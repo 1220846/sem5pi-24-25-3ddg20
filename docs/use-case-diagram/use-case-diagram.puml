@@ -1,0 +1,73 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+'skinparam shadowing false
+
+skinparam rectangle{
+    BorderColor yellow
+}
+
+title Use Case Diagram
+left to right direction
+
+    actor "Admin" as Admin
+    actor "Doctor" as Doctor
+    actor "Nurse" as Nurse
+    actor "Technician" as Technician
+    actor "Patient" as Patient
+
+    usecase "Register new backoffice users" as RegisterNewBackofficeUsers
+    usecase "Reset my password if I forget it" as ResetMyPasswordIfIForgetIt
+    usecase "Register for the healthcare application" as RegisterForHealthcareApplication
+    usecase "Update my user profile" as  UpdateMyUserProfile
+    usecase "Delete my account and all associated data" as DeleteMyAccountAndAllAssociatedData
+    usecase "Log in to the system using my credentials" as LogInToTheSystemUsingMyCredentials
+    usecase "Log in to the healthcare system using my external IAM credentials" as LogInToTheHealthcareSystemUsingMyExternalIAMCredentials
+    usecase "Create a new patient profile" as CreateANewPatientProfile
+    usecase "Edit an existing patient profile" as EditAnExistingPatientProfile
+    usecase "Delete a patient profile" as DeleteAPatientProfile
+    usecase "List patient profiles by different atributes" as ListPatientProfilesByDifferentAtributes
+    usecase "Create a new staff profile" as CreateANewStaffProfile
+    usecase "Edit a staff's profile" as EditAStaffsProfile
+    usecase "Deactivate a staff profile" as DeactivateAStaffProfile
+    usecase "List staff profiles" as ListStaffProfiles
+    usecase "Request an operation" as RequestAnOperation
+    usecase "Update an operation requisition" as UpdateAnOperationRequisition
+    usecase "Remove an operation requisition" as RemoveAnOperationRequisition
+    usecase "List operation requisitions" as ListOperationRequisitions
+    usecase "Add new types of operation" as AddNewTypesOfOperation
+    usecase "Edit existing operation types" as EditExistingOperationTypes
+    usecase "Remove obsolete or no longer performed operation types" as RemoveObsoleteOrNoLongerPerformedOperationTypes
+    usecase " List operation types" as ListOperationTypes
+
+    Admin --> RegisterNewBackofficeUsers
+    Admin --> ResetMyPasswordIfIForgetIt
+    Doctor --> ResetMyPasswordIfIForgetIt
+    Nurse --> ResetMyPasswordIfIForgetIt
+    Technician --> ResetMyPasswordIfIForgetIt
+    Patient --> RegisterForHealthcareApplication
+    Patient --> UpdateMyUserProfile
+    Patient --> DeleteMyAccountAndAllAssociatedData
+    Admin --> LogInToTheSystemUsingMyCredentials
+    Doctor --> LogInToTheSystemUsingMyCredentials
+    Nurse --> LogInToTheSystemUsingMyCredentials
+    Technician --> LogInToTheSystemUsingMyCredentials
+    Patient --> LogInToTheHealthcareSystemUsingMyExternalIAMCredentials
+    Admin --> CreateANewPatientProfile
+    Admin --> EditAnExistingPatientProfile
+    Admin --> DeleteAPatientProfile
+    Admin --> ListPatientProfilesByDifferentAtributes
+    Admin --> CreateANewStaffProfile
+    Admin --> EditAStaffsProfile
+    Admin -- ListStaffProfiles
+    Admin --> DeactivateAStaffProfile
+    Doctor --> RequestAnOperation
+    Doctor --> UpdateAnOperationRequisition
+    Doctor --> RemoveAnOperationRequisition
+    Doctor --> ListOperationRequisitions
+    Admin --> AddNewTypesOfOperation
+    Admin --> EditExistingOperationTypes
+    Admin --> RemoveObsoleteOrNoLongerPerformedOperationTypes
+    Admin --> ListOperationTypes
+
+@enduml
