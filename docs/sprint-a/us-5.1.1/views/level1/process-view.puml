@@ -1,0 +1,15 @@
+@startuml ssdlevel1
+
+actor "Administrator" as Admin
+participant SYS as "SARM" <<C4:System>>
+
+activate Admin
+
+    Admin -> SYS : Asks to create new Backoffice User
+    activate SYS
+        
+        SYS-->Admin: Confirmation of Backoffice User creation
+    deactivate SYS
+deactivate Admin
+
+@enduml
