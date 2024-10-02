@@ -12,7 +12,7 @@ component "SARM" <<component>> <<system (C4)>> {
         portin " " as BackendPI
         portout " " as BackendPO
         portout " " as BackendPO2
-        portout " " BackendPO2
+        portout " " as BackendPO3
     }
 
     component "Frontend" <<component>> <<component>>{
@@ -26,7 +26,7 @@ component "SARM" <<component>> <<system (C4)>> {
     }
 
     component "Data Base" <<component>> <<C4 containner>>{
-        
+        portin " " as DataBasePI
     }
 }
 
@@ -37,5 +37,5 @@ SARMPI2 -- BackendPI
 PlanningPI -u- BackendPO
 PlanningPI -u- FrontendPO
 FrontendPI2 --- BackendPO2
-
+DataBasePI )-u- BackendPO3
 @enduml
