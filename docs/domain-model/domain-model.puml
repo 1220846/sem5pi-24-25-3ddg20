@@ -187,55 +187,55 @@ package "<<aggregate>> SurgeryRoom"{
 }
 
 'User'
-User --> Username
+Username <- User
 User --> Role
 User --> Email
 User --> FirstName
 User --> LastName
-User --> FullName
+User -> FullName
 
 'Patient'
-Patient --> DateOfBirth
-Patient --> Gender
+DateOfBirth <- Patient
+Gender <- Patient
 Patient --> MedicalRecordNumber
 Patient --> ContactInformation
 Patient --> MedicalConditions
 Patient --> EmergencyContact
-Patient --> AppointmentHistory
+Patient -> AppointmentHistory
 Patient "1" --> "1" User: includes
 
 'Staff'
 Staff --> LicenseNumber
 Staff --> Specialization
-Staff --> AvailabilitySlots
-Staff "1" --> "1"User: includes
+Staff -> AvailabilitySlots
+Staff "1" ---> "1"User: includes
 
 'OperationRequest'
-OperationRequest --> OperationRequestId
+OperationRequestId <- OperationRequest
 OperationRequest --> DeadlineDate
 OperationRequest --> Priority
-OperationRequest "*" --> "1" Patient: of
-OperationRequest "*" --> "1" Staff: to
-OperationRequest "*" --> "1" OperationType: of
+OperationRequest "*" ---> "1" Patient: of
+OperationRequest "*" ---> "1" Staff: to
+OperationRequest "*" ---> "1" OperationType: of
 
 'OperationType'
 OperationType --> OperationTypeId
 OperationType --> OperationTypeName
-OperationType --> EstimatedDuration
+OperationType -> EstimatedDuration
 
 'Appointment'
-Appointment --> AppointmentId
+AppointmentId <- Appointment
 Appointment --> AppointmentDateAndTime
 Appointment --> AppointmentStatus
-Appointment "1" --> "1" OperationRequest: of
-Appointment "*" --> "1" SurgeryRoom: in
+Appointment "1" ---> "1" OperationRequest: of
+Appointment "*" ---> "1" SurgeryRoom: in
 
 'SurgeryRoom'
-SurgeryRoom --> RoomNumber
+RoomNumber <- SurgeryRoom
 SurgeryRoom --> RoomType
 SurgeryRoom --> Capacity
 SurgeryRoom --> AssignedEquipment
 SurgeryRoom --> CurrentStatus
-SurgeryRoom  --> MaintenanceSlots
+SurgeryRoom  -> MaintenanceSlots
 
 @enduml
