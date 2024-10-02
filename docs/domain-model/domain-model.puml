@@ -23,6 +23,9 @@ package "<<aggregate>> User"{
 
     class Email  <<Value Object>> {
     }
+    
+    class Password  <<Value Object>> {
+    }
 
 }
 
@@ -222,9 +225,7 @@ package "<<aggregate>> SurgeryRoom"{
 Username <- User
 User --> Role
 User --> Email
-'User --> FirstName
-'User --> LastName
-'User -> FullName
+User --> Password
 
 'Patient'
 PatientFirstName <-- Patient
