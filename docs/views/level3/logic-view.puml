@@ -1,41 +1,26 @@
-@startuml vista-logica
+@startuml logic-view
 top to bottom direction
 
-interface "UI" as UI
 interface "API" as API
 
-component "SARM" <<component>> <<system (C4)>> {
-    portin " " as SARMPI2
-    portin " " as SARMPI
+component "Backend Data Management" <<component>>{
+    () "DB API" as DBAPI
+    portin " " as PI
 
-    component "Backend Data Management" <<component>> <<component>>{
-        portin " " as BackendPI
-        portout " " as BackendPO
-        portout " " as BackendPO2
-        portout " " as BackendPO3
+    component "Backend API" <<component>> <<C4 Container>>{
+        portin " " as BEPI
+        portout " " as BEPO
     }
 
-    component "Frontend" <<component>> <<component>>{
-        portin " " as FrontendPI
-        portout " " as FrontendPO
-        portin " " as FrontendPI2
+    component "DataBase" <<component>> <<C4 Container>>{
+        portin " " as DBPI
     }
-
-    component "Planning" <<component>> <<component>>{
-        portin " " as PlanningPI
-    }
-
-    component "Data Base" <<component>> <<C4 containner>>{
-        portin " " as DataBasePI
-    }
+     
 }
 
-UI -- SARMPI
-API -- SARMPI2
-SARMPI -- FrontendPI
-SARMPI2 -- BackendPI
-PlanningPI -u- BackendPO
-PlanningPI -u- FrontendPO
-FrontendPI2 --- BackendPO2
-DataBasePI )-u- BackendPO3
+API -- PI
+PI -- BEPI 
+BEPO --( DBAPI
+DBPI -U- DBAPI
+
 @enduml

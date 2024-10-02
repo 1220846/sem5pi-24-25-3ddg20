@@ -1,24 +1,10 @@
-@startuml
+@startuml implementation-view
 top to bottom direction
 
-folder "SARM" <<folder>>{
-
-    folder "Backend Data Management" as BackendDataManagement{
+package " " <<SARM>>{
+    package " " <<Backend Data Management>>{
 
     }
-
-    folder "Frontend" as FrontendDataManagement{
-        
-    }
-
-    folder "Planning" as Planning{
-        
-    }
-
 }
-
-BackendDataManagement <.. FrontendDataManagement
-BackendDataManagement ..> Planning
-FrontendDataManagement .r.> Planning
 
 @enduml
