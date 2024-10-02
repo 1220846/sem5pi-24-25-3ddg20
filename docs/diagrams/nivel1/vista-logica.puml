@@ -1,0 +1,16 @@
+@startuml vista-logica
+top to bottom direction
+
+interface "UI" as UI
+interface "API" as API
+
+component "SARM" <<component>> <<system (C4)>> {
+    portin " " as PI1
+    portin " " as PI2
+    
+}
+
+UI -- PI1
+API -- PI2
+
+@enduml

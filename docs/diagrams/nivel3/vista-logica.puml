@@ -1,0 +1,41 @@
+@startuml vista-logica
+top to bottom direction
+
+interface "UI" as UI
+interface "API" as API
+
+component "SARM" <<component>> <<system (C4)>> {
+    portin " " as SARMPI2
+    portin " " as SARMPI
+
+    component "Backend Data Management" <<component>> <<component>>{
+        portin " " as BackendPI
+        portout " " as BackendPO
+        portout " " as BackendPO2
+        portout " " BackendPO2
+    }
+
+    component "Frontend" <<component>> <<component>>{
+        portin " " as FrontendPI
+        portout " " as FrontendPO
+        portin " " as FrontendPI2
+    }
+
+    component "Planning" <<component>> <<component>>{
+        portin " " as PlanningPI
+    }
+
+    component "Data Base" <<component>> <<C4 containner>>{
+        
+    }
+}
+
+UI -- SARMPI
+API -- SARMPI2
+SARMPI -- FrontendPI
+SARMPI2 -- BackendPI
+PlanningPI -u- BackendPO
+PlanningPI -u- FrontendPO
+FrontendPI2 --- BackendPO2
+
+@enduml
