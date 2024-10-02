@@ -3,7 +3,7 @@ top to bottom direction
 
 interface "API" as API
 
-component "SARM" <<component>> <<system (C4)>> {
+component "SARM" <<component>> <<C4 System>> {
     portin " " as SARMPI
 
     component "Backend Data Management" <<component>> {
