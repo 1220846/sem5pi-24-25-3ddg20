@@ -1,0 +1,241 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+
+skinparam packageStyle rectangle
+
+package "<<aggregate>> User"{
+    
+    entity User <<entity>> <<root>>{
+
+    }
+    class Username <<Value Object>>{
+
+    }
+    
+    enum Role <<Value Object>> {
+        ADMIN
+        DOCTOR
+        NURSE
+        TECHNICIAN
+        PATIENT
+    }
+
+    class Email  <<Value Object>> {
+    }
+
+    class FirstName <<Value Object>>{
+
+    }
+
+    class LastName <<Value Object>>{
+        
+    }
+
+    class FullName <<Value Object>>{
+        
+    }
+}
+
+package "<<aggregate>> Patient"{
+
+    entity Patient <<entity>> <<root>>{
+    }
+
+    class DateOfBirth <<Value Object>>{
+        
+    }
+
+    class Gender <<Value Object>>{
+        
+    }
+
+    class MedicalRecordNumber <<Value Object>>{
+        
+    }
+
+    class ContactInformation <<Value Object>>{
+        
+    }
+
+    class MedicalConditions <<Value Object>>{
+        
+    }
+
+    class EmergencyContact <<Value Object>>{
+        
+    }
+
+    class AppointmentHistory <<Value Object>>{
+        
+    }
+
+}
+
+package "<<aggregate>> Staff"{
+
+    entity Staff <<entity>> <<root>>{
+    }
+
+    class LicenseNumber <<Value Object>>{
+        
+    }
+
+    class Specialization <<Value Object>>{
+        
+    }
+
+    class AvailabilitySlots <<Value Object>>{
+        
+    }
+
+    'Contact Information rever'
+}
+
+package "<<aggregate>> OperationRequest"{
+
+    entity OperationRequest <<entity>> <<root>>{
+    }
+
+    class OperationRequestId <<Value Object>>{
+        
+    }
+
+    class DeadlineDate <<Value Object>>{
+        
+    }
+
+    enum Priority <<Value Object>>{
+        HIGH
+        MEDIUM
+        LOW
+    }
+
+}
+
+package "<<aggregate>> OperationType"{
+
+    entity OperationType <<entity>> <<root>>{
+    }
+
+    class OperationTypeId <<Value Object>>{
+        
+    }
+
+    class OperationTypeName <<Value Object>>{
+        
+    }
+
+    class EstimatedDuration <<Value Object>>{
+        
+    }
+}
+
+package "<<aggregate>> Appointment"{
+
+    entity Appointment <<entity>> <<root>>{
+    }
+
+    class AppointmentId <<Value Object>>{
+        
+    }
+
+    class AppointmentDateAndTime <<Value Object>>{
+        
+    }
+
+    enum AppointmentStatus <<Value Object>>{
+        SCHEDULED
+        COMPLETED
+        CANCELED
+    }
+}
+
+package "<<aggregate>> SurgeryRoom"{
+
+    entity SurgeryRoom <<entity>> <<root>>{
+    }
+
+    class RoomNumber <<Value Object>>{
+        
+    }
+
+    enum RoomType <<Value Object>>{
+        OPERATING_ROOM
+        CONSULTATION_ROOM
+        ICU
+    }
+
+    class Capacity <<Value Object>>{
+        
+    }
+
+    class AssignedEquipment <<Value Object>> { 
+
+    }
+
+    enum CurrentStatus <<Value Object>>{
+        AVAILABLE
+        OCCUPIED
+        UNDER_MAINTENANCE
+    }
+
+    class MaintenanceSlots <<Value Object>> {
+             
+    }
+    
+}
+
+'User'
+User --> Username
+User --> Role
+User --> Email
+User --> FirstName
+User --> LastName
+User --> FullName
+
+'Patient'
+Patient --> DateOfBirth
+Patient --> Gender
+Patient --> MedicalRecordNumber
+Patient --> ContactInformation
+Patient --> MedicalConditions
+Patient --> EmergencyContact
+Patient --> AppointmentHistory
+Patient "1" --> "1" User: includes
+
+'Staff'
+Staff --> LicenseNumber
+Staff --> Specialization
+Staff --> AvailabilitySlots
+Staff "1" --> "1"User: includes
+
+'OperationRequest'
+OperationRequest --> OperationRequestId
+OperationRequest --> DeadlineDate
+OperationRequest --> Priority
+OperationRequest "*" --> "1" Patient: of
+OperationRequest "*" --> "1" Staff: to
+OperationRequest "*" --> "1" OperationType: of
+
+'OperationType'
+OperationType --> OperationTypeId
+OperationType --> OperationTypeName
+OperationType --> EstimatedDuration
+
+'Appointment'
+Appointment --> AppointmentId
+Appointment --> AppointmentDateAndTime
+Appointment --> AppointmentStatus
+Appointment "1" --> "1" OperationRequest: of
+Appointment "*" --> "1" SurgeryRoom: in
+
+'SurgeryRoom'
+SurgeryRoom --> RoomNumber
+SurgeryRoom --> RoomType
+SurgeryRoom --> Capacity
+SurgeryRoom --> AssignedEquipment
+SurgeryRoom --> CurrentStatus
+SurgeryRoom  --> MaintenanceSlots
+
+@enduml
