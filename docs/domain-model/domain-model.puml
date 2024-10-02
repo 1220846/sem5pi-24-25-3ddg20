@@ -24,17 +24,6 @@ package "<<aggregate>> User"{
     class Email  <<Value Object>> {
     }
 
-    class FirstName <<Value Object>>{
-
-    }
-
-    class LastName <<Value Object>>{
-        
-    }
-
-    class FullName <<Value Object>>{
-        
-    }
 }
 
 package "<<aggregate>> Patient"{
@@ -42,6 +31,18 @@ package "<<aggregate>> Patient"{
     entity Patient <<entity>> <<root>>{
     }
 
+    class PatientFirstName <<Value Object>>{
+
+    }
+
+    class PatientLastName <<Value Object>>{
+        
+    }
+
+    class PatientFullName <<Value Object>>{
+        
+    }
+    
     class DateOfBirth <<Value Object>>{
         
     }
@@ -54,7 +55,15 @@ package "<<aggregate>> Patient"{
         
     }
 
-    class ContactInformation <<Value Object>>{
+    entity PatientContactInformation <<Value Object>>{
+        
+    }
+
+    class PatientEmail <<Value Object>>{
+        
+    }
+
+    class PatientPhone <<Value Object>>{
         
     }
 
@@ -70,11 +79,24 @@ package "<<aggregate>> Patient"{
         
     }
 
+
 }
 
 package "<<aggregate>> Staff"{
 
     entity Staff <<entity>> <<root>>{
+    }
+
+    class StaffFirstName <<Value Object>>{
+
+    }
+
+    class StaffLastName <<Value Object>>{
+        
+    }
+
+    class StaffFullName <<Value Object>>{
+        
     }
 
     class LicenseNumber <<Value Object>>{
@@ -89,7 +111,17 @@ package "<<aggregate>> Staff"{
         
     }
 
-    'Contact Information rever'
+    entity StaffContactInformation <<Value Object>>{
+        
+    }
+
+    class StaffEmail <<Value Object>>{
+        
+    }
+
+    class StaffPhone <<Value Object>>{
+        
+    }
 }
 
 package "<<aggregate>> OperationRequest"{
@@ -190,31 +222,42 @@ package "<<aggregate>> SurgeryRoom"{
 Username <- User
 User --> Role
 User --> Email
-User --> FirstName
-User --> LastName
-User -> FullName
+'User --> FirstName
+'User --> LastName
+'User -> FullName
 
 'Patient'
+PatientFirstName <-- Patient
+PatientLastName <-- Patient
+PatientFullName <-- Patient
 DateOfBirth <- Patient
-Gender <- Patient
-Patient --> MedicalRecordNumber
-Patient --> ContactInformation
+Patient --> Gender
+Patient ---> MedicalRecordNumber
+Patient ---> PatientContactInformation
 Patient --> MedicalConditions
 Patient --> EmergencyContact
 Patient -> AppointmentHistory
+Patient ---> PatientEmail
+Patient ---> PatientPhone
 Patient "1" --> "1" User: includes
 
 'Staff'
-Staff --> LicenseNumber
-Staff --> Specialization
-Staff -> AvailabilitySlots
+Staff --> StaffFirstName
+Staff --> StaffLastName
+Staff -> StaffFullName
+StaffContactInformation <- Staff
+StaffEmail <- Staff
+Staff ---> LicenseNumber
+Staff ---> Specialization
+Staff ---> AvailabilitySlots
+Staff --> StaffPhone
 Staff "1" ---> "1"User: includes
 
 'OperationRequest'
 OperationRequestId <- OperationRequest
 OperationRequest --> DeadlineDate
 OperationRequest --> Priority
-OperationRequest "*" ---> "1" Patient: of
+OperationRequest "*" --> "1" Patient: of
 OperationRequest "*" ---> "1" Staff: to
 OperationRequest "*" ---> "1" OperationType: of
 
