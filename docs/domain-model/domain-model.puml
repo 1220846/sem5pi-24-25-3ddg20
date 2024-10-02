@@ -23,9 +23,6 @@ package "<<aggregate>> User"{
 
     class Email  <<Value Object>> {
     }
-    
-    class Password  <<Value Object>> {
-    }
 
 }
 
