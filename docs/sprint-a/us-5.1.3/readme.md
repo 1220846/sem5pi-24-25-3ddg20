@@ -20,3 +20,7 @@
 
 ![Process view level 1](views/level1/process-view.svg "A process view level 1")
 
+### Level 2
+
+![Process view level 2](views/level2/process-view.svg "A process view level 2")
+
