@@ -103,10 +103,6 @@ package "<<aggregate>> Staff"{
         
     }
 
-    class Specialization <<Value Object>>{
-        
-    }
-
     class AvailabilitySlots <<Value Object>>{
         
     }
@@ -143,6 +139,20 @@ package "<<aggregate>> OperationRequest"{
         LOW
     }
 
+}
+
+package "<<aggregate Specialization>> "{
+
+    entity Specialization <<entity>> <<root>>{
+    }
+
+    class SpecializationId <<Value Object>>{
+        
+    }
+
+    class SpecializationName <<Value Object>>{
+        
+    }
 }
 
 package "<<aggregate>> OperationType"{
@@ -222,7 +232,6 @@ package "<<aggregate>> SurgeryRoom"{
 Username <- User
 User --> Role
 User --> Email
-User --> Password
 
 'Patient'
 PatientFirstName <-- Patient
@@ -237,7 +246,7 @@ Patient --> EmergencyContact
 Patient -> AppointmentHistory
 Patient ---> PatientEmail
 Patient ---> PatientPhone
-Patient "1" --> "1" User: includes
+Patient "1" --> "0..1" User: includes
 
 'Staff'
 Staff --> StaffFirstName
@@ -246,10 +255,14 @@ Staff -> StaffFullName
 StaffContactInformation <- Staff
 StaffEmail <- Staff
 Staff ---> LicenseNumber
-Staff ---> Specialization
 Staff ---> AvailabilitySlots
 Staff --> StaffPhone
 Staff "1" ---> "1"User: includes
+Staff "1" ---> "1" Specialization : has
+
+'Specialization'
+Specialization --> SpecializationId
+Specialization --> SpecializationName
 
 'OperationRequest'
 OperationRequestId <- OperationRequest
@@ -263,6 +276,7 @@ OperationRequest "*" ---> "1" OperationType: of
 OperationType --> OperationTypeId
 OperationType --> OperationTypeName
 OperationType -> EstimatedDuration
+OperationType "*" --> "*" Specialization: has
 
 'Appointment'
 AppointmentId <- Appointment
