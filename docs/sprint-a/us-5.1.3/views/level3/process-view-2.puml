@@ -1,0 +1,71 @@
+@startuml process-view-2
+autonumber
+
+participant "UserController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+participant "User" as User <<Domain>>
+participant "Patient" as Patient <<Domain>>
+participant "UserDto" as UserDto <<Domain>>
+participant "IPatientRepository" as PatientRepository <<Domain>>
+participant "IUserRepository" as UserRepository <<Domain>>
+
+?o-> Controller : POST /api/users/patients
+
+activate Controller
+
+    Controller -> Service : addUserPatientAsync(creatingUserDto)
+
+    activate Service
+
+        Service -> PatientRepository : GetByEmailAsync(creatingUserDto.email)
+
+        activate PatientRepository
+
+            PatientRepository --> Service : patient
+
+        deactivate PatientRepository
+
+        Service -> User : create(creatingUserDto.username,creatingUserDto.email,ROLE.PATIENT)
+
+        activate User
+
+            User --> Service : user
+
+        deactivate User
+
+        Service  -> UserRepository : addAsync(user)
+
+        activate UserRepository
+
+            UserRepository --> Service : user
+
+        deactivate UserRepository
+
+        Service -> Patient : setUser(user)
+
+        Service -> PatientRepository : updateAsync(patient)
+
+        activate PatientRepository
+
+            PatientRepository -->  Service : patient
+        
+        deactivate PatientRepository
+
+        Service -> UserDto : create(user.getUsername().toString(),user.getEmail().toString(),user.getRole().toString())
+
+        activate UserDto
+
+            UserDto --> Service : userDto
+
+        deactivate UserDto
+
+        Service --> Controller : userDto
+
+    deactivate Service
+
+    ?o<-- Controller : 201 Created
+
+deactivate Controller
+
+
+@enduml

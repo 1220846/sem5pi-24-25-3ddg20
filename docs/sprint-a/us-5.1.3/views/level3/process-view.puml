@@ -1,0 +1,23 @@
+@startuml process-view
+autonumber
+
+participant "Server" as Server
+participant "Database" as Database
+
+?o-> Server : POST /api/users/patients
+
+activate Server
+
+    Server -> Database : save patient
+    
+    activate Database
+
+        Database -> Server : patient
+
+    deactivate Database
+
+    <-- Server : 201 Created
+
+deactivate Server
+
+@enduml
