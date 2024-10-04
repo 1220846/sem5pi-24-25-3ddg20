@@ -2,12 +2,14 @@
 top to bottom direction
 
 interface "API" as API
+interface "Auth0 API" as A0API
 
 component "SARM" <<component>> <<C4 System>> {
     portin " " as PI
-    
+    portout " " as PI1
 }
 
 API -- PI
+PI1 --( A0API
 
 @enduml

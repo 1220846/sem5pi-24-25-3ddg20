@@ -2,17 +2,22 @@
 top to bottom direction
 
 interface "API" as API
+interface "Auth0 API" as A0API
 
 component "SARM" <<component>> <<C4 System>> {
     portin " " as SARMPI
+    portout " " as SARMPI1
 
     component "Backend Data Management" <<component>> {
         portin " " as BackendPI
+        portout " " as BackendPI1
     }
 
 }
 
 API -- SARMPI
+SARMPI1 -r-( A0API
 SARMPI -- BackendPI
+SARMPI1 -- BackendPI1
 
 @enduml

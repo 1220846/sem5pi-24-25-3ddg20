@@ -2,25 +2,30 @@
 top to bottom direction
 
 interface "API" as API
+interface "Auth0 API" as A0API
 
 component "Backend Data Management" <<component>>{
     () "DB API" as DBAPI
     portin " " as PI
+    portout " " as SARMPI1
 
-    component "Backend API" <<component>> <<C4 Container>>{
-        portin " " as BEPI
-        portout " " as BEPO
+    component "Server" <<component>> <<C4 Container>>{
+        portin " " as SVPI
+        portout " " as SVPO
+        portout " " as SVPO1
+
     }
 
-    component "DataBase" <<component>> <<C4 Container>>{
+    component "Database" <<component>> <<C4 Container>>{
         portin " " as DBPI
     }
      
 }
 
 API -- PI
-PI -- BEPI 
-BEPO --( DBAPI
+PI -- SVPI 
+SVPO --( DBAPI
 DBPI -U- DBAPI
-
+SVPO1 -- SARMPI1
+SARMPI1 -r-( A0API
 @enduml
