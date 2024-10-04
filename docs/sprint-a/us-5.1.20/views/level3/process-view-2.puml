@@ -1,0 +1,51 @@
+@startuml process-view-2
+autonumber
+
+participant "OperationTypeController" as Controller <<Controller>>
+participant "OperationTypeService" as Service <<Service>>
+participant "OperationType" as OperationType <<Domain>>
+participant "OperationTypeDto" as OperationTypeDto <<Domain>>
+participant "IOperationTypeRepository" as Repository <<Domain>>
+
+?o-> Controller : POST /api/operation-types
+
+activate Controller
+
+    Controller -> Service : addOperationTypeAsync(creatingOperationTypeDto)
+
+    activate Service
+
+        Service -> OperationType : create(creatingOperationTypeDto.name,creatingOperationTypeDto.specializations,creatingOperationTypeDto.estimatedDuration)
+
+        activate OperationType
+
+            OperationType --> Service : operationType
+
+        deactivate OperationType
+
+        Service  -> Repository : addAsync(operationType)
+
+        activate Repository
+
+            Repository --> Service : operationType
+
+        deactivate Repository
+
+        Service -> OperationTypeDto : create(operationType.getOperationTypeName().toString(),operationType.getSpecializations().toString(),operationType.getEstimatedTime())
+
+        activate OperationTypeDto
+
+            OperationTypeDto --> Service : operationTypeDto
+
+        deactivate OperationTypeDto
+
+        Service --> Controller : operationTypeDto
+
+    deactivate Service
+
+    ?o<-- Controller : 201 Created
+
+deactivate Controller
+
+
+@enduml

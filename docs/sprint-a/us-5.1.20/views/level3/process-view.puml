@@ -1,0 +1,23 @@
+@startuml process-view
+autonumber
+
+participant "Server" as Server
+participant "Database" as Database
+
+?o-> Server : POST 
+
+activate Server
+
+    Server -> Database : save operation type
+    
+    activate Database
+
+        Database -> Server : operation type
+
+    deactivate Database
+
+    <-- Server : 201 Created
+
+deactivate Server
+
+@enduml
