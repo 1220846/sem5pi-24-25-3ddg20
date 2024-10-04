@@ -1,0 +1,19 @@
+@startuml process-view
+autonumber
+
+actor "Patient" as Patient
+participant SARM as "SARM" <<system (C4)>>
+
+activate Patient
+
+    Patient -> SARM : asks to add new type of operation
+    
+    activate SARM
+
+        SARM --> Patient : confirms the addition
+
+    deactivate SARM
+
+deactivate Patient
+
+@enduml

@@ -1,0 +1,14 @@
+@startuml process-view
+autonumber
+
+participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
+
+?o-> BackendDataManagement : POST /api/operation-types
+activate BackendDataManagement
+
+    BackendDataManagement -> BackendDataManagement : addOperationType(operationType)
+
+    <-- BackendDataManagement : 201 Created
+deactivate BackendDataManagement
+
+@enduml
