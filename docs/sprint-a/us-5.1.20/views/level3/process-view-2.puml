@@ -7,7 +7,7 @@ participant "OperationType" as OperationType <<Domain>>
 participant "OperationTypeDto" as OperationTypeDto <<Domain>>
 participant "IOperationTypeRepository" as Repository <<Domain>>
 
-?o-> Controller : POST /api/operation-types
+?o-> Controller : POST /api/operationtypes
 
 activate Controller
 

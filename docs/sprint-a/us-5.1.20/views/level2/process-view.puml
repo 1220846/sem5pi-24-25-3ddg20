@@ -3,7 +3,7 @@ autonumber
 
 participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
 
-?o-> BackendDataManagement : POST /api/operation-types
+?o-> BackendDataManagement : POST /api/operationtypes
 activate BackendDataManagement
 
     BackendDataManagement -> BackendDataManagement : addOperationType(operationType)
