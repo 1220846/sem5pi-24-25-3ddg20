@@ -23,10 +23,10 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Restore dependencies
-      run: dotnet restore dddnetcore/dddnetcore.csproj
+      run: dotnet restore dddnetcore/DDDNetCore.csproj
 
     - name: Build
-      run: dotnet build dddnetcore/dddnetcore.csproj --no-restore
+      run: dotnet build dddnetcore/DDDNetCore.csproj --no-restore
 
     - name: Test
-      run: dotnet test dddnetcore/dddnetcore.csproj --no-build --verbosity normal
+      run: dotnet test dddnetcore/DDDNetCore.csproj --no-build --verbosity normal
