@@ -253,10 +253,10 @@ Staff --> StaffFirstName
 Staff --> StaffLastName
 Staff -> StaffFullName
 StaffContactInformation <- Staff
-StaffEmail <- Staff
+StaffContactInformation --> StaffEmail
+StaffContactInformation --> StaffPhone
 Staff ---> LicenseNumber
 Staff ---> AvailabilitySlots
-Staff --> StaffPhone
 Staff "1" ---> "1"User: includes
 Staff "1" ---> "1" Specialization : has
 
