@@ -1,0 +1,13 @@
+@startuml level2
+
+participant SYS as "SARM" <<C4:System>>
+
+?o->SYS:POST /api/OperationRequest
+activate SYS
+
+    SYS->SYS:createOperationRequest(creatingRequestOperationDto)
+
+    <--SYS:201 created
+deactivate SYS
+
+@enduml

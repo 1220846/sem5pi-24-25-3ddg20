@@ -1,0 +1,17 @@
+@startuml level1
+
+actor "Doctor" as Doctor
+participant SYS as "SARM" <<C4:System>>
+
+activate Doctor
+
+Doctor -> SYS:Request one Operation to pacient
+activate SYS
+
+    SYS-->Doctor:Request Accepted
+deactivate SYS
+
+
+deactivate Doctor
+
+@enduml

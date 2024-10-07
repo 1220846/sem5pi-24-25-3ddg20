@@ -1,0 +1,69 @@
+@startuml
+
+autonumber
+
+participant "DoctorController" as Controller <<Controller>>
+participant "DoctorService" as Service <<Service>>
+participant "Patient" as Patient <<Domain>>
+participant "OperationRequest" as OperationRequest <<Domain>>
+participant "OperationRequestDto" as OperationRequestDto <<Domain>>
+database "IOperationTypeRepository" as OperationTypeRepository <<Domain>>
+database "IStaffRepository" as StaffRepository <<Domain>>
+database "IPatientRepository" as PatientRepository <<Domain>>
+database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
+
+?o->Controller: POST /api/operationrequests
+activate Controller
+
+    Controller->Service:addOperationRequest(operationRequestDto)
+    activate Service
+
+        Service -> StaffRepository:getDoctorByIdAsync(doctorLicenceNumber)
+        activate StaffRepository
+
+            StaffRepository-->Service:doctor
+        deactivate StaffRepository
+        
+
+        alt doctor.specialization == operationType.specialization then
+        
+        Service -> PatientRepository:getByIdAsync(patientMedicalRecordNumber)
+        activate PatientRepository
+
+            PatientRepository-->Service:patient
+        deactivate PatientRepository
+
+        Service->OperationRequest:create(patient, doctor, operationType, deadline, priority)
+        activate OperationRequest
+
+            OperationRequest-->Service:operationRequest
+        deactivate OperationRequest
+
+        Service->OperationRequestRepository:addOperationRequestAsync(operationRequest)
+        activate OperationRequestRepository
+
+            OperationRequestRepository-->Service:operationRequest
+        deactivate OperationRequestRepository
+
+        Service->Patient:updateAppointmentHistory(operationRequest)
+        
+
+        Service->PatientRepository:updateAsync(patient)
+        activate PatientRepository
+
+            PatientRepository-->Service:patient
+        deactivate PatientRepository
+
+        Service->OperationRequestDto:create(patient.id, doctor.id, operationType, deadline, priority)
+        activate OperationRequestDto
+
+            OperationRequestDto-->Service:operationRequestDto
+        deactivate OperationRequestDto
+        end alt
+        Service --> Controller:operationRequestDto
+    deactivate Service
+
+    <--Controller:201 created
+deactivate Controller
+
+@enduml
