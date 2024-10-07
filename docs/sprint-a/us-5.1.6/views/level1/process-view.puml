@@ -1,0 +1,15 @@
+@startuml ssdlevel1
+
+actor "Backoffice User" as BackofficeUser
+participant SYS as "SARM" <<C4:System>>
+
+activate BackofficeUser
+
+    BackofficeUser -> SYS : Asks to log in with credentials
+    activate SYS
+        
+        SYS-->BackofficeUser: Login Accepted
+    deactivate SYS
+deactivate BackofficeUser
+
+@enduml

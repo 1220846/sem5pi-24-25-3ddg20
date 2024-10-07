@@ -1,0 +1,12 @@
+@startuml ssdlevel1
+
+participant SYS as "SARM" <<C4:System>>
+
+?o->SYS:POST /api/users/login
+activate SYS
+
+    SYS-->SYS:UserLoginAsync(username,password)
+
+    <--SYS:201 Verificated
+deactivate SYS
+@enduml
