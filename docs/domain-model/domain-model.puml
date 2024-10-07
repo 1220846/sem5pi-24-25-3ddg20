@@ -134,9 +134,9 @@ package "<<aggregate>> OperationRequest"{
     }
 
     enum Priority <<Value Object>>{
-        HIGH
-        MEDIUM
-        LOW
+        ELECTIVE
+        URGENT
+        EMERGENCY
     }
 
 }
