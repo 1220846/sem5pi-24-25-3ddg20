@@ -12,7 +12,7 @@ activate Server
     
     activate Database
 
-        Database -> Server : patient
+        Database --> Server : patient
 
     deactivate Database
 
