@@ -1,0 +1,12 @@
+@startuml ssdlevel1
+
+participant SYS as "SARM" <<C4:System>>
+
+?o->SYS:PUT /api/user
+activate SYS
+
+    SYS-->SYS:updadePassword(password)
+
+    <--SYS:201 Password Updated
+deactivate SYS
+@enduml

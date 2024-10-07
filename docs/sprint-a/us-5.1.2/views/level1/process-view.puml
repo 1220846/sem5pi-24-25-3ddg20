@@ -1,0 +1,15 @@
+@startuml ssdlevel1
+
+actor "Backoffice User" as Admin
+participant SYS as "SARM" <<C4:System>>
+
+activate Admin
+
+    Admin -> SYS : Asks to reseat the password
+    activate SYS
+        
+        SYS-->Admin: Confirmation of password reseated
+    deactivate SYS
+deactivate Admin
+
+@enduml

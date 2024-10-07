@@ -1,0 +1,37 @@
+@startuml level3
+autonumber
+
+participant "UserController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+participant "User" as User <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
+
+?o->Controller:PUT /api/users
+activate Controller
+    
+    Controller->Service:resetPasswordAsync(userEmail)
+    activate Service
+
+        /'Service->SendNotification:notifyStaffWithLink(userEmail)
+        activate SendNotification
+
+            SendNotification-->Service:sendLink
+        deactivate SendNotification
+
+        note over Service
+            "Fazer auth ao Staff"
+        end note
+        '/
+        /'
+        Service->Auth:setPassword()
+
+        '/
+
+
+    
+
+        Service-->Controller:message
+    deactivate Service
+    <-- Controller:201 confirmation\n of password reset
+deactivate Controller
+@enduml 
