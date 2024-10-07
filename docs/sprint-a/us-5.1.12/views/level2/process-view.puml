@@ -1,0 +1,12 @@
+@startuml process-view
+autonumber
+
+participant "Backend Data Management" as BDM
+
+?o-> BDM : POST /api/staffs
+activate BDM
+    BDM -> BDM : createStaffProfile(creatingStaffDto)
+    <-- BDM : 201 Created
+deactivate BDM
+
+@enduml

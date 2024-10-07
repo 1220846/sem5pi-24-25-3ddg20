@@ -1,0 +1,12 @@
+@startuml process-view
+
+?o-> Server : POST /api/users/patients
+activate Server
+    Server -> Database : save staff
+    activate Database
+        Database -> Server : staff
+    deactivate Database
+    <-- Server : 201 Created
+deactivate Server
+
+@enduml

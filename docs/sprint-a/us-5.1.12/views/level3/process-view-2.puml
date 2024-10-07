@@ -1,0 +1,35 @@
+@startuml process-view-2
+autonumber
+
+participant "StaffController" as Controller <<Contreoller>>
+participant "StaffService" as Service <<Service>>
+participant "User" as User <<Domain>>
+participant "Staff" as Staff <<Domain>>
+participant "StaffDto" as StaffDto <<Domain>>
+participant "IUserRepository" as UserRepository <<Domain>>
+participant "IStaffRepository" as StaffRepository <<Domain>>
+
+
+?o-> Controller : POST /api/staffs
+activate Controller
+    Controller -> Service : createStaffProfileAsync(creatingStaffDto)
+    activate Service
+        Service -> UserRepository : GetByEmailAsync(creatingStaffDto.email)
+        activate UserRepository
+            UserRepository --> Service : user
+        deactivate UserRepository
+        Service -> Staff : create(creatingStaffDto, user)
+        activate Staff
+            Staff --> Service : staff
+        deactivate Staff
+        Service -> StaffRepository : addAsync(staff)
+        Service -> StaffDto : create(staff)
+        activate StaffDto
+            StaffDto --> Service : staffDto
+        deactivate StaffDto
+        Service --> Controller : staffDto
+    deactivate Service
+    ?o<-- Controller : 201 Created
+deactivate Controller
+
+@enduml
