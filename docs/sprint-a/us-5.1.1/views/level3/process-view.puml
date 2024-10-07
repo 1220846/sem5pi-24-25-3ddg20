@@ -1,0 +1,62 @@
+@startuml level3
+
+autonumber
+
+participant "UserController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+participant "User" as User <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
+participant "UserDTO" as UserDto <<Domain>>
+
+?o->Controller:POST /api/users
+activate Controller
+
+    Controller->Service:addBackofficeUserAsync(creatingUserDto)
+    activate Service
+
+        /'Service->UserRepository:getUserByEmail(user.email)
+        activate UserRepository
+
+            UserRepository --> Service:user
+        deactivate UserRepository
+
+        Service -> SendNotification: senNotificationUser(user.email)
+        activate SendNotification
+
+            SendNotification --> Service:EmailSended
+        deactivate SendNotification
+        
+        alt NotificationAccepted then
+
+        Service->User:setRole(user)
+        activate User
+        
+            User-->Service:user
+        deactivate User
+        '/
+
+        Service -> User:create(creatingUserDto.username,creatingUserDto.email,creatingUserDto.role)
+        activate User
+
+            User-->Service:user
+        deactivate User
+        Service->UserRepository:addAsnc(user)
+        activate UserRepository
+
+            UserRepository-->Service:user
+        deactivate UserRepository
+
+        Service->UserDto:create(user.getUsername().toString(),user.getEmail().toString(),user.getRole().toString())
+        activate UserDto
+
+            UserDto-->Service:userDto
+        deactivate UserDto
+
+
+        Service --> Controller:userDto
+    deactivate Service
+
+    <--Controller:201 Created
+deactivate Controller
+
+@enduml
