@@ -1,13 +1,13 @@
 @startuml process-view-2
 autonumber
 
-participant "StaffController" as Controller <<Contreoller>>
+participant "StaffsController" as Controller <<Contreoller>>
 participant "StaffService" as Service <<Service>>
 participant "User" as User <<Domain>>
 participant "Staff" as Staff <<Domain>>
 participant "StaffDto" as StaffDto <<Domain>>
-participant "IUserRepository" as UserRepository <<Domain>>
-participant "IStaffRepository" as StaffRepository <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
+database "IStaffRepository" as StaffRepository <<Domain>>
 
 
 ?o-> Controller : POST /api/staffs
@@ -18,6 +18,10 @@ activate Controller
         activate UserRepository
             UserRepository --> Service : user
         deactivate UserRepository
+alt user == null
+        Service --> Controller : NotFoundException
+    ?o<-- Controller : 404 Not Found
+end alt
         Service -> Staff : create(creatingStaffDto, user)
         activate Staff
             Staff --> Service : staff

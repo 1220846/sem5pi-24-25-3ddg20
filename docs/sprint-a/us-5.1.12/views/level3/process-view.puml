@@ -2,6 +2,11 @@
 
 ?o-> Server : POST /api/users/patients
 activate Server
+
+    Server -> Database : get user
+    activate Database
+        Database --> Server : user
+    deactivate Database
     Server -> Database : save staff
     activate Database
         Database --> Server : staff
