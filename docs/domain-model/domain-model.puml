@@ -55,7 +55,7 @@ package "<<aggregate>> Patient"{
         
     }
 
-    entity PatientContactInformation <<Value Object>>{
+    class PatientContactInformation <<Value Object>>{
         
     }
 
@@ -107,7 +107,7 @@ package "<<aggregate>> Staff"{
         
     }
 
-    entity StaffContactInformation <<Value Object>>{
+    class StaffContactInformation <<Value Object>>{
         
     }
 
@@ -169,6 +169,18 @@ package "<<aggregate>> OperationType"{
     }
 
     class EstimatedDuration <<Value Object>>{
+        
+    }
+
+    class AnesthesiaTime <<Value Object>>{
+        
+    }
+
+    class SurgeryTime <<Value Object>>{
+        
+    }
+
+    class CleaningTime <<Value Object>>{
         
     }
 }
@@ -276,6 +288,9 @@ OperationRequest "*" ---> "1" OperationType: of
 OperationType --> OperationTypeId
 OperationType --> OperationTypeName
 OperationType -> EstimatedDuration
+OperationType --> AnesthesiaTime
+OperationType --> SurgeryTime
+OperationType --> CleaningTime
 OperationType "*" --> "*" Specialization: has
 
 'Appointment'
