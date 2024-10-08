@@ -8,7 +8,23 @@ participant "Database" as Database
 
 activate Server
 
-    Server -> Database : save patient
+    Server -> Database : get patient
+    
+    activate Database
+
+        Database --> Server : patient
+
+    deactivate Database
+
+    Server -> Database : save user
+    
+    activate Database
+
+        Database --> Server : user
+
+    deactivate Database
+
+    Server -> Database : update patient
     
     activate Database
 

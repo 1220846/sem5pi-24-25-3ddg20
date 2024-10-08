@@ -1,13 +1,13 @@
 @startuml process-view-2
 autonumber
 
-participant "UserController" as Controller <<Controller>>
+participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "User" as User <<Domain>>
 participant "Patient" as Patient <<Domain>>
 participant "UserDto" as UserDto <<Domain>>
-participant "IPatientRepository" as PatientRepository <<Domain>>
-participant "IUserRepository" as UserRepository <<Domain>>
+database "IPatientRepository" as PatientRepository <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
 
 ?o-> Controller : POST /api/users/patients
 
@@ -17,7 +17,7 @@ activate Controller
 
     activate Service
 
-        Service -> PatientRepository : GetByEmailAsync(creatingUserDto.email)
+        Service -> PatientRepository : GetByEmailAsync(creatingUserDto.Email)
 
         activate PatientRepository
 
@@ -25,7 +25,15 @@ activate Controller
 
         deactivate PatientRepository
 
-        Service -> User : create(creatingUserDto.username,creatingUserDto.email,ROLE.PATIENT)
+        alt patient == null 
+
+            Service --> Controller : NotFoundException
+
+            ?o<-- Controller : 404 Not Found
+
+        end 
+
+        Service -> User : create(creatingUserDto.Username,creatingUserDto.Email,Role.PATIENT)
 
         activate User
 
@@ -33,7 +41,7 @@ activate Controller
 
         deactivate User
 
-        Service  -> UserRepository : addAsync(user)
+        Service  -> UserRepository : AddAsync(user)
 
         activate UserRepository
 
@@ -41,9 +49,9 @@ activate Controller
 
         deactivate UserRepository
 
-        Service -> Patient : setUser(user)
+        Service -> Patient : UpdateUser(user)
 
-        Service -> PatientRepository : updateAsync(patient)
+        Service -> PatientRepository : UpdateAsync(patient)
 
         activate PatientRepository
 
@@ -51,7 +59,7 @@ activate Controller
         
         deactivate PatientRepository
 
-        Service -> UserDto : create(user.getUsername().toString(),user.getEmail().toString(),user.getRole().toString())
+        Service -> UserDto : create(Username,Email,Role)
 
         activate UserDto
 
