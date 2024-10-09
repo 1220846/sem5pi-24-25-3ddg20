@@ -1,0 +1,12 @@
+@startuml ssdlevel2
+
+participant SYS as "SARM" <<C4:System>>
+
+?o->SYS:POST /api/users
+activate SYS
+
+    SYS->SYS:addBackofficeUser(creatingUserDto)
+
+    <--SYS:201 Created
+deactivate SYS
+@enduml

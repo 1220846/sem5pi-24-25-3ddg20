@@ -2,13 +2,16 @@
 
 autonumber
 
-participant "UserController" as Controller <<Controller>>
+actor "User" as UserP
+participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "User" as User <<Domain>>
 database "IUserRepository" as UserRepository <<Domain>>
 participant "UserDTO" as UserDto <<Domain>>
 
-?o->Controller:POST /api/users
+activate UserP
+    UserP->Controller:POST /api/users
+
 activate Controller
 
     Controller->Service:addBackofficeUserAsync(creatingUserDto)
@@ -56,7 +59,7 @@ activate Controller
         Service --> Controller:userDto
     deactivate Service
 
-    <--Controller:201 Created
+    UserP<--Controller:201 Created
 deactivate Controller
 
 @enduml
