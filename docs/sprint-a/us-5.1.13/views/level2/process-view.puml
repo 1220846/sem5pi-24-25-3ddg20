@@ -5,7 +5,7 @@ actor "Admin" as ADM
 participant "Backend Data Management" as BDM
 
 activate ADM
-    ADM -> BDM : POST /api/staffs/{id}
+    ADM -> BDM : PUT /api/staffs/{id}
     activate BDM
         BDM -> BDM : editStaffProfile(editingStaffDto)
         BDM --> ADM : 200 OK

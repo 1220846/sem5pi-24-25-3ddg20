@@ -1,0 +1,24 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as adm
+participant "Server" as srv
+participant "Database" as db
+
+activate adm
+    adm -> srv : PUT /api/staffs/{id}
+    activate srv
+        srv -> db : get staff
+        activate db
+            db --> srv : staff
+        deactivate db
+        srv -> db : update staff
+        activate db
+            db --> srv : staff
+        deactivate db
+        srv --> adm : 200 OK
+    deactivate srv
+deactivate adm
+
+
+@enduml
