@@ -1,0 +1,33 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as ADM
+participant "PatientsController" as Controller <<Controller>>
+participant "Patientservice" as Service <<Service>>
+participant "Patient" as Patient <<Domain>>
+participant "PatientDto" as PatientDto <<Domain>>
+database "IPatientRepository" as PatientRepository <<Domain>>
+
+activate ADM
+ADM-> Controller : POST /api/patients
+activate Controller
+    Controller -> Service : createPatientProfileAsync(creatingPatientDto)
+    activate Service
+        Service -> Patient : create(creatingPatientDto)
+        activate Patient
+            Patient --> Service : Patient
+        deactivate Patient
+        Service -> PatientRepository : addAsync(Patient)
+            activate PatientRepository
+            PatientRepository --> Service : Patient
+            deactivate PatientRepository
+        Service -> PatientDto : create(Patient)
+        activate PatientDto
+            PatientDto --> Service : PatientDto
+        deactivate PatientDto
+        Service --> Controller : PatientDto
+    deactivate Service
+    ADM<-- Controller : 201 Created
+deactivate Controller
+
+@enduml

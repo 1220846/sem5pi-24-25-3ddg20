@@ -1,0 +1,16 @@
+@startuml process-view
+
+actor "Admin" as ADM
+
+activate ADM
+ADM-> Server : POST /api/patients
+activate Server
+    Server -> Database : save patient
+    activate Database
+        Database --> Server : patient
+    deactivate Database
+    ADM <-- Server : 201 Created
+deactivate Server
+deactivate ADM
+
+@enduml

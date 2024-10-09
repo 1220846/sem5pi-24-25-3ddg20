@@ -1,0 +1,15 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as ADM
+participant "Backend Data Management" as BDM
+
+activate ADM
+ADM-> BDM : POST /api/patients
+activate BDM
+    BDM -> BDM : createPatientProfile(creatingPatientDto)
+    ADM<-- BDM : 201 Created
+deactivate BDM
+deactivate ADM
+
+@enduml
