@@ -1,6 +1,7 @@
 @startuml process-view-2
 autonumber
 
+actor "Admin" as Adm
 participant "StaffsController" as Controller <<Contreoller>>
 participant "StaffService" as Service <<Service>>
 participant "User" as User <<Domain>>
@@ -10,7 +11,7 @@ database "IUserRepository" as UserRepository <<Domain>>
 database "IStaffRepository" as StaffRepository <<Domain>>
 
 
-?o-> Controller : POST /api/staffs
+Adm -> Controller : POST /api/staffs
 activate Controller
     Controller -> Service : createStaffProfileAsync(creatingStaffDto)
     activate Service
@@ -20,7 +21,7 @@ activate Controller
         deactivate UserRepository
 alt user == null
         Service --> Controller : NotFoundException
-    ?o<-- Controller : 404 Not Found
+    Controller --> Adm : 404 Not Found
 end alt
         Service -> Staff : create(creatingStaffDto, user)
         activate Staff
@@ -33,7 +34,7 @@ end alt
         deactivate StaffDto
         Service --> Controller : staffDto
     deactivate Service
-    ?o<-- Controller : 201 Created
+    Controller --> Adm : 201 Created
 deactivate Controller
 
 @enduml

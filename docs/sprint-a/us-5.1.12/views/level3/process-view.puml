@@ -1,6 +1,8 @@
 @startuml process-view
 
-?o-> Server : POST /api/users/patients
+actor "Admin" as Adm
+
+Adm -> Server : POST /api/users/patients
 activate Server
 
     Server -> Database : get user
@@ -11,7 +13,7 @@ activate Server
     activate Database
         Database --> Server : staff
     deactivate Database
-    <-- Server : 201 Created
+    Server --> Admin : 201 Created
 deactivate Server
 
 @enduml

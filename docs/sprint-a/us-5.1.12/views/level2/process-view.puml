@@ -1,12 +1,13 @@
 @startuml process-view
 autonumber
 
+actor "Admin" as ADM
 participant "Backend Data Management" as BDM
 
-?o-> BDM : POST /api/staffs
+ADM -> BDM : POST /api/staffs
 activate BDM
     BDM -> BDM : createStaffProfile(creatingStaffDto)
-    <-- BDM : 201 Created
+    BDM --> ADM : 201 Created
 deactivate BDM
 
 @enduml
