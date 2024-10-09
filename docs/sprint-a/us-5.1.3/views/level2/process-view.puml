@@ -1,14 +1,18 @@
 @startuml process-view
 autonumber
 
+actor "Patient" as Patient
 participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
 
-?o-> BackendDataManagement : POST /api/users/patients
-activate BackendDataManagement
+activate Patient
+    Patient -> BackendDataManagement : POST /api/users/patients
+    activate BackendDataManagement
 
-    BackendDataManagement -> BackendDataManagement : registerUserPatient(creatingUserDto)
+        BackendDataManagement -> BackendDataManagement : registerUserPatient(creatingUserDto)
 
-    <-- BackendDataManagement : 201 Created
-deactivate BackendDataManagement
+        Patient <-- BackendDataManagement : 201 Created
+    deactivate BackendDataManagement
+
+deactivate Patient
 
 @enduml

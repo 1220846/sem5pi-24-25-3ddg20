@@ -1,6 +1,7 @@
 @startuml process-view-2
 autonumber
 
+actor "Patient" as PatientActor
 participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "User" as User <<Domain>>
@@ -9,71 +10,77 @@ participant "UserDto" as UserDto <<Domain>>
 database "IPatientRepository" as PatientRepository <<Domain>>
 database "IUserRepository" as UserRepository <<Domain>>
 
-?o-> Controller : POST /api/users/patients
+activate PatientActor
 
-activate Controller
+    PatientActor-> Controller : POST /api/users/patients
 
-    Controller -> Service : addUserPatientAsync(creatingUserDto)
+    activate Controller
 
-    activate Service
+        Controller -> Service : addUserPatientAsync(creatingUserDto)
 
-        Service -> PatientRepository : GetByEmailAsync(creatingUserDto.Email)
+        activate Service
 
-        activate PatientRepository
+            Service -> PatientRepository : GetByEmailAsync(creatingUserDto.Email)
 
-            PatientRepository --> Service : patient
+            activate PatientRepository
 
-        deactivate PatientRepository
+                PatientRepository --> Service : patient
 
-        alt patient == null 
+            deactivate PatientRepository
 
-            Service --> Controller : NotFoundException
+            alt patient == null 
 
-            ?o<-- Controller : 404 Not Found
+                Service --> Controller : NotFoundException
 
-        end 
+                PatientActor <-- Controller : 404 Not Found
 
-        Service -> User : create(creatingUserDto.Username,creatingUserDto.Email,Role.PATIENT)
+            else 
 
-        activate User
+                Service -> User : create(creatingUserDto.Username,creatingUserDto.Email,Role.PATIENT)
 
-            User --> Service : user
+                activate User
 
-        deactivate User
+                    User --> Service : user
 
-        Service  -> UserRepository : AddAsync(user)
+                deactivate User
 
-        activate UserRepository
+                Service  -> UserRepository : AddAsync(user)
 
-            UserRepository --> Service : user
+                activate UserRepository
 
-        deactivate UserRepository
+                    UserRepository --> Service : user
 
-        Service -> Patient : UpdateUser(user)
+                deactivate UserRepository
 
-        Service -> PatientRepository : UpdateAsync(patient)
+                Service -> Patient : UpdateUser(user)
 
-        activate PatientRepository
+                Service -> PatientRepository : UpdateAsync(patient)
 
-            PatientRepository -->  Service : patient
-        
-        deactivate PatientRepository
+                activate PatientRepository
 
-        Service -> UserDto : create(Username,Email,Role)
+                    PatientRepository -->  Service : patient
+                
+                deactivate PatientRepository
 
-        activate UserDto
+                Service -> UserDto : create(Username,Email,Role)
 
-            UserDto --> Service : userDto
+                activate UserDto
 
-        deactivate UserDto
+                    UserDto --> Service : userDto
 
-        Service --> Controller : userDto
+                deactivate UserDto
 
-    deactivate Service
+                Service --> Controller : userDto
 
-    ?o<-- Controller : 201 Created
+            end
 
-deactivate Controller
+        deactivate Service
+
+        PatientActor <-- Controller : 201 Created
+
+    deactivate Controller
+
+deactivate PatientActor
 
 
 @enduml

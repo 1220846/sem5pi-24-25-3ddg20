@@ -1,39 +1,43 @@
 @startuml process-view
 autonumber
 
+actor "Patient" as Patient
 participant "Server" as Server
 participant "Database" as Database
 
-?o-> Server : POST /api/users/patients
+activate Patient
 
-activate Server
+    Patient-> Server : POST /api/users/patients
 
-    Server -> Database : get patient
-    
-    activate Database
+    activate Server
 
-        Database --> Server : patient
+        Server -> Database : get patient
+        
+        activate Database
 
-    deactivate Database
+            Database --> Server : patient
 
-    Server -> Database : save user
-    
-    activate Database
+        deactivate Database
 
-        Database --> Server : user
+        Server -> Database : save user
+        
+        activate Database
 
-    deactivate Database
+            Database --> Server : user
 
-    Server -> Database : update patient
-    
-    activate Database
+        deactivate Database
 
-        Database --> Server : patient
+        Server -> Database : update patient
+        
+        activate Database
 
-    deactivate Database
+            Database --> Server : patient
 
-    <-- Server : 201 Created
+        deactivate Database
 
-deactivate Server
+        Patient <-- Server : 201 Created
+
+    deactivate Server
+deactivate Patient
 
 @enduml
