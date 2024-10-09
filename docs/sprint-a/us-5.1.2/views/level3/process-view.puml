@@ -1,12 +1,14 @@
 @startuml level3
 autonumber
 
-participant "UserController" as Controller <<Controller>>
+actor "User" as UserP
+participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "User" as User <<Domain>>
 database "IUserRepository" as UserRepository <<Domain>>
 
-?o->Controller:PUT /api/users
+activate UserP
+UserP->Controller:PUT /api/users
 activate Controller
     
     Controller->Service:resetPasswordAsync(userEmail)
@@ -32,6 +34,6 @@ activate Controller
 
         Service-->Controller:message
     deactivate Service
-    <-- Controller:201 confirmation\n of password reset
+    UserP<-- Controller:201 confirmation\n of password reset
 deactivate Controller
 @enduml 
