@@ -1,10 +1,12 @@
 @startuml level3
 
-participant "UserController" as Controller <<Controller>>
+actor "User" as UserP
+participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 database "UserRepository" as UserRepository <<domain>>
 
-?o->Controller:GET /api/users/login
+activate UserP
+UserP->Controller:GET /api/users/login
 activate Controller
 
     Controller->Service:UserLoginAsync(username,password)
@@ -22,7 +24,7 @@ activate Controller
 
         Service-->Controller:message
     deactivate Service
-    <--Controller:message
+    UserP<--Controller:201 autenticated
 deactivate Controller
 
 @enduml
