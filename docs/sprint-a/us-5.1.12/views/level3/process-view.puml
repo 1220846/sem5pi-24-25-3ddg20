@@ -13,7 +13,7 @@ activate Server
     activate Database
         Database --> Server : staff
     deactivate Database
-    Server --> Admin : 201 Created
+    Server --> Adm : 201 Created
 deactivate Server
 
 @enduml
