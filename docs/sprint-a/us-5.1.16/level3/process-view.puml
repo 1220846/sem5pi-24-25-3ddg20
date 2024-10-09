@@ -1,24 +1,25 @@
-@startuml
+@startuml level3
 
 autonumber
 
-participant "DoctorController" as Controller <<Controller>>
-participant "DoctorService" as Service <<Service>>
+actor "User" as UserP
+participant "RequestOperationsController" as Controller <<Controller>>
+participant "RequestOperationService" as Service <<Service>>
 participant "Patient" as Patient <<Domain>>
 participant "OperationRequest" as OperationRequest <<Domain>>
 participant "OperationRequestDto" as OperationRequestDto <<Domain>>
-database "IOperationTypeRepository" as OperationTypeRepository <<Domain>>
 database "IStaffRepository" as StaffRepository <<Domain>>
 database "IPatientRepository" as PatientRepository <<Domain>>
 database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
 
-?o->Controller: POST /api/operationrequests
+activate UserP
+UserP->Controller: POST /api/operationrequests
 activate Controller
 
-    Controller->Service:addOperationRequest(operationRequestDto)
+    Controller->Service:addgetDoctorByIdAsync(operationRequestDto)
     activate Service
 
-        Service -> StaffRepository:getDoctorByIdAsync(doctorLicenceNumber)
+        Service -> StaffRepository:getDoctorByIdAsync(operationRequestDto.doctorID)
         activate StaffRepository
 
             StaffRepository-->Service:doctor
@@ -27,26 +28,20 @@ activate Controller
 
         alt doctor.specialization == operationType.specialization then
         
-        Service -> PatientRepository:getByIdAsync(patientMedicalRecordNumber)
-        activate PatientRepository
 
-            PatientRepository-->Service:patient
-        deactivate PatientRepository
-
-        Service->OperationRequest:create(patient, doctor, operationType, deadline, priority)
+        Service->OperationRequest:create(operationRequestDto.PatientId, operationRequestDto.doctorID, operationRequestDto.OperationTypeId, operationRequestDto.deadline, operationRequestDto.priority)
         activate OperationRequest
 
             OperationRequest-->Service:operationRequest
         deactivate OperationRequest
 
-        Service->OperationRequestRepository:addOperationRequestAsync(operationRequest)
+        Service->OperationRequestRepository:addAsync(operationRequest)
         activate OperationRequestRepository
 
             OperationRequestRepository-->Service:operationRequest
         deactivate OperationRequestRepository
 
         Service->Patient:updateAppointmentHistory(operationRequest)
-        
 
         Service->PatientRepository:updateAsync(patient)
         activate PatientRepository
@@ -54,16 +49,22 @@ activate Controller
             PatientRepository-->Service:patient
         deactivate PatientRepository
 
-        Service->OperationRequestDto:create(patient.id, doctor.id, operationType, deadline, priority)
+        Service->OperationRequestDto:create(PatientId, DoctorId, OperationType,Deadline, Priority)
         activate OperationRequestDto
 
             OperationRequestDto-->Service:operationRequestDto
         deactivate OperationRequestDto
-        end alt
         Service --> Controller:operationRequestDto
-    deactivate Service
 
-    <--Controller:201 created
-deactivate Controller
+        UserP<--Controller:201 created
+        else
+            Controller<--Service:BusinessRuleValidationException
+        deactivate Service
+        UserP<--Controller:403 Forbidden
+    deactivate Controller
+
+
+    end alt
+
 
 @enduml
