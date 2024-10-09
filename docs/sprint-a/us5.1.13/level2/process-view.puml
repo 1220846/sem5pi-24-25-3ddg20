@@ -1,0 +1,15 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as ADM
+participant "Backend Data Management" as BDM
+
+activate ADM
+    ADM -> BDM : POST /api/staffs/{id}
+    activate BDM
+        BDM -> BDM : editStaffProfile(editingStaffDto)
+        BDM --> ADM : 200 OK
+    deactivate BDM
+deactivate ADM
+
+@enduml
