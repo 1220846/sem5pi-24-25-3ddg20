@@ -28,6 +28,9 @@ end alt
             Staff --> Service : staff
         deactivate Staff
         Service -> StaffRepository : addAsync(staff)
+        activate StaffRepository
+            StaffRepository --> Service : staff
+        deactivate StaffRepository
         Service -> StaffDto : create(staff)
         activate StaffDto
             StaffDto --> Service : staffDto

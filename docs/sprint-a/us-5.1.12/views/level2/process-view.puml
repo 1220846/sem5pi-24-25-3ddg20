@@ -4,10 +4,12 @@ autonumber
 actor "Admin" as ADM
 participant "Backend Data Management" as BDM
 
-ADM -> BDM : POST /api/staffs
-activate BDM
-    BDM -> BDM : createStaffProfile(creatingStaffDto)
-    BDM --> ADM : 201 Created
-deactivate BDM
+activate ADM
+    ADM -> BDM : POST /api/staffs
+    activate BDM
+        BDM -> BDM : createStaffProfile(creatingStaffDto)
+        BDM --> ADM : 201 Created
+    deactivate BDM
+deactivate ADM
 
 @enduml

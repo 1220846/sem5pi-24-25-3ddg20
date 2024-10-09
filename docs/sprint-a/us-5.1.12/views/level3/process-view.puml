@@ -1,19 +1,21 @@
 @startuml process-view
+autonumber
 
 actor "Admin" as Adm
 
-Adm -> Server : POST /api/users/patients
-activate Server
-
-    Server -> Database : get user
-    activate Database
-        Database --> Server : user
-    deactivate Database
-    Server -> Database : save staff
-    activate Database
-        Database --> Server : staff
-    deactivate Database
-    Server --> Adm : 201 Created
-deactivate Server
+activate Adm
+    Adm -> Server : POST /api/staffs
+    activate Server
+        Server -> Database : get user
+        activate Database
+            Database --> Server : user
+        deactivate Database
+        Server -> Database : save staff
+        activate Database
+            Database --> Server : staff
+        deactivate Database
+        Server --> Adm : 201 Created
+    deactivate Server
+deactivate Adm
 
 @enduml
