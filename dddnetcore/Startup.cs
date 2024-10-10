@@ -14,6 +14,12 @@ using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Categories;
 using DDDSample1.Domain.Products;
 using DDDSample1.Domain.Families;
+using DDDSample1.Domain.OperationTypes;
+using DDDSample1.Infrastructure.OperationTypes;
+using DDDSample1.Domain.Specializations;
+using DDDSample1.Infrastructure.Specializations;
+using DDDSample1.Domain.OperationTypesSpecializations;
+using DDDSample1.Infrastructure.OperationTypesSpecializations;
 
 namespace DDDSample1
 {
@@ -76,6 +82,14 @@ namespace DDDSample1
 
             services.AddTransient<IFamilyRepository,FamilyRepository>();
             services.AddTransient<FamilyService>();
+
+            services.AddTransient<IOperationTypeRepository,OperationTypeRepository>();
+            services.AddTransient<OperationTypeService>();
+
+            services.AddTransient<ISpecializationRepository,SpecializationRepository>();
+            services.AddTransient<SpecializationService>();
+
+            services.AddTransient<IOperationTypeSpecializationRepository,OperationTypeSpecializationRepository>();
         }
     }
 }

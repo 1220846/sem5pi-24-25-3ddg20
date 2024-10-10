@@ -15,6 +15,8 @@ namespace DDDSample1.Domain.OperationTypes{
         public CleaningTime CleaningTime {get; private set;}
 
         public SurgeryTime SurgeryTime {get; private set;}
+
+        public OperationTypeStatus OperationTypeStatus {get;private set;}
         public ICollection<OperationTypeSpecialization> OperationTypeSpecializations {get; private set;} = new List<OperationTypeSpecialization>();
 
         private OperationType() { }
@@ -27,6 +29,7 @@ namespace DDDSample1.Domain.OperationTypes{
             this.AnesthesiaTime = anesthesiaTime;
             this.CleaningTime = cleaningTime;
             this.SurgeryTime = surgeryTime;
+            this.OperationTypeStatus = OperationTypeStatus.ACTIVE;
         }
 
         public override bool Equals(object obj)

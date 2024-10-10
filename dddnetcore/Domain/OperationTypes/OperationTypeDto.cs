@@ -9,6 +9,7 @@ namespace DDDSample1.Domain.OperationTypes{
         public int AnesthesiaTime {get;set;}
         public int CleaningTime {get;set;}
         public int SurgeryTime {get;set;}
+        public string OperationTypeStatus {get;set;}
         
     }
 }

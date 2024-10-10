@@ -22,6 +22,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(anesthesiaTime, operationType.AnesthesiaTime);
             Assert.Equal(cleaningTime, operationType.CleaningTime);
             Assert.Equal(surgeryTime, operationType.SurgeryTime);
+            Assert.Equal(OperationTypeStatus.ACTIVE, operationType.OperationTypeStatus);
         }
 
         [Fact]

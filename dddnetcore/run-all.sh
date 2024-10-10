@@ -1,1 +1,1 @@
-dotnet run --launch-profile https
+dotnet run
