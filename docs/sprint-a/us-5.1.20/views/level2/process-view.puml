@@ -1,14 +1,19 @@
 @startuml process-view
 autonumber
 
+actor "Admin" as Admin
 participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
 
-?o-> BackendDataManagement : POST /api/operationtypes
-activate BackendDataManagement
+activate Admin
 
-    BackendDataManagement -> BackendDataManagement : addOperationType(creatingOperationTypeDto)
+    Admin-> BackendDataManagement : POST /api/operationtypes
+    activate BackendDataManagement
 
-    <-- BackendDataManagement : 201 Created
-deactivate BackendDataManagement
+        BackendDataManagement -> BackendDataManagement : addOperationType(creatingOperationTypeDto)
+
+        Admin <-- BackendDataManagement : 201 Created
+    deactivate BackendDataManagement
+
+deactivate Admin
 
 @enduml

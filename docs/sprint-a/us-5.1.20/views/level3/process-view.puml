@@ -12,9 +12,22 @@ activate Server
     
     activate Database
 
-        Database -> Server : operation type
+        Database --> Server : operation type
 
     deactivate Database
+
+    loop for each specialization
+
+        Server -> Database : get specialization
+        
+        activate Database
+
+            Database --> Server : specialization
+
+        deactivate Database
+
+        Server -> Database : save operation type specialization
+    end 
 
     <-- Server : 201 Created
 

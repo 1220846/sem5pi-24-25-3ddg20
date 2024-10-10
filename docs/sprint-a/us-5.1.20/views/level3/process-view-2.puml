@@ -1,51 +1,90 @@
 @startuml process-view-2
 autonumber
 
-participant "OperationTypeController" as Controller <<Controller>>
+actor "Admin" as Admin
+participant "OperationTypesController" as Controller <<Controller>>
 participant "OperationTypeService" as Service <<Service>>
 participant "OperationType" as OperationType <<Domain>>
 participant "OperationTypeDto" as OperationTypeDto <<Domain>>
-participant "IOperationTypeRepository" as Repository <<Domain>>
+participant "OperationTypeSpecialization" as OperationTypeSpecialization <<Domain>>
+database "IOperationTypeRepository" as Repository <<Domain>>
+database "IOperationTypeRepository" as SpecializationRepository <<Domain>>
+database "IOperationTypeSpecializationRepository" as OperationTypeSpecializationRepository <<Domain>>
 
-?o-> Controller : POST /api/operationtypes
+activate Admin
+    Admin-> Controller : POST /api/operationtypes
 
-activate Controller
+    activate Controller
 
-    Controller -> Service : addOperationTypeAsync(creatingOperationTypeDto)
+        Controller -> Service : addAsync(creatingOperationTypeDto)
 
-    activate Service
+        activate Service
 
-        Service -> OperationType : create(creatingOperationTypeDto.name,creatingOperationTypeDto.specializations,creatingOperationTypeDto.estimatedDuration)
+            Service -> OperationType : create(creatingOperationTypeDto.Name,creatingOperationTypeDto.EstimatedDuration,creatingOperationTypeDto.AnesthesiaTime,creatingOperationTypeDto.CleaningTime,creatingOperationTypeDto.SurgeryTime)
 
-        activate OperationType
+            activate OperationType
 
-            OperationType --> Service : operationType
+                OperationType --> Service : operationType
 
-        deactivate OperationType
+            deactivate OperationType
 
-        Service  -> Repository : addAsync(operationType)
+            Service  -> Repository : AddAsync(operationType)
 
-        activate Repository
+            activate Repository
 
-            Repository --> Service : operationType
+                Repository --> Service : operationType
 
-        deactivate Repository
+            deactivate Repository
 
-        Service -> OperationTypeDto : create(operationType.getOperationTypeName().toString(),operationType.getSpecializations().toString(),operationType.getEstimatedTime())
+            loop for each specializationDto
 
-        activate OperationTypeDto
+                Service -> SpecializationRepository : GetByIdAsync(specializationId)
 
-            OperationTypeDto --> Service : operationTypeDto
+                activate SpecializationRepository
 
-        deactivate OperationTypeDto
+                    SpecializationRepository --> Service : specialization
 
-        Service --> Controller : operationTypeDto
+                deactivate SpecializationRepository
 
-    deactivate Service
+                alt specialization == null 
 
-    ?o<-- Controller : 201 Created
+                    Service --> Controller : NotFoundException
 
-deactivate Controller
+                    Admin <-- Controller : 404 Not Found
+
+                else 
+                
+                    Service -> OperationTypeSpecialization : create(OperationTypeId,SpecializationId,NumberOfStaff)
+
+                    activate OperationTypeSpecialization
+
+                        OperationTypeSpecialization --> Service : operationTypeSpecialization
+
+                    deactivate OperationTypeSpecialization
+
+                    Service  -> OperationTypeSpecializationRepository : AddAsync(operationTypeSpecialization)
+
+                end
+
+            end
+
+            Service -> OperationTypeDto : create(OperationTypeId,Name,EstimatedDuration,AnesthesiaTime,CleaningTime,SurgeryTime)
+
+            activate OperationTypeDto
+
+                OperationTypeDto --> Service : operationTypeDto
+
+            deactivate OperationTypeDto
+
+            Service --> Controller : operationTypeDto
+
+        deactivate Service
+
+        Admin <-- Controller : 201 Created
+
+    deactivate Controller
+
+deactivate Admin
 
 
 @enduml
