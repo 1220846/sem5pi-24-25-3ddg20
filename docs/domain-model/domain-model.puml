@@ -183,6 +183,10 @@ package "<<aggregate>> OperationType"{
     class CleaningTime <<Value Object>>{
         
     }
+
+    class OperationTypeStatus <<Value Object>>{
+        
+    }
 }
 
 package "<<aggregate>> Appointment"{
@@ -291,6 +295,7 @@ OperationType -> EstimatedDuration
 OperationType --> AnesthesiaTime
 OperationType --> SurgeryTime
 OperationType --> CleaningTime
+OperationType --> OperationTypeStatus
 OperationType "*" --> "*" Specialization: has
 
 'Appointment'
