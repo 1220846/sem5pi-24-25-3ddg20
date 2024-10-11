@@ -1,0 +1,38 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "OperationTypesController" as Controller <<Controller>>
+participant "OperationTypeService" as Service <<Service>>
+database "IOperationTypeRepository" as Repository <<Domain>>
+
+activate Admin
+
+        Admin -> Controller : GET /api/operationtypes/filter
+
+        activate Controller 
+
+            Controller -> Service : GetOperationTypes(name,specializationId,status)
+
+            activate Service
+
+                Service ->  Repository : GetOperationTypesAsync(name,specializationId,status)
+
+                activate Repository
+
+                    Repository -->  Service : operationTypes
+
+                deactivate Repository
+
+                Service -->  Controller : operationTypesDto
+
+            deactivate Service
+
+        Controller --> Admin : 200 OK
+
+    deactivate Controller
+
+deactivate Admin
+
+
+@enduml

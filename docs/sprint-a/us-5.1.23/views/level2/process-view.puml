@@ -1,3 +1,5 @@
+
+
 @startuml process-view
 autonumber
 
@@ -7,17 +9,12 @@ participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
 activate Admin
 
     alt Get operation types
-        Admin-> BackendDataManagement : GET /api/operationtypes
+        Admin-> BackendDataManagement : GET /api/operationtypes/filter
 
         activate BackendDataManagement
 
-            BackendDataManagement -> BackendDataManagement : GetAll()
+            BackendDataManagement -> BackendDataManagement : GetOperationTypes(name,specializationId,\nstatus)
 
-    else Get operation types filtered
-        Admin-> BackendDataManagement : GET /api/operationtypes/filter
-
-            BackendDataManagement -> BackendDataManagement : GetAllFiltered(operationTypeName,\nspecializationId,operationTypeStatus)
-    end
         Admin <-- BackendDataManagement : 200 OK
         deactivate BackendDataManagement
 
