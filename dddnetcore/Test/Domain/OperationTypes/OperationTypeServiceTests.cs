@@ -160,5 +160,153 @@ namespace DDDSample1.Tests.Domain.OperationTypes
 
             _specializationRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<SpecializationId>(id => id.Equals(new SpecializationId(specializationId)))), Times.Once);
         }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithValidParametersShouldReturnListOfOperationTypeDto()
+        {
+            var operationTypeId = new OperationTypeId(Guid.NewGuid());
+            var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
+                new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
+
+            var operationTypes = new List<OperationType> { operationType };
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, null, null))
+                .ReturnsAsync(operationTypes);
+
+            var result = await _operationTypeService.GetOperationTypesAsync();
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal(operationType.Id.AsGuid(), result[0].Id);
+            Assert.Equal("ACL Reconstruction Surgery", result[0].Name);
+            Assert.Equal(135, result[0].EstimatedDuration);
+            Assert.Equal(45, result[0].AnesthesiaTime);
+            Assert.Equal(30, result[0].CleaningTime);
+            Assert.Equal(60, result[0].SurgeryTime);
+            Assert.Equal(OperationTypeStatus.ACTIVE.ToString(), result[0].OperationTypeStatus);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithNoMatchingOperationTypesShouldReturnEmptyList(){
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, null, null))
+                .ReturnsAsync(new List<OperationType>());
+
+            var result = await _operationTypeService.GetOperationTypesAsync();
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithSpecificNameShouldReturnFilteredList() {
+            var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
+                new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
+
+            var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"),new EstimatedDuration(120), new AnesthesiaTime(40), new CleaningTime(25), new SurgeryTime(55));
+
+            var operationTypes = new List<OperationType> { operationType1, operationType2 };
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync("ACL Reconstruction Surgery", null, null))
+                .ReturnsAsync(new List<OperationType> { operationType1 });
+
+            var result = await _operationTypeService.GetOperationTypesAsync(name: "ACL Reconstruction Surgery");
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal(operationType1.Id.AsGuid(), result[0].Id);
+            Assert.Equal("ACL Reconstruction Surgery", result[0].Name);
+            Assert.Equal(135, result[0].EstimatedDuration);
+            Assert.Equal(45, result[0].AnesthesiaTime);
+            Assert.Equal(30, result[0].CleaningTime);
+            Assert.Equal(60, result[0].SurgeryTime);
+            Assert.Equal(OperationTypeStatus.ACTIVE.ToString(), result[0].OperationTypeStatus);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithNonExistingNameShouldReturnEmptyList()
+        {
+            var name = "ACL Reconstruction Surgery";
+            
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(name, null, null))
+                .ReturnsAsync(new List<OperationType>());
+
+            var result = await _operationTypeService.GetOperationTypesAsync(name: name);
+
+            Assert.NotNull(result);
+            Assert.Empty(result); 
+        }
+
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithNonExistingSpecializationShouldReturnFilteredList() {
+            var specializationId = Guid.NewGuid();
+            var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
+
+            var operationTypes = new List<OperationType> { operationType };
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, specializationId, null))
+                .ReturnsAsync(new List<OperationType>());
+
+            var result = await _operationTypeService.GetOperationTypesAsync(specializationId: specializationId);
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithSpecificStatusShouldReturnFilteredList()
+        {
+            var operationTypeId = new OperationTypeId(Guid.NewGuid());
+            var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
+
+            var operationTypes = new List<OperationType> { operationType };
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, null, "Active"))
+                .ReturnsAsync(operationTypes);
+
+            var result = await _operationTypeService.GetOperationTypesAsync(status: "Active");
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal(operationType.Id.AsGuid(), result[0].Id);
+            Assert.Equal("ACL Reconstruction Surgery", result[0].Name);
+            Assert.Equal(135, result[0].EstimatedDuration);
+            Assert.Equal(45, result[0].AnesthesiaTime);
+            Assert.Equal(30, result[0].CleaningTime);
+            Assert.Equal(60, result[0].SurgeryTime);
+            Assert.Equal(OperationTypeStatus.ACTIVE.ToString(), result[0].OperationTypeStatus);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithInvalidStatusShouldReturnEmptyList() {
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, null, "InvalidStatus"))
+                .ReturnsAsync(new List<OperationType>());
+
+            var result = await _operationTypeService.GetOperationTypesAsync(status: "InvalidStatus");
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithNullParametersShouldReturnAllTypes() {
+            var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
+                new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
+
+            var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"),new EstimatedDuration(120), new AnesthesiaTime(40), new CleaningTime(25), new SurgeryTime(55));
+
+            var operationTypes = new List<OperationType> { operationType1, operationType2 };
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, null, null))
+                .ReturnsAsync(operationTypes);
+
+            var result = await _operationTypeService.GetOperationTypesAsync();
+
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+            Assert.Contains(result, item => item.Name == "ACL Reconstruction Surgery");
+            Assert.Contains(result, item => item.Name == "Knee Reconstruction Surgery");
+        }
     }
 }

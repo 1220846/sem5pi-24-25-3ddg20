@@ -3,6 +3,8 @@ using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.OperationTypesSpecializations;
 using DDDSample1.Domain.Specializations;
 using DDDSample1.Domain.OperationTypeSpecializations;
+using System.Collections.Generic;
+using System;
 
 namespace DDDSample1.Domain.OperationTypes
 {
@@ -57,7 +59,17 @@ namespace DDDSample1.Domain.OperationTypes
 
             await this._unitOfWork.CommitAsync();
 
+            await this._operationTypeSpecializationRepo.GetAllAsync();
+
             return new OperationTypeDto { Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString()};
+        }
+
+        public async Task<List<OperationTypeDto>> GetOperationTypesAsync(string name = null, Guid? specializationId = null, string status = null) {
+            var operationTypes = await this._repo.GetOperationTypesAsync(name,specializationId,status);
+            
+            List<OperationTypeDto> operationTypesDto = operationTypes.ConvertAll<OperationTypeDto>(operationType => new OperationTypeDto {Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString()});
+
+            return operationTypesDto;
         }
     }
 }
