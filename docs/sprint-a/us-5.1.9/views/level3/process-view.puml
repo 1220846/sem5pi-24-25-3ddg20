@@ -1,0 +1,22 @@
+@startuml process-view
+
+actor "Admin" as adm
+participant "Server" as srv
+participant "Database" as db
+
+activate adm
+    adm -> srv : PUT /api/patients/{id}
+    activate srv
+        srv -> db : get patient
+        activate db
+            db --> srv : patient
+        deactivate db
+        srv -> db : update patient
+        activate db
+            db --> srv : patient
+        deactivate db
+        srv --> adm : 200 OK
+    deactivate srv
+deactivate adm
+
+@enduml

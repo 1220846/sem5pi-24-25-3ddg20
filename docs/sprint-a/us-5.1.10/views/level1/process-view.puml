@@ -1,0 +1,14 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as adm
+participant "SARM" as sarm <<system (C4)>>
+
+activate adm
+    adm -> sarm : asks to delete a patient profile
+    activate sarm
+        sarm --> adm : confirms the profile deletion
+    deactivate sarm
+deactivate adm
+
+@endum
