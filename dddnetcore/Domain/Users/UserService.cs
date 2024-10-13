@@ -29,7 +29,7 @@ namespace DDDSample1.Domain.Users
             return new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }
 
-        public async Task<UserDto> AddAsync(CreatingUserDto dto)
+        public async Task<UserDto> addBackofficeUserAsync(CreatingUserDto dto)
         {
 
              Console.WriteLine("Chegou aqui");
