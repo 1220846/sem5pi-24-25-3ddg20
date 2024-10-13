@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace DDDSample1.Domain.OperationTypes{
 
@@ -10,6 +11,6 @@ namespace DDDSample1.Domain.OperationTypes{
         public int CleaningTime {get;set;}
         public int SurgeryTime {get;set;}
         public string OperationTypeStatus {get;set;}
-        
+        public List<StaffSpecializationDto> StaffSpecializationDtos {get;set;}
     }
 }
