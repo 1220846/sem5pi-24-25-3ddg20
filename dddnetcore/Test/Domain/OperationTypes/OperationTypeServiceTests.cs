@@ -56,6 +56,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
 
             Assert.Single(result.StaffSpecializationDtos);
             Assert.Equal(2, result.StaffSpecializationDtos[0].NumberOfStaff);
+            Assert.Equal("Anaesthetist", result.StaffSpecializationDtos[0].SpecializationName);
 
             Assert.NotNull(capturedOperationTypeId);
             Assert.Equal(operationTypeId, capturedOperationTypeId);
@@ -125,10 +126,11 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(capturedOperationType.SurgeryTime.Minutes, result.SurgeryTime);
 
             Assert.NotNull(capturedOperationTypeSpecialization);
-
             Assert.Equal(capturedOperationType.Id.AsGuid(), capturedOperationTypeSpecialization.Id.OperationTypeId.AsGuid());
             Assert.Equal(specialization.Id.AsGuid(), capturedOperationTypeSpecialization.Id.SpecializationId.AsGuid());
 
+            Assert.Equal(capturedOperationType.Id.AsGuid(), capturedOperationTypeSpecialization.Id.OperationTypeId.AsGuid());
+            Assert.Equal(specialization.Id.AsGuid(), capturedOperationTypeSpecialization.Id.SpecializationId.AsGuid());
 
             _operationTypeRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationType>()), Times.Once);
             _operationTypeSpecializationRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationTypeSpecialization>()), Times.Once);
@@ -168,7 +170,13 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             var operationTypeId = new OperationTypeId(Guid.NewGuid());
             var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
                 new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
+            
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
 
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(2));
+            
+            operationType.OperationTypeSpecializations.Add(operationTypeSpecialization);
+            
             var operationTypes = new List<OperationType> { operationType };
 
             _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, null, null))
@@ -185,6 +193,12 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(30, result[0].CleaningTime);
             Assert.Equal(60, result[0].SurgeryTime);
             Assert.Equal(OperationTypeStatus.ACTIVE.ToString(), result[0].OperationTypeStatus);
+
+            Assert.Single(result[0].StaffSpecializationDtos); 
+            var specializationDto = result[0].StaffSpecializationDtos[0];
+            Assert.Equal(specialization.Id.AsGuid().ToString(), specializationDto.SpecializationId);
+            Assert.Equal(specialization.Name.Name, specializationDto.SpecializationName);
+            Assert.Equal(2, specializationDto.NumberOfStaff);
         }
 
         [Fact]
@@ -221,6 +235,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(30, result[0].CleaningTime);
             Assert.Equal(60, result[0].SurgeryTime);
             Assert.Equal(OperationTypeStatus.ACTIVE.ToString(), result[0].OperationTypeStatus);
+            
         }
 
         [Fact]
@@ -259,6 +274,12 @@ namespace DDDSample1.Tests.Domain.OperationTypes
         {
             var operationTypeId = new OperationTypeId(Guid.NewGuid());
             var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
+            
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(2));
+            
+            operationType.OperationTypeSpecializations.Add(operationTypeSpecialization);
 
             var operationTypes = new List<OperationType> { operationType };
 
@@ -276,6 +297,12 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(30, result[0].CleaningTime);
             Assert.Equal(60, result[0].SurgeryTime);
             Assert.Equal(OperationTypeStatus.ACTIVE.ToString(), result[0].OperationTypeStatus);
+
+            Assert.Single(result[0].StaffSpecializationDtos); 
+            var specializationDto = result[0].StaffSpecializationDtos[0];
+            Assert.Equal(specialization.Id.AsGuid().ToString(), specializationDto.SpecializationId);
+            Assert.Equal(specialization.Name.Name, specializationDto.SpecializationName);
+            Assert.Equal(2, specializationDto.NumberOfStaff);
         }
 
         [Fact]
@@ -291,12 +318,102 @@ namespace DDDSample1.Tests.Domain.OperationTypes
         }
 
         [Fact]
+        public async Task GetOperationTypesAsyncWithNonExistingSpecializationShouldReturnEmptyList() {
+            var specializationId = Guid.NewGuid();
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, specializationId, null))
+                .ReturnsAsync(new List<OperationType>()); 
+
+            var result = await _operationTypeService.GetOperationTypesAsync(specializationId: specializationId);
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithSpecificSpecializationShouldReturnFilteredList() {
+
+            var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
+                new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            
+            var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"),
+                new EstimatedDuration(120), new AnesthesiaTime(40), new CleaningTime(25), new SurgeryTime(55));
+
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType1, specialization, new NumberOfStaff(2));
+            
+            operationType1.OperationTypeSpecializations.Add(operationTypeSpecialization);
+
+            var operationTypes = new List<OperationType> { operationType1, operationType2 };
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, specialization.Id.AsGuid(),null))
+                .ReturnsAsync(new List<OperationType> { operationType1 });
+
+            var result = await _operationTypeService.GetOperationTypesAsync(specializationId: specialization.Id.AsGuid());
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal(operationType1.Id.AsGuid(), result[0].Id);
+            Assert.Equal("ACL Reconstruction Surgery", result[0].Name);
+            Assert.Equal(135, result[0].EstimatedDuration);
+            Assert.Equal(45, result[0].AnesthesiaTime);
+            Assert.Equal(30, result[0].CleaningTime);
+            Assert.Equal(60, result[0].SurgeryTime);
+
+            Assert.Single(result[0].StaffSpecializationDtos); 
+            var specializationDto = result[0].StaffSpecializationDtos[0];
+            Assert.Equal(specialization.Id.AsGuid().ToString(), specializationDto.SpecializationId);
+            Assert.Equal(specialization.Name.Name, specializationDto.SpecializationName);
+            Assert.Equal(2, specializationDto.NumberOfStaff);
+        }
+
+        [Fact]
+        public async Task GetOperationTypesAsyncWithNameAndSpecializationShouldReturnFilteredList() {
+            var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
+                new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType1, specialization, new NumberOfStaff(2));
+            
+            operationType1.OperationTypeSpecializations.Add(operationTypeSpecialization);
+
+            var operationTypes = new List<OperationType> { operationType1 };
+
+            _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync("ACL Reconstruction Surgery", specialization.Id.AsGuid(), null))
+                .ReturnsAsync(new List<OperationType> { operationType1 });
+
+            var result = await _operationTypeService.GetOperationTypesAsync(name: "ACL Reconstruction Surgery", specializationId: specialization.Id.AsGuid());
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal(operationType1.Id.AsGuid(), result[0].Id);
+            Assert.Equal("ACL Reconstruction Surgery", result[0].Name);
+            Assert.Equal(135, result[0].EstimatedDuration);
+            Assert.Equal(45, result[0].AnesthesiaTime);
+            Assert.Equal(30, result[0].CleaningTime);
+            Assert.Equal(60, result[0].SurgeryTime);
+
+            Assert.Single(result[0].StaffSpecializationDtos); 
+            var specializationDto = result[0].StaffSpecializationDtos[0];
+            Assert.Equal(specialization.Id.AsGuid().ToString(), specializationDto.SpecializationId);
+            Assert.Equal(specialization.Name.Name, specializationDto.SpecializationName);
+            Assert.Equal(2, specializationDto.NumberOfStaff);
+        }
+
+        [Fact]
         public async Task GetOperationTypesAsyncWithNullParametersShouldReturnAllTypes() {
             var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
                 new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
 
             var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"),new EstimatedDuration(120), new AnesthesiaTime(40), new CleaningTime(25), new SurgeryTime(55));
 
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType1, specialization, new NumberOfStaff(2));
+            
+            operationType1.OperationTypeSpecializations.Add(operationTypeSpecialization);
+            
             var operationTypes = new List<OperationType> { operationType1, operationType2 };
 
             _operationTypeRepoMock.Setup(repo => repo.GetOperationTypesAsync(null, null, null))

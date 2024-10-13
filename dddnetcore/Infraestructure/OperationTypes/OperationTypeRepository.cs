@@ -34,6 +34,9 @@ namespace DDDSample1.Infrastructure.OperationTypes
                 query = query.Where(operationType => operationType.OperationTypeStatus.ToString().ToUpper() == status.ToUpper());
             }
 
+            query = query.Include(o => o.OperationTypeSpecializations)
+                 .ThenInclude(ots => ots.Specialization);
+
             return await query.ToListAsync();
         }
     }

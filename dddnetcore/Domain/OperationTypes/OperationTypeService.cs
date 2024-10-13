@@ -70,7 +70,9 @@ namespace DDDSample1.Domain.OperationTypes
         public async Task<List<OperationTypeDto>> GetOperationTypesAsync(string name = null, Guid? specializationId = null, string status = null) {
             var operationTypes = await this._repo.GetOperationTypesAsync(name,specializationId,status);
             
-            List<OperationTypeDto> operationTypesDto = operationTypes.ConvertAll<OperationTypeDto>(operationType => new OperationTypeDto {Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString()});
+            List<OperationTypeDto> operationTypesDto = operationTypes.ConvertAll<OperationTypeDto>(operationType => new OperationTypeDto {Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString(),
+            StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
+            SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()});
 
             return operationTypesDto;
         }
