@@ -30,11 +30,14 @@ namespace DDDSample1.Tests.Domain.OperationTypes
         }
 
         [Fact]
-        public async Task GetByIdAsyncWithExistingIdShouldReturnOperationTypeDto() {
+        public async Task GetByIdAsyncWithExistingIdShouldReturnOperationTypeDto() 
+        {
             var operationTypeId = new OperationTypeId(Guid.NewGuid());
-            var operationType = new OperationType( new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),
-                                                    new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var operationType = new OperationType( new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
 
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(2));
+            operationType.OperationTypeSpecializations.Add(operationTypeSpecialization);
             OperationTypeId capturedOperationTypeId = null;
 
             _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.Is<OperationTypeId>(id => id == operationTypeId)))
@@ -51,12 +54,14 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(30, result.CleaningTime);
             Assert.Equal(60, result.SurgeryTime);
 
+            Assert.Single(result.StaffSpecializationDtos);
+            Assert.Equal(2, result.StaffSpecializationDtos[0].NumberOfStaff);
+
             Assert.NotNull(capturedOperationTypeId);
             Assert.Equal(operationTypeId, capturedOperationTypeId);
 
             _operationTypeRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<OperationTypeId>(id => id == operationTypeId)), Times.Once);
         }
-
 
         [Fact]
         public async Task GetByIdAsyncWithNonExistingIdShouldThrowBusinessRuleValidationException()
@@ -84,15 +89,14 @@ namespace DDDSample1.Tests.Domain.OperationTypes
         [Fact]
         public async Task AddAsyncWithValidDataShouldAddOperationTypeAndSpecializations()
         {
-
             var specialization = new Specialization(new SpecializationName("Anaesthetist"));
 
-            var creatingOperationTypeDto = new CreatingOperationTypeDto {Name = "ACL Reconstruction Surgery",EstimatedDuration = 60,
-                                                                        AnesthesiaTime = 30,CleaningTime = 15, SurgeryTime = 45,
-                                                                        StaffSpecializations = new List<CreatingStaffSpecializationDto>
-                                                                        { new CreatingStaffSpecializationDto{
-                                                                            SpecializationId = specialization.Id.AsGuid().ToString(),
-                                                                            NumberOfStaff = 2 }}};
+            var creatingOperationTypeDto = new CreatingOperationTypeDto {Name = "ACL Reconstruction Surgery",EstimatedDuration = 60,AnesthesiaTime = 30,CleaningTime = 15, SurgeryTime = 45,
+            StaffSpecializations = new List<CreatingStaffSpecializationDto>{
+                    new CreatingStaffSpecializationDto{
+                        SpecializationId = specialization.Id.AsGuid().ToString(),
+                        NumberOfStaff = 2 
+                    }}};
 
             _specializationRepoMock.Setup(repo => repo.GetByIdAsync(specialization.Id)).ReturnsAsync(specialization);
 
@@ -100,17 +104,15 @@ namespace DDDSample1.Tests.Domain.OperationTypes
 
             _operationTypeRepoMock.Setup(repo => repo.AddAsync(It.IsAny<OperationType>()))
                 .Callback<OperationType>(op => capturedOperationType = op)
-                .ReturnsAsync((OperationType op) => { return new OperationType( new OperationTypeName(op.Name.Name), 
-                                                                                new EstimatedDuration(op.EstimatedDuration.Minutes), 
-                                                                                new AnesthesiaTime(op.AnesthesiaTime.Minutes), 
-                                                                                new CleaningTime(op.CleaningTime.Minutes),
-                                                                                new SurgeryTime(op.SurgeryTime.Minutes));});
+                .ReturnsAsync((OperationType op) => new OperationType(new OperationTypeName(op.Name.Name), 
+                    new EstimatedDuration(op.EstimatedDuration.Minutes), new AnesthesiaTime(op.AnesthesiaTime.Minutes), new CleaningTime(op.CleaningTime.Minutes),new SurgeryTime(op.SurgeryTime.Minutes)));
 
             OperationTypeSpecialization capturedOperationTypeSpecialization = null;
 
             _operationTypeSpecializationRepoMock.Setup(repo => repo.AddAsync(It.IsAny<OperationTypeSpecialization>()))
                 .Callback<OperationTypeSpecialization>(spec => capturedOperationTypeSpecialization = spec)
                 .ReturnsAsync((OperationTypeSpecialization spec) => spec); 
+
             var result = await _operationTypeService.AddAsync(creatingOperationTypeDto);
 
             Assert.NotNull(result);
@@ -127,12 +129,11 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(capturedOperationType.Id.AsGuid(), capturedOperationTypeSpecialization.Id.OperationTypeId.AsGuid());
             Assert.Equal(specialization.Id.AsGuid(), capturedOperationTypeSpecialization.Id.SpecializationId.AsGuid());
 
+
             _operationTypeRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationType>()), Times.Once);
             _operationTypeSpecializationRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationTypeSpecialization>()), Times.Once);
             _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(), Times.Once);
         }
-
-
 
         [Fact]
         public async Task AddAsyncWithNonExistingSpecializationShouldThrowBusinessRuleValidationException() {

@@ -13,29 +13,25 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         [Fact]
         public void ConstructorValidParametersShouldCreateOperationTypeSpecialization()
         {
-            var operationTypeId = new OperationTypeId(Guid.NewGuid());
-            var specializationId = new SpecializationId(Guid.NewGuid());
+            var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
             var numberOfStaff = new NumberOfStaff(5);
 
-            var operationTypeSpecialization = new OperationTypeSpecialization(operationTypeId, specializationId, numberOfStaff);
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
 
             Assert.NotNull(operationTypeSpecialization);
             Assert.Equal(numberOfStaff, operationTypeSpecialization.NumberOfStaff);
-            Assert.Equal(operationTypeId, operationTypeSpecialization.Id.OperationTypeId);
-            Assert.Equal(specializationId, operationTypeSpecialization.Id.SpecializationId);
+            Assert.Equal(operationType.Id, operationTypeSpecialization.Id.OperationTypeId);
+            Assert.Equal(specialization.Id, operationTypeSpecialization.Id.SpecializationId);
         }
 
         [Fact]
         public void ConstructorInvalidNumberOfStaffShouldThrowBusinessRuleValidationException()
         {
-            var operationTypeId = new OperationTypeId(Guid.NewGuid());
-            var specializationId = new SpecializationId(Guid.NewGuid());
-            var invalidNumberOfStaff = -1;
+            var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
 
-            var exception = Assert.Throws<BusinessRuleValidationException>(() =>
-            {
-                new NumberOfStaff(invalidNumberOfStaff);
-            });
+            var exception = Assert.Throws<BusinessRuleValidationException>(() => {new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(-1));});
 
             Assert.Equal("The number of staff must be positive", exception.Message);
         }
@@ -43,12 +39,12 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         [Fact]
         public void EqualsSameIdShouldReturnTrue()
         {
-            var operationTypeId = new OperationTypeId(Guid.NewGuid());
-            var specializationId = new SpecializationId(Guid.NewGuid());
+            var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
             var numberOfStaff = new NumberOfStaff(5);
 
-            var operationTypeSpecialization1 = new OperationTypeSpecialization(operationTypeId, specializationId, numberOfStaff);
-            var operationTypeSpecialization2 = new OperationTypeSpecialization(operationTypeId, specializationId, numberOfStaff);
+            var operationTypeSpecialization1 = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
+            var operationTypeSpecialization2 = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
 
             bool result = operationTypeSpecialization1.Equals(operationTypeSpecialization2);
 
@@ -56,16 +52,15 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         }
 
         [Fact]
-        public void EqualsWithDifferentIdsShouldReturnTrue()
+        public void EqualsWithDifferentIdsShouldReturnFalse()
         {
-            var operationTypeId = new OperationTypeId(Guid.NewGuid());
-            var specializationId = new SpecializationId(Guid.NewGuid());
+            var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"), new EstimatedDuration(120), new AnesthesiaTime(30), new CleaningTime(20), new SurgeryTime(50));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
             var numberOfStaff = new NumberOfStaff(5);
 
-            var newOperationTypeId = new OperationTypeId(Guid.NewGuid());
-
-            var operationTypeSpecialization1 = new OperationTypeSpecialization(operationTypeId, specializationId, numberOfStaff);
-            var operationTypeSpecialization2 = new OperationTypeSpecialization(newOperationTypeId, specializationId, numberOfStaff);
+            var operationTypeSpecialization1 = new OperationTypeSpecialization(operationType1, specialization, numberOfStaff);
+            var operationTypeSpecialization2 = new OperationTypeSpecialization(operationType2, specialization, numberOfStaff);
 
             bool result = operationTypeSpecialization1.Equals(operationTypeSpecialization2);
 

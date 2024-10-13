@@ -20,7 +20,7 @@ namespace DDDSample1.Infrastructure.OperationTypes
 
             builder.Property(b => b.EstimatedDuration).HasConversion(b => b.Minutes, b => new EstimatedDuration(b)).IsRequired();
 
-            builder.HasMany(o => o.OperationTypeSpecializations).WithOne().HasForeignKey("OperationTypeId") .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(b => b.OperationTypeSpecializations).WithOne(b => b.OperationType).HasForeignKey("OperationTypeId").OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(b => b.AnesthesiaTime).HasConversion(b => b.Minutes, b => new AnesthesiaTime(b)).IsRequired();
 
