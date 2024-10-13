@@ -37,7 +37,7 @@ namespace DDDSample1.Controllers{
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
             try{
-                var user = await _service.AddAsync(dto);
+                var user = await _service.addBackofficeUserAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
 

@@ -65,7 +65,7 @@ namespace DDDSample1.Tests.Domain.Users
              _mockUserRepository.Setup(repo => repo.AddAsync(It.IsAny<User>()))
                 .Callback<User>(user => {Assert.NotNull(user);});
 
-            var result = await _service.AddAsync(dto);
+            var result = await _service.addBackofficeUserAsync(dto);
 
             Assert.NotNull(result);
             Assert.Equal(dto.Email, result.Email);
