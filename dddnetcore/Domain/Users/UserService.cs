@@ -31,26 +31,17 @@ namespace DDDSample1.Domain.Users
 
         public async Task<UserDto> addBackofficeUserAsync(CreatingUserDto dto)
         {
-
-             Console.WriteLine("Chegou aqui");
-            Console.WriteLine($"Email recebido: {dto.Email}");
-
             var role = Enum.Parse<Role>(dto.Role.ToUpper());
 
-            Console.WriteLine(role);
             String year = DateTime.Now.Year.ToString();
 
-            Console.WriteLine(year);
-            Console.WriteLine("Contando usuários de backoffice...");
             int count = await _repo.CountBackofficeUsersAsync();
-            Console.WriteLine($"Usuários de backoffice contados: {count}");
             int number = count + 1; 
 
-            Console.WriteLine(number);
             string numberFormatted = number.ToString("D4");
             string usernameValue = $"{year}{numberFormatted}";
 
-            var user = new User(new Username(role,usernameValue),new Email(dto.Email), role);
+            var user = new User(Username.Create(role,usernameValue),new Email(dto.Email), role);
 
             Console.Write(user.Id);
 

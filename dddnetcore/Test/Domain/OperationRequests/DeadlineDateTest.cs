@@ -8,7 +8,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
     public class DeadlineDateTests
     {
         [Fact]
-        public void Constructor_ShouldThrowException_WhenDateIsInThePast()
+        public void ConstructorShouldThrowExceptionWhenDateIsInThePast()
         {
             var pastDate = DateTime.Now.AddDays(-1);
             var exception = Assert.Throws<BusinessRuleValidationException>(() => new DeadlineDate(pastDate));
@@ -16,7 +16,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void Constructor_ShouldCreateInstance_WhenDateIsInTheFuture()
+        public void ConstructorShouldCreateInstanceWhenDateIsInTheFuture()
         {
             var futureDate = DateTime.Now.AddDays(1);
             var deadlineDate = new DeadlineDate(futureDate);
@@ -25,16 +25,16 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void FromString_ShouldReturnDeadlineDate_WhenStringIsValid()
+        public void FromStringShouldReturnDeadlineDateWhenStringIsValid()
         {
-            var validDateString = "2024-10-14";
+            var validDateString = "2040-10-14";
             var deadlineDate = DeadlineDate.FromString(validDateString);
             Assert.NotNull(deadlineDate);
             Assert.Equal(DateTime.Parse(validDateString), deadlineDate.Date);
         }
 
         [Fact]
-        public void FromString_ShouldThrowException_WhenStringIsInvalid()
+        public void FromStringShouldThrowExceptionWhenStringIsInvalid()
         {
             var invalidDateString = "invalid-date";
             var exception = Assert.Throws<BusinessRuleValidationException>(() => DeadlineDate.FromString(invalidDateString));
@@ -42,14 +42,14 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void HasExpired_ShouldReturnTrue_WhenDateIsInThePast()
+        public void HasExpiredShouldReturnTrueWhenDateIsInThePast()
         {
             var pastDate = DateTime.Now.AddDays(-1);
             Assert.Throws<BusinessRuleValidationException>(() => new DeadlineDate(pastDate));
         }
 
         [Fact]
-        public void HasExpired_ShouldReturnFalse_WhenDateIsInTheFuture()
+        public void HasExpiredShouldReturnFalseWhenDateIsInTheFuture()
         {
             var futureDate = DateTime.Now.AddDays(1);
             var deadlineDate = new DeadlineDate(futureDate);
@@ -58,7 +58,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void Equals_ShouldReturnTrue_WhenDatesAreEqual()
+        public void EqualsShouldReturnTrueWhenDatesAreEqual()
         {
             var date = DateTime.Now.AddDays(1);
             var deadline1 = new DeadlineDate(date);
@@ -68,7 +68,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void Equals_ShouldReturnFalse_WhenDatesAreDifferent()
+        public void EqualsShouldReturnFalseWhenDatesAreDifferent()
         {
             var date1 = new DeadlineDate(DateTime.Now.AddDays(1));
             var date2 = new DeadlineDate(DateTime.Now.AddDays(2));
@@ -77,11 +77,11 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void ToString_ShouldReturnDateStringInCorrectFormat()
+        public void ToStringShouldReturnDateStringInCorrectFormat()
         {
-            var date = new DeadlineDate(DateTime.Parse("2024-10-14 15:30:00"));
+            var date = new DeadlineDate(DateTime.Parse("2040-10-14 15:30:00"));
             var dateString = date.ToString();
-            Assert.Equal("2024-10-14 15:30:00", dateString);
+            Assert.Equal("2040-10-14 15:30:00", dateString);
         }
     }
 }

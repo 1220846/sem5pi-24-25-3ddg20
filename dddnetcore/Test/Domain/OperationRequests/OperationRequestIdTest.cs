@@ -8,7 +8,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
     public class OperationRequestIdTests
     {
         [Fact]
-        public void Constructor_ShouldCreateOperationRequestId_WhenValidGuidProvided()
+        public void ConstructorShouldCreateOperationRequestIdWhenValidGuidProvided()
         {
             var guid = Guid.NewGuid();
             var operationRequestId = new OperationRequestId(guid.ToString());
@@ -18,7 +18,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void AsGuid_ShouldReturnCorrectGuid_WhenCalled()
+        public void AsGuidShouldReturnCorrectGuidWhenCalled()
         {
             var guid = Guid.NewGuid();
             var operationRequestId = new OperationRequestId(guid.ToString());
@@ -27,7 +27,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         }
 
         [Fact]
-        public void AsString_ShouldReturnCorrectString_WhenCalled()
+        public void AsStringShouldReturnCorrectStringWhenCalled()
         {
             var guid = Guid.NewGuid();
             var operationRequestId = new OperationRequestId(guid.ToString());

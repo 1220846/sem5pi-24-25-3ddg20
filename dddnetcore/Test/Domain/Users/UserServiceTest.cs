@@ -21,31 +21,32 @@ namespace DDDSample1.Tests.Domain.Users
         }
 
         [Fact]
-        public async Task GetByIdAsync_ExistingUser_ReturnsUserDto()
+        public async Task GetByIdAsyncExistingUserReturnsUserDto()
         {
-            var username = "D240003";
+            //var username = "D240003";
             var email = "user@example.com";
             var role = Role.NURSE;
-            var user = new User(new Username(username), new Email(email), role);
+            var username = Username.Create(role,"D240003");
+            var user = new User(username, new Email(email), role);
 
             _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Username>()))
                 .ReturnsAsync(user);
 
-            var result = await _service.GetByIdAsync(username);
+            var result = await _service.GetByIdAsync(username.Name);
 
             Assert.NotNull(result);
-            Assert.Equal(username, result.Username);
+            Assert.Equal(username.Name, result.Username);
             Assert.Equal(email, result.Email);
             Assert.Equal(role.ToString(), result.Role);
         }
 
         [Fact]
-        public async Task GetByIdAsync_NonExistingUser_ReturnsNull()
+        public async Task GetByIdAsyncNonExistingUserReturnsNull()
         {
             _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Username>()))
                 .ReturnsAsync((User)null);
 
-            var result = await _service.GetByIdAsync("NonExistingUser");
+            var result = await _service.GetByIdAsync("NonExistingUser@gmail.com");
 
             Assert.Null(result);
         }

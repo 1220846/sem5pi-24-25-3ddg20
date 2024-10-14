@@ -7,7 +7,7 @@ namespace DDDSample1.Tests.Domain.Users
     public class EmailTests
     {
         [Fact]
-        public void CreateEmail_ValidAddress_ShouldCreateSuccessfully()
+        public void CreateEmailValidAddressShouldCreateSuccessfully()
         {
             var validEmail = "user@example.com";
 
@@ -18,7 +18,7 @@ namespace DDDSample1.Tests.Domain.Users
         }
 
         [Fact]
-        public void CreateEmail_InvalidAddress_ShouldThrowException()
+        public void CreateEmailInvalidAddressShouldThrowException()
         {
             var invalidEmail = "invalid-email";
 
@@ -26,7 +26,7 @@ namespace DDDSample1.Tests.Domain.Users
         }
 
         [Fact]
-        public void Equals_WithSameAddress_ShouldReturnTrue()
+        public void EqualsWithSameAddressShouldReturnTrue()
         {
             var email1 = new Email("user@example.com");
             var email2 = new Email("user@example.com");
