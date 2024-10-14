@@ -52,11 +52,26 @@ namespace DDDSample1.Domain.Users
 
             var user = new User(new Username(role,usernameValue),new Email(dto.Email), role);
 
+            Console.Write(user.Id);
+
             await this._repo.AddAsync(user);
 
             await this._unitOfWork.CommitAsync();
 
             return new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
+        }
+
+        public async Task<UserDto>AddUserPatientAsync(CreatingUserPatientDto creatingUserPatientDto){
+
+            // TODO: Verify if have patient record
+
+            var user = new User(new Username(creatingUserPatientDto.Email),new Email(creatingUserPatientDto.Email),Role.PATIENT);
+
+            await this._repo.AddAsync(user);
+
+            //TODO: Dar update do user
+            
+            return  new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }
     }
 }

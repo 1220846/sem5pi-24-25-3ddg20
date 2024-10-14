@@ -19,10 +19,10 @@ namespace DDDSample1.Controllers{
 
         // GET: api/users/
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetById(String username)
+        public async Task<ActionResult<UserDto>> GetById(String id)
         {
-            Console.WriteLine(username);
-            var user = await _service.GetByIdAsync(username);
+            Console.WriteLine(id);
+            var user = await _service.GetByIdAsync(id);
 
             if (user == null)
             {
@@ -33,11 +33,26 @@ namespace DDDSample1.Controllers{
         }
 
         // POST: api/users
-        [HttpPost]
+        [HttpPost()]
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
             try{
                 var user = await _service.addBackofficeUserAsync(dto);
+
+                return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
+
+            }catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+            }
+        }
+
+        // POST: api/users/patients
+        [HttpPost("patients")]
+        public async Task<ActionResult<UserDto>> CreateUserPatient(CreatingUserPatientDto dto)
+        {
+            try{
+                var user = await _service.AddUserPatientAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
 

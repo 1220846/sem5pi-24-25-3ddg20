@@ -76,5 +76,6 @@ namespace DDDSample1.Tests.Domain.Users
             _mockUnitOfWork.Verify(uow => uow.CommitAsync(), Times.Once);
         }
 
+    
     }
 }
