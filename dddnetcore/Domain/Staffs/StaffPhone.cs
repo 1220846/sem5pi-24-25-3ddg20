@@ -20,7 +20,7 @@ namespace DDDSample1.Domain.Staffs {
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            return PhoneNumber.Equals(((StaffFirstName)obj).Name);
+            return PhoneNumber.Equals(((StaffPhone)obj).PhoneNumber);
         }
 
         

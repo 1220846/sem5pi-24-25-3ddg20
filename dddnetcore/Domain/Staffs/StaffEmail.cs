@@ -20,7 +20,7 @@ namespace DDDSample1.Domain.Staffs {
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            return Email.Equals(((StaffFirstName)obj).Name);
+            return Email.Equals(((StaffEmail)obj).Email);
         }
 
         

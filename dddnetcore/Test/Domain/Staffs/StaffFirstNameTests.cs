@@ -22,7 +22,7 @@ namespace Domain.Staffs
             string invalidName = null;
 
             var exception = Assert.Throws<BusinessRuleValidationException>(() => new StaffFirstName(invalidName));
-            Assert.Equal("Fist name of staff cannot be null or empty!", exception.Message);
+            Assert.Equal("First name of staff cannot be null or empty!", exception.Message);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace Domain.Staffs
 
             
             var exception = Assert.Throws<BusinessRuleValidationException>(() => new StaffFirstName(invalidName));
-            Assert.Equal("Fist name of staff cannot be null or empty!", exception.Message);
+            Assert.Equal("First name of staff cannot be null or empty!", exception.Message);
         }
 
         [Fact]
