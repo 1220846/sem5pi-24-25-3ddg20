@@ -1,0 +1,28 @@
+@startuml level3
+
+autonumber
+
+actor Admin as  "Admin"
+participant "Server" as Server
+participant "Database" as Database
+
+activate Admin
+    Admin->Server:POST /api/users
+    activate Server
+        Server->Database:CountBackofficeUserAsync()
+        activate Database
+
+            Server<-Database:count
+        deactivate Database
+
+        Server->Database:addAsync(User)
+        activate Database
+
+            Server<-Database:user
+        deactivate Database
+
+        Admin<-Server:201 Created
+    deactivate Server
+deactivate Admin
+
+@enduml

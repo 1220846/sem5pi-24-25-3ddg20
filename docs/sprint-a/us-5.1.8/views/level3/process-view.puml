@@ -1,6 +1,8 @@
 @startuml process-view
 
 actor "Admin" as ADM
+participant "Server" as Server
+participant "Database" as Database
 
 activate ADM
 ADM-> Server : POST /api/patients

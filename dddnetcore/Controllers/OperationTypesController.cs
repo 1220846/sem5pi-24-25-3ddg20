@@ -46,5 +46,12 @@ namespace DDDSample1.Controllers{
                 return BadRequest(new {exception.Message});
             }
         }
+
+        // GET: api/operationtypes/filter
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<OperationTypeDto>>> GetOperationTypes(string name = null, Guid? specializationId = null, string status = null)
+        {
+            return await _service.GetOperationTypesAsync(name,specializationId,status);
+        }
     }
 }

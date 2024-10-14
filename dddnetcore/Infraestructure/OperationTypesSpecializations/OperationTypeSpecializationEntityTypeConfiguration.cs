@@ -17,10 +17,10 @@ namespace DDDSample1.Infrastructure.OperationTypesSpecializations
             builder.HasKey(b => b.Id);
             //builder.Property<bool>("_active").HasColumnName("Active");
 
-            builder.HasOne<OperationType>().WithMany(b => b.OperationTypeSpecializations).HasForeignKey("OperationTypeId")
+            builder.HasOne<OperationType>(b => b.OperationType).WithMany(b => b.OperationTypeSpecializations).HasForeignKey("OperationTypeId")
                 .OnDelete(DeleteBehavior.Cascade); 
 
-            builder.HasOne<Specialization>().WithMany(b => b.OperationTypeSpecializations).HasForeignKey("SpecializationId").OnDelete(DeleteBehavior.Cascade); 
+            builder.HasOne<Specialization>(b => b.Specialization).WithMany(b => b.OperationTypeSpecializations).HasForeignKey("SpecializationId").OnDelete(DeleteBehavior.Cascade); 
 
             builder.Property(b => b.NumberOfStaff).HasConversion(b => b.Number, b=> new NumberOfStaff(b)).IsRequired();
 

@@ -5,7 +5,7 @@ participant SYS as "SARM" <<C4:System>>
 ?o->SYS:POST /api/users
 activate SYS
 
-    SYS->SYS:addBackofficeUser(creatingUserDto)
+    SYS->SYS:addBackofficeAsync(creatingUserDto)
 
     <--SYS:201 Created
 deactivate SYS

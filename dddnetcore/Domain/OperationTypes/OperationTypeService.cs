@@ -3,6 +3,9 @@ using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.OperationTypesSpecializations;
 using DDDSample1.Domain.Specializations;
 using DDDSample1.Domain.OperationTypeSpecializations;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace DDDSample1.Domain.OperationTypes
 {
@@ -32,7 +35,8 @@ namespace DDDSample1.Domain.OperationTypes
                 throw new BusinessRuleValidationException($"Not Found Operation Type with Id: {id}");
 
             return new OperationTypeDto{Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,
-            CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes, OperationTypeStatus = operationType.OperationTypeStatus.ToString()};
+            CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes, OperationTypeStatus = operationType.OperationTypeStatus.ToString(),StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
+            SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()};
         }
 
         public async Task<OperationTypeDto> AddAsync(CreatingOperationTypeDto creatingOperationTypeDto){      
@@ -49,7 +53,7 @@ namespace DDDSample1.Domain.OperationTypes
                     throw new BusinessRuleValidationException($"Not Found Specialization with Id: {staffSpecialization.SpecializationId}");
                 }
 
-                var operationTypeSpecialization = new OperationTypeSpecialization(operationType.Id, specialization.Id,
+                var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization,
                                                     new NumberOfStaff(staffSpecialization.NumberOfStaff));
 
                 await this._operationTypeSpecializationRepo.AddAsync(operationTypeSpecialization);
@@ -57,7 +61,20 @@ namespace DDDSample1.Domain.OperationTypes
 
             await this._unitOfWork.CommitAsync();
 
-            return new OperationTypeDto { Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString()};
+            await this._operationTypeSpecializationRepo.GetAllAsync();
+
+            return new OperationTypeDto { Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString(),StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
+            SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()};
+        }
+
+        public async Task<List<OperationTypeDto>> GetOperationTypesAsync(string name = null, Guid? specializationId = null, string status = null) {
+            var operationTypes = await this._repo.GetOperationTypesAsync(name,specializationId,status);
+            
+            List<OperationTypeDto> operationTypesDto = operationTypes.ConvertAll<OperationTypeDto>(operationType => new OperationTypeDto {Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString(),
+            StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
+            SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()});
+
+            return operationTypesDto;
         }
     }
 }

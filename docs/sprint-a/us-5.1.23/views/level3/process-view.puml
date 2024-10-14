@@ -1,0 +1,28 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant "Server" as Server
+participant "Database" as Database
+
+activate Admin
+
+    Admin-> Server : GET /api/operationtypes/filter
+    
+    activate Server
+
+        Server -> Database : get operation types
+        
+        activate Database
+
+            Database --> Server : operation types
+
+        deactivate Database
+
+        Admin <-- Server : 200 OK
+
+    deactivate Server
+
+deactivate Admin
+
+@enduml

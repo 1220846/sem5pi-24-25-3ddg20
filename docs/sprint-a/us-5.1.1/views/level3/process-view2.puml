@@ -6,8 +6,8 @@ actor "User" as UserP
 participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "User" as User <<Domain>>
-database "IUserRepository" as UserRepository <<Domain>>
 participant "UserDTO" as UserDto <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
 
 activate UserP
     UserP->Controller:POST /api/users
@@ -17,39 +17,25 @@ activate Controller
     Controller->Service:addBackofficeUserAsync(creatingUserDto)
     activate Service
 
-        /'Service->UserRepository:getUserByEmail(user.email)
+        Service->UserRepository:CountBackofficeUsersAsync()
         activate UserRepository
 
-            UserRepository --> Service:user
+            UserRepository-->Service:count
         deactivate UserRepository
 
-        Service -> SendNotification: senNotificationUser(user.email)
-        activate SendNotification
-
-            SendNotification --> Service:EmailSended
-        deactivate SendNotification
-        
-        alt NotificationAccepted then
-
-        Service->User:setRole(user)
-        activate User
-        
-            User-->Service:user
-        deactivate User
-        '/
-
-        Service -> User:create(creatingUserDto.username,creatingUserDto.email,creatingUserDto.role)
+        Service -> User:create(Username,creatingUserDto.email,creatingUserDto.role)
         activate User
 
             User-->Service:user
         deactivate User
+
         Service->UserRepository:addAsnc(user)
         activate UserRepository
 
             UserRepository-->Service:user
         deactivate UserRepository
 
-        Service->UserDto:create(user.getUsername().toString(),user.getEmail().toString(),user.getRole().toString())
+        Service->UserDto:create(user.Username,user.email,user.Role)
         activate UserDto
 
             UserDto-->Service:userDto

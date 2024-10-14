@@ -10,6 +10,8 @@ using DDDSample1.Infrastructure.Specializations;
 using DDDSample1.Domain.Specializations;
 using DDDSample1.Infrastructure.OperationTypesSpecializations;
 using DDDSample1.Domain.OperationTypesSpecializations;
+using DDDSample1.Domain.Users;
+using DDDSample1.Infrastructure.Users;
 
 namespace DDDSample1.Infrastructure
 {
@@ -24,6 +26,8 @@ namespace DDDSample1.Infrastructure
         public DbSet<OperationType> OperationTypes { get; set; }
 
         public DbSet<Specialization> Specializations { get; set; }
+
+        public DbSet<User> Users {get;set;} 
 
         public DbSet<OperationTypeSpecialization> OperationTypesSpecializations { get; set; } 
 
@@ -40,6 +44,7 @@ namespace DDDSample1.Infrastructure
             modelBuilder.ApplyConfiguration(new OperationTypeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SpecializationEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OperationTypeSpecializationEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
         }
     }
 }
