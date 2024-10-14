@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DDDSample1.Domain.Shared;
+using DDDSample1.Domain.Staffs;
+using Xunit;
 
-namespace Domain.Staffs
+namespace DDDSample1.Tests.Domain.Staffs
 {
     public class StaffEmailTests
     {
@@ -13,7 +16,7 @@ namespace Domain.Staffs
 
             var email = new StaffEmail(validEmail);
 
-            Assert.Equal(validEmail, email);
+            Assert.Equal(validEmail, email.Email);
         }
 
         [Fact]
@@ -62,5 +65,9 @@ namespace Domain.Staffs
 
             Assert.False(_email1.Equals(_email2));
         }
+    }
+
+    internal class FactAttribute : Attribute
+    {
     }
 }

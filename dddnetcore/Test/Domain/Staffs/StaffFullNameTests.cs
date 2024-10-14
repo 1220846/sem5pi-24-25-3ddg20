@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DDDSample1.Domain.Shared;
+using DDDSample1.Domain.Staffs;
+using Xunit;
 
 namespace Domain.Staffs
 {
@@ -13,7 +16,7 @@ namespace Domain.Staffs
 
             var name = new StaffFullName(validName);
 
-            Assert.Equal(validName, name);
+            Assert.Equal(validName, name.Name);
         }
 
         [Fact]

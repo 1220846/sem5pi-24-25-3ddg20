@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DDDSample1.Domain.Shared;
+using DDDSample1.Domain.Staffs;
+using Xunit;
 
 namespace Domain.Staffs
 {
@@ -13,7 +16,7 @@ namespace Domain.Staffs
 
             var phone = new StaffPhone(validPhone);
 
-            Assert.Equal(validPhone, phone);
+            Assert.Equal(validPhone, phone.PhoneNumber);
         }
 
         [Fact]
