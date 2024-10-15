@@ -66,8 +66,4 @@ namespace DDDSample1.Tests.Domain.Staffs
             Assert.False(_email1.Equals(_email2));
         }
     }
-
-    internal class FactAttribute : Attribute
-    {
-    }
 }
