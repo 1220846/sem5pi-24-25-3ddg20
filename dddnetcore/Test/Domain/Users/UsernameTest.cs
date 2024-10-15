@@ -2,11 +2,11 @@ using DDDSample1.Domain.Users;
 using DDDSample1.Domain.Shared;
 using Xunit;
 
-/*namespace DDDSample1.Tests.Domain.Users
+namespace DDDSample1.Tests.Domain.Users
 {
     public class UsernameTests
     {
-        /*[Fact]
+        [Fact]
         public void CreateUsername_ValidEmail_ShouldCreateSuccessfully()
         {
             // Arrange
@@ -25,24 +25,14 @@ using Xunit;
         {
             // Arrange
             var role = Role.NURSE;
-            var mechanographicNumber = "20240003";
+            var mechanographicNumber = "240003"; // Use a valid mechanographic number format (no leading zeros)
 
             // Act
-            var username = new Username(role, mechanographicNumber);
+            var username = Username.Create(role, mechanographicNumber);
 
             // Assert
             Assert.NotNull(username);
-            Assert.Equal($"N{mechanographicNumber}@sarm.com", username.AsString());
-        }
-
-        [Fact]
-        public void CreateUsername_InvalidEmail_ShouldThrowException()
-        {
-            // Arrange
-            var invalidEmail = "invalid-email";
-
-            // Act & Assert
-            Assert.Throws<BusinessRuleValidationException>(() => new Username(invalidEmail));
+            Assert.Equal($"N240003@sarm.com", username.AsString());
         }
 
         [Fact]
@@ -82,4 +72,3 @@ using Xunit;
         }
     }
 }
-*/
