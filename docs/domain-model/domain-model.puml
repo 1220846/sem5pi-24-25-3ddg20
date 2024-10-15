@@ -47,8 +47,11 @@ package "<<aggregate>> Patient"{
         
     }
 
-    class Gender <<Value Object>>{
-        
+    enum Gender <<Value Object>>{
+        MALE
+        FEMALE
+        UNDEFINED
+        OTHER
     }
 
     class MedicalRecordNumber <<Value Object>>{
@@ -107,10 +110,6 @@ package "<<aggregate>> Staff"{
         
     }
 
-    class AvailabilitySlots <<Value Object>>{
-        
-    }
-
     class StaffContactInformation <<Value Object>>{
         
     }
@@ -145,7 +144,7 @@ package "<<aggregate>> OperationRequest"{
 
 }
 
-package "<<aggregate Specialization>> "{
+package "<<aggregate>> Specialization "{
 
     entity Specialization <<entity>> <<root>>{
     }
@@ -248,6 +247,25 @@ package "<<aggregate>> SurgeryRoom"{
     
 }
 
+package "<<aggregate>> AvailabilitySlot" {
+
+    class AvailabilitySlot <<Value Object>>{
+        
+    }
+
+    class AvailabilitySlotId <<ValueObject>> {
+
+    }
+
+    class StartTime <<Value Objet>> {
+
+    }
+
+    class EndTime <<Value Obkect>> {
+
+    }
+}
+
 'User'
 Username <- User
 User --> Role
@@ -277,8 +295,8 @@ StaffContactInformation <- Staff
 StaffContactInformation --> StaffEmail
 StaffContactInformation --> StaffPhone
 Staff ---> LicenseNumber
-Staff ---> AvailabilitySlots
-Staff "1" ---> "1"User: includes
+Staff "1" ---> "*" AvailabilitySlot : has
+Staff "1" ---> "1" User: includes
 Staff "1" ---> "1" Specialization : has
 
 'Specialization'
@@ -290,7 +308,7 @@ OperationRequestId <- OperationRequest
 OperationRequest --> DeadlineDate
 OperationRequest --> Priority
 OperationRequest "*" --> "1" Patient: of
-OperationRequest "*" ---> "1" Staff: to
+OperationRequest "*" ----> "1" Staff: to
 OperationRequest "*" ---> "1" OperationType: of
 
 'OperationType'
@@ -308,7 +326,7 @@ AppointmentId <- Appointment
 Appointment --> AppointmentDateAndTime
 Appointment --> AppointmentStatus
 Appointment "1" ---> "1" OperationRequest: of
-Appointment "*" ---> "1" SurgeryRoom: in
+Appointment "*" --> "1" SurgeryRoom: in
 
 'SurgeryRoom'
 RoomNumber <- SurgeryRoom
@@ -318,4 +336,9 @@ SurgeryRoom --> AssignedEquipment
 SurgeryRoom --> CurrentStatus
 SurgeryRoom  -> MaintenanceSlots
 
+
+'AvailabilitySlot'
+AvailabilitySlot -> AvailabilitySlotId
+AvailabilitySlot --> StartTime
+AvailabilitySlot --> EndTime
 @enduml
