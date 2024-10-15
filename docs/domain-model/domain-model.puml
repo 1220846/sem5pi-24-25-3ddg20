@@ -87,6 +87,10 @@ package "<<aggregate>> Staff"{
     entity Staff <<entity>> <<root>>{
     }
 
+    class StaffId <<ValueObject>>{
+
+    }
+
     class StaffFirstName <<Value Object>>{
 
     }
@@ -265,6 +269,7 @@ PatientContactInformation --> PatientPhone
 Patient "1" --> "0..1" User: includes
 
 'Staff'
+Staff -> StaffId
 Staff --> StaffFirstName
 Staff --> StaffLastName
 Staff -> StaffFullName
