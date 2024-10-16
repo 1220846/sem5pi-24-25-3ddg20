@@ -1,8 +1,9 @@
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using System;
 using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.OperationRequests;
+using DDDSample1.Domain.Staffs;
+using DDDSample1.Domain.Users;
+using DDDSample1.Domain.Patients;
+using DDDSample1.Domain.OperationTypes;
 
 namespace DDDSample1.Domain.OperationRequests{
 
@@ -10,12 +11,22 @@ namespace DDDSample1.Domain.OperationRequests{
 
         public DeadlineDate deadlineDate {get;private set;}
 
+        public OperationType operationType{get;private set;}
+
         public Priority priority{get;private set;}
-        public OperationRequest(OperationRequestId id, DeadlineDate deadlineDate, Priority priority)
+
+        public MedicalRecordNumber medicalRecordNumber{get;private set;}
+
+        public Status status{get;private set;}
+        public StaffId staffId{get;private set;}
+        public OperationRequest(MedicalRecordNumber patientId, StaffId staffId, OperationTypeId operationTypeId, DeadlineDate deadlineDate, Priority priority)
         {
-            this.Id=id;
+            this.Id=new OperationRequestId(new Guid());
             this.deadlineDate=deadlineDate;
             this.priority=priority;
+            this.medicalRecordNumber=patientId;
+            this.staffId=staffId;
+            this.status=Status.ONWAITINGLIST;
         }
 
         public OperationRequest()

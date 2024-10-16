@@ -5,12 +5,13 @@ using DDDSample1.Domain.Shared;
 namespace DDDSample1.Domain.OperationRequests{
     public class OperationRequestId : EntityId {
 
-        public String Id {get; private set;}
-
         [JsonConstructor]
+        public OperationRequestId(Guid value):base(value)
+        {
+
+        }
         public OperationRequestId(String value):base(value)
         {
-            this.Id=value;
         }
 
         override
