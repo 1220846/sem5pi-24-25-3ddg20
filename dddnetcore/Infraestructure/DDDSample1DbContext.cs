@@ -12,6 +12,8 @@ using DDDSample1.Infrastructure.OperationTypesSpecializations;
 using DDDSample1.Domain.OperationTypesSpecializations;
 using DDDSample1.Domain.Users;
 using DDDSample1.Infrastructure.Users;
+using dddnetcore.Domain.AvailabilitySlots;
+using dddnetcore.Infraestructure.AvailabilitySlots;
 
 namespace DDDSample1.Infrastructure
 {
@@ -31,6 +33,8 @@ namespace DDDSample1.Infrastructure
 
         public DbSet<OperationTypeSpecialization> OperationTypesSpecializations { get; set; } 
 
+        public DbSet<AvailabilitySlot> AvailabilitySlots {get; set;}
+
         public DDDSample1DbContext(DbContextOptions options) : base(options)
         {
 
@@ -45,6 +49,7 @@ namespace DDDSample1.Infrastructure
             modelBuilder.ApplyConfiguration(new SpecializationEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OperationTypeSpecializationEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailabilitySlotEntityTypeConfiguration());
         }
     }
 }

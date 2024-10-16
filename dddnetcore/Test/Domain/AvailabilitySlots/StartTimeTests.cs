@@ -11,42 +11,88 @@ namespace DDDSample1.Tests.Domain.AvailabilitySlots
     public class StartTimeTests
     {
         [Fact]
-        public void EnsureValidTimestampIsAllowed() {
-            long validTime = 1727272800;
-
-            var time = new StartTime(validTime);
-
-            Assert.Equal(validTime, time.Time);
-        }
-
-        [Fact]
-        public void EnsureNegativeTimestampThrowsException() {
-            long invalidTime = -1;
+        public void CreateStartTimeShouldSucceedWhenTimeIsInTheFuture()
+        {
             
-            var exception = Assert.Throws<BusinessRuleValidationException>(() => new StartTime(invalidTime));
-            Assert.Equal("Timestamp cannot be negative!", exception.Message);
+            var futureTime = DateTime.Now.AddHours(1);
+
+            
+            var endTime = new StartTime(futureTime);
+
+            
+            Assert.NotNull(endTime);
+            Assert.Equal(futureTime, endTime.Time);
         }
 
         [Fact]
-        public void EnsureEqualsReturnsTrueWhenStartTimesAreEqual() {
-            long validTime1 = 1727272800;
-            long validTime2 = 1727272800;
+        public void CreateStartTimeShouldThrowExceptionWhenTimeIsInThePast()
+        {
+            
+            var pastTime = DateTime.Now.AddHours(-1);
 
-            var _validTime1 = new StartTime(validTime1);
-            var _validTime2 = new StartTime(validTime2);
-
-            Assert.True(_validTime1.Equals(_validTime2));
+            
+            var ex = Assert.Throws<BusinessRuleValidationException>(() => new StartTime(pastTime));
+            Assert.Equal("Availability cannot start in the past.", ex.Message);
         }
 
         [Fact]
-        public void EnsureEqualsReturnsFalseWhenStartTimesAreDifferent() {
-            long validTime1 = 1727272800;
-            long validTime2 = 1727272801;
+        public void StartTimeEqualsShouldReturnTrueForSameTime()
+        {
+            
+            var time = DateTime.Now.AddHours(1);
+            var endTime1 = new StartTime(time);
+            var endTime2 = new StartTime(time);
 
-            var _validTime1 = new StartTime(validTime1);
-            var _validTime2 = new StartTime(validTime2);
+            
+            var result = endTime1.Equals(endTime2);
 
-            Assert.False(_validTime1.Equals(_validTime2));
+            
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void StartTimeEqualsShouldReturnFalseForDifferentTimes()
+        {
+            
+            var endTime1 = new StartTime(DateTime.Now.AddHours(1));
+            var endTime2 = new StartTime(DateTime.Now.AddHours(2));
+
+            
+            var result = endTime1.Equals(endTime2);
+
+            
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void StartTimeGetHashCodeShouldReturnSameHashCodeForSameTime()
+        {
+            
+            var time = DateTime.Now.AddHours(1);
+            var endTime1 = new StartTime(time);
+            var endTime2 = new StartTime(time);
+
+            
+            var hashCode1 = endTime1.GetHashCode();
+            var hashCode2 = endTime2.GetHashCode();
+
+            
+            Assert.Equal(hashCode1, hashCode2);
+        }
+
+        [Fact]
+        public void StartTimeGetHashCodeShouldReturnDifferentHashCodesForDifferentTimes()
+        {
+            
+            var endTime1 = new StartTime(DateTime.Now.AddHours(1));
+            var endTime2 = new StartTime(DateTime.Now.AddHours(2));
+
+            
+            var hashCode1 = endTime1.GetHashCode();
+            var hashCode2 = endTime2.GetHashCode();
+
+            
+            Assert.NotEqual(hashCode1, hashCode2);
         }
     }
 }
