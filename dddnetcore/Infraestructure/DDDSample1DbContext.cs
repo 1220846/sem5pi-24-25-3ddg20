@@ -40,7 +40,7 @@ namespace DDDSample1.Infrastructure
         public DbSet<AvailabilitySlot> AvailabilitySlots {get; set;}
 
         public DbSet<Staff> Staffs {get; set;}
-        public DbSet<OperationRequest> OperationRequest { get; internal set; }
+        public DbSet<OperationRequest> OperationRequest { get; set;}
 
         public DDDSample1DbContext(DbContextOptions options) : base(options)
         {
