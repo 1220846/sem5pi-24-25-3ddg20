@@ -22,6 +22,12 @@ using DDDSample1.Domain.OperationTypesSpecializations;
 using DDDSample1.Infrastructure.OperationTypesSpecializations;
 using DDDSample1.Domain.Users;
 using DDDSample1.Infrastructure.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using DDDSample1.Domain.Auth;
+using Microsoft.AspNetCore.Authorization;
+using System;
+using DotNetEnv;
 
 namespace DDDSample1
 {
@@ -29,6 +35,7 @@ namespace DDDSample1
     {
         public Startup(IConfiguration configuration)
         {
+            Env.Load();
             Configuration = configuration;
         }
 
@@ -37,13 +44,31 @@ namespace DDDSample1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddDbContext<DDDSample1DbContext>(opt =>
                 opt.UseInMemoryDatabase("DDDSample1DB")
                 .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
 
             ConfigureMyServices(services);
             
+            //Add
+            var Domain = Environment.GetEnvironmentVariable("Auth0_Domain");
+            var Audience = Environment.GetEnvironmentVariable("Auth0_Audience");
 
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options => { options.Authority = $"https://{Domain}/";
+            options.Audience = Audience;
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true};});
+            services.AddAuthorization(options =>{
+                options.AddPolicy("read:messages", policy =>
+                    policy.Requirements.Add(new HasScopeRequirement("read:messages", $"https://{Domain}/")));});
+            services.AddAuthorization(options => {
+            });
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+            
             services.AddControllers().AddNewtonsoftJson();
         }
 
@@ -64,6 +89,7 @@ namespace DDDSample1
 
             app.UseRouting();
 
+            app.UseAuthentication(); //Add
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -92,9 +118,11 @@ namespace DDDSample1
             services.AddTransient<SpecializationService>();
 
             services.AddTransient<IOperationTypeSpecializationRepository,OperationTypeSpecializationRepository>();
-
+            
             services.AddTransient<IUserRepository,UserRepository>();
             services.AddTransient<UserService>();
+
+            services.AddTransient<AuthenticationService>();
         }
     }
 }

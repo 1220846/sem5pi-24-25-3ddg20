@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using DDDSample1.Domain.Users;
+using System;
 
 namespace DDDSample1.Infrastructure.Users
 {
@@ -15,6 +16,13 @@ namespace DDDSample1.Infrastructure.Users
             //builder.Property<bool>("_active").HasColumnName("Active");
 
             builder.Property(b => b.Email).HasConversion(b => b.Address, b => new Email(b)).IsRequired();
+
+            builder.HasIndex(b => b.Email)
+                   .IsUnique();
+
+            builder.Property(b => b.Role).HasConversion(
+                       v => v.ToString(), 
+                       v => (Role)Enum.Parse(typeof(Role), v)).IsRequired();
         }
     }
 }
