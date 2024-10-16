@@ -411,3 +411,6 @@ bin/
 
 *.sln
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,csharp
+
+# Ignore o arquivo .env
+.env
