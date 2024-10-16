@@ -9,6 +9,7 @@ participant "Patient" as Patient <<Domain>>
 participant "OperationRequest" as OperationRequest <<Domain>>
 participant "OperationRequestDto" as OperationRequestDto <<Domain>>
 database "IStaffRepository" as StaffRepository <<Domain>>
+database "IOperationTypeRepository" as OperationTypeRepository <<Domain>>
 database "IPatientRepository" as PatientRepository <<Domain>>
 database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
 
@@ -16,18 +17,33 @@ activate UserP
 UserP->Controller: POST /api/operationrequests
 activate Controller
 
-    Controller->Service:addgetDoctorByIdAsync(operationRequestDto)
+    Controller->Service:addOperationRequestAsync(operationRequestDto)
     activate Service
 
-        Service -> StaffRepository:getDoctorByIdAsync(operationRequestDto.doctorID)
+        Service -> StaffRepository:getByIdAsync(operationRequestDto.doctorID)
         activate StaffRepository
 
             StaffRepository-->Service:doctor
         deactivate StaffRepository
         
+        Service -> OperationTypeRepository:getByIdAsync(operationRequestDto.operationTypeID)
+        activate OperationTypeRepository
 
-        alt doctor.specialization == operationType.specialization then
+            OperationTypeRepository-->Service:operationType
+        deactivate OperationTypeRepository
+
+        alt doctor.specialization.OperationTypeSpecialization == operationType then
         
+        Service -> PatientRepository:getByIdAsync(operationRequestDto.medicalRecordNumber)
+        activate PatientRepository
+
+            PatientRepository-->Service:patient
+        deactivate PatientRepository
+
+        opt patient==null
+            Service-->Controller:BusinessRuleValidationException
+        Controller-->UserP:404 Not Found
+        end opt
 
         Service->OperationRequest:create(operationRequestDto.PatientId, operationRequestDto.doctorID, operationRequestDto.OperationTypeId, operationRequestDto.deadline, operationRequestDto.priority)
         activate OperationRequest
@@ -49,14 +65,14 @@ activate Controller
             PatientRepository-->Service:patient
         deactivate PatientRepository
 
-        Service->OperationRequestDto:create(PatientId, DoctorId, OperationType,Deadline, Priority)
+        Service->OperationRequestDto:create(PatientId, DoctorId, OperationType,Deadline, Priority, Status)
         activate OperationRequestDto
 
             OperationRequestDto-->Service:operationRequestDto
         deactivate OperationRequestDto
         Service --> Controller:operationRequestDto
 
-        UserP<--Controller:201 created
+        UserP<--Controller:201 Created
         else
             Controller<--Service:BusinessRuleValidationException
         deactivate Service
