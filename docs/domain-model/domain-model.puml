@@ -142,6 +142,11 @@ package "<<aggregate>> OperationRequest"{
         EMERGENCY
     }
 
+    enum Status <<Value Object>> {
+        SCHEDULED
+        WAITING
+    }
+
 }
 
 package "<<aggregate>> Specialization "{
@@ -310,6 +315,7 @@ OperationRequest --> Priority
 OperationRequest "*" --> "1" Patient: of
 OperationRequest "*" ----> "1" Staff: to
 OperationRequest "*" ---> "1" OperationType: of
+OperationRequest --> Status
 
 'OperationType'
 OperationType --> OperationTypeId
