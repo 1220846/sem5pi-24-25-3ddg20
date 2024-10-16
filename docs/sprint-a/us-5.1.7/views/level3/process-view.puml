@@ -1,0 +1,20 @@
+@startuml process-view
+autonumber
+
+actor "Patient" as Patient
+participant "Server" as Server
+
+activate Patient
+
+    Patient-> Server : POST /api/users/login
+
+    activate Server
+
+        Note  right of Server: Login to the auth0 api
+
+        Patient <-- Server : 200 OK
+
+    deactivate Server
+deactivate Patient
+
+@enduml
