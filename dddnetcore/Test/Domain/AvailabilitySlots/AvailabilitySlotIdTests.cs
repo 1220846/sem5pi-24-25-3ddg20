@@ -5,7 +5,7 @@ using dddnetcore.Domain.AvailabilitySlots;
 public class AvailabilitySlotIdTests
 {
     [Fact]
-    public void CreateAvailabilitySlotId_FromGuid_ShouldSucceed()
+    public void CreateAvailabilitySlotIdFromGuidShouldSucceed()
     {
         
         var guid = Guid.NewGuid();
@@ -19,7 +19,7 @@ public class AvailabilitySlotIdTests
     }
 
     [Fact]
-    public void CreateAvailabilitySlotId_FromString_ShouldSucceed()
+    public void CreateAvailabilitySlotIdFromStringShouldSucceed()
     {
         
         var guidString = Guid.NewGuid().ToString();
@@ -33,7 +33,7 @@ public class AvailabilitySlotIdTests
     }
 
     [Fact]
-    public void AsGuid_ShouldReturnGuid()
+    public void AsGuidShouldReturnGuid()
     {
         
         var guid = Guid.NewGuid();
@@ -47,7 +47,7 @@ public class AvailabilitySlotIdTests
     }
 
     [Fact]
-    public void AsString_ShouldReturnStringRepresentationOfGuid()
+    public void AsStringShouldReturnStringRepresentationOfGuid()
     {
         
         var guid = Guid.NewGuid();
@@ -61,7 +61,7 @@ public class AvailabilitySlotIdTests
     }
 
     [Fact]
-    public void CreateAvailabilitySlotId_FromInvalidString_ShouldThrowFormatException()
+    public void CreateAvailabilitySlotIdFromInvalidStringShouldThrowFormatException()
     {
         
         var invalidString = "invalid-guid";

@@ -11,42 +11,88 @@ namespace DDDSample1.Tests.Domain.AvailabilitySlots
     public class EndTimeTests
     {
         [Fact]
-        public void EnsureValidTimestampIsAllowed() {
-            long validTime = 1727272800;
-
-            var time = new EndTime(validTime);
-
-            Assert.Equal(validTime, time.Time);
-        }
-
-        [Fact]
-        public void EnsureNegativeTimestampThrowsException() {
-            long invalidTime = -1;
+        public void CreateEndTimeShouldSucceedWhenTimeIsInTheFuture()
+        {
             
-            var exception = Assert.Throws<BusinessRuleValidationException>(() => new EndTime(invalidTime));
-            Assert.Equal("Timestamp cannot be negative!", exception.Message);
+            var futureTime = DateTime.Now.AddHours(1);
+
+            
+            var endTime = new EndTime(futureTime);
+
+            
+            Assert.NotNull(endTime);
+            Assert.Equal(futureTime, endTime.Time);
         }
 
         [Fact]
-        public void EnsureEqualsReturnsTrueWhenEndTimesAreEqual() {
-            long validTime1 = 1727272800;
-            long validTime2 = 1727272800;
+        public void CreateEndTimeShouldThrowExceptionWhenTimeIsInThePast()
+        {
+            
+            var pastTime = DateTime.Now.AddHours(-1);
 
-            var _validTime1 = new EndTime(validTime1);
-            var _validTime2 = new EndTime(validTime2);
-
-            Assert.True(_validTime1.Equals(_validTime2));
+            
+            var ex = Assert.Throws<BusinessRuleValidationException>(() => new EndTime(pastTime));
+            Assert.Equal("Availability cannot end in the past.", ex.Message);
         }
 
         [Fact]
-        public void EnsureEqualsReturnsFalseWhenEndTimesAreDifferent() {
-            long validTime1 = 1727272800;
-            long validTime2 = 1727272801;
+        public void EndTimeEqualsShouldReturnTrueForSameTime()
+        {
+            
+            var time = DateTime.Now.AddHours(1);
+            var endTime1 = new EndTime(time);
+            var endTime2 = new EndTime(time);
 
-            var _validTime1 = new EndTime(validTime1);
-            var _validTime2 = new EndTime(validTime2);
+            
+            var result = endTime1.Equals(endTime2);
 
-            Assert.False(_validTime1.Equals(_validTime2));
+            
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void EndTimeEqualsShouldReturnFalseForDifferentTimes()
+        {
+            
+            var endTime1 = new EndTime(DateTime.Now.AddHours(1));
+            var endTime2 = new EndTime(DateTime.Now.AddHours(2));
+
+            
+            var result = endTime1.Equals(endTime2);
+
+            
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void EndTimeGetHashCodeShouldReturnSameHashCodeForSameTime()
+        {
+            
+            var time = DateTime.Now.AddHours(1);
+            var endTime1 = new EndTime(time);
+            var endTime2 = new EndTime(time);
+
+            
+            var hashCode1 = endTime1.GetHashCode();
+            var hashCode2 = endTime2.GetHashCode();
+
+            
+            Assert.Equal(hashCode1, hashCode2);
+        }
+
+        [Fact]
+        public void EndTimeGetHashCodeShouldReturnDifferentHashCodesForDifferentTimes()
+        {
+            
+            var endTime1 = new EndTime(DateTime.Now.AddHours(1));
+            var endTime2 = new EndTime(DateTime.Now.AddHours(2));
+
+            
+            var hashCode1 = endTime1.GetHashCode();
+            var hashCode2 = endTime2.GetHashCode();
+
+            
+            Assert.NotEqual(hashCode1, hashCode2);
         }
     }
 }
