@@ -39,7 +39,7 @@ namespace DDDSample1.Domain.Users
             if(operationRequest == null)
                 return null;
 
-            return new OperationRequestDto{Id=operationRequest.Id.AsGuid(), DoctorId=operationRequest.staffId.AsString(), OperationTypeId=operationRequest.operationType.ToString(), MedicalRecordNumber=operationRequest.medicalRecordNumber.AsString(), Deadline=operationRequest.deadlineDate.ToString(), Priority=operationRequest.priority.ToString(), Status=operationRequest.status.ToString()};
+            return new OperationRequestDto{Id=operationRequest.Id.AsGuid(), DoctorId=operationRequest.StaffId.AsString(), OperationTypeId=operationRequest.OperationTypeId.ToString(), MedicalRecordNumber=operationRequest.MedicalRecordNumber.AsString(), Deadline=operationRequest.DeadlineDate.ToString(), Priority=operationRequest.Priority.ToString(), Status=operationRequest.Status.ToString()};
         }
 
         public async Task<OperationRequestDto> addOperationRequestAsync(CreatingOperationRequestDto dto)
@@ -55,8 +55,8 @@ namespace DDDSample1.Domain.Users
                 var operationRequest = new OperationRequest(new MedicalRecordNumber(dto.MedicalRecordNumber), new StaffId(dto.DoctorId), new OperationTypeId(dto.OperationTypeId), DeadlineDate.FromString(dto.Deadline), priority);
                 await _repoOp.AddAsync(operationRequest);
                 await this._unitOfWork.CommitAsync();
-                return new OperationRequestDto {DoctorId = operationRequest.staffId.AsString(), OperationTypeId=operationRequest.operationType.Id.AsString(), MedicalRecordNumber=operationRequest.medicalRecordNumber.AsString(),
-                    Deadline=operationRequest.deadlineDate.ToString(), Priority=operationRequest.priority.ToString(), Status=operationRequest.status.ToString()};
+                return new OperationRequestDto {DoctorId = operationRequest.StaffId.AsString(), OperationTypeId=operationRequest.OperationTypeId.AsString(), MedicalRecordNumber=operationRequest.MedicalRecordNumber.AsString(),
+                    Deadline=operationRequest.DeadlineDate.ToString(), Priority=operationRequest.Priority.ToString(), Status=operationRequest.Status.ToString()};
             }else {
                 throw new BusinessRuleValidationException("The Doctor Specialization not match with the Operation Type");
             }
