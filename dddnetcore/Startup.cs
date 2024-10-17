@@ -29,6 +29,11 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using DotNetEnv;
 using Newtonsoft.Json;
+using dddnetcore.Domain.Staffs;
+using DDDSample1.DataAnnotations.Staffs;
+using dddnetcore.Infraestructure.Staffs;
+using dddnetcore.Domain.AvailabilitySlots;
+using dddnetcore.Infraestructure.AvailabilitySlots;
 
 namespace DDDSample1
 {
@@ -146,6 +151,11 @@ namespace DDDSample1
             services.AddTransient<UserService>();
 
             services.AddTransient<AuthenticationService>();
+
+            services.AddTransient<IStaffRepository,StaffRepository>();
+            services.AddTransient<StaffService>();
+
+            services.AddTransient<IAvailabilitySlotRepository,AvailabilitySlotRepository>();
         }
     }
 }

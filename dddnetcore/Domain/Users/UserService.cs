@@ -69,7 +69,7 @@ namespace DDDSample1.Domain.Users
             int count = await _repo.CountBackofficeUsersAsync();
             int number = count + 1; 
 
-            string numberFormatted = number.ToString("D4");
+            string numberFormatted = number.ToString("D5");
             string usernameValue = $"{year}{numberFormatted}";
 
             var user = new User(Username.Create(role,usernameValue),new Email(dto.Email), role);

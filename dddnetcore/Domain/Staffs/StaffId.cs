@@ -13,13 +13,18 @@ namespace DDDSample1.Domain.Staffs {
         public StaffId(Guid value):base(value)
         {
         }
+
+        [JsonConstructor]
         public StaffId(String value):base(value)
         {
+            if (!Regex.IsMatch(value, @"^[ODN]\d{9}$")) {
+                throw new BusinessRuleValidationException("Staff ID is badly formatted!");
+            }
         }
 
         override
         protected Object createFromString(String text){
-            return new Guid(text);
+            return text;
         }
 
         override
