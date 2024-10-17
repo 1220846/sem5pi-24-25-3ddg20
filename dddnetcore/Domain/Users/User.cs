@@ -1,5 +1,6 @@
 using System;
 using DDDSample1.Domain.Shared;
+using DDDSample1.Domain.Staffs;
 
 namespace DDDSample1.Domain.Users
 {
@@ -7,6 +8,8 @@ namespace DDDSample1.Domain.Users
     {
         public Email Email { get; private set; }
         public Role Role { get; private set; }
+
+        public Staff Staff {get; private set;}
 
         public User(Username name, Email email, Role userRole)
         {

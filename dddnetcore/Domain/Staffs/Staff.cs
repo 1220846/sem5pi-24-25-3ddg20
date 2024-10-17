@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using dddnetcore.Domain.AvailabilitySlots;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
+using DDDSample1.Domain.Users;
 
 namespace DDDSample1.Domain.Staffs {
 
@@ -14,26 +15,32 @@ namespace DDDSample1.Domain.Staffs {
         public StaffContactInformation ContactInformation {get; private set;}
         public LicenseNumber LicenseNumber {get; private set;}
         public ICollection<AvailabilitySlot> AvailabilitySlots {get; private set;}
-
         public Specialization Specialization {get; private set;}
+        public User User {get; private set;}
+        public Username Username {get; private set;}
 
         private Staff() {}
 
-        public Staff(StaffFirstName firstName,
+        public Staff(
+            string id,
+            StaffFirstName firstName,
             StaffLastName lastName,
             StaffFullName fullName,
             StaffContactInformation contactInformation,
             LicenseNumber licenseNumber,
             List<AvailabilitySlot> availabilitySlots,
-            Specialization specialization) 
+            Specialization specialization,
+            User user) 
         {
-            this.Id = new StaffId(Guid.NewGuid());
+            this.Id = new StaffId(id);
             this.FirstName = firstName;
             this.LastName = lastName;
             this.FullName = fullName;
             this.ContactInformation = contactInformation;
             this.AvailabilitySlots = availabilitySlots;
+            this.LicenseNumber = licenseNumber;
             this.Specialization = specialization;
+            this.User = user;
         }
 
         public override bool Equals(object obj)

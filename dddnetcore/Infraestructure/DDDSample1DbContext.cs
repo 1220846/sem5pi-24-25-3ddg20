@@ -57,7 +57,7 @@ namespace DDDSample1.Infrastructure
             modelBuilder.ApplyConfiguration(new OperationTypeSpecializationEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AvailabilitySlotEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new StaffEntiryTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new StaffEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OperationRequestEntityTypeConfiguration());
         }
     }
