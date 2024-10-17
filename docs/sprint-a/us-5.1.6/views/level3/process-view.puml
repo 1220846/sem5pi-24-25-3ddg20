@@ -1,30 +1,20 @@
-@startuml level3
+@startuml process-view
+autonumber
 
-actor "User" as UserP
-participant "UsersController" as Controller <<Controller>>
-participant "UserService" as Service <<Service>>
-database "UserRepository" as UserRepository <<domain>>
+actor "BackofficeUser" as Patient
+participant "Server" as Server
 
-activate UserP
-UserP->Controller:GET /api/users/login
-activate Controller
+activate Patient
 
-    Controller->Service:UserLoginAsync(username,password)
-    activate Service
+    Patient-> Server : POST /api/users/login
 
-        
+    activate Server
 
-        /'
-        Service->Auth:verifyLogin(user,password)
-        activate Auth
+        Note  right of Server: Login to the auth0 api
 
-            Auth-->Service:result
-        deactivate Auth
-        '/
+        Patient <-- Server : 200 OK
 
-        Service-->Controller:message
-    deactivate Service
-    UserP<--Controller:201 autenticated
-deactivate Controller
+    deactivate Server
+deactivate Patient
 
 @enduml
