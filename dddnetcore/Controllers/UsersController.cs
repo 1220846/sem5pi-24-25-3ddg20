@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Users;
+using DDDSample1.Domain.Auth;
 
 namespace DDDSample1.Controllers{
 
@@ -59,6 +60,20 @@ namespace DDDSample1.Controllers{
             }catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginRequestDto loginRequestDto)
+        {
+            try
+            {
+                var loginDto = await _service.LoginAsync(loginRequestDto);
+
+                return Ok(loginDto);
+            }catch (Exception ex){
+                
+                return Unauthorized(new { Message ="Login failed. Please check your credentials and try again.", ErrorMessage = ex.Message});
             }
         }
     }

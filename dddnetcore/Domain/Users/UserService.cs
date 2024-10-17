@@ -8,6 +8,10 @@ using DDDSample1.Domain.Auth;
 using Microsoft.Extensions.Configuration;
 using Auth0.ManagementApi;
 using Auth0.ManagementApi.Models;
+using System.Net.Http;
+using System.Text.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace DDDSample1.Domain.Users
 {
@@ -23,6 +27,9 @@ namespace DDDSample1.Domain.Users
         private readonly string  _clientId;
         private readonly string  _clientSecret;
         private readonly string  _connection;
+        private readonly string  _namespace;
+        private readonly HttpClient _httpClient;
+
         public UserService(IUnitOfWork unitOfWork, IUserRepository repo, AuthenticationService authenticationService){
 
             this._unitOfWork = unitOfWork;
@@ -34,10 +41,13 @@ namespace DDDSample1.Domain.Users
             _clientId = Environment.GetEnvironmentVariable("Auth0_ClientId");
             _clientSecret = Environment.GetEnvironmentVariable("Auth0_ClientSecret");
             _connection = Environment.GetEnvironmentVariable("Auth0_Connection");
+            _namespace = Environment.GetEnvironmentVariable("Auth0_Namespace_Roles");
 
             _accessToken = _authenticationService.GetAccessToken(_domain,$"https://{_domain}/api/v2/", _clientId, _clientSecret).Result;
 
             _managementApiClient = new ManagementApiClient(_accessToken, _domain);
+            _httpClient = new HttpClient();
+
         }
 
         public async Task<UserDto> GetByIdAsync(String username)
@@ -89,7 +99,7 @@ namespace DDDSample1.Domain.Users
                                                                 Email = creatingUserPatientDto.Email,
                                                                 Password = creatingUserPatientDto.Password,
                                                                 Connection = _connection,
-                                                                UserMetadata = new Dictionary<string, object> {
+                                                                AppMetadata = new Dictionary<string, object> {
                                                                     { "roles", new string[] { EnumDescription.GetEnumDescription(Role.PATIENT) } }},
                                                                     EmailVerified = false
                                                                 };
@@ -103,6 +113,39 @@ namespace DDDSample1.Domain.Users
             await this._unitOfWork.CommitAsync();
 
             return  new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
+        }
+
+        public async Task<LoginDto> LoginAsync(LoginRequestDto loginRequestDto) {
+            var tokenEndpoint = $"https://{_domain}/oauth/token";
+
+            var tokenRequestBody = new Dictionary<string, string> {
+                { "grant_type", "password" },
+                { "username", loginRequestDto.Username },
+                { "password", loginRequestDto.Password },
+                { "client_id", _clientId },
+                { "client_secret", _clientSecret },
+                { "audience", _audience },
+                { "connection", _connection }};
+
+            var requestContent = new FormUrlEncodedContent(tokenRequestBody);
+
+            var tokenResponse = await _httpClient.PostAsync(tokenEndpoint, requestContent);
+
+            if (tokenResponse.IsSuccessStatusCode) {
+                var tokenResponseBody = await tokenResponse.Content.ReadAsStringAsync();
+                var tokenResult = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(tokenResponseBody);
+                string loginToken = tokenResult.GetProperty("access_token").GetString();
+
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(loginToken);
+                
+                var roles = jwtToken.Claims.Where(c => c.Type == $"{_namespace}/roles").Select(c => c.Value).ToList();
+
+                return new LoginDto {LoginToken = loginToken, Roles = roles};
+            } else {
+                var error = await tokenResponse.Content.ReadAsStringAsync();
+                throw new Exception($"Error retrieving access token: {error}");
+            }
         }
     }
 }

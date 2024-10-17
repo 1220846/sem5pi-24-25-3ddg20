@@ -28,6 +28,7 @@ using DDDSample1.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using DotNetEnv;
+using Newtonsoft.Json;
 
 namespace DDDSample1
 {
@@ -54,19 +55,28 @@ namespace DDDSample1
             //Add
             var Domain = Environment.GetEnvironmentVariable("Auth0_Domain");
             var Audience = Environment.GetEnvironmentVariable("Auth0_Audience");
+            var Namespace_Roles = Environment.GetEnvironmentVariable("Auth0_Namespace_Roles");
 
             services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options => { options.Authority = $"https://{Domain}/";
+
             options.Audience = Audience;
                 options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuer = true};});
+
             services.AddAuthorization(options =>{
                 options.AddPolicy("read:messages", policy =>
-                    policy.Requirements.Add(new HasScopeRequirement("read:messages", $"https://{Domain}/")));});
-            services.AddAuthorization(options => {
-            });
+                    policy.Requirements.Add(new HasScopeRequirement("read:messages", $"https://{Domain}/")));
+                options.AddPolicy("RequiredBackofficeRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Admin","Doctor","Nurse","Technician"));
+                options.AddPolicy("RequiredAdminRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Admin"));
+                options.AddPolicy("RequiredDoctorRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Doctor"));
+                options.AddPolicy("RequiredNurseRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Nurse"));
+                options.AddPolicy("RequiredTechnicianRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Technician"));
+                options.AddPolicy("RequiredPatientRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Patient"));
+                });
+                
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             
             services.AddControllers().AddNewtonsoftJson();
