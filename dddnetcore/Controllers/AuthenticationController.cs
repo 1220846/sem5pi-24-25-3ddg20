@@ -54,6 +54,16 @@ namespace DDDSample1.Controllers
             });
         }
 
+        [HttpGet("patient")]
+        [Authorize(Policy = "RequiredPatientRole")]
+        public IActionResult Patient()
+        {
+            return Ok(new
+            {
+                Message = "Hello from a patient endpoint!"
+            });
+        }
+
         [HttpPost("token")]
         public async Task<IActionResult> GetAcessToken()
         {

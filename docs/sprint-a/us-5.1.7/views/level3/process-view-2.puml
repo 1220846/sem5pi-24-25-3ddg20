@@ -1,0 +1,31 @@
+@startuml process-view-2
+autonumber
+
+actor "Patient" as PatientActor
+participant "UsersController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+
+activate PatientActor
+
+    PatientActor-> Controller : POST /api/users/login
+
+    activate Controller
+
+        Controller -> Service : loginAsync(loginRequestDto)
+
+        activate Service
+
+            Note  right of Service: Login to the auth0 api,\n bringing the token and roles
+
+            Service --> Controller : loginDto
+
+        deactivate Service
+
+        PatientActor <-- Controller : 200 Ok
+
+    deactivate Controller
+
+deactivate PatientActor
+
+
+@enduml
