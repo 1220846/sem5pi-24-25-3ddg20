@@ -10,11 +10,11 @@ namespace DDDSample1.Controllers{
     [Route("api/[controller]")]
     [ApiController]
 
-    public class RequestOperationController : ControllerBase{
+    public class OperationRequestsController : ControllerBase{
 
-        private readonly RequestOperationService _service;
+        private readonly OperationRequestService _service;
 
-        public  RequestOperationController(RequestOperationService service){
+        public  OperationRequestsController(OperationRequestService service){
             _service = service;
         }
 
@@ -37,7 +37,7 @@ namespace DDDSample1.Controllers{
         public async Task<ActionResult<OperationRequestDto>> Create(CreatingOperationRequestDto dto)
         {
             try{
-                var operationRequest = await _service.addOperationRequestAsync(dto);
+                var operationRequest = await _service.AddOperationRequestAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = operationRequest.Id }, operationRequest);
 

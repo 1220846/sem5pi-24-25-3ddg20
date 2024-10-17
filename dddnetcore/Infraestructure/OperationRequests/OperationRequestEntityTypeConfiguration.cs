@@ -21,13 +21,13 @@ namespace DDDSample1.Infrastructure.OperationRequests
             builder.HasMany(s => s.OperationTypeSpecializations)
                 .WithOne().HasForeignKey("SpecializationId").OnDelete(DeleteBehavior.Cascade);
 */
-        builder.OwnsOne(o => o.deadlineDate, d =>{
+        builder.OwnsOne(o => o.DeadlineDate, d =>{
                 d.Property(p => p.Date)
                  .HasColumnName("DeadlineDate")
                  .IsRequired(); 
             });
 
-            builder.Property(o => o.priority)
+            builder.Property(o => o.Priority)
                    .IsRequired(); 
         }
     }
