@@ -1,0 +1,30 @@
+@startuml level3
+
+actor "BackofficeUser" as UserP
+participant "UserController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+
+activate UserP
+
+    UserP-> Controller : POST /api/users/login
+
+    activate Controller
+
+        Controller -> Service : loginAsync(loginRequestDto)
+
+        activate Service
+
+            Note  right of Service: Login to the auth0 api,\n bringing the token and roles
+
+            Service --> Controller : loginDto
+
+        deactivate Service
+
+        UserP <-- Controller : 200 Ok
+
+    deactivate Controller
+
+deactivate UserP
+
+
+@enduml
