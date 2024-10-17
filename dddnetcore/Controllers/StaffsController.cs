@@ -35,7 +35,7 @@ namespace DDDSample1.Controllers
             //try {
                 StaffDto staff = await _service.AddAsync(dto);
 
-                return CreatedAtAction(nameof(GetById), new {id = staff.Id}, staff);
+                return CreatedAtAction(nameof(GetById), new {id = staff.Id.ToString()}, staff);
             /*
             } catch (BusinessRuleValidationException e) {
                 return BadRequest(new {e.Message});

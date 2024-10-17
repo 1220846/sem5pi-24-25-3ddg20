@@ -9,24 +9,25 @@ namespace DDDSample1.Domain.OperationRequests{
 
     public class OperationRequest:Entity<OperationRequestId>, IAggregateRoot{
 
-        public DeadlineDate deadlineDate {get;private set;}
+        public DeadlineDate DeadlineDate {get;private set;}
 
-        public OperationType operationType{get;private set;}
+        public OperationTypeId OperationTypeId{get;private set;}
 
-        public Priority priority{get;private set;}
+        public Priority Priority{get;private set;}
 
-        public MedicalRecordNumber medicalRecordNumber{get;private set;}
+        public MedicalRecordNumber MedicalRecordNumber{get;private set;}
 
-        public Status status{get;private set;}
-        public StaffId staffId{get;private set;}
-        public OperationRequest(MedicalRecordNumber patientId, StaffId staffId, OperationTypeId operationTypeId, DeadlineDate deadlineDate, Priority priority)
+        public Status Status{get;private set;}
+        public StaffId StaffId{get;private set;}
+        public OperationRequest(MedicalRecordNumber patientId, StaffId staffId, OperationTypeId operationTypeId, DeadlineDate DeadlineDate, Priority priority)
         {
             this.Id=new OperationRequestId(new Guid());
-            this.deadlineDate=deadlineDate;
-            this.priority=priority;
-            this.medicalRecordNumber=patientId;
-            this.staffId=staffId;
-            this.status=Status.ONWAITINGLIST;
+            this.DeadlineDate=DeadlineDate;
+            this.Priority=priority;
+            this.OperationTypeId=operationTypeId;
+            this.MedicalRecordNumber=patientId;
+            this.StaffId=staffId;
+            this.Status=Status.ONWAITINGLIST;
         }
 
         public OperationRequest()
