@@ -3,8 +3,8 @@
 autonumber
 
 actor "User" as UserP
-participant "RequestOperationsController" as Controller <<Controller>>
-participant "RequestOperationService" as Service <<Service>>
+participant "OperationRequestsController" as Controller <<Controller>>
+participant "OperationRequestService" as Service <<Service>>
 participant "Patient" as Patient <<Domain>>
 participant "OperationRequest" as OperationRequest <<Domain>>
 participant "OperationRequestDto" as OperationRequestDto <<Domain>>
