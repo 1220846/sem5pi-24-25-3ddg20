@@ -17,7 +17,7 @@ activate UserP
 UserP->Controller: POST /api/operationrequests
 activate Controller
 
-    Controller->Service:addOperationRequestAsync(operationRequestDto)
+    Controller->Service:AddOperationRequestAsync(creatingOperationRequestDto)
     activate Service
 
         Service -> StaffRepository:getByIdAsync(operationRequestDto.doctorID)

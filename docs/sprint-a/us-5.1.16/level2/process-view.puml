@@ -2,10 +2,10 @@
 
 participant SYS as "SARM" <<C4:System>>
 
-?o->SYS:POST /api/OperationRequest
+?o->SYS:POST /api/operationrequest
 activate SYS
 
-    SYS->SYS:createOperationRequest(creatingRequestOperationDto)
+    SYS->SYS:AddOperationRequestAsync(creatingOperationRequestDto)
 
     <--SYS:201 created
 deactivate SYS
