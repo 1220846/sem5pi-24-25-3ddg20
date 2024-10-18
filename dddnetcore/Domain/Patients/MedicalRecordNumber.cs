@@ -4,25 +4,36 @@ using Newtonsoft.Json;
 
 namespace DDDSample1.Domain.Patients{
     public class MedicalRecordNumber : EntityId{
+        public string Id{get; private set;}
+
         [JsonConstructor]
-        public MedicalRecordNumber(Guid value):base(value){}
-
-        public MedicalRecordNumber(String value):base(value){}
-
-        override
-        protected  Object createFromString(String text){
-            return new Guid(text);
-        }
-
-        override
-        public String AsString(){
-            Guid obj = (Guid) base.ObjValue;
-            return obj.ToString();
+        
+        public MedicalRecordNumber(string id):base(id){
+            this.Id = id;
         }
         
-       
-        public Guid AsGuid(){
-            return (Guid) base.ObjValue;
+        protected override object createFromString(string text)
+        {
+            return text; 
         }
+
+        public override string AsString()
+        {
+            return Id;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            return Id.Equals(((MedicalRecordNumber)obj).Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+    
     }
 }
