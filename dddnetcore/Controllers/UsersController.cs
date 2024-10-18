@@ -38,11 +38,11 @@ namespace DDDSample1.Controllers{
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
             try{
-                var user = await _service.addBackofficeUserAsync(dto);
+                var user = await _service.AddBackofficeUserAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
 
-            }catch(BusinessRuleValidationException exception){
+            }catch(Exception exception){
                 
                 return BadRequest(new {exception.Message});
             }

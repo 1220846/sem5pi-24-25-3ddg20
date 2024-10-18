@@ -13,6 +13,8 @@ using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace DDDSample1.Domain.Users
 {
@@ -61,7 +63,7 @@ namespace DDDSample1.Domain.Users
             return new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }
 
-        public async Task<UserDto> addBackofficeUserAsync(CreatingUserDto dto)
+        public async Task<UserDto> AddBackofficeUserAsync(CreatingUserDto dto)
         {
             var role = Enum.Parse<Role>(dto.Role.ToUpper());
 
@@ -75,9 +77,34 @@ namespace DDDSample1.Domain.Users
 
             var user = new User(Username.Create(role,usernameValue),new Email(dto.Email), role);
 
-            Console.Write(user.Id);
-
             await this._repo.AddAsync(user);
+
+            try{
+                var userCreateRequest = new UserCreateRequest { UserId = user.Id.Name,
+                                                                Email = dto.Email,
+                                                                Password = dto.Password,
+                                                                Connection = _connection,
+                                                                AppMetadata = new Dictionary<string, object> {
+                                                                    { "roles", new string[] { EnumDescription.GetEnumDescription(role) } }}
+                                                                };
+
+                await _managementApiClient.Users.CreateAsync(userCreateRequest);
+
+                var requestBody = new
+                {
+                    client_id =_clientId,
+                    email = dto.Email,
+                    connection = _connection
+                };
+
+                var json = JsonConvert.SerializeObject(requestBody);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync($"https://{_domain}/dbconnections/change_password", content);
+
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
 
             await this._unitOfWork.CommitAsync();
 
