@@ -2,12 +2,13 @@
 autonumber
 
 actor "Admin" as Adm
-participant "StaffsController" as Controller <<Contreoller>>
+participant "StaffsController" as Controller <<Controller>>
 participant "StaffService" as Service <<Service>>
 participant "User" as User <<Domain>>
 participant "Staff" as Staff <<Domain>>
 participant "StaffDto" as StaffDto <<Domain>>
 database "IUserRepository" as UserRepository <<Domain>>
+database "ISpecializationRepository" as SpecializationRepository <<Domain>>
 database "IStaffRepository" as StaffRepository <<Domain>>
 
 
@@ -15,18 +16,34 @@ Adm -> Controller : POST /api/staffs
 activate Controller
     Controller -> Service : createStaffProfileAsync(creatingStaffDto)
     activate Service
-        Service -> UserRepository : GetByEmailAsync(creatingStaffDto.email)
+alt dto is missing data
+        Service --> Controller : ArgumentNullException
+    Controller --> Adm : 400 Bad Request
+end alt
+        Service -> UserRepository : GetByIdAsync(creatingStaffDto.userEmail)
         activate UserRepository
             UserRepository --> Service : user
         deactivate UserRepository
 alt user == null
-        Service --> Controller : NotFoundException
+        Service --> Controller : NullReferenceException
     Controller --> Adm : 404 Not Found
 end alt
-        Service -> Staff : create(creatingStaffDto, user)
+        Service -> SpecializationRepository : GetByIdAsync(creatingStaffDto.specializationId)
+        activate SpecializationRepository
+            SpecializationRepository --> Service : specialization
+        deactivate SpecializationRepository
+alt specialization == null
+        Service --> Controller : NullReferenceException
+    Controller --> Adm : 404 Not Found
+end alt
+        Service -> Staff : create(creatingStaffDto,\nspecialization, user)
         activate Staff
             Staff --> Service : staff
         deactivate Staff
+alt business rules violatoe
+        Service --> Controller : BusinessRuleValidationException
+    Controller --> Adm : 200 Bad Request
+end alt
         Service -> StaffRepository : addAsync(staff)
         activate StaffRepository
             StaffRepository --> Service : staff

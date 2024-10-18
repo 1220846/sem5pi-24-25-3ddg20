@@ -10,6 +10,10 @@ activate Adm
         activate Database
             Database --> Server : user
         deactivate Database
+        Server -> Database : get specialization
+        activate Database
+            Database --> Server : specialization
+        deactivate Database
         Server -> Database : save staff
         activate Database
             Database --> Server : staff

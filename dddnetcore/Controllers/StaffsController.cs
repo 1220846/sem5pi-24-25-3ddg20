@@ -32,11 +32,11 @@ namespace DDDSample1.Controllers
 
         [HttpPost]
         public async Task<ActionResult<StaffDto>> Create(CreatingStaffDto dto) {
-            //try {
+            try {
                 StaffDto staff = await _service.AddAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new {id = staff.Id.ToString()}, staff);
-            /*
+            
             } catch (BusinessRuleValidationException e) {
                 return BadRequest(new {e.Message});
             } catch (NullReferenceException e) {
@@ -45,7 +45,7 @@ namespace DDDSample1.Controllers
                 return BadRequest(new {e.Message});
             } catch (ArgumentException) {
                 return Forbid();
-            }*/
+            }
         }
     }
 }
