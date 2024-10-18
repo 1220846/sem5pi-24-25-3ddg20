@@ -35,5 +35,16 @@ namespace DDDSample1.Domain.Users
         {
             return HashCode.Combine(Id, Email, Role);
         }
+
+        public void ChangeUsername(Username newUsername){
+
+            ArgumentNullException.ThrowIfNull(newUsername);
+            this.Id = newUsername;
+        }
+
+        public void ChangeEmail(Email newEmail){
+            ArgumentNullException.ThrowIfNull(newEmail);
+            this.Email = newEmail;
+        }
     }
 }
