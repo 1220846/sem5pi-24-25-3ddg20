@@ -20,6 +20,7 @@ namespace DDDSample1.Domain.Staffs {
             if (!Regex.IsMatch(value, @"^[ODN]\d{9}$")) {
                 throw new BusinessRuleValidationException("Staff ID is badly formatted!");
             }
+            this.Id = value;
         }
 
         override

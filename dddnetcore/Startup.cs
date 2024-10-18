@@ -28,7 +28,6 @@ using DDDSample1.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using DotNetEnv;
-using Newtonsoft.Json;
 using dddnetcore.Domain.Staffs;
 using DDDSample1.DataAnnotations.Staffs;
 using dddnetcore.Infraestructure.Staffs;
@@ -67,7 +66,6 @@ namespace DDDSample1
 
             services.AddDbContext<DDDSample1DbContext>(opt => opt.UseMySql(connection,
                     new MySqlServerVersion(new Version(8, 0, 21))).ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
-
             ConfigureMyServices(services);
             
             //Add
