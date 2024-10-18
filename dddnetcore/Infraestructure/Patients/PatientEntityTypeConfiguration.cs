@@ -20,7 +20,7 @@ namespace DDDSample1.Infrastructure.Patients
             builder.Property(b => b.EmergencyContact).HasConversion(b => b.PhoneNumber, b => new EmergencyContact(b));
             builder.Property(b => b.Gender).HasConversion<string>().IsRequired();
             builder.Property(b => b.MedicalConditions).HasConversion(b => b.Conditions, b => new MedicalConditions(b));
-            builder.HasOne(b => b.User).WithOne().HasForeignKey<Patient>(b => b.Username).IsRequired();
+            builder.HasOne(b => b.User).WithOne(b =>b.Patient).HasForeignKey<Patient>(b => b.Username).IsRequired();
         }
     }
 }

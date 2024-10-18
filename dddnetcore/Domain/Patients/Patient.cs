@@ -31,6 +31,9 @@ namespace DDDSample1.Domain.Patients{
             this.FullName = fullName;
             this.User = user;
         }
+
+        public Patient(){
+        }
         
 
         public override bool Equals(object obj)
