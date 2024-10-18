@@ -28,7 +28,6 @@ using DDDSample1.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using DotNetEnv;
-using Newtonsoft.Json;
 using dddnetcore.Domain.Staffs;
 using DDDSample1.DataAnnotations.Staffs;
 using dddnetcore.Infraestructure.Staffs;
@@ -50,11 +49,23 @@ namespace DDDSample1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddDbContext<DDDSample1DbContext>(opt =>
+            
+            /*services.AddDbContext<DDDSample1DbContext>(opt =>
                 opt.UseInMemoryDatabase("DDDSample1DB")
-                .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
+                .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());*/
 
+
+            // Add database in mysql
+            var databaseName = Environment.GetEnvironmentVariable("Database_Name");
+            var databaseUser = Environment.GetEnvironmentVariable("Database_User");
+            var databasePassword = Environment.GetEnvironmentVariable("Database_Password");
+            var databaseHost = Environment.GetEnvironmentVariable("Database_HostName");
+            var databasePort = Environment.GetEnvironmentVariable("Database_Port");
+
+            var connection = $"server={databaseHost};port={databasePort};database={databaseName};user={databaseUser};password={databasePassword};";
+
+            services.AddDbContext<DDDSample1DbContext>(opt => opt.UseMySql(connection,
+                    new MySqlServerVersion(new Version(8, 0, 21))).ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
             ConfigureMyServices(services);
             
             //Add
