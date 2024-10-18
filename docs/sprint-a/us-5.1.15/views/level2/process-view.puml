@@ -1,0 +1,15 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as ADM
+participant "Backend Data Management" as BDM
+
+activate ADM
+    ADM -> BDM : GET /api/staffs/filter>
+    activate BDM
+        BDM -> BDM : GetStaffs(name,email,specialization)
+        BDM --> ADM : 200 OK
+    deactivate BDM
+deactivate ADM
+
+@enduml

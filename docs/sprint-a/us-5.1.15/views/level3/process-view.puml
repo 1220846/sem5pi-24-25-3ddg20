@@ -1,0 +1,19 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant "Server" as Server
+participant "Database" as Database
+
+activate Admin
+    Admin-> Server : GET /api/staffs/filter
+    activate Server
+        Server -> Database : get staffs
+        activate Database
+            Database --> Server : staffs
+        deactivate Database
+        Admin <-- Server : 200 OK
+    deactivate Server
+deactivate Admin
+
+@enduml
