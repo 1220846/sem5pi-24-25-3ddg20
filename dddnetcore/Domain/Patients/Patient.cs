@@ -1,3 +1,4 @@
+using System;
 using DDDSample1.Domain.Shared;
 
 namespace DDDSample1.Domain.Patients{
@@ -38,5 +39,29 @@ namespace DDDSample1.Domain.Patients{
             return Id.GetHashCode();
         }
 
+        public void ChangeFirstName(PatientFirstName newPatientFirstName){
+            ArgumentNullException.ThrowIfNull(newPatientFirstName);
+            this.FirstName = newPatientFirstName;
+        }
+
+        public void ChangeLastName(PatientLastName newPatientLastName){
+            ArgumentNullException.ThrowIfNull(newPatientLastName);
+            this.LastName = newPatientLastName;
+        }
+
+        public void ChangeFullName(PatientFullName newPatientFullName){
+            ArgumentNullException.ThrowIfNull(newPatientFullName);
+            this.FullName = newPatientFullName;
+        }
+
+        public void ChangeEmail(PatientEmail newPatientEmail){
+            ArgumentNullException.ThrowIfNull(newPatientEmail);
+            ContactInformation.ChangeEmail(newPatientEmail);
+        }
+
+        public void ChangePhoneNumber(PatientPhone newPatientPhoneNumber){
+            ArgumentNullException.ThrowIfNull(newPatientPhoneNumber);
+            ContactInformation.ChangePhoneNumber(newPatientPhoneNumber);
+        }
     }
 }
