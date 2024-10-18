@@ -18,6 +18,8 @@ using DDDSample1.Domain.Staffs;
 using dddnetcore.Infraestructure.Staffs;
 using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Infrastructure.OperationRequests;
+using DDDSample1.Infrastructure.Patients;
+using DDDSample1.Domain.Patients;
 
 namespace DDDSample1.Infrastructure
 {
@@ -40,6 +42,8 @@ namespace DDDSample1.Infrastructure
         public DbSet<AvailabilitySlot> AvailabilitySlots {get; set;}
 
         public DbSet<Staff> Staffs {get; set;}
+
+        public DbSet<Patient> Patients {get; set;}
         public DbSet<OperationRequest> OperationRequest { get; set; }
 
         public DDDSample1DbContext(DbContextOptions options) : base(options)
@@ -59,6 +63,7 @@ namespace DDDSample1.Infrastructure
             modelBuilder.ApplyConfiguration(new AvailabilitySlotEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StaffEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OperationRequestEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PatientEntityTypeConfiguration());
         }
     }
 }
