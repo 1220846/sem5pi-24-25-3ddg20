@@ -1,0 +1,119 @@
+@startuml process-view-2
+autonumber
+
+actor "Patient" as PatientActor
+participant "UsersController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+participant "User" as User <<Domain>>
+participant "Patient" as Patient <<Domain>>
+participant "UserDto" as UserDto <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
+database "IPatientRepository" as PatientRepository <<Domain>>
+
+activate PatientActor
+
+    PatientActor-> Controller : POST /api/users/patients/{username}
+
+    activate Controller
+
+        Controller -> Service : UpdateUserPatientAsync(username,updateUserPatientDto)
+
+        activate Service
+
+            Service -> UserRepository : GetByIdAsync(username)
+
+            activate UserRepository
+
+                UserRepository --> Service  : user
+
+            deactivate UserRepository
+
+            alt user == null
+
+                Service --> Controller : NullReferenceException
+
+                PatientActor <-- Controller : 404 Not Found
+
+            Service -> PatientRepository : GetByUserIdAsync(username)
+
+            activate PatientRepository
+
+                PatientRepository --> Service : patient
+
+            deactivate PatientRepository
+
+            alt patient == null 
+
+                Service --> Controller : NullReferenceException
+
+                PatientActor <-- Controller : 404 Not Found
+
+            else    
+                
+                alt  updatePatientDto.Username != null
+                    Service -> User : changeUsername(updateUserPatientDto.Username)
+                end
+
+                alt  updatePatientDto.FirstName != null
+                    Service -> Patient : changeUsername(updateUserPatientDto.FirstName)
+                end
+
+                alt  updatePatientDto.LastName != null
+                    Service -> Patient : changeUsername(updateUserPatientDto.LastName)
+                end
+
+                alt  updatePatientDto.FullName != null
+                    Service -> Patient : changeUsername(updateUserPatientDto.FullName)
+                end
+
+                alt  updatePatientDto.Email != null
+                    Service -> User : changeEmail(updateUserPatientDto.Email)
+                    Service -> Patient : changeEmail(updateUserPatientDto.Email)
+                end
+
+                alt  updatePatientDto.PhoneNumber != null
+                    Service -> Patient : changePhoneNumber(updateUserPatientDto.PhoneNumber)
+                end
+
+                Service  -> UserRepository : UpdateAsync(user)
+
+                activate UserRepository
+
+                    UserRepository --> Service : user
+
+                deactivate UserRepository
+
+                Service -> Patient : UpdateUser(user)
+
+                Service -> PatientRepository : UpdateAsync(patient)
+
+                activate PatientRepository
+
+                    PatientRepository -->  Service : patient
+                
+                deactivate PatientRepository
+
+                Note  right of Service: Update user in the auth0 api \nand send email by auth0 for for verification
+
+                Service -> UserDto : create(Username,Email,Role)
+
+                activate UserDto
+
+                    UserDto --> Service : userDto
+
+                deactivate UserDto
+
+                Service --> Controller : userDto
+            end
+            end
+
+        deactivate Service
+
+        PatientActor <-- Controller : 200 OK
+
+    deactivate Controller
+
+deactivate PatientActor
+
+
+@enduml
