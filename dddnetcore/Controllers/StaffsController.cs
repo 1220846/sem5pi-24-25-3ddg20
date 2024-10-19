@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using dddnetcore.Domain.Staffs;
 using DDDSample1.Domain.Shared;
@@ -46,6 +47,12 @@ namespace DDDSample1.Controllers
             } catch (ArgumentException) {
                 return Forbid();
             }
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<StaffDto>>> GetStaffs(string firstName = null, string lastName = null, string fullName = null, string email = null, Guid? specializationId = null,
+        string phoneNumber = null, string id = null, string licenseNumber = null, int pageNumber = 1, int pageSize = 10) {
+            return await _service.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, pageNumber, pageSize);
         }
     }
 }

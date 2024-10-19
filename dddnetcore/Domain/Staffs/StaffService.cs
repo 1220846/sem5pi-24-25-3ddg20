@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using dddnetcore.Domain.AvailabilitySlots;
 using DDDSample1.DataAnnotations.Staffs;
@@ -61,6 +62,19 @@ namespace dddnetcore.Domain.Staffs
             }
 
             throw new ArgumentNullException("Missing data for staff creation!");
+        }
+
+        public async Task<List<StaffDto>> GetStaffsAsync(string firstName = null, string lastName = null, string fullName = null, string email = null, Guid? specializationId = null,
+        string phoneNumber = null, string id = null, string licenseNumber = null, int pageNumber = 1, int pageSize = 10) {
+            try {
+            List<Staff> staffs = await this._repo.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, pageNumber, pageSize);
+            
+            List<StaffDto> staffsDto = staffs.ConvertAll<StaffDto>(staff => new StaffDto(staff));
+            
+            return staffsDto;
+            } catch (BusinessRuleValidationException) {
+                return new List<StaffDto>();
+            }
         }
     }
 }

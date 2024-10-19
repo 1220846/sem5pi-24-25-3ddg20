@@ -7,6 +7,8 @@ namespace DDDSample1.Domain.Staffs{
         public StaffEmail Email {get; private set;}
         public StaffPhone PhoneNumber {get; private set;}
 
+        private StaffContactInformation() {}
+
         public StaffContactInformation(StaffEmail staffEmail, StaffPhone staffPhone) {
             this.Email = staffEmail;
             this.PhoneNumber = staffPhone;
