@@ -1,0 +1,53 @@
+@startuml process-view
+autonumber
+
+actor "Patient" as Patient
+participant "Server" as Server
+participant "Database" as Database
+
+activate Patient
+
+    Patient-> Server : PUT /api/users/patients/{username}
+
+    activate Server
+
+        Server -> Database : get user by id
+        
+        activate Database
+
+            Database --> Server : user
+
+        deactivate Database
+
+        Server -> Database : get patient by user id
+        
+        activate Database
+
+            Database --> Server : patient
+
+        deactivate Database
+
+        Server -> Database : update user
+        
+        activate Database
+
+            Database --> Server : user
+
+        deactivate Database
+
+        Server -> Database : update patient
+        
+        activate Database
+
+            Database --> Server : patient
+
+        deactivate Database
+
+        Note  right of Server: Update user in the auth0 api \nand send email by auth0 for for verification
+
+        Patient <-- Server : 200 OK
+
+    deactivate Server
+deactivate Patient
+
+@enduml

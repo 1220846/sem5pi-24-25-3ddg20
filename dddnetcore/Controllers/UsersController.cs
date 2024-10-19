@@ -38,11 +38,11 @@ namespace DDDSample1.Controllers{
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
             try{
-                var user = await _service.addBackofficeUserAsync(dto);
+                var user = await _service.AddBackofficeUserAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
 
-            }catch(BusinessRuleValidationException exception){
+            }catch(Exception exception){
                 
                 return BadRequest(new {exception.Message});
             }
@@ -61,6 +61,26 @@ namespace DDDSample1.Controllers{
                 
                 return BadRequest(new {exception.Message});
             }
+        }
+
+        // PUT: api/users/patients
+        [HttpPut("patients/{username}")]
+        public async Task<ActionResult<UserDto>> UpdateUserPatient(string username,UpdateUserPatientDto dto)
+        {
+            try{
+                var userDto = await _service.UpdateUserPatientAsync(username,dto);
+
+                return Ok(userDto);
+
+            }catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }
+            
         }
 
         [HttpPost("login")]

@@ -12,6 +12,9 @@ using System.Net.Http;
 using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Threading;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace DDDSample1.Domain.Users
 {
@@ -60,7 +63,7 @@ namespace DDDSample1.Domain.Users
             return new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }
 
-        public async Task<UserDto> addBackofficeUserAsync(CreatingUserDto dto)
+        public async Task<UserDto> AddBackofficeUserAsync(CreatingUserDto dto)
         {
             var role = Enum.Parse<Role>(dto.Role.ToUpper());
 
@@ -74,9 +77,34 @@ namespace DDDSample1.Domain.Users
 
             var user = new User(Username.Create(role,usernameValue),new Email(dto.Email), role);
 
-            Console.Write(user.Id);
-
             await this._repo.AddAsync(user);
+
+            try{
+                var userCreateRequest = new UserCreateRequest { UserId = user.Id.Name,
+                                                                Email = dto.Email,
+                                                                Password = dto.Password,
+                                                                Connection = _connection,
+                                                                AppMetadata = new Dictionary<string, object> {
+                                                                    { "roles", new string[] { EnumDescription.GetEnumDescription(role) } }}
+                                                                };
+
+                await _managementApiClient.Users.CreateAsync(userCreateRequest);
+
+                var requestBody = new
+                {
+                    client_id =_clientId,
+                    email = dto.Email,
+                    connection = _connection
+                };
+
+                var json = JsonConvert.SerializeObject(requestBody);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync($"https://{_domain}/dbconnections/change_password", content);
+
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
 
             await this._unitOfWork.CommitAsync();
 
@@ -146,6 +174,67 @@ namespace DDDSample1.Domain.Users
                 var error = await tokenResponse.Content.ReadAsStringAsync();
                 throw new Exception($"Error retrieving access token: {error}");
             }
+        }
+
+        public async Task<UserDto> UpdateUserPatientAsync(string username,UpdateUserPatientDto updateUserPatientDto){
+            
+            var user = await _repo.GetByIdAsync(new Username(username)) ?? throw new NullReferenceException("Not Found user with: " + username);
+
+            // TODO: Verify if patient exists
+            
+            if(updateUserPatientDto.FirstName != null)
+                //patient.ChangeFirstName(new PatientFirstName(updateUserPatientDto.FirstName));
+
+            if(updateUserPatientDto.LastName != null)
+                //patient.ChangeLastName(new PatientLastName(updateUserPatientDto.LastName));
+
+            if(updateUserPatientDto.FullName != null)
+                //patient.ChangeFullName(new PatientFullName(updateUserPatientDto.FullName));
+
+            if(updateUserPatientDto.Email != null)
+                user.ChangeEmail(new Email(updateUserPatientDto.Email));
+                //patient.ChangeEmail(new PatientEmail(updateUserPatientDto.Email));
+
+            if(updateUserPatientDto.PhoneNumber != null){
+                //patient.ChangePhoneNumber(new PatientPhone(updateUserPatientDto.PhoneNumber));
+            }
+            await this._repo.UpdateAsync(user);
+
+            //await this._repoPatient.UpdateAsync(patient);
+            try{
+                var userUpdateRequest = new UserUpdateRequest {
+                                                                Email = updateUserPatientDto.Email,
+                                                                Connection = _connection,
+                                                                };
+
+                CancellationToken cancellationToken = default;
+                await _managementApiClient.Users.UpdateAsync($"auth0|{username}",userUpdateRequest,cancellationToken);
+                
+                if (!string.IsNullOrEmpty(updateUserPatientDto.Password)){
+                    var passwordUpdateRequest = new UserUpdateRequest
+                    {
+                        Password = updateUserPatientDto.Password,
+                        Connection = _connection
+                    };
+
+                    await _managementApiClient.Users.UpdateAsync($"auth0|{username}", passwordUpdateRequest, CancellationToken.None);
+
+                    var verifyEmailJobRequest = new VerifyEmailJobRequest{
+                        UserId = $"auth0|{username}",
+                        ClientId = _clientId  
+                    };
+
+                    await _managementApiClient.Jobs.SendVerificationEmailAsync(verifyEmailJobRequest);
+
+                    }
+
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+
+            await this._unitOfWork.CommitAsync();
+
+            return  new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }
     }
 }

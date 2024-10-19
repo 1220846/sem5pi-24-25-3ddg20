@@ -1,4 +1,4 @@
-namespace DDDSample1.Domain.Auth{
+namespace DDDSample1.Domain.Users{
     public class LoginRequestDto{
 
         public string Username { get; set; }

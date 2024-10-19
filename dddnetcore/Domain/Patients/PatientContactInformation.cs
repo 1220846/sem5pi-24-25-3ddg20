@@ -9,5 +9,15 @@ namespace DDDSample1.Domain.Patients{
             this.Email = email;
             this.PhoneNumber = phoneNumber;
         }
+
+        public void ChangeEmail(PatientEmail newPatientEmail){
+            ArgumentNullException.ThrowIfNull(newPatientEmail);
+            this.Email = newPatientEmail;
+        }
+
+        public void ChangePhoneNumber(PatientPhone newPatientPhone){
+            ArgumentNullException.ThrowIfNull(newPatientPhone);
+            this.PhoneNumber = newPatientPhone;
+        }
     }
 }

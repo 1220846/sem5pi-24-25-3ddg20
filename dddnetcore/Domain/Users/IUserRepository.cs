@@ -6,5 +6,7 @@ namespace DDDSample1.Domain.Users
     public interface IUserRepository : IRepository<User, Username>
     {
         Task<int> CountBackofficeUsersAsync();
+
+        Task<User> UpdateAsync(User user);
     }
 }
