@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DDDSample1.DataAnnotations.Patients;
 using DDDSample1.Domain.Patients;
-using DDDSample1.Infrastructure;
+using DDDSample1.Domain.Users;
 using DDDSample1.Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +32,13 @@ namespace DDDSample1.Infrastructure.Patients
     
             var patient = patients.SingleOrDefault(p => p.ContactInformation != null && 
                 p.ContactInformation.Email != null && p.ContactInformation.Email.Email == email);
+
+            return patient;
+        }
+
+        public async Task<Patient> GetByUserIdAsync(string username)
+        {
+            var patient = await _context.Patients.Where(p => p.Username == new Username(username)).SingleOrDefaultAsync();       
 
             return patient;
         }

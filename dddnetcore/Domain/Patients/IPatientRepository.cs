@@ -9,6 +9,7 @@ namespace DDDSample1.DataAnnotations.Patients
     {
         Task<int> CountNewPatientsMonthAsync(DateTime date);
         Task<Patient> GetByEmailAsync(string email);
+        Task<Patient> GetByUserIdAsync(string username);
         Task<Patient> UpdateAsync(Patient patient);
     }
 }
