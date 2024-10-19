@@ -2,7 +2,7 @@ using System;
 using DDDSample1.Domain.Staffs;
 using Microsoft.Net.Http.Headers;
 
-namespace DDDSample1.Domain.Users
+namespace DDDSample1.Domain.OperationRequests
 {
     public class OperationRequestDto
     {

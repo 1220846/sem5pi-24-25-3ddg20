@@ -1,10 +1,10 @@
 using System.ComponentModel;
 
 namespace DDDSample1.Domain.OperationRequests{
-    public enum Status
+    public enum OperationRequestStatus
     {
         [Description ("Scheduled")] SCHEDULED,
-        [Description ("OnWaitingList")] ONWAITINGLIST 
+        [Description ("OnWaitingList")] WAITING 
 
     }
 }

@@ -35,6 +35,8 @@ using dddnetcore.Domain.AvailabilitySlots;
 using dddnetcore.Infraestructure.AvailabilitySlots;
 using DDDSample1.DataAnnotations.Patients;
 using DDDSample1.Infrastructure.Patients;
+using DDDSample1.Domain.OperationRequests;
+using DDDSample1.Infrastructure.OperationRequests;
 
 namespace DDDSample1
 {
@@ -157,6 +159,9 @@ namespace DDDSample1
 
             services.AddTransient<IPatientRepository,PatientRepository>();
             //services.AddTransient<PatientService>();
+
+            services.AddTransient<IOperationRequestRepository,OperationRequestRepository>();
+            services.AddTransient<OperationRequestService>();
 
             services.AddTransient<IAvailabilitySlotRepository,AvailabilitySlotRepository>();
         }
