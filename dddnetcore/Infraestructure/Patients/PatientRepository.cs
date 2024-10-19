@@ -26,6 +26,23 @@ namespace DDDSample1.Infrastructure.Patients
             return count;
         }
 
-        
+        public async Task<Patient> GetByEmailAsync(string email)
+        {
+            var patients = await _context.Patients.ToListAsync();
+    
+            var patient = patients.SingleOrDefault(p => p.ContactInformation != null && 
+                p.ContactInformation.Email != null && p.ContactInformation.Email.Email == email);
+
+            return patient;
+        }
+
+        public async Task<Patient> UpdateAsync(Patient patient)
+        {
+            _context.Patients.Update(patient);
+            
+            await _context.SaveChangesAsync();
+
+            return patient;
+        }
     }
 }

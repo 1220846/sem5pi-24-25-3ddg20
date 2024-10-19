@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
 using System.Text;
+using DDDSample1.DataAnnotations.Patients;
 
 namespace DDDSample1.Domain.Users
 {
@@ -22,6 +23,7 @@ namespace DDDSample1.Domain.Users
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
+        private readonly IPatientRepository _repoPatient;
         private readonly AuthenticationService _authenticationService;
         private readonly ManagementApiClient _managementApiClient;
         private readonly string _accessToken;
@@ -33,11 +35,12 @@ namespace DDDSample1.Domain.Users
         private readonly string  _namespace;
         private readonly HttpClient _httpClient;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, AuthenticationService authenticationService){
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo,IPatientRepository repoPatient, AuthenticationService authenticationService){
 
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._authenticationService = authenticationService;
+            this._repoPatient = repoPatient;
 
             _domain = Environment.GetEnvironmentVariable("Auth0_Domain");
             _audience = Environment.GetEnvironmentVariable("Auth0_Audience");
@@ -113,13 +116,15 @@ namespace DDDSample1.Domain.Users
 
         public async Task<UserDto>AddUserPatientAsync(CreatingUserPatientDto creatingUserPatientDto){
 
-            // TODO: Verify if have patient record
+            var patient = await _repoPatient.GetByEmailAsync(creatingUserPatientDto.Email) ?? throw new NullReferenceException("Not Found Patient: " + creatingUserPatientDto.Email);
 
             var user = new User(new Username(creatingUserPatientDto.Email),new Email(creatingUserPatientDto.Email),Role.PATIENT);
 
             await this._repo.AddAsync(user);
 
-            //TODO: Dar update do user
+            patient.UpdateUser(user);
+
+            await this._repoPatient.UpdateAsync(patient);
 
             // Add user in auth0
             try{
@@ -135,7 +140,7 @@ namespace DDDSample1.Domain.Users
                 await _managementApiClient.Users.CreateAsync(userCreateRequest);
 
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                throw new Exception($"Error creating user: " + ex.Message);
             }
 
             await this._unitOfWork.CommitAsync();

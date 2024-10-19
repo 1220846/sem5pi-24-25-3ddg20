@@ -73,5 +73,10 @@ namespace DDDSample1.Domain.Patients{
             ArgumentNullException.ThrowIfNull(newPatientPhoneNumber);
             ContactInformation.ChangePhoneNumber(newPatientPhoneNumber);
         }
+
+        public void UpdateUser(User newUser){
+            ArgumentNullException.ThrowIfNull(newUser);
+            this.User = newUser;
+        }
     }
 }

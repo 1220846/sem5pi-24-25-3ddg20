@@ -60,6 +60,12 @@ namespace DDDSample1.Controllers{
             }catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }catch(Exception exception){
+
+                return BadRequest(new {exception.Message});
             }
         }
 
