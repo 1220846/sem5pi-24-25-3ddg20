@@ -5,8 +5,10 @@ actor "Patient" as PatientActor
 participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "UserDto" as UserDto <<Domain>>
+participant "AnonymizedPatientData" as AnonymizedPatientData <<Domain>>
 database "IUserRepository" as UserRepository <<Domain>>
 database "IPatientRepository" as PatientRepository <<Domain>>
+database "IAnonymizedPatientDataRepository" as AnonymizedPatientDataRepository <<Domain>>
 
 activate PatientActor
 
@@ -46,7 +48,31 @@ activate PatientActor
 
                 PatientActor <-- Controller : 404 Not Found
 
-            else    
+            else
+
+                Service  -> Service : CalculateAgeRange(patient.DateOfBirth)
+
+                activate Service
+
+                    Service --> Service : ageRange
+                
+                deactivate Service
+
+                Service -> AnonymizedPatientData : create(ageRange, patient.Gender, patient.MedicalConditions, patient.AppointmentHistory)
+
+                activate AnonymizedPatientData
+
+                    AnonymizedPatientData --> Service :  anonymizedPatientData
+
+                deactivate AnonymizedPatientData
+
+                Service -> AnonymizedPatientDataRepository : AddAsync(anonymizedPatientData)
+
+                activate  AnonymizedPatientDataRepository
+
+                    AnonymizedPatientDataRepository --> Service: anonymizedPatientData
+
+                deactivate AnonymizedPatientDataRepository
 
                 Service  -> UserRepository : Remove(user)
 

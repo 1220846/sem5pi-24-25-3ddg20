@@ -27,6 +27,14 @@ activate Patient
 
         deactivate Database
 
+        Server -> Database : save anonymized patient data
+
+        activate Database
+
+            Database --> Server : anonymized patient data
+
+        deactivate Database
+
         Server -> Database : remove user
 
         Server -> Database : remove patient
