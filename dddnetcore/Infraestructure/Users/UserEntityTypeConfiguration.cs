@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using DDDSample1.Domain.Users;
 using System;
 using DDDSample1.Domain.Staffs;
+using DDDSample1.Domain.Patients;
 
 namespace DDDSample1.Infrastructure.Users
 {
@@ -26,6 +27,7 @@ namespace DDDSample1.Infrastructure.Users
                        v => (Role)Enum.Parse(typeof(Role), v)).IsRequired();
 
             builder.HasOne(b => b.Staff).WithOne(b => b.User).HasForeignKey<Staff>(b => b.Username);
+            builder.HasOne(b => b.Patient).WithOne(b => b.User).HasForeignKey<Patient>(b => b.Username);
         }
     }
 }
