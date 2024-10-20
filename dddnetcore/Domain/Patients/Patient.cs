@@ -17,9 +17,10 @@ namespace DDDSample1.Domain.Patients{
         public User User {get; private set;}
         public Username Username {get; private set;}
         
-        public Patient(AppointmentHistory appointmentHistory, DateOfBirth dateOfBirth, EmergencyContact emergencyContact,
+        public Patient(MedicalRecordNumber id, AppointmentHistory appointmentHistory, DateOfBirth dateOfBirth, EmergencyContact emergencyContact,
             Gender gender, MedicalConditions medicalConditions, PatientContactInformation contactInformation, 
             PatientFirstName firstName, PatientLastName lastName, PatientFullName fullName, User user){
+            this.Id = id;
             this.AppointmentHistory = appointmentHistory;
             this.DateOfBirth = dateOfBirth;
             this.EmergencyContact = emergencyContact;

@@ -38,6 +38,7 @@ using DDDSample1.Infrastructure.Patients;
 using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Infrastructure.OperationRequests;
 using DDDSample1.Domain.Patients;
+using dddnetcore.Domain.Patients;
 
 namespace DDDSample1
 {
@@ -159,7 +160,7 @@ namespace DDDSample1
             services.AddTransient<StaffService>();
 
             services.AddTransient<IPatientRepository,PatientRepository>();
-            //services.AddTransient<PatientService>();
+            services.AddTransient<PatientService>();
 
             services.AddTransient<IOperationRequestRepository,OperationRequestRepository>();
             services.AddTransient<OperationRequestService>();

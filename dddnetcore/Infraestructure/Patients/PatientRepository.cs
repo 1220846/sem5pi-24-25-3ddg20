@@ -18,9 +18,8 @@ namespace DDDSample1.Infrastructure.Patients
             _context = context;
         }
 
-        public async Task<int> CountNewPatientsMonthAsync(DateTime date)
+        public async Task<int> CountNewPatientsMonthAsync(string targetMonth)
         {
-            var targetMonth = date.ToString("yyyyMM");
             var count = await _context.Patients.Where(p => p.Id.AsString().Substring(0, 6) == targetMonth).CountAsync();
 
             return count;
