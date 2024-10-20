@@ -1,0 +1,78 @@
+@startuml process-view-2
+autonumber
+
+actor "Patient" as PatientActor
+participant "UsersController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+participant "UserDto" as UserDto <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
+database "IPatientRepository" as PatientRepository <<Domain>>
+
+activate PatientActor
+
+    PatientActor-> Controller : DELETE /api/users/patients/{username}
+
+    activate Controller
+
+        Controller -> Service : DeleteUserPatientAsync(username)
+
+        activate Service
+
+            Service -> UserRepository : GetByIdAsync(username)
+
+            activate UserRepository
+
+                UserRepository --> Service  : user
+
+            deactivate UserRepository
+
+            alt user == null
+
+                Service --> Controller : NullReferenceException
+
+                PatientActor <-- Controller : 404 Not Found
+
+            Service -> PatientRepository : GetByUserIdAsync(username)
+
+            activate PatientRepository
+
+                PatientRepository --> Service : patient
+
+            deactivate PatientRepository
+
+            alt patient == null 
+
+                Service --> Controller : NullReferenceException
+
+                PatientActor <-- Controller : 404 Not Found
+
+            else    
+
+                Service  -> UserRepository : Remove(user)
+
+                Service -> PatientRepository : Remove(patient)
+
+                Note  right of Service: Delete user in the auth0 api
+
+                Service -> UserDto : create(Username,Email,Role)
+
+                activate UserDto
+
+                    UserDto --> Service : userDto
+
+                deactivate UserDto
+
+                Service --> Controller : userDto
+            end
+            end
+
+        deactivate Service
+
+        PatientActor <-- Controller : 200 OK
+
+    deactivate Controller
+
+deactivate PatientActor
+
+
+@enduml
