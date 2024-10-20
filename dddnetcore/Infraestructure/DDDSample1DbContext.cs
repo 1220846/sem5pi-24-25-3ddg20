@@ -46,6 +46,8 @@ namespace DDDSample1.Infrastructure
         public DbSet<Patient> Patients {get; set;}
         public DbSet<OperationRequest> OperationRequest { get; set; }
 
+        public DbSet<AnonymizedPatientData> AnonymizedPatientsData { get; set; }
+
         public DDDSample1DbContext(DbContextOptions options) : base(options)
         {
 

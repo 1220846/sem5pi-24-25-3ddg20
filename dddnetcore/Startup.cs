@@ -37,6 +37,7 @@ using DDDSample1.DataAnnotations.Patients;
 using DDDSample1.Infrastructure.Patients;
 using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Infrastructure.OperationRequests;
+using DDDSample1.Domain.Patients;
 
 namespace DDDSample1
 {
@@ -164,6 +165,8 @@ namespace DDDSample1
             services.AddTransient<OperationRequestService>();
 
             services.AddTransient<IAvailabilitySlotRepository,AvailabilitySlotRepository>();
+
+            services.AddTransient<IAnonymizedPatientDataRepository,AnonymizedPatientDataRepository>();
         }
     }
 }
