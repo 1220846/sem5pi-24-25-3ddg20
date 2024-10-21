@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using dddnetcore.Domain.Staffs;
 using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.Staffs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DDDSample1.Controllers
@@ -21,7 +20,7 @@ namespace DDDSample1.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<StaffDto>> GetById(string id)
         {
-            var staff = await _service.GetByIdAsync(new StaffId(id));
+            var staff = await _service.GetByIdAsync(id);
 
             if (staff == null)
             {
@@ -54,5 +53,21 @@ namespace DDDSample1.Controllers
         string phoneNumber = null, string id = null, string licenseNumber = null, int pageNumber = 1, int pageSize = 10) {
             return await _service.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, pageNumber, pageSize);
         }
+
+        /*
+        [HttpPut("/{id}")]
+        public async Task<ActionResult<StaffDto>> EditStaff(string id, EditingStaffDto dto) {
+            try {
+                var staffDto = await _service.EditStaffAsync(id, dto);
+                return Ok(staffDto);
+            } catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+
+            } catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }
+        }*/
     }
 }
