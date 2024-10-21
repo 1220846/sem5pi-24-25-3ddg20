@@ -11,6 +11,8 @@ namespace dddnetcore.Domain.AvailabilitySlots
         private AvailabilitySlot() {}
 
         public AvailabilitySlot(StartTime startTime, EndTime endTime) {
+            if (startTime.Time.CompareTo(endTime.Time) != -1)
+                throw new BusinessRuleValidationException("Start time of availability slot must be before the end time!");
             this.Id = new AvailabilitySlotId(Guid.NewGuid());
             this.StartTime = startTime;
             this.EndTime = endTime;

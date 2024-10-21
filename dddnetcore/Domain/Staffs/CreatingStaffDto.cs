@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DDDSample1.Domain.Specializations;
-
 namespace dddnetcore.Domain.Staffs
 {
     public class CreatingStaffDto

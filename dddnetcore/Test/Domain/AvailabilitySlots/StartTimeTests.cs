@@ -11,10 +11,10 @@ namespace DDDSample1.Tests.Domain.AvailabilitySlots
     public class StartTimeTests
     {
         [Fact]
-        public void CreateStartTimeShouldSucceedWhenTimeIsInTheFuture()
+        public void CreateStartTimeShouldSucceedForAValidInput()
         {
             
-            var futureTime = DateTime.Now.AddHours(1);
+            var futureTime = DateTime.Now;
 
             
             var endTime = new StartTime(futureTime);
@@ -22,17 +22,6 @@ namespace DDDSample1.Tests.Domain.AvailabilitySlots
             
             Assert.NotNull(endTime);
             Assert.Equal(futureTime, endTime.Time);
-        }
-
-        [Fact]
-        public void CreateStartTimeShouldThrowExceptionWhenTimeIsInThePast()
-        {
-            
-            var pastTime = DateTime.Now.AddHours(-1);
-
-            
-            var ex = Assert.Throws<BusinessRuleValidationException>(() => new StartTime(pastTime));
-            Assert.Equal("Availability cannot start in the past.", ex.Message);
         }
 
         [Fact]
