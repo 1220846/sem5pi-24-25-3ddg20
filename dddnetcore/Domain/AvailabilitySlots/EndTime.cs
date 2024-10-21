@@ -8,8 +8,6 @@ namespace dddnetcore.Domain.AvailabilitySlots
         public DateTime Time {get; private set;}
 
         public EndTime(DateTime time) {
-            if (time <= DateTime.Now.AddMinutes(-5)) //para deixar criar ligeiramente no passado
-                throw new BusinessRuleValidationException("Availability cannot end in the past.");
             this.Time = time;
         } 
 

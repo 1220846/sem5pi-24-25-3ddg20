@@ -11,7 +11,7 @@ namespace DDDSample1.Tests.Domain.AvailabilitySlots
     public class EndTimeTests
     {
         [Fact]
-        public void CreateEndTimeShouldSucceedWhenTimeIsInTheFuture()
+        public void CreateEndTimeShouldSucceedForAValidInput()
         {
             
             var futureTime = DateTime.Now.AddHours(1);
@@ -22,17 +22,6 @@ namespace DDDSample1.Tests.Domain.AvailabilitySlots
             
             Assert.NotNull(endTime);
             Assert.Equal(futureTime, endTime.Time);
-        }
-
-        [Fact]
-        public void CreateEndTimeShouldThrowExceptionWhenTimeIsInThePast()
-        {
-            
-            var pastTime = DateTime.Now.AddHours(-1);
-
-            
-            var ex = Assert.Throws<BusinessRuleValidationException>(() => new EndTime(pastTime));
-            Assert.Equal("Availability cannot end in the past.", ex.Message);
         }
 
         [Fact]
