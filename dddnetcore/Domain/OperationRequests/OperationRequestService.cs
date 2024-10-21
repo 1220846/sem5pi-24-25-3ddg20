@@ -8,9 +8,10 @@ using DDDSample1.Domain.OperationRequests;
 using DDDSample1.DataAnnotations.Staffs;
 using DDDSample1.Domain.Staffs;
 using DDDSample1.Domain.Patients;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client.Payloads;
+using DDDSample1.DataAnnotations.Patients;
+using System.Linq;
 
-namespace DDDSample1.Domain.Users
+namespace DDDSample1.Domain.OperationRequests
 {
     public class OperationRequestService{
 
@@ -20,16 +21,16 @@ namespace DDDSample1.Domain.Users
 
         private readonly IOperationTypeRepository _repoOpTy;
 
-        //private readonly IPatientRepository _repoPat;
+        private readonly IPatientRepository _repoPat;
 
         private readonly IStaffRepository _repoS;
 
-        public OperationRequestService(IUnitOfWork unitOfWork, IOperationRequestRepository repo, IStaffRepository repoS, IOperationTypeRepository repoOpTy/*IPatientRepository repoPat*/){
+        public OperationRequestService(IUnitOfWork unitOfWork, IOperationRequestRepository repo, IStaffRepository repoS, IOperationTypeRepository repoOpTy, IPatientRepository repoPat){
             this._unitOfWork = unitOfWork;
             this._repoOp = repo;
             this._repoS=repoS;
             this._repoOpTy=repoOpTy;
-            //this._repoPat=repoPat;
+            this._repoPat=repoPat;
         }
 
         public async Task<OperationRequestDto> GetByIdAsync(OperationRequestId id)
@@ -46,10 +47,15 @@ namespace DDDSample1.Domain.Users
         {
             var doctor=await _repoS.GetByIdAsync(new StaffId(dto.DoctorId));
             var operationType= await _repoOpTy.GetByIdAsync(new OperationTypeId(dto.OperationTypeId));
-            if(doctor.Specialization.OperationTypeSpecializations==operationType){
-                //var patient = await _repoPat.getByIdAsync(new MedicalRecordNumber(dto.))
-                /*if(patient==null){
-                    throw new BusinessRuleValidationException("The patient with that Id does not exist!");
+            if(doctor==null){
+                    throw new NullReferenceException("The doctor with that Id does not exist!");
+            }
+            Console.WriteLine(doctor.Specialization.Id.AsString());
+            Console.WriteLine(operationType.OperationTypeSpecializations.First().Specialization.Id.AsString());
+            if(operationType.OperationTypeSpecializations.Any(specialization => specialization.Specialization.Id == doctor.Specialization.Id)){
+                /*var patient = await _repoPat.GetByIdAsync(new MedicalRecordNumber(dto.MedicalRecordNumber));
+                if(patient==null){
+                    throw new NullReferenceException("The patient with that Id does not exist!");
                 }*/
                 var priority = Enum.Parse<Priority>(dto.Priority.ToUpper());
                 var operationRequest = new OperationRequest(new MedicalRecordNumber(dto.MedicalRecordNumber), new StaffId(dto.DoctorId), new OperationTypeId(dto.OperationTypeId), DeadlineDate.FromString(dto.Deadline), priority);

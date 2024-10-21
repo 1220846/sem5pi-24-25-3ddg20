@@ -142,7 +142,7 @@ package "<<aggregate>> OperationRequest"{
         EMERGENCY
     }
 
-    enum Status <<Value Object>> {
+    enum OperationRequestStatus <<Value Object>> {
         SCHEDULED
         WAITING
     }

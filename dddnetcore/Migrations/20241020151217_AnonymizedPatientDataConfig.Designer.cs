@@ -4,6 +4,7 @@ using DDDSample1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDSample1DbContext))]
-    partial class DDDSample1DbContextModelSnapshot : ModelSnapshot
+    [Migration("20241020151217_AnonymizedPatientDataConfig")]
+    partial class AnonymizedPatientDataConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,6 +174,9 @@ namespace DDDNetCore.Migrations
                     b.Property<string>("AppointmentHistory")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ContactInformation")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime(6)");
 
@@ -197,9 +203,13 @@ namespace DDDNetCore.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContactInformation")
+                        .IsUnique();
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -387,35 +397,9 @@ namespace DDDNetCore.Migrations
                 {
                     b.HasOne("DDDSample1.Domain.Users.User", "User")
                         .WithOne("Patient")
-                        .HasForeignKey("DDDSample1.Domain.Patients.Patient", "Username");
-
-                    b.OwnsOne("DDDSample1.Domain.Patients.PatientContactInformation", "ContactInformation", b1 =>
-                        {
-                            b1.Property<string>("PatientId")
-                                .HasColumnType("varchar(255)");
-
-                            b1.Property<string>("Email")
-                                .IsRequired()
-                                .HasColumnType("longtext")
-                                .HasColumnName("Email");
-
-                            b1.Property<string>("PhoneNumber")
-                                .IsRequired()
-                                .HasColumnType("varchar(255)")
-                                .HasColumnName("PhoneNumber");
-
-                            b1.HasKey("PatientId");
-
-                            b1.HasIndex("PhoneNumber")
-                                .IsUnique();
-
-                            b1.ToTable("Patients");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PatientId");
-                        });
-
-                    b.Navigation("ContactInformation");
+                        .HasForeignKey("DDDSample1.Domain.Patients.Patient", "Username")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

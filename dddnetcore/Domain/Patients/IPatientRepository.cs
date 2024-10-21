@@ -7,8 +7,9 @@ namespace DDDSample1.DataAnnotations.Patients
 {
     public interface IPatientRepository : IRepository<Patient, MedicalRecordNumber>
     {
-        Task<int> CountNewPatientsMonthAsync(DateTime date);
+        Task<int> CountNewPatientsMonthAsync(string targetMonth);
         Task<Patient> GetByEmailAsync(string email);
+        Task<Patient> GetByUserIdAsync(string username);
         Task<Patient> UpdateAsync(Patient patient);
     }
 }

@@ -1,11 +1,8 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using DDDSample1.Domain.Shared;
-using System.Reflection.Emit;
-using DDDSample1.Domain.OperationTypes;
 using System;
 using DDDSample1.Domain.Auth;
-using Microsoft.Extensions.Configuration;
 using Auth0.ManagementApi;
 using Auth0.ManagementApi.Models;
 using System.Net.Http;
@@ -16,6 +13,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.Text;
 using DDDSample1.DataAnnotations.Patients;
+using DDDSample1.Domain.Patients;
 
 namespace DDDSample1.Domain.Users
 {
@@ -24,6 +22,7 @@ namespace DDDSample1.Domain.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
         private readonly IPatientRepository _repoPatient;
+        private readonly IAnonymizedPatientDataRepository _repoAnonymizedPatientData;
         private readonly AuthenticationService _authenticationService;
         private readonly ManagementApiClient _managementApiClient;
         private readonly string _accessToken;
@@ -35,12 +34,13 @@ namespace DDDSample1.Domain.Users
         private readonly string  _namespace;
         private readonly HttpClient _httpClient;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo,IPatientRepository repoPatient, AuthenticationService authenticationService){
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo,IPatientRepository repoPatient, IAnonymizedPatientDataRepository anonymizedPatientDataRepository, AuthenticationService authenticationService){
 
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._authenticationService = authenticationService;
             this._repoPatient = repoPatient;
+            this._repoAnonymizedPatientData = anonymizedPatientDataRepository;
 
             _domain = Environment.GetEnvironmentVariable("Auth0_Domain");
             _audience = Environment.GetEnvironmentVariable("Auth0_Audience");
@@ -185,27 +185,28 @@ namespace DDDSample1.Domain.Users
             
             var user = await _repo.GetByIdAsync(new Username(username)) ?? throw new NullReferenceException("Not Found user with: " + username);
 
-            // TODO: Verify if patient exists
-            
+            var  patient = await _repoPatient.GetByUserIdAsync(username)?? throw new NullReferenceException("Not Found patient with: " + username);
+
             if(updateUserPatientDto.FirstName != null)
-                //patient.ChangeFirstName(new PatientFirstName(updateUserPatientDto.FirstName));
+                patient.ChangeFirstName(new PatientFirstName(updateUserPatientDto.FirstName));
 
             if(updateUserPatientDto.LastName != null)
-                //patient.ChangeLastName(new PatientLastName(updateUserPatientDto.LastName));
+                patient.ChangeLastName(new PatientLastName(updateUserPatientDto.LastName));
 
             if(updateUserPatientDto.FullName != null)
-                //patient.ChangeFullName(new PatientFullName(updateUserPatientDto.FullName));
+                patient.ChangeFullName(new PatientFullName(updateUserPatientDto.FullName));
 
             if(updateUserPatientDto.Email != null)
                 user.ChangeEmail(new Email(updateUserPatientDto.Email));
-                //patient.ChangeEmail(new PatientEmail(updateUserPatientDto.Email));
+                patient.ChangeEmail(new PatientEmail(updateUserPatientDto.Email));
 
             if(updateUserPatientDto.PhoneNumber != null){
-                //patient.ChangePhoneNumber(new PatientPhone(updateUserPatientDto.PhoneNumber));
+                patient.ChangePhoneNumber(new PatientPhone(updateUserPatientDto.PhoneNumber));
             }
             await this._repo.UpdateAsync(user);
 
-            //await this._repoPatient.UpdateAsync(patient);
+            await this._repoPatient.UpdateAsync(patient);
+
             try{
                 var userUpdateRequest = new UserUpdateRequest {
                                                                 Email = updateUserPatientDto.Email,
@@ -234,12 +235,53 @@ namespace DDDSample1.Domain.Users
                     }
 
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                throw new Exception($"Error creating user: " + ex.Message);
             }
 
             await this._unitOfWork.CommitAsync();
 
             return  new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
+        }
+
+        public async Task<UserDto> DeleteUserPatientAsync(string username){
+
+            var user = await _repo.GetByIdAsync(new Username(username)) ?? throw new NullReferenceException("Not Found user with: " + username);
+
+            var  patient = await _repoPatient.GetByUserIdAsync(username)?? throw new NullReferenceException("Not Found patient with: " + username);
+
+            var anonymizedPatientData = new AnonymizedPatientData(
+                CalculateAgeRange(patient.DateOfBirth), 
+                patient.Gender.ToString(),
+                patient.MedicalConditions.ToString(),
+                patient.AppointmentHistory.ToString());
+
+            await this._repoAnonymizedPatientData.AddAsync(anonymizedPatientData);
+
+            this._repo.Remove(user);
+            this._repoPatient.Remove(patient);
+
+            try{
+                await _managementApiClient.Users.DeleteAsync(username);
+
+            }catch (Exception ex){
+                throw new Exception("Error when deleting user: ", ex);
+            }
+
+            await this._unitOfWork.CommitAsync();
+
+            return new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
+        }
+
+        private string CalculateAgeRange(DateOfBirth dateOfBirth){
+            var age = DateTime.Now.Year - dateOfBirth.Date.Year;
+
+            return age switch{
+                < 18 => "Under 18",
+                >= 18 and <= 35 => "18-35",
+                > 35 and <= 50 => "36-50",
+                > 50 and <= 65 => "51-65",
+                _ => "65+"
+            };
         }
     }
 }

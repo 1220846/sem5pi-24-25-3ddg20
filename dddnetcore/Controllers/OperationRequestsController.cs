@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.Users;
 using DDDSample1.Domain.OperationRequests;
 
 namespace DDDSample1.Controllers{
@@ -36,15 +35,18 @@ namespace DDDSample1.Controllers{
         [HttpPost()]
         public async Task<ActionResult<OperationRequestDto>> Create(CreatingOperationRequestDto dto)
         {
-            try{
+            //try{
                 var operationRequest = await _service.AddOperationRequestAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = operationRequest.Id }, operationRequest);
 
-            }catch(BusinessRuleValidationException exception){
+            /*}catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
-            }
+            }catch(NullReferenceException exception){
+                
+                return BadRequest(new {exception.Message});
+            }*/
         }
     }
 }

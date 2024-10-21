@@ -2,7 +2,7 @@ using System;
 using DDDSample1.Domain.Staffs;
 using Microsoft.Net.Http.Headers;
 
-namespace DDDSample1.Domain.Users
+namespace DDDSample1.Domain.OperationRequests
 {
     public class CreatingOperationRequestDto
     {
@@ -15,7 +15,5 @@ namespace DDDSample1.Domain.Users
         public string Deadline {get;set;}
 
         public string Priority {get;set;}
-
-        public string Status{get;set;}
     }
 }

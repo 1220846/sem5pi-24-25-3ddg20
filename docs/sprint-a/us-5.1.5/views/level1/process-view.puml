@@ -1,0 +1,19 @@
+@startuml process-view
+autonumber
+
+actor "Patient" as Patient
+participant SARM as "SARM" <<system (C4)>>
+
+activate Patient
+
+    Patient -> SARM : asks to delete my account and all associated data
+    
+    activate SARM
+
+        SARM --> Patient : confirms the delete
+
+    deactivate SARM
+
+deactivate Patient
+
+@enduml

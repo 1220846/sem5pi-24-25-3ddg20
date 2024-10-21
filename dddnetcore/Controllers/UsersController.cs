@@ -69,12 +69,32 @@ namespace DDDSample1.Controllers{
             }
         }
 
-        // PUT: api/users/patients
+        // PUT: api/users/patients/{username}
         [HttpPut("patients/{username}")]
         public async Task<ActionResult<UserDto>> UpdateUserPatient(string username,UpdateUserPatientDto dto)
         {
             try{
                 var userDto = await _service.UpdateUserPatientAsync(username,dto);
+
+                return Ok(userDto);
+
+            }catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }
+            
+        }
+
+        // DELETE: api/users/patients/{username}
+        [HttpDelete("patients/{username}")]
+        public async Task<ActionResult<UserDto>> DeleteUserPatient(string username)
+        {
+            try{
+                var userDto = await _service.DeleteUserPatientAsync(username);
 
                 return Ok(userDto);
 

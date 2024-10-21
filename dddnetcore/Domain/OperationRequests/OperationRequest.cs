@@ -17,7 +17,7 @@ namespace DDDSample1.Domain.OperationRequests{
 
         public MedicalRecordNumber MedicalRecordNumber{get;private set;}
 
-        public Status Status{get;private set;}
+        public OperationRequestStatus Status{get;private set;}
         public StaffId StaffId{get;private set;}
         public OperationRequest(MedicalRecordNumber patientId, StaffId staffId, OperationTypeId operationTypeId, DeadlineDate DeadlineDate, Priority priority)
         {
@@ -27,7 +27,7 @@ namespace DDDSample1.Domain.OperationRequests{
             this.OperationTypeId=operationTypeId;
             this.MedicalRecordNumber=patientId;
             this.StaffId=staffId;
-            this.Status=Status.ONWAITINGLIST;
+            this.Status=OperationRequestStatus.WAITING;
         }
 
         public OperationRequest()
