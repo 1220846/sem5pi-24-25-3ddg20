@@ -54,5 +54,13 @@ namespace dddnetcore.Infraestructure.Staffs
                 throw new BusinessRuleValidationException("Filters badly formatted!");
             }
         }
+
+        public async Task<Staff> UpdateAsync(Staff staff) {
+            _context.Staffs.Update(staff);
+
+            await _context.SaveChangesAsync();
+
+            return staff;
+        }
     }
 }

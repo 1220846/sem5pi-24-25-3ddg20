@@ -54,20 +54,21 @@ namespace DDDSample1.Controllers
             return await _service.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, pageNumber, pageSize);
         }
 
-        /*
-        [HttpPut("/{id}")]
+        
+        [HttpPut("{id}")]
         public async Task<ActionResult<StaffDto>> EditStaff(string id, EditingStaffDto dto) {
-            try {
+            //try {
                 var staffDto = await _service.EditStaffAsync(id, dto);
                 return Ok(staffDto);
+            /*} catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+                
             } catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
 
-            } catch(NullReferenceException exception){
-                
-                return NotFound(new {exception.Message});
-            }
-        }*/
+            }*/ 
+        }
     }
 }

@@ -12,6 +12,15 @@ activate adm
         activate db
             db --> srv : staff
         deactivate db
+alt
+        srv -> db : add availability slot
+        activate db
+            db --> srv : availability slot
+        deactivate db
+end alt
+alt
+        srv -> db : remove availability slot
+end alt
         srv -> db : update staff
         activate db
             db --> srv : staff

@@ -1,0 +1,73 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "StaffsController" as Controller <<Controller>>
+participant "StaffService" as Service <<Service>>
+participant "IEmailService" as EmailService <<Service>> 
+participant "Staff" as Staff <<Domain>>
+participant "Specialization" as Specialization <<Domain>>
+participant "AvailabilitySlot" as AvailabilitySlot <<Domain>>
+database "IStaffRepository" as StaffRepository <<Domain>>
+database "ISpecializationRepository" as SpecializationRepository <<Domain>>
+database "IAvailabilitySlotRepository" as AvailabilitySlotRepository <<Domain>>
+
+activate Admin
+    Admin -> Controller : PUT /api/staffs/{id}
+    activate Controller
+        Controller -> Service : EditStaffAsync(id, editingStaffDto)
+        activate Service
+            Service -> StaffRepository : GetByIdAsync(id)
+            activate StaffRepository
+                StaffRepository --> Service : staff
+            deactivate StaffRepository
+alt staff != null
+            Service --> Controller : NullReferenceException
+        Controller --> Admin : 404 Not Found
+end alt
+alt editingStaffDto.specializationId != null
+            Service -> SpecializationRepository : GetByIdAsync(editingStaffDto.specializationid)
+            activate SpecializationRepository
+                SpecializationRepository --> Service : specialization
+            deactivate SpecializationRepository
+alt specialization == null
+            Service --> Controller : NullReferenceException
+        Controller --> Admin : 404 Not Found
+end alt
+            Service -> Staff : ChangeSpecialization(specialization)
+end alt
+alt dto.ToRemoveAvailabilitySlotId != null
+            Service -> AvailabilitySlotRepository : getById(dto.ToRemoveAvailabilitySlotId)
+            activate AvailabilitySlotRepository
+                AvailabilitySlotRepository --> Service : availabilitySlot
+            deactivate AvailabilitySlotRepository
+alt availabilitySlot == null
+            Service --> Controller : NullReferenceException
+        Controller --> Admin : 404 Not Found
+end alt
+            Service -> Staff : RemoveAvailabilitySlot(availabilitySlot)
+            Service -> AvailabilitySlotRepository : Remove(availabilitySlot)
+end alt
+alt dto.NewAvailabilitySlotStartTime != null && dto.NewAvailabilitySlotEndTime != null
+            Service -> AvailabilitySlot : create(startTime, endTime)
+            activate AvailabilitySlot
+                AvailabilitySlot --> Service : availabilitySlot
+            deactivate AvailabilitySlot
+            Service -> Staff : AddAvailabilitySlot(availabilitySlot)
+            Service -> AvailabilitySlotRepository : AddAsync(availabilitySlot)
+end alt
+alt dto.Email != null
+            Service -> Staff : ContactInformation.ChangeEmail(new StaffEmail(dto.Email))            
+end alt
+alt dto.PhoneNumber != null
+            Service -> Staff : ContactInformation.ChangePhoneNumber(new StaffPhone(dto.PhoneNumber))
+end alt
+            Service -> StaffRepository : UpdateAsync(staff)
+alt ContactInformation changes happened
+            Service -> EmailService : SendEmailAsync(to, subject, body)
+end alt
+        deactivate Service
+
+    deactivate Controller
+
+deactivate Admin

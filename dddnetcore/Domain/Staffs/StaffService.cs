@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using dddnetcore.Domain.AvailabilitySlots;
 using DDDSample1.DataAnnotations.Staffs;
+using DDDSample1.Domain.Emails;
 using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
@@ -19,13 +20,15 @@ namespace dddnetcore.Domain.Staffs
         private readonly IAvailabilitySlotRepository _availabilitySlotRepo;
         private readonly ISpecializationRepository _specializationRepo;
         private readonly IUserRepository _userRepo;
+        private readonly IEmailService _emailService;
 
-        public StaffService(IUnitOfWork unitOfWork, IStaffRepository repo, IAvailabilitySlotRepository availabilitySlotRepo, ISpecializationRepository specializationRepo, IUserRepository userRepo) {
+        public StaffService(IUnitOfWork unitOfWork, IStaffRepository repo, IAvailabilitySlotRepository availabilitySlotRepo, ISpecializationRepository specializationRepo, IUserRepository userRepo, IEmailService emailService) {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._availabilitySlotRepo = availabilitySlotRepo;
             this._specializationRepo = specializationRepo;
             this._userRepo = userRepo;
+            this._emailService = emailService;
         }   
 
         public async Task<StaffDto> GetByIdAsync(string id)
@@ -81,30 +84,54 @@ namespace dddnetcore.Domain.Staffs
                 return new List<StaffDto>();
             }
         }
-        /*
+        
         public async Task<StaffDto> EditStaffAsync(string id, EditingStaffDto dto) {
-            Staff staff = await _repo.GetByIdAsync(new StaffId(id)) ?? throw new NullReferenceException("Staff not found");
+            bool changedContactInfo = false;
+            Staff staff = (await _repo.GetStaffsAsync(id: id)).FirstOrDefault() ?? throw new NullReferenceException("Staff not found");
+            StaffEmail previousEmail = staff.ContactInformation.Email;
 
-            //TODO email confirmation for contact information changes
-
-            if (dto.SpecializationId != null) {
-                Specialization specialization = await _specializationRepo.GetByIdAsync(new SpecializationId(dto.SpecializationId)) ?? throw new NullReferenceException("Specialization not found");
-                staff.changeSpecialization(specialization);
+            if (dto.SpecializationId.HasValue) {
+                Specialization specialization = await _specializationRepo.GetByIdAsync(new SpecializationId(dto.SpecializationId.Value)) ?? throw new NullReferenceException("Specialization not found");
+                staff.ChangeSpecialization(specialization);
+            }
+            if (dto.ToRemoveAvailabilitySlotId.HasValue) {
+                AvailabilitySlot availabilitySlot = await _availabilitySlotRepo.GetByIdAsync(new AvailabilitySlotId(dto.ToRemoveAvailabilitySlotId.Value)) ?? throw new NullReferenceException("Availability slot not found");
+                staff.RemoveAvailabilitySlot(availabilitySlot);
+                this._availabilitySlotRepo.Remove(availabilitySlot);
             }
             if (dto.NewAvailabilitySlotStartTime != null && dto.NewAvailabilitySlotEndTime != null) {
                 StartTime startTime = new(DateTimeOffset.FromUnixTimeSeconds((long) dto.NewAvailabilitySlotStartTime).DateTime);
                 EndTime endTime = new(DateTimeOffset.FromUnixTimeSeconds((long) dto.NewAvailabilitySlotEndTime).DateTime);
-                AvailabilitySlot availabilitySlot = new(startTime, endTime)
-                staff.addAvailabilitySlot(availabilitySlot);
-
+                AvailabilitySlot availabilitySlot = new(startTime, endTime);
+                staff.AddAvailabilitySlot(availabilitySlot);
+                await this._availabilitySlotRepo.AddAsync(availabilitySlot);
             }
-            if (dto.ToRemoveAvailabilitySlotId != null) {
-                 
-            }
-            if (dto.Email != null)
+            if (dto.Email != null) {
+                changedContactInfo = true;
                 staff.ContactInformation.ChangeEmail(new StaffEmail(dto.Email));
-            if (dto.PhoneNumber != null)
+            }
+            if (dto.PhoneNumber != null) {
+                changedContactInfo = true;
                 staff.ContactInformation.ChangePhoneNumber(new StaffPhone(dto.PhoneNumber));
-        }*/
+            }
+
+            await this._repo.UpdateAsync(staff);
+            await this._unitOfWork.CommitAsync();
+
+            
+            if (changedContactInfo) {
+
+                var to = new List<string>{previousEmail.Email};
+                var subject = "Contact information change.";
+                var body = $@"
+                <p>Dear {staff.FullName.Name},Your contact information has been changed:</p>
+                <p>Email Address: {staff.ContactInformation.Email.Email}.</p>
+                <p>Phone Number: {staff.ContactInformation.PhoneNumber.PhoneNumber}.</p>";
+                
+                await _emailService.SendEmailAsync(to, subject, body);
+            }
+
+            return new StaffDto(staff);
+        }
     }
 }
