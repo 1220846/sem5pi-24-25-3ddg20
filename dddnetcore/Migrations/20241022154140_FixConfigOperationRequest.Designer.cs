@@ -4,6 +4,7 @@ using DDDSample1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDSample1DbContext))]
-    partial class DDDSample1DbContextModelSnapshot : ModelSnapshot
+    [Migration("20241022154140_FixConfigOperationRequest")]
+    partial class FixConfigOperationRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,9 +109,8 @@ namespace DDDNetCore.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("OperationTypeStatus")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("OperationTypeStatus")
+                        .HasColumnType("int");
 
                     b.Property<int>("SurgeryTime")
                         .HasColumnType("int");
@@ -244,9 +246,6 @@ namespace DDDNetCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Specializations");
                 });
 
@@ -289,31 +288,6 @@ namespace DDDNetCore.Migrations
                         .IsUnique();
 
                     b.ToTable("Staffs");
-                });
-
-            modelBuilder.Entity("DDDSample1.Domain.SystemLogs.SystemLog", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Created_At")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Entity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EntityId")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Operation")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SystemLogs");
                 });
 
             modelBuilder.Entity("DDDSample1.Domain.Users.User", b =>

@@ -15,6 +15,7 @@ namespace DDDSample1.Domain.Patients{
 
         public AnonymizedPatientData(string ageRange,string gender,string medicalConditions, string appointmentHistory){
             
+            this.Id = new AnonymizedPatientDataId(Guid.NewGuid());
             this.AgeRange = ageRange;
             this.Gender = gender;
             this.MedicalConditions = medicalConditions;

@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using DDDSample1.Domain.Specializations;
 using DDDSample1.Domain.OperationRequests;
 using System;
+using DDDSample1.Domain.Staffs;
+using DDDSample1.Domain.Patients;
+using System.Reflection.Emit;
+using DDDSample1.Domain.OperationTypes;
 
 namespace DDDSample1.Infrastructure.OperationRequests
 {
@@ -10,17 +14,21 @@ namespace DDDSample1.Infrastructure.OperationRequests
 
          public void Configure(EntityTypeBuilder<OperationRequest> builder)
         {
-            builder.OwnsOne(o => o.DeadlineDate, d =>{d.Property(p => p.Date).HasColumnName("DeadlineDate").IsRequired();});
 
-            builder.Property(o => o.Priority).HasConversion(p => p.ToString(), p => (Priority)Enum.Parse(typeof(Priority), p)).HasColumnName("Priority").IsRequired();
+            builder.HasKey(o=>o.Id);
 
-            builder.Property(o => o.Status).HasConversion(s => s.ToString(), s => (OperationRequestStatus)Enum.Parse(typeof(OperationRequestStatus), s)).HasColumnName("Status").IsRequired();
+            builder.Property(o=>o.DeadlineDate).HasConversion(o=>o.Date, o=>new DeadlineDate(o)).IsRequired();
 
-            builder.Property(o => o.OperationTypeId).IsRequired();
+            builder.Property(b => b.Priority).HasConversion<string>().IsRequired();
 
-            builder.OwnsOne(o => o.MedicalRecordNumber, mrn =>{mrn.Property(p => p.Id).HasColumnName("MedicalRecordNumber").IsRequired();});
+            builder.Property(b => b.Status).HasConversion<string>().IsRequired();
 
-            builder.Property(o => o.StaffId).IsRequired();
+            builder.Property(o=>o.StaffId).HasConversion(o=>o.Id, o=>new StaffId(o)).IsRequired();
+            
+            builder.Property(o=>o.MedicalRecordNumber).HasConversion(o=>o.Id, o=>new MedicalRecordNumber(o)).IsRequired();
+            
+            builder.Property(o=>o.OperationTypeId).HasConversion(o=>o.Value, o=>new OperationTypeId(o)).IsRequired();
+           
         }
     }
 }
