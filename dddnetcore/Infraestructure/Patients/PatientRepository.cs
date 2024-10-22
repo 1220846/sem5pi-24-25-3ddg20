@@ -27,10 +27,9 @@ namespace DDDSample1.Infrastructure.Patients
 
         public async Task<Patient> GetByEmailAsync(string email)
         {
-            var patients = await _context.Patients.ToListAsync();
-    
-            var patient = patients.SingleOrDefault(p => p.ContactInformation != null && 
-                p.ContactInformation.Email != null && p.ContactInformation.Email.Email == email);
+            
+            var patient = await _context.Patients.Include(p => p.ContactInformation).Where(p => p.ContactInformation != null &&p.ContactInformation.Email != null &&
+            p.ContactInformation.Email.Equals(new PatientEmail(email))).SingleOrDefaultAsync();
 
             return patient;
         }

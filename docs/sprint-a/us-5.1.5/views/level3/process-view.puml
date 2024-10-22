@@ -7,7 +7,22 @@ participant "Database" as Database
 
 activate Patient
 
-    Patient-> Server : DELETE /api/users/patients/{username}
+    Patient-> Server : POST /api/users/patients/request-delete/{username}
+
+    activate Server
+        Server -> Database : get user by id
+        
+        activate Database
+
+            Database --> Server : user
+
+        deactivate Database
+    
+        Patient <-- Server : 200 OK
+
+    deactivate Server
+
+    Patient-> Server : DELETE api/users/patients/confirm-delete/{username}
 
     activate Server
 
