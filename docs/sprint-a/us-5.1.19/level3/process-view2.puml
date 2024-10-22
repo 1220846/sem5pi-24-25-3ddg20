@@ -1,0 +1,27 @@
+@startuml level3
+
+autonumber
+
+actor "Doctor" as Doctor
+participant "OperationRequestsController" as Controller <<Controller>>
+participant "OperationRequestService" as Service <<Service>>
+database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
+
+activate Doctor
+Doctor->Controller: POST /api/operationrequests/filter
+    activate Controller
+        Controller->Service:GetOperationRequestsAsync(patientName, operationType, priority, status)
+        activate Service
+                Service ->  OperationRequestRepository : GetOperationRequestsAsync(patientName, operationType, priority, status)
+
+                activate OperationRequestRepository
+
+                    OperationRequestRepository -->  Service : operationRequests
+
+                deactivate OperationRequestRepository
+
+                Service -->  Controller : operationRequestsDto
+        deactivate Service
+        Doctor<--Controller:200 OK
+    deactivate Controller
+@enduml

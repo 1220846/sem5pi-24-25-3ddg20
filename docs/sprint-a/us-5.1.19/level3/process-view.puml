@@ -1,0 +1,28 @@
+@startuml process-view
+autonumber
+
+actor "Doctor" as Doctor
+participant "Server" as Server
+participant "Database" as Database
+
+activate Doctor
+
+    Doctor-> Server : GET /api/operationrequests/filter
+    
+    activate Server
+
+        Server -> Database : get operation requests
+        
+        activate Database
+
+            Database --> Server : operation requests
+
+        deactivate Database
+
+        Doctor <-- Server : 200 OK
+
+    deactivate Server
+
+deactivate Doctor
+
+@enduml
