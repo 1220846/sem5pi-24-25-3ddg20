@@ -17,6 +17,8 @@ namespace DDDSample1.Infrastructure.Specializations
             builder.Property(b => b.Name).HasConversion(b => b.Name, b => new SpecializationName(b))
             .IsRequired().HasMaxLength(255);
 
+            builder.HasIndex(b => b.Name).IsUnique();
+
             builder.HasMany(s => s.OperationTypeSpecializations)
                 .WithOne().HasForeignKey("SpecializationId").OnDelete(DeleteBehavior.Cascade);
         }
