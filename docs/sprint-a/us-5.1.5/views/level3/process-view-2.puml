@@ -6,13 +6,53 @@ participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "UserDto" as UserDto <<Domain>>
 participant "AnonymizedPatientData" as AnonymizedPatientData <<Domain>>
+participant "IEmailService" as IEmailService <<Domain>>
 database "IUserRepository" as UserRepository <<Domain>>
 database "IPatientRepository" as PatientRepository <<Domain>>
 database "IAnonymizedPatientDataRepository" as AnonymizedPatientDataRepository <<Domain>>
 
 activate PatientActor
 
-    PatientActor-> Controller : DELETE /api/users/patients/{username}
+    PatientActor-> Controller : POST /api/users/patients/request-delete/{username}
+
+    activate Controller 
+
+        Controller -> Service : RequestDeleteUserPatientAsync(username)
+
+            activate Service
+            
+                Service -> UserRepository : GetByIdAsync(username)
+
+                activate UserRepository
+
+                    UserRepository --> Service  : user
+
+                deactivate UserRepository
+
+                alt user == null
+
+                    Service --> Controller : NullReferenceException
+
+                    PatientActor <-- Controller : 404 Not Found
+                else
+
+                Service -> IEmailService : SendEmailAsync(to,subject,body)
+
+                activate  IEmailService
+
+                    IEmailService --> Service : message
+
+                deactivate IEmailService
+
+                Service --> Controller : message
+
+            deactivate Service
+
+        Controller --> PatientActor : 200 OK
+
+    deactivate Controller
+
+    PatientActor-> Controller : DELETE api/users/patients/confirm-delete/{username}
 
     activate Controller
 
@@ -89,6 +129,7 @@ activate PatientActor
                 deactivate UserDto
 
                 Service --> Controller : userDto
+            end
             end
             end
 
