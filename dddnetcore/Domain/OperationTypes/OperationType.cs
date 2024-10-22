@@ -45,5 +45,16 @@ namespace DDDSample1.Domain.OperationTypes{
         {
             return Id.GetHashCode();
         }
+
+        public override String ToString(){
+            
+            return $"OperationType: \n" +
+                $"  Name: {Name.Name}\n" +
+                $"  Estimated Duration: {EstimatedDuration.Minutes} minutes\n" +
+                $"  Anesthesia Time: {AnesthesiaTime.Minutes} minutes\n" +
+                $"  Surgery Time: {SurgeryTime.Minutes} minutes\n" +
+                $"  Cleaning Time: {CleaningTime.Minutes} minutes\n" +
+                $"  Status: {OperationTypeStatus}\n";
+        }
     }
 }

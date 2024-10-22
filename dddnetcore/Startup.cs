@@ -41,6 +41,8 @@ using DDDSample1.Domain.Patients;
 using dddnetcore.Domain.Patients;
 using DDDSample1.Domain.Emails;
 using DDDSample1.Infrastructure.Emails;
+using DDDSample1.Domain.SystemLogs;
+using DDDSample1.Infrastructure.SystemLogs;
 
 namespace DDDSample1
 {
@@ -173,6 +175,7 @@ namespace DDDSample1
 
             services.AddTransient<IEmailService, EmailService>();
 
+            services.AddTransient<ISystemLogRepository,SystemLogRepository>();
         }
     }
 }
