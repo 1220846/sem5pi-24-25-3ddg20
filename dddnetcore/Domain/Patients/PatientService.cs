@@ -29,8 +29,16 @@ namespace dddnetcore.Domain.Patients
             dto.PhoneNumber != null && dto.DateOfBirth != null && dto.EmergencyContact != null && dto.Gender != null)
             {
                 string month = DateTime.Now.ToString("yyyyMM");
-                int newNumber = await _repo.CountNewPatientsMonthAsync(month) + 1;
-                string numberFormatted = newNumber.ToString("D5");
+                string lastId = await _repo.LastPatientCreatedAsync();
+                int newId = 1;
+                if (!string.IsNullOrEmpty(lastId)){
+                    string lastIdMonth = lastId[..6];
+                    string lastIdNumber = lastId.Substring(6,6);
+                    if (lastIdMonth == month){
+                        newId = int.Parse(lastIdNumber) + 1;
+                    }
+                }
+                string numberFormatted = newId.ToString("D6");
                 string medicalRecordNumber = month + numberFormatted;
                 var gender = Enum.Parse<Gender>(dto.Gender.ToUpper());
                 var patient = new Patient(
