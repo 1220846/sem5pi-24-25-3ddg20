@@ -3,17 +3,19 @@ top to bottom direction
 
 interface "API" as API
 interface "Auth0 API" as A0API
+interface "SMTP Office 365" as SMTP_Office_365
 
 component "Backend Data Management" <<component>>{
     () "DB API" as DBAPI
     portin " " as PI
-    portout " " as SARMPI1
+    portout " " as SARMPO1
+    portout " " as SARMPO2
 
     component "Server" <<component>> <<C4 Container>>{
         portin " " as SVPI
         portout " " as SVPO
         portout " " as SVPO1
-
+        portout " " as SVPO2
     }
 
     component "Database" <<component>> <<C4 Container>>{
@@ -26,6 +28,9 @@ API -- PI
 PI -- SVPI 
 SVPO --( DBAPI
 DBPI -U- DBAPI
-SVPO1 -- SARMPI1
-SARMPI1 -r-( A0API
+SVPO1 -- SARMPO1
+SARMPO1 -u-( A0API
+
+SARMPO2 --( SMTP_Office_365
+SVPO2 -- SARMPO2
 @enduml
