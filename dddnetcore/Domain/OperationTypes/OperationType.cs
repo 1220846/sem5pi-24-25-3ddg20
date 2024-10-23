@@ -46,6 +46,10 @@ namespace DDDSample1.Domain.OperationTypes{
             return Id.GetHashCode();
         }
 
+        public void Disable(){
+            this.OperationTypeStatus = OperationTypeStatus.INACTIVE;
+        }
+
         public override String ToString(){
             
             return $"OperationType: \n" +

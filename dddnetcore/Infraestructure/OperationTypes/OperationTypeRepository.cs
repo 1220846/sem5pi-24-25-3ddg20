@@ -57,5 +57,13 @@ namespace DDDSample1.Infrastructure.OperationTypes
                 return new List<OperationType>();
             }
         }
+
+        public async Task<OperationType> UpdateAsync(OperationType operationType) {
+            _context.OperationTypes.Update(operationType);
+            
+            await _context.SaveChangesAsync();
+
+            return operationType;
+        }
     }
 }

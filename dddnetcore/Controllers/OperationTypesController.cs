@@ -56,5 +56,21 @@ namespace DDDSample1.Controllers{
         {
             return await _service.GetOperationTypesAsync(name,specializationId,status);
         }
+
+        // GET: api/operationtypes/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "RequiredAdminRole")]
+        public async Task<ActionResult<OperationTypeDto>> RemoveOperationTypes(Guid id)
+        {
+            try{
+                return await _service.RemoveAsync(id);
+
+            }catch(NullReferenceException exception){
+                return NotFound(new {exception.Message});
+
+            }catch(Exception){
+                return Forbid();
+            }
+        }
     }
 }

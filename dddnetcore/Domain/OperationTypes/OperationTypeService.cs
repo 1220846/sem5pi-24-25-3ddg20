@@ -82,5 +82,20 @@ namespace DDDSample1.Domain.OperationTypes
 
             return operationTypesDto;
         }
+
+        public async Task<OperationTypeDto> RemoveAsync(Guid id){
+            
+            var operationType = await this._repo.GetByIdAsync(new OperationTypeId(id)) ?? throw new NullReferenceException("Not Found Operation Type: " + id);
+
+            operationType.Disable();
+
+            await this._repo.UpdateAsync(operationType); 
+
+            await this._unitOfWork.CommitAsync();
+
+            return new OperationTypeDto{Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,
+            CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes, OperationTypeStatus = operationType.OperationTypeStatus.ToString(),StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
+            SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()};
+        }
     }
 }
