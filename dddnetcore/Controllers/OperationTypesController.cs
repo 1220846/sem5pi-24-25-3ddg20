@@ -46,6 +46,12 @@ namespace DDDSample1.Controllers{
             }catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }catch(Exception){
+                
+                return Forbid();
             }
         }
 
@@ -53,7 +59,7 @@ namespace DDDSample1.Controllers{
         [HttpGet("filter")]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<OperationTypeDto>>> GetOperationTypes(string name = null, Guid? specializationId = null, string status = null)
-        {
+        {   
             return await _service.GetOperationTypesAsync(name,specializationId,status);
         }
 

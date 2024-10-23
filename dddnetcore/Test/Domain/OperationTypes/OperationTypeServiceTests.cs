@@ -70,7 +70,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
         }
 
         [Fact]
-        public async Task GetByIdAsyncWithNonExistingIdShouldThrowBusinessRuleValidationException()
+        public async Task GetByIdAsyncWithNonExistingIdShouldThrowNullReferenceException()
         {
             var operationTypeId = new OperationTypeId(Guid.NewGuid());
 
@@ -80,7 +80,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
                 .Callback<OperationTypeId>(id => capturedOperationTypeId = id)
                 .ReturnsAsync((OperationType)null);
 
-            var exception = await Assert.ThrowsAsync<BusinessRuleValidationException>(() =>
+            var exception = await Assert.ThrowsAsync<NullReferenceException>(() =>
                 _operationTypeService.GetByIdAsync(operationTypeId));
 
             Assert.Equal($"Not Found Operation Type with Id: {operationTypeId}", exception.Message);
@@ -143,7 +143,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
         }
 
         [Fact]
-        public async Task AddAsyncWithNonExistingSpecializationShouldThrowBusinessRuleValidationException() {
+        public async Task AddAsyncWithNonExistingSpecializationShouldThrowNullReferenceException() {
             var specializationId = Guid.NewGuid();
 
             var creatingOperationTypeDto = new CreatingOperationTypeDto{Name = "ACL Reconstruction Surgery",
@@ -158,7 +158,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
 
             _specializationRepoMock.Setup(repo => repo.GetByIdAsync(It.Is<SpecializationId>(id => id.Equals(new SpecializationId(specializationId))))).Callback<SpecializationId>(id => capturedSpecializationId = id).ReturnsAsync((Specialization)null);
 
-            var exception = await Assert.ThrowsAsync<BusinessRuleValidationException>(() =>
+            var exception = await Assert.ThrowsAsync<NullReferenceException>(() =>
                 _operationTypeService.AddAsync(creatingOperationTypeDto));
 
             Assert.Equal($"Not Found Specialization with Id: {specializationId}", exception.Message);
@@ -430,6 +430,69 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(2, result.Count);
             Assert.Contains(result, item => item.Name == "ACL Reconstruction Surgery");
             Assert.Contains(result, item => item.Name == "Knee Reconstruction Surgery");
+        }
+
+        [Fact]
+        public async Task RemoveAsyncValidIdDisablesOperationType(){
+            
+            var operationType = new OperationType(
+                new OperationTypeName("ACL Reconstruction Surgery"),
+                new EstimatedDuration(135),
+                new AnesthesiaTime(45),
+                new CleaningTime(30),
+                new SurgeryTime(60)
+            );
+
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                    .ReturnsAsync(operationType);
+
+            var result = await _operationTypeService.RemoveAsync(operationType.Id.AsGuid());
+
+            Assert.NotNull(result);
+            Assert.Equal(operationType.Id.AsGuid(), result.Id);
+            Assert.Equal("ACL Reconstruction Surgery", result.Name);
+            Assert.Equal(OperationTypeStatus.INACTIVE.ToString(), result.OperationTypeStatus);
+            _operationTypeRepoMock.Verify(repo => repo.UpdateAsync(operationType), Times.Once);
+            _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task RemoveAsyncNonExistentIdThrowsEntityNotFoundException()
+        {
+            var operationTypeId = Guid.NewGuid();
+
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                    .ReturnsAsync((OperationType)null);
+
+            var exception = await Assert.ThrowsAsync<NullReferenceException>(() => _operationTypeService.RemoveAsync(operationTypeId));
+            Assert.Equal("Not Found Operation Type: " + operationTypeId, exception.Message);
+        }
+
+        [Fact]
+        public async Task RemoveAsyncExistingIdReturnsCorrectDto(){
+            var operationType = new OperationType(
+                new OperationTypeName("Knee Reconstruction Surgery"),
+                new EstimatedDuration(120),
+                new AnesthesiaTime(40),
+                new CleaningTime(25),
+                new SurgeryTime(55)
+            );
+
+            operationType.Disable();
+
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                    .ReturnsAsync(operationType);
+
+            var result = await _operationTypeService.RemoveAsync(operationType.Id.AsGuid());
+
+            Assert.NotNull(result);
+            Assert.Equal(operationType.Id.AsGuid(), result.Id);
+            Assert.Equal("Knee Reconstruction Surgery", result.Name);
+            Assert.Equal(120, result.EstimatedDuration);
+            Assert.Equal(40, result.AnesthesiaTime);
+            Assert.Equal(25, result.CleaningTime);
+            Assert.Equal(55, result.SurgeryTime);
+            Assert.Equal(OperationTypeStatus.INACTIVE.ToString(), result.OperationTypeStatus);
         }
     }
 }
