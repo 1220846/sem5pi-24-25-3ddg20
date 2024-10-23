@@ -1,0 +1,19 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
+
+activate Admin
+
+    Admin-> BackendDataManagement : DELETE /api/operationtypes/{id}
+    activate BackendDataManagement
+
+        BackendDataManagement -> BackendDataManagement : removeOperationType(id)
+
+        Admin <-- BackendDataManagement : 200 OK
+    deactivate BackendDataManagement
+
+deactivate Admin
+
+@enduml

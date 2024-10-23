@@ -1,0 +1,59 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "OperationTypesController" as Controller <<Controller>>
+participant "OperationTypeService" as Service <<Service>>
+participant "OperationType" as OperationType <<Domain>>
+participant "OperationTypeDto" as OperationTypeDto <<Domain>>
+database "IOperationTypeRepository" as Repository <<Domain>>
+
+activate Admin
+    Admin-> Controller : DELETE /api/operationtypes/{id}
+
+    activate Controller
+
+        Controller -> Service : RemoveAsync(id)
+
+        activate Service
+
+            Service -> Repository : GetById(id)
+
+            activate Repository
+
+                Repository --> Service : operationType
+
+            deactivate Repository
+
+            alt operationType == null 
+
+                Service --> Controller : NullReferenceException
+
+                Admin <-- Controller : 404 Not Found
+
+            else 
+
+            Service  -> OperationType : disable()
+            
+            Service -> Repository : UpdateAsync(operationType)
+
+            Service -> OperationTypeDto : create(OperationTypeId,Name,EstimatedDuration,AnesthesiaTime,CleaningTime,SurgeryTime,OperationTypeStatus,StaffSpecializations)
+
+            activate OperationTypeDto
+
+                OperationTypeDto --> Service : operationTypeDto
+
+            deactivate OperationTypeDto
+
+            Service --> Controller : operationTypeDto
+
+            end
+        deactivate Service
+
+        Admin <-- Controller : 200 OK
+    deactivate Controller
+
+deactivate Admin
+
+
+@enduml

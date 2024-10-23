@@ -1,0 +1,27 @@
+@startuml process-view
+autonumber
+
+actor Admin as  "Admin"
+participant "Server" as Server
+participant "Database" as Database
+
+activate Admin
+    Admin-> Server : DELETE /api/operationtypes/{id}
+
+    activate Server
+
+        Server -> Database : get operation type by id
+        
+        activate Database
+
+            Database --> Server : operation type
+
+        deactivate Database
+
+        Server -> Database : update operation type
+
+        Admin <-- Server : 200 OK
+
+    deactivate Server
+deactivate Admin
+@enduml
