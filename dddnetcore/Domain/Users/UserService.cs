@@ -126,8 +126,6 @@ namespace DDDSample1.Domain.Users
 
             var user = new User(new Username(creatingUserPatientDto.Email),new Email(creatingUserPatientDto.Email),Role.PATIENT);
 
-            Console.WriteLine(patient.FirstName.Name);
-
             await this._repo.AddAsync(user);
 
             patient.UpdateUser(user);

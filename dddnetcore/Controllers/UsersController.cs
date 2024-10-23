@@ -64,9 +64,9 @@ namespace DDDSample1.Controllers{
             }catch(NullReferenceException exception){
                 
                 return NotFound(new {exception.Message});
-            }catch(Exception exception){
+            }catch(Exception){
 
-                return BadRequest(new {exception.Message});
+                return Forbid();
             }
         }
 
@@ -87,6 +87,9 @@ namespace DDDSample1.Controllers{
             }catch(NullReferenceException exception){
                 
                 return NotFound(new {exception.Message});
+            }catch(Exception){
+
+                return Forbid();
             }
             
         }
@@ -127,6 +130,9 @@ namespace DDDSample1.Controllers{
             }catch(NullReferenceException exception){
                 
                 return NotFound(new {exception.Message});
+            }catch(Exception){
+                
+                return Forbid();
             }
             
         }
