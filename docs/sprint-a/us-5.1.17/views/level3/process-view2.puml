@@ -1,0 +1,64 @@
+@startuml level3
+
+autonumber
+
+actor "User" as UserP
+participant "UsersController" as Controller <<Controller>>
+participant "UserService" as Service <<Service>>
+participant "OperationRequest" as OperationRequest <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
+database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
+
+activate UserP
+    UserP->Controller:PATCH /api/OperationRequest
+
+activate Controller
+
+    Controller->Service:UpdateOperationRequestAsync(operationRequestUpdateDto)
+    activate Service
+        Service->UserRepository:GetByIdAsync(username)
+        activate UserRepository
+
+            UserRepository-->Service:user
+        deactivate UserRepository
+
+        opt user==null or user.Role==Patient then
+            Service-->Controller:error
+            Controller-->UserP:404 NOT FOUND
+        end opt
+
+        Service->OperationRequestRepository:getById(operationRequestId)
+        activate OperationRequestRepository
+
+            OperationRequestRepository-->Service:operationRequest
+        deactivate OperationRequestRepository
+
+        opt operationRequest==null then
+            Service-->Controller:error
+            Controller-->UserP:404 NOT FOUND
+        end opt
+
+        Service->OperationRequest:updateData(operationRequestUpdateDto)
+        activate OperationRequest
+
+            OperationRequest-->Service:operationRequest
+        deactivate OperationRequest
+
+
+        Service->OperationRequestRepository:UpdateOperationRequestAsync(operationRequest)
+        activate OperationRequestRepository
+
+            OperationRequestRepository-->Service:statusCode
+        deactivate OperationRequestRepository
+
+        opt statusCode=500 then
+            Service-->Controller:error
+            Controller-->UserP:500 ERROR OCCURRED
+        end opt
+        Service --> Controller:userDto
+    deactivate Service
+
+    UserP<--Controller:201 Updated
+deactivate Controller
+
+@enduml

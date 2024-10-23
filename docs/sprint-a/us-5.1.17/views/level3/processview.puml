@@ -1,0 +1,35 @@
+@startuml level3
+
+autonumber
+
+actor Admin as  "Admin"
+participant "Server" as Server
+participant "Database" as Database
+
+activate Admin
+    Admin->Server:POST /api/OperationRequests
+    activate Server
+
+        Server->Database:getByIdAsync(username)
+        activate Database
+
+            Server<-Database:user
+        deactivate Database
+
+        Server->Database:getByIdAsync(operationRequestId)
+        activate Database
+
+            Server<-Database:operationRequest
+        deactivate Database
+
+        Server->Database:UpdateOperationRequestAsync(operationRequest)
+        activate Database
+
+            Server<-Database:result
+        deactivate Database
+
+        Admin<-Server:201 Created
+    deactivate Server
+deactivate Admin
+
+@enduml

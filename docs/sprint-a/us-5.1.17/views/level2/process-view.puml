@@ -1,0 +1,12 @@
+@startuml ssdlevel2
+
+participant SYS as "SARM" <<C4:System>>
+
+?o->SYS:PATCH /api/OperationRequest
+activate SYS
+
+    SYS->SYS:UpdateOperationRequestAsync(operationRequestUpdateDto)
+
+    <--SYS:201 OK
+deactivate SYS
+@enduml

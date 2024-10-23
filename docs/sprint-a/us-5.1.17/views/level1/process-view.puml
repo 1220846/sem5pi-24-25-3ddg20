@@ -1,0 +1,15 @@
+@startuml ssdlevel1
+
+actor "Doctor" as Doctor
+participant SYS as "SARM" <<C4:System>>
+
+activate Doctor
+
+    Doctor -> SYS : Asks to update an Operation Request
+    activate SYS
+        
+        SYS-->Doctor: Confirmation of operation Request Update
+    deactivate SYS
+deactivate Doctor
+
+@enduml
