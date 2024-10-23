@@ -9,6 +9,7 @@ using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
 using DDDSample1.Domain.Staffs;
+using DDDSample1.Domain.SystemLogs;
 using DDDSample1.Domain.Users;
 
 namespace dddnetcore.Domain.Staffs
@@ -20,13 +21,15 @@ namespace dddnetcore.Domain.Staffs
         private readonly IAvailabilitySlotRepository _availabilitySlotRepo;
         private readonly ISpecializationRepository _specializationRepo;
         private readonly IUserRepository _userRepo;
+        private readonly ISystemLogRepository _repoSystemLog;
         private readonly IEmailService _emailService;
 
-        public StaffService(IUnitOfWork unitOfWork, IStaffRepository repo, IAvailabilitySlotRepository availabilitySlotRepo, ISpecializationRepository specializationRepo, IUserRepository userRepo, IEmailService emailService) {
+        public StaffService(IUnitOfWork unitOfWork, IStaffRepository repo, IAvailabilitySlotRepository availabilitySlotRepo, ISpecializationRepository specializationRepo, IUserRepository userRepo, ISystemLogRepository repoSystemLog, IEmailService emailService) {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._availabilitySlotRepo = availabilitySlotRepo;
             this._specializationRepo = specializationRepo;
+            this._repoSystemLog = repoSystemLog;
             this._userRepo = userRepo;
             this._emailService = emailService;
         }   
@@ -90,12 +93,16 @@ namespace dddnetcore.Domain.Staffs
             Staff staff = (await _repo.GetStaffsAsync(id: id)).FirstOrDefault() ?? throw new NullReferenceException("Staff not found");
             StaffEmail previousEmail = staff.ContactInformation.Email;
 
+            List<string> changeLog = [];
+
             if (dto.SpecializationId.HasValue) {
                 Specialization specialization = await _specializationRepo.GetByIdAsync(new SpecializationId(dto.SpecializationId.Value)) ?? throw new NullReferenceException("Specialization not found");
+                changeLog.Add($"Staff changed specialization from {staff.Specialization.Name} to {specialization.Name}");
                 staff.ChangeSpecialization(specialization);
             }
             if (dto.ToRemoveAvailabilitySlotId.HasValue) {
                 AvailabilitySlot availabilitySlot = await _availabilitySlotRepo.GetByIdAsync(new AvailabilitySlotId(dto.ToRemoveAvailabilitySlotId.Value)) ?? throw new NullReferenceException("Availability slot not found");
+                changeLog.Add($"Staff removed availability slot {availabilitySlot.StartTime.Time}-{availabilitySlot.EndTime.Time}");
                 staff.RemoveAvailabilitySlot(availabilitySlot);
                 this._availabilitySlotRepo.Remove(availabilitySlot);
             }
@@ -103,19 +110,26 @@ namespace dddnetcore.Domain.Staffs
                 StartTime startTime = new(DateTimeOffset.FromUnixTimeSeconds((long) dto.NewAvailabilitySlotStartTime).DateTime);
                 EndTime endTime = new(DateTimeOffset.FromUnixTimeSeconds((long) dto.NewAvailabilitySlotEndTime).DateTime);
                 AvailabilitySlot availabilitySlot = new(startTime, endTime);
+                changeLog.Add($"Staff added availability slot {availabilitySlot.StartTime.Time}-{availabilitySlot.EndTime.Time}");
                 staff.AddAvailabilitySlot(availabilitySlot);
                 await this._availabilitySlotRepo.AddAsync(availabilitySlot);
             }
             if (dto.Email != null) {
                 changedContactInfo = true;
+                changeLog.Add($"Staff changed email from {staff.ContactInformation.Email.Email} to {dto.Email}");
                 staff.ContactInformation.ChangeEmail(new StaffEmail(dto.Email));
             }
             if (dto.PhoneNumber != null) {
                 changedContactInfo = true;
+                changeLog.Add($"Staff changed phone number from {staff.ContactInformation.PhoneNumber.PhoneNumber} to {dto.PhoneNumber}");
                 staff.ContactInformation.ChangePhoneNumber(new StaffPhone(dto.PhoneNumber));
             }
 
             await this._repo.UpdateAsync(staff);
+
+            if (changeLog.Count > 0) 
+                await this._repoSystemLog.AddAsync(new SystemLog(Operation.UPDATE, Entity.STAFF, string.Join(",", changeLog), staff.Id.Id));
+
             await this._unitOfWork.CommitAsync();
 
             
