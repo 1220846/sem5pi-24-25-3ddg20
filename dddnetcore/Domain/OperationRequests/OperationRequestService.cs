@@ -53,18 +53,18 @@ namespace DDDSample1.Domain.OperationRequests
                     throw new NullReferenceException("The doctor with that Id does not exist!");
             }
             if(operationType.OperationTypeSpecializations.Any(specialization => specialization.Specialization.Id == doctor.Specialization.Id)){
-                var patient = await _repoPatient.GetByIdAsync(new MedicalRecordNumber(dto.MedicalRecordNumber));
+                /*var patient = (await _repoPatient.GetPatientAsync(id: dto.MedicalRecordNumber)).FirstOrDefault();
                 if(patient==null){
                     throw new NullReferenceException("The patient with that Id does not exist!");
-                }
+                }*/
                 var priority = Enum.Parse<Priority>(dto.Priority.ToUpper());
                 var operationRequest = new OperationRequest(new MedicalRecordNumber(dto.MedicalRecordNumber), new StaffId(dto.DoctorId), new OperationTypeId(dto.OperationTypeId), DeadlineDate.FromString(dto.Deadline), priority);
                 await _repoOperationRequest.AddAsync(operationRequest);
                 await this._unitOfWork.CommitAsync();
-                return new OperationRequestDto {DoctorId = operationRequest.StaffId.AsString(), 
-                        OperationTypeId=operationRequest.OperationTypeId.AsString(), 
-                        MedicalRecordNumber=operationRequest.MedicalRecordNumber.AsString(),
-                        Deadline=operationRequest.DeadlineDate.ToString(), 
+                return new OperationRequestDto {DoctorId = operationRequest.StaffId.Id, 
+                        OperationTypeId=operationRequest.OperationTypeId.Value, 
+                        MedicalRecordNumber=operationRequest.MedicalRecordNumber.Id,
+                        Deadline=operationRequest.DeadlineDate.Date.ToString(), 
                         Priority=operationRequest.Priority.ToString(), 
                         Status=operationRequest.Status.ToString()};
             }else {

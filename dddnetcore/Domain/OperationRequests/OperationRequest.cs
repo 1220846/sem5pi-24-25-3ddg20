@@ -21,7 +21,7 @@ namespace DDDSample1.Domain.OperationRequests{
         public StaffId StaffId{get;private set;}
         public OperationRequest(MedicalRecordNumber patientId, StaffId staffId, OperationTypeId operationTypeId, DeadlineDate DeadlineDate, Priority priority)
         {
-            this.Id=new OperationRequestId(new Guid());
+            this.Id=new OperationRequestId(Guid.NewGuid());
             this.DeadlineDate=DeadlineDate;
             this.Priority=priority;
             this.OperationTypeId=operationTypeId;
