@@ -43,6 +43,20 @@ namespace DDDSample1.Domain.Staffs {
             this.User = user;
         }
 
+        public void ChangeSpecialization(Specialization newSpecialization) {
+            ArgumentNullException.ThrowIfNull(newSpecialization);
+            this.Specialization = newSpecialization;
+        }
+
+        public void AddAvailabilitySlot(AvailabilitySlot newAvailabilitySlot) {
+            ArgumentNullException.ThrowIfNull(newAvailabilitySlot);
+            this.AvailabilitySlots.Add(newAvailabilitySlot);
+        }
+
+        public void RemoveAvailabilitySlot(AvailabilitySlot oldAvailabilitySlot) {
+            this.AvailabilitySlots.Remove(oldAvailabilitySlot);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

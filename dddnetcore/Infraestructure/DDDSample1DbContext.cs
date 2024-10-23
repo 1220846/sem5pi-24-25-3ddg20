@@ -20,6 +20,7 @@ using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Infrastructure.OperationRequests;
 using DDDSample1.Infrastructure.Patients;
 using DDDSample1.Domain.Patients;
+using DDDSample1.Domain.SystemLogs;
 
 namespace DDDSample1.Infrastructure
 {
@@ -47,6 +48,8 @@ namespace DDDSample1.Infrastructure
         public DbSet<OperationRequest> OperationRequest { get; set; }
 
         public DbSet<AnonymizedPatientData> AnonymizedPatientsData { get; set; }
+
+        public DbSet<SystemLog> SystemLogs { get; set; }
 
         public DDDSample1DbContext(DbContextOptions options) : base(options)
         {

@@ -14,6 +14,17 @@ namespace DDDSample1.Domain.Staffs{
             this.PhoneNumber = staffPhone;
         }
 
+        
+        public void ChangeEmail(StaffEmail newEmail) {
+            ArgumentNullException.ThrowIfNull(newEmail);
+            this.Email = newEmail;
+        }
+
+        public void ChangePhoneNumber(StaffPhone newPhoneNumber) {
+            ArgumentNullException.ThrowIfNull(newPhoneNumber);
+            this.PhoneNumber = newPhoneNumber;
+        }
+
         public override bool Equals(object obj){
             if (obj == null || GetType() != obj.GetType())
                 return false;

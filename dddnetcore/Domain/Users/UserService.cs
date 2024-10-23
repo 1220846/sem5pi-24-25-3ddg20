@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Text;
 using DDDSample1.DataAnnotations.Patients;
 using DDDSample1.Domain.Patients;
+using DDDSample1.Domain.Emails;
 
 namespace DDDSample1.Domain.Users
 {
@@ -25,6 +26,7 @@ namespace DDDSample1.Domain.Users
         private readonly IAnonymizedPatientDataRepository _repoAnonymizedPatientData;
         private readonly AuthenticationService _authenticationService;
         private readonly ManagementApiClient _managementApiClient;
+        private readonly  IEmailService _emailService;
         private readonly string _accessToken;
         private readonly string  _domain;
         private readonly string  _audience;
@@ -34,13 +36,14 @@ namespace DDDSample1.Domain.Users
         private readonly string  _namespace;
         private readonly HttpClient _httpClient;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo,IPatientRepository repoPatient, IAnonymizedPatientDataRepository anonymizedPatientDataRepository, AuthenticationService authenticationService){
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo,IPatientRepository repoPatient, IAnonymizedPatientDataRepository anonymizedPatientDataRepository, AuthenticationService authenticationService,IEmailService emailService){
 
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._authenticationService = authenticationService;
             this._repoPatient = repoPatient;
             this._repoAnonymizedPatientData = anonymizedPatientDataRepository;
+            this._emailService = emailService;
 
             _domain = Environment.GetEnvironmentVariable("Auth0_Domain");
             _audience = Environment.GetEnvironmentVariable("Auth0_Audience");
@@ -119,6 +122,8 @@ namespace DDDSample1.Domain.Users
             var patient = await _repoPatient.GetByEmailAsync(creatingUserPatientDto.Email) ?? throw new NullReferenceException("Not Found Patient: " + creatingUserPatientDto.Email);
 
             var user = new User(new Username(creatingUserPatientDto.Email),new Email(creatingUserPatientDto.Email),Role.PATIENT);
+
+            Console.WriteLine(patient.FirstName.Name);
 
             await this._repo.AddAsync(user);
 
@@ -243,6 +248,32 @@ namespace DDDSample1.Domain.Users
             return  new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }
 
+        public async Task<String> RequestDeleteUserPatientAsync(string username)
+        {
+            var user = await _repo.GetByIdAsync(new Username(username));
+            if (user == null)
+            {
+                throw new NullReferenceException("Not Found user with: " + username);
+            }
+
+            var to = new List<string> { user.Email.Address };
+            var subject = "Confirm Account Deletion";
+            var body = $@"
+                        <p>You requested to delete your account. Please confirm by clicking the button below:</p>
+                        <p>
+                            <a href='http://localhost:5000/api/users/patients/confirm-delete/{username}'
+                            style='background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center;
+                                    text-decoration: none; display: inline-block; font-size: 16px; border-radius: 5px;'>
+                                Confirm Account Deletion
+                            </a>
+                        </p>";
+            
+
+            await _emailService.SendEmailAsync(to,subject,body);
+
+            return "Email to confirm account deletion";
+        }
+
         public async Task<UserDto> DeleteUserPatientAsync(string username){
 
             var user = await _repo.GetByIdAsync(new Username(username)) ?? throw new NullReferenceException("Not Found user with: " + username);
@@ -251,9 +282,9 @@ namespace DDDSample1.Domain.Users
 
             var anonymizedPatientData = new AnonymizedPatientData(
                 CalculateAgeRange(patient.DateOfBirth), 
-                patient.Gender.ToString(),
-                patient.MedicalConditions.ToString(),
-                patient.AppointmentHistory.ToString());
+                EnumDescription.GetEnumDescription(patient.Gender),
+                patient.MedicalConditions.Conditions,
+                patient.AppointmentHistory.History);
 
             await this._repoAnonymizedPatientData.AddAsync(anonymizedPatientData);
 
@@ -261,13 +292,20 @@ namespace DDDSample1.Domain.Users
             this._repoPatient.Remove(patient);
 
             try{
-                await _managementApiClient.Users.DeleteAsync(username);
+
+                await _managementApiClient.Users.DeleteAsync($"auth0|{username}");
 
             }catch (Exception ex){
-                throw new Exception("Error when deleting user: ", ex);
+                throw new Exception($"Error when deleting user '{username}': {ex.Message}", ex);
             }
 
             await this._unitOfWork.CommitAsync();
+
+            var to = new List<string> { user.Email.Address };
+            var subject = "Account Deleted";
+            var body = "Your account has been successfully deleted";
+            
+            await _emailService.SendEmailAsync(to,subject,body);
 
             return new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }

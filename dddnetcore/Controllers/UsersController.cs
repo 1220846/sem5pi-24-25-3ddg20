@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Users;
 using DDDSample1.Domain.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DDDSample1.Controllers{
 
@@ -71,6 +72,7 @@ namespace DDDSample1.Controllers{
 
         // PUT: api/users/patients/{username}
         [HttpPut("patients/{username}")]
+        [Authorize(Policy = "RequiredPatientRole")]
         public async Task<ActionResult<UserDto>> UpdateUserPatient(string username,UpdateUserPatientDto dto)
         {
             try{
@@ -88,9 +90,29 @@ namespace DDDSample1.Controllers{
             }
             
         }
+        
+        // POST: api/users/patients/request-delete/{username}
+        [HttpPost("patients/request-delete/{username}")]
+        [Authorize(Policy = "RequiredPatientRole")]
+        public async Task<IActionResult> RequestDeleteUserPatient(string username)
+        {
+            try
+            {
+                var result = await _service.RequestDeleteUserPatientAsync(username);
+                return Ok(result);
+            }
+            catch (NullReferenceException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
-        // DELETE: api/users/patients/{username}
-        [HttpDelete("patients/{username}")]
+        // DELETE: api/users/patients/confirm-delete/{username}
+        [HttpDelete("patients/confirm-delete/{username}")]
         public async Task<ActionResult<UserDto>> DeleteUserPatient(string username)
         {
             try{

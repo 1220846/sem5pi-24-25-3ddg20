@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.OperationTypes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DDDSample1.Controllers{
 
@@ -34,6 +35,7 @@ namespace DDDSample1.Controllers{
 
         // POST: api/operationtypes
         [HttpPost]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<OperationTypeDto>> Create(CreatingOperationTypeDto dto)
         {
             try{
@@ -49,6 +51,7 @@ namespace DDDSample1.Controllers{
 
         // GET: api/operationtypes/filter
         [HttpGet("filter")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<OperationTypeDto>>> GetOperationTypes(string name = null, Guid? specializationId = null, string status = null)
         {
             return await _service.GetOperationTypesAsync(name,specializationId,status);

@@ -7,7 +7,7 @@ participant "Backend Data Management" as BDM
 activate ADM
     ADM -> BDM : PUT /api/staffs/{id}
     activate BDM
-        BDM -> BDM : editStaffProfile(editingStaffDto)
+        BDM -> BDM : editStaffProfile(id,editingStaffDto)
         BDM --> ADM : 200 OK
     deactivate BDM
 deactivate ADM

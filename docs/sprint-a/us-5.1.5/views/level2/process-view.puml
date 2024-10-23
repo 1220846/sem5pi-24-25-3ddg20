@@ -5,7 +5,17 @@ actor "Patient" as Patient
 participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
 
 activate Patient
-    Patient -> BackendDataManagement : DELETE /api/users/patients/{username}
+
+    Patient -> BackendDataManagement : POST /api/users/patients/request-delete/{username}
+    
+    activate BackendDataManagement
+
+        BackendDataManagement -> BackendDataManagement : requestDeleteUserPatient(username)
+
+        Patient <-- BackendDataManagement : 200 OK
+    deactivate BackendDataManagement
+
+    Patient -> BackendDataManagement : DELETE api/users/patients/confirm-delete/{username}
     activate BackendDataManagement
 
         BackendDataManagement -> BackendDataManagement : deleteUserPatient(username)

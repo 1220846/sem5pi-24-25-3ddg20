@@ -27,6 +27,8 @@ namespace DDDSample1.Infrastructure.OperationTypes
             builder.Property(b => b.CleaningTime).HasConversion(b => b.Minutes, b => new CleaningTime(b)).IsRequired();
 
             builder.Property(b => b.SurgeryTime).HasConversion(b => b.Minutes, b => new SurgeryTime(b)).IsRequired();
+
+            builder.Property(b => b.OperationTypeStatus).HasConversion<string>().IsRequired();
         }
     }
 }

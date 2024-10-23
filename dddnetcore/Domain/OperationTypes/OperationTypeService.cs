@@ -6,6 +6,7 @@ using DDDSample1.Domain.OperationTypeSpecializations;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using DDDSample1.Domain.SystemLogs;
 
 namespace DDDSample1.Domain.OperationTypes
 {
@@ -19,12 +20,15 @@ namespace DDDSample1.Domain.OperationTypes
 
         private readonly IOperationTypeSpecializationRepository _operationTypeSpecializationRepo;
 
-        public OperationTypeService(IUnitOfWork unitOfWork, IOperationTypeRepository repo,ISpecializationRepository specializationRepo,IOperationTypeSpecializationRepository operationTypeSpecializationRepo){
+        private readonly ISystemLogRepository _systemLogRepository;
+
+        public OperationTypeService(IUnitOfWork unitOfWork, IOperationTypeRepository repo,ISpecializationRepository specializationRepo,IOperationTypeSpecializationRepository operationTypeSpecializationRepo, ISystemLogRepository systemLogRepository){
 
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._specializationRepo = specializationRepo; 
             this._operationTypeSpecializationRepo = operationTypeSpecializationRepo;
+            this._systemLogRepository = systemLogRepository;
         }
 
         public async Task<OperationTypeDto> GetByIdAsync(OperationTypeId id)
@@ -58,6 +62,8 @@ namespace DDDSample1.Domain.OperationTypes
 
                 await this._operationTypeSpecializationRepo.AddAsync(operationTypeSpecialization);
             }
+
+            await this._systemLogRepository.AddAsync(new SystemLog(Operation.INSERT,Entity.OPERATION_TYPE,operationType.ToString(),operationType.Id.AsString()));
 
             await this._unitOfWork.CommitAsync();
 

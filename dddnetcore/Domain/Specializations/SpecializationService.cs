@@ -20,12 +20,12 @@ namespace DDDSample1.Domain.Specializations
 
         public async Task<SpecializationDto> GetByIdAsync(SpecializationId id)
         {
-            var operationType = await this._repo.GetByIdAsync(id);
+            var specialization = await this._repo.GetByIdAsync(id);
             
-            if(operationType == null)
+            if(specialization == null)
                 return null;
 
-            return new SpecializationDto{Id = operationType.Id.AsGuid(), Name = operationType.Name.Name};
+            return new SpecializationDto{Id = specialization.Id.AsGuid(), Name = specialization.Name.Name};
         }
 
         public async Task<SpecializationDto> AddAsync(CreatingSpecializationDto dto)
