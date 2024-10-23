@@ -57,10 +57,10 @@ namespace DDDSample1.Controllers
         
         [HttpPut("{id}")]
         public async Task<ActionResult<StaffDto>> EditStaff(string id, EditingStaffDto dto) {
-            //try {
+            try {
                 var staffDto = await _service.EditStaffAsync(id, dto);
                 return Ok(staffDto);
-            /*} catch(NullReferenceException exception){
+            } catch(NullReferenceException exception){
                 
                 return NotFound(new {exception.Message});
                 
@@ -68,7 +68,7 @@ namespace DDDSample1.Controllers
                 
                 return BadRequest(new {exception.Message});
 
-            }*/ 
+            }
         }
     }
 }
