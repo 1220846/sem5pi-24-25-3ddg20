@@ -15,6 +15,7 @@ using System.Text;
 using DDDSample1.DataAnnotations.Patients;
 using DDDSample1.Domain.Patients;
 using DDDSample1.Domain.Emails;
+using DDDSample1.Domain.SystemLogs;
 
 namespace DDDSample1.Domain.Users
 {
@@ -24,6 +25,7 @@ namespace DDDSample1.Domain.Users
         private readonly IUserRepository _repo;
         private readonly IPatientRepository _repoPatient;
         private readonly IAnonymizedPatientDataRepository _repoAnonymizedPatientData;
+        private readonly ISystemLogRepository _repoSystemLog;
         private readonly AuthenticationService _authenticationService;
         private readonly ManagementApiClient _managementApiClient;
         private readonly  IEmailService _emailService;
@@ -36,7 +38,7 @@ namespace DDDSample1.Domain.Users
         private readonly string  _namespace;
         private readonly HttpClient _httpClient;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo,IPatientRepository repoPatient, IAnonymizedPatientDataRepository anonymizedPatientDataRepository, AuthenticationService authenticationService,IEmailService emailService){
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo,IPatientRepository repoPatient, IAnonymizedPatientDataRepository anonymizedPatientDataRepository, AuthenticationService authenticationService,IEmailService emailService, ISystemLogRepository systemLogRepository){
 
             this._unitOfWork = unitOfWork;
             this._repo = repo;
@@ -44,6 +46,7 @@ namespace DDDSample1.Domain.Users
             this._repoPatient = repoPatient;
             this._repoAnonymizedPatientData = anonymizedPatientDataRepository;
             this._emailService = emailService;
+            this._repoSystemLog = systemLogRepository;
 
             _domain = Environment.GetEnvironmentVariable("Auth0_Domain");
             _audience = Environment.GetEnvironmentVariable("Auth0_Audience");
@@ -192,20 +195,33 @@ namespace DDDSample1.Domain.Users
 
             var  patient = await _repoPatient.GetByUserIdAsync(username)?? throw new NullReferenceException("Not Found patient with: " + username);
 
-            if(updateUserPatientDto.FirstName != null)
+            var userChanges = new List<string>();
+            var patientChanges = new List<string>();
+
+            if(updateUserPatientDto.FirstName != null){
+                patientChanges.Add($"FirstName changed from {patient.FirstName} to {updateUserPatientDto.FirstName}");
                 patient.ChangeFirstName(new PatientFirstName(updateUserPatientDto.FirstName));
+            }
 
-            if(updateUserPatientDto.LastName != null)
+            if(updateUserPatientDto.LastName != null){
+                patientChanges.Add($"LastName changed from {patient.LastName} to {updateUserPatientDto.LastName}");
                 patient.ChangeLastName(new PatientLastName(updateUserPatientDto.LastName));
+            }
 
-            if(updateUserPatientDto.FullName != null)
+            if(updateUserPatientDto.FullName != null){
+                patientChanges.Add($"FullName changed from {patient.FullName} to {updateUserPatientDto.FullName}");
                 patient.ChangeFullName(new PatientFullName(updateUserPatientDto.FullName));
+            }
 
-            if(updateUserPatientDto.Email != null)
+            if(updateUserPatientDto.Email != null){
+                userChanges.Add($"Email changed from {user.Email} to {updateUserPatientDto.Email}");
+                patientChanges.Add($"Email changed from {patient.ContactInformation.Email} to {updateUserPatientDto.Email}");
                 user.ChangeEmail(new Email(updateUserPatientDto.Email));
                 patient.ChangeEmail(new PatientEmail(updateUserPatientDto.Email));
+            }
 
             if(updateUserPatientDto.PhoneNumber != null){
+                patientChanges.Add($"PhoneNumber changed from {patient.ContactInformation.PhoneNumber} to {updateUserPatientDto.PhoneNumber}");
                 patient.ChangePhoneNumber(new PatientPhone(updateUserPatientDto.PhoneNumber));
             }
             await this._repo.UpdateAsync(user);
@@ -241,6 +257,16 @@ namespace DDDSample1.Domain.Users
 
             } catch (Exception ex) {
                 throw new Exception($"Error creating user: " + ex.Message);
+            }
+
+            if (userChanges.Count > 0){
+                string userLog = string.Join(", ", userChanges);
+                await this._repoSystemLog.AddAsync(new SystemLog(Operation.UPDATE, Entity.USER, userLog, user.Id.Name));
+            }
+
+            if (patientChanges.Count > 0){
+                string patientLog = string.Join(", ", patientChanges);
+                await this._repoSystemLog.AddAsync(new SystemLog(Operation.UPDATE, Entity.PATIENT, patientLog, patient.Id.Id));
             }
 
             await this._unitOfWork.CommitAsync();
@@ -298,6 +324,13 @@ namespace DDDSample1.Domain.Users
             }catch (Exception ex){
                 throw new Exception($"Error when deleting user '{username}': {ex.Message}", ex);
             }
+
+            string userLogMessage = $"User '{username}' was deleted for GDPR compliance.";
+            string patientLogMessage = $"Patient associated with user '{username}' was deleted for GDPR compliance.";
+
+            await this._repoSystemLog.AddAsync(new SystemLog(Operation.DELETE, Entity.USER, userLogMessage, user.Id.Name));
+
+            await this._repoSystemLog.AddAsync(new SystemLog(Operation.DELETE, Entity.PATIENT, patientLogMessage, patient.Id.Id));
 
             await this._unitOfWork.CommitAsync();
 

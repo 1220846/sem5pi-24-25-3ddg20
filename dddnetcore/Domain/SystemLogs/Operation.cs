@@ -10,7 +10,7 @@ namespace DDDSample1.Domain.SystemLogs{
         [Description("Delete")]
         DELETE,
 
-        [Description("Delete")]
+        [Description("Update")]
         UPDATE
     }
 }
