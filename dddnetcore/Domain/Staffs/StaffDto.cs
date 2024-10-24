@@ -16,6 +16,7 @@ namespace dddnetcore.Domain.Staffs
         public string Email {get;set;}
         public string PhoneNumber {get;set;}
         public string LicenseNumber {get;set;}
+        public string Status {get;set;}
         public ICollection<AvailabilitySlotDto> AvailabilitySlots {get;set;}
         public SpecializationDto Specialization {get;set;}
         public UserDto User {get;set;}
@@ -34,6 +35,7 @@ namespace dddnetcore.Domain.Staffs
             }
             this.Specialization = new SpecializationDto(staff.Specialization);
             this.User = new UserDto(staff.User);
+            this.Status = staff.Status.ToString();
         }
     }
 }

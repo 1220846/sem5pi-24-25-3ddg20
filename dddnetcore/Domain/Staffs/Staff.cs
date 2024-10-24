@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using dddnetcore.Domain.AvailabilitySlots;
+using dddnetcore.Domain.Staffs;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
 using DDDSample1.Domain.Users;
@@ -15,6 +16,7 @@ namespace DDDSample1.Domain.Staffs {
         public StaffContactInformation ContactInformation {get; private set;}
         public LicenseNumber LicenseNumber {get; private set;}
         public ICollection<AvailabilitySlot> AvailabilitySlots {get; private set;}
+        public StaffStatus Status {get; private set;}
         public Specialization Specialization {get; private set;}
         public User User {get; private set;}
         public Username Username {get; private set;}
@@ -30,7 +32,8 @@ namespace DDDSample1.Domain.Staffs {
             LicenseNumber licenseNumber,
             List<AvailabilitySlot> availabilitySlots,
             Specialization specialization,
-            User user) 
+            User user,
+            StaffStatus staffStatus) 
         {
             this.Id = new StaffId(id);
             this.FirstName = firstName;
@@ -51,6 +54,10 @@ namespace DDDSample1.Domain.Staffs {
         public void AddAvailabilitySlot(AvailabilitySlot newAvailabilitySlot) {
             ArgumentNullException.ThrowIfNull(newAvailabilitySlot);
             this.AvailabilitySlots.Add(newAvailabilitySlot);
+        }
+
+        public void Deactivate() {
+            this.Status = StaffStatus.DEACTIVATED;
         }
 
         public void RemoveAvailabilitySlot(AvailabilitySlot oldAvailabilitySlot) {

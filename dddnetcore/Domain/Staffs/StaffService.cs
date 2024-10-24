@@ -65,7 +65,8 @@ namespace dddnetcore.Domain.Staffs
                     new LicenseNumber(dto.LicenseNumber),
                     [],
                     specialization,
-                    user
+                    user,
+                    StaffStatus.ACTIVE
                 );
                 await this._repo.AddAsync(staff);
                 await this._unitOfWork.CommitAsync();
@@ -76,9 +77,10 @@ namespace dddnetcore.Domain.Staffs
         }
 
         public async Task<List<StaffDto>> GetStaffsAsync(string firstName = null, string lastName = null, string fullName = null, string email = null, Guid? specializationId = null,
-        string phoneNumber = null, string id = null, string licenseNumber = null, int pageNumber = 1, int pageSize = 10) {
+        string phoneNumber = null, string id = null, string licenseNumber = null,
+        string status = null, int pageNumber = 1, int pageSize = 10) {
             try {
-            List<Staff> staffs = await this._repo.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, pageNumber, pageSize);
+            List<Staff> staffs = await this._repo.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, status, pageNumber, pageSize);
             
             List<StaffDto> staffsDto = staffs.ConvertAll<StaffDto>(staff => new StaffDto(staff));
             
@@ -132,7 +134,6 @@ namespace dddnetcore.Domain.Staffs
 
             await this._unitOfWork.CommitAsync();
 
-            
             if (changedContactInfo) {
 
                 var to = new List<string>{previousEmail.Email};
@@ -145,6 +146,14 @@ namespace dddnetcore.Domain.Staffs
                 await _emailService.SendEmailAsync(to, subject, body);
             }
 
+            return new StaffDto(staff);
+        }
+
+        public async Task<StaffDto> RemoveAsync(string id) {
+            Staff staff = (await _repo.GetStaffsAsync(id: id)).FirstOrDefault() ?? throw new NullReferenceException("Staff not found");
+            staff.Deactivate();
+            await this._repo.UpdateAsync(staff);
+            await this._unitOfWork.CommitAsync();
             return new StaffDto(staff);
         }
     }

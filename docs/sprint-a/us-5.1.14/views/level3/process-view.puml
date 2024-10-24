@@ -1,0 +1,19 @@
+@startuml process-view
+autonumber
+
+actor Admin as  "Admin"
+participant "Server" as Server
+participant "Database" as Database
+
+activate Admin
+    Admin-> Server : DELETE /api/staffs/{id}
+    activate Server
+        Server -> Database : get staff by id
+        activate Database
+            Database --> Server : staff
+        deactivate Database
+        Server -> Database : change staff status
+        Admin <-- Server : 200 OK
+    deactivate Server
+deactivate Admin
+@enduml

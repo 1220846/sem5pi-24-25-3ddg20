@@ -50,8 +50,9 @@ namespace DDDSample1.Controllers
 
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<StaffDto>>> GetStaffs(string firstName = null, string lastName = null, string fullName = null, string email = null, Guid? specializationId = null,
-        string phoneNumber = null, string id = null, string licenseNumber = null, int pageNumber = 1, int pageSize = 10) {
-            return await _service.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, pageNumber, pageSize);
+        string phoneNumber = null, string id = null, string licenseNumber = null,
+        string status = null, int pageNumber = 1, int pageSize = 10) {
+            return await _service.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, status, pageNumber, pageSize);
         }
 
         
@@ -68,6 +69,17 @@ namespace DDDSample1.Controllers
                 
                 return BadRequest(new {exception.Message});
 
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<StaffDto>> DeactivateStaff(string id) {
+            try {
+                return await _service.RemoveAsync(id);
+            } catch(NullReferenceException exception){
+                return NotFound(new {exception.Message});
+            } catch(Exception){
+                return Forbid();
             }
         }
     }
