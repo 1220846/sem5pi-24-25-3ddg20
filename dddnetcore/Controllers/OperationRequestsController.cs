@@ -3,6 +3,8 @@ using System;
 using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.OperationRequests;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace DDDSample1.Controllers{
 
@@ -47,6 +49,13 @@ namespace DDDSample1.Controllers{
                 
                 return BadRequest(new {exception.Message});
             }*/
+        }
+
+        // GET: api/operationRequests/filter
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<OperationRequestDto>>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority=null ,string status = null)
+        {
+            return await _service.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);
         }
     }
 }
