@@ -189,6 +189,28 @@ namespace DDDSample1.Domain.Users
                 return new LoginDto {LoginToken = loginToken, Roles = roles};
             } else {
                 var error = await tokenResponse.Content.ReadAsStringAsync();
+
+                var user = await _repo.GetByEmail(new Email(loginRequestDto.Username));
+                
+                Console.WriteLine(user.Id.Name);
+                if(error.Contains("too_many_attempts") && user.Role!=Role.PATIENT){
+
+                    var admins = await _repo.GetByRole(Role.ADMIN);
+
+                    List<string> adminsEmails = new List<string>();
+                    foreach  (var admin in admins){
+                        adminsEmails.Add(admin.Email.Address);
+                    }
+                    string emailSubject = "Alert: Maximum Attempts Exceeded";
+                    string emailBody = $@"
+                            <p>Dear Admin,</p>
+                            <p>We would like to inform you that the user <strong>{loginRequestDto.Username}</strong> has exceeded the maximum number of allowed login attempts.</p>
+                            <p>Please review the situation and take the necessary steps.</p>
+                            <p>Best regards,<br>SARM Team</p>";
+
+                    await _emailService.SendEmailAsync(adminsEmails,emailSubject,emailBody);
+
+                }
                 throw new Exception($"Error retrieving access token: {error}");
             }
         }

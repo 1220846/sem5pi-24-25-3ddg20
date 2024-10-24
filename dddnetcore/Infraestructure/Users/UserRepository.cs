@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -21,6 +22,16 @@ namespace DDDSample1.Infrastructure.Users
             var users = await _context.Users.Where(u => u.Role != Role.PATIENT).ToListAsync();
 
             return users.Count;
+        }
+
+        public async Task<User> GetByEmail(Email email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+        }
+
+        public async Task<List<User>> GetByRole(Role role)
+        {
+            return await _context.Users.Where(user => user.Role == role).ToListAsync();
         }
 
         public async Task<User> UpdateAsync(User user) {
