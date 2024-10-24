@@ -20,52 +20,51 @@ namespace DDDSample1.Infrastructure.OperationRequests{
         }
 
         public async Task<List<OperationRequest>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority = null, string status = null)
-{
-    try
-    {
-        var query = _context.OperationRequest.AsQueryable();
-
-        if (!string.IsNullOrEmpty(patientId))
         {
-            query = query.Where(or => or.MedicalRecordNumber.Equals(new MedicalRecordNumber(patientId)));
-        }
-
-        if (operationTypeId.HasValue && operationTypeId.Value != Guid.Empty)
-        {
-            query = query.Where(or => or.OperationTypeId == new OperationTypeId(operationTypeId.Value));
-        }
-
-        if (!string.IsNullOrEmpty(status))
-        {
-            if (Enum.TryParse<OperationRequestStatus>(status, true, out var parsedStatus))
+            try
             {
-                query = query.Where(or => or.Status == parsedStatus);
+                var query = _context.OperationRequest.AsQueryable();
+
+                if (!string.IsNullOrEmpty(patientId))
+                {
+                    query = query.Where(or => or.MedicalRecordNumber.Equals(new MedicalRecordNumber(patientId)));
+                }
+
+                if (operationTypeId.HasValue && operationTypeId.Value != Guid.Empty)
+                {
+                    query = query.Where(or => or.OperationTypeId == new OperationTypeId(operationTypeId.Value));
+                }
+
+                if (!string.IsNullOrEmpty(status))
+                {
+                    if (Enum.TryParse<OperationRequestStatus>(status, true, out var parsedStatus))
+                    {
+                        query = query.Where(or => or.Status == parsedStatus);
+                    }
+                    else
+                    {
+                        return new List<OperationRequest>();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(priority))
+                {
+                    if (Enum.TryParse<Priority>(priority, true, out var parsedPriority))
+                    {
+                        query = query.Where(or => or.Priority == parsedPriority);
+                    }
+                    else
+                    {
+                        return new List<OperationRequest>();
+                    }
+                }
+
+                return await query.ToListAsync();
             }
-            else
+            catch (BusinessRuleValidationException)
             {
                 return new List<OperationRequest>();
             }
-        }
-
-        if (!string.IsNullOrEmpty(priority))
-        {
-            if (Enum.TryParse<Priority>(priority, true, out var parsedPriority))
-            {
-                query = query.Where(or => or.Priority == parsedPriority);
-            }
-            else
-            {
-                return new List<OperationRequest>();
-            }
-        }
-
-        return await query.ToListAsync();
-    }
-    catch (BusinessRuleValidationException)
-    {
-        return new List<OperationRequest>();
-    }
-
         }
     }
 }
