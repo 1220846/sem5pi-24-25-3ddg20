@@ -193,6 +193,33 @@ namespace DDDSample1.Domain.Users
             }
         }
 
+        public async Task<bool> ResetPassword(RequestResetPasswordDto requestResetPasswordDto){
+            var resetPasswordUrl = $"https://{_domain}/dbconnections/change_password";
+
+            var requestBody = new
+            {
+                client_id =_clientId ,
+                email = requestResetPasswordDto.Email,
+                connection = _connection
+            };
+
+            var content = new StringContent(
+                System.Text.Json.JsonSerializer.Serialize(requestBody), 
+                Encoding.UTF8, 
+                "application/json"
+            );
+
+            var response = await _httpClient.PostAsync(resetPasswordUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public async Task<UserDto> UpdateUserPatientAsync(string username,UpdateUserPatientDto updateUserPatientDto){
             
             var user = await _repo.GetByIdAsync(new Username(username)) ?? throw new NullReferenceException("Not Found user with: " + username);
@@ -358,5 +385,6 @@ namespace DDDSample1.Domain.Users
                 _ => "65+"
             };
         }
+
     }
 }
