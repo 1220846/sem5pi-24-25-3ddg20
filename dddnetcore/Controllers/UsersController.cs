@@ -23,7 +23,6 @@ namespace DDDSample1.Controllers{
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetById(String id)
         {
-            Console.WriteLine(id);
             var user = await _service.GetByIdAsync(id);
 
             if (user == null)
@@ -65,8 +64,8 @@ namespace DDDSample1.Controllers{
                 
                 return NotFound(new {exception.Message});
             }catch(Exception){
-
-                return Forbid();
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
 
@@ -88,8 +87,8 @@ namespace DDDSample1.Controllers{
                 
                 return NotFound(new {exception.Message});
             }catch(Exception){
-
-                return Forbid();
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
             
         }
@@ -106,11 +105,15 @@ namespace DDDSample1.Controllers{
             }
             catch (NullReferenceException ex)
             {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
+                return NotFound(new {message = ex.Message});
+            
+            }catch(BusinessRuleValidationException ex){
+                
+                return StatusCode(400, new { message = ex.Message });
+
+            }catch(Exception){
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
 
@@ -132,7 +135,7 @@ namespace DDDSample1.Controllers{
                 return NotFound(new {exception.Message});
             }catch(Exception){
                 
-                return Forbid();
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
             
         }
