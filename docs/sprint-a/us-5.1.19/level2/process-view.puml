@@ -12,7 +12,7 @@ activate Doctor
 
         activate BackendDataManagement
 
-            BackendDataManagement -> BackendDataManagement : GetOperationRequests(patientName,\n operationType, priority, status)
+            BackendDataManagement -> BackendDataManagement : GetOperationRequests(patientId,\n operationTypeId, priority, status)
 
         Doctor <-- BackendDataManagement : 200 OK
         deactivate BackendDataManagement

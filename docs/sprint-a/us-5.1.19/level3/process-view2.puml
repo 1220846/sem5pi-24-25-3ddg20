@@ -8,11 +8,11 @@ participant "OperationRequestService" as Service <<Service>>
 database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
 
 activate Doctor
-Doctor->Controller: POST /api/operationrequests/filter
+Doctor->Controller: GET /api/operationrequests/filter
     activate Controller
-        Controller->Service:GetOperationRequestsAsync(patientName, operationType, priority, status)
+        Controller->Service:GetOperationRequestsAsync(patientId, operationTypeId, priority, status)
         activate Service
-                Service ->  OperationRequestRepository : GetOperationRequestsAsync(patientName, operationType, priority, status)
+                Service ->  OperationRequestRepository : GetOperationRequestsAsync(patientId, operationTypeId, priority, status)
 
                 activate OperationRequestRepository
 
