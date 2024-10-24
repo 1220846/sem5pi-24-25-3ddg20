@@ -121,6 +121,12 @@ namespace DDDSample1.Domain.Users
         }
 
         public async Task<UserDto>AddUserPatientAsync(CreatingUserPatientDto creatingUserPatientDto){
+            
+            try{
+                var patientEmail = new PatientEmail(creatingUserPatientDto.Email);
+            } catch (BusinessRuleValidationException ex){
+                throw new BusinessRuleValidationException(ex.Message);
+            }
 
             var patient = await _repoPatient.GetByEmailAsync(creatingUserPatientDto.Email) ?? throw new NullReferenceException("Not Found Patient: " + creatingUserPatientDto.Email);
 
@@ -197,29 +203,29 @@ namespace DDDSample1.Domain.Users
             var patientChanges = new List<string>();
 
             if(updateUserPatientDto.FirstName != null){
-                patientChanges.Add($"FirstName changed from {patient.FirstName} to {updateUserPatientDto.FirstName}");
+                patientChanges.Add($"FirstName changed from {patient.FirstName.Name} to {updateUserPatientDto.FirstName}");
                 patient.ChangeFirstName(new PatientFirstName(updateUserPatientDto.FirstName));
             }
 
             if(updateUserPatientDto.LastName != null){
-                patientChanges.Add($"LastName changed from {patient.LastName} to {updateUserPatientDto.LastName}");
+                patientChanges.Add($"LastName changed from {patient.LastName.Name} to {updateUserPatientDto.LastName}");
                 patient.ChangeLastName(new PatientLastName(updateUserPatientDto.LastName));
             }
 
             if(updateUserPatientDto.FullName != null){
-                patientChanges.Add($"FullName changed from {patient.FullName} to {updateUserPatientDto.FullName}");
+                patientChanges.Add($"FullName changed from {patient.FullName.Name} to {updateUserPatientDto.FullName}");
                 patient.ChangeFullName(new PatientFullName(updateUserPatientDto.FullName));
             }
 
             if(updateUserPatientDto.Email != null){
-                userChanges.Add($"Email changed from {user.Email} to {updateUserPatientDto.Email}");
+                userChanges.Add($"Email changed from {user.Email.Address} to {updateUserPatientDto.Email}");
                 patientChanges.Add($"Email changed from {patient.ContactInformation.Email} to {updateUserPatientDto.Email}");
                 user.ChangeEmail(new Email(updateUserPatientDto.Email));
                 patient.ChangeEmail(new PatientEmail(updateUserPatientDto.Email));
             }
 
             if(updateUserPatientDto.PhoneNumber != null){
-                patientChanges.Add($"PhoneNumber changed from {patient.ContactInformation.PhoneNumber} to {updateUserPatientDto.PhoneNumber}");
+                patientChanges.Add($"PhoneNumber changed from {patient.ContactInformation.PhoneNumber.PhoneNumber} to {updateUserPatientDto.PhoneNumber}");
                 patient.ChangePhoneNumber(new PatientPhone(updateUserPatientDto.PhoneNumber));
             }
             await this._repo.UpdateAsync(user);
@@ -254,7 +260,7 @@ namespace DDDSample1.Domain.Users
                     }
 
             } catch (Exception ex) {
-                throw new Exception($"Error creating user: " + ex.Message);
+                throw new Exception($"Error updating password: " + ex.Message);
             }
 
             if (userChanges.Count > 0){
