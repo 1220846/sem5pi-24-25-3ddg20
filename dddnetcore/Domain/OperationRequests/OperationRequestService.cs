@@ -10,6 +10,7 @@ using DDDSample1.Domain.Staffs;
 using DDDSample1.Domain.Patients;
 using DDDSample1.DataAnnotations.Patients;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DDDSample1.Domain.OperationRequests
 {
@@ -61,7 +62,8 @@ namespace DDDSample1.Domain.OperationRequests
                 var operationRequest = new OperationRequest(new MedicalRecordNumber(dto.MedicalRecordNumber), new StaffId(dto.DoctorId), new OperationTypeId(dto.OperationTypeId), DeadlineDate.FromString(dto.Deadline), priority);
                 await _repoOperationRequest.AddAsync(operationRequest);
                 await this._unitOfWork.CommitAsync();
-                return new OperationRequestDto {DoctorId = operationRequest.StaffId.Id, 
+                return new OperationRequestDto {Id = operationRequest.Id.AsGuid(),
+                        DoctorId = operationRequest.StaffId.Id, 
                         OperationTypeId=operationRequest.OperationTypeId.Value, 
                         MedicalRecordNumber=operationRequest.MedicalRecordNumber.Id,
                         Deadline=operationRequest.DeadlineDate.Date.ToString(), 
@@ -71,5 +73,19 @@ namespace DDDSample1.Domain.OperationRequests
                 throw new BusinessRuleValidationException("The Doctor Specialization not match with the Operation Type");
             }
         }
+
+        public async Task<List<OperationRequestDto>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority=null ,string status = null){
+            var operationRequests =await _repoOperationRequest.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);
+            List<OperationRequestDto> operationRequestsDto = operationRequests.ConvertAll<OperationRequestDto>(operationRequest => new OperationRequestDto{
+                        Id = operationRequest.Id.AsGuid(),
+                        DoctorId = operationRequest.StaffId.Id, 
+                        OperationTypeId=operationRequest.OperationTypeId.Value, 
+                        MedicalRecordNumber=operationRequest.MedicalRecordNumber.Id,
+                        Deadline=operationRequest.DeadlineDate.Date.ToString(), 
+                        Priority=operationRequest.Priority.ToString(), 
+                        Status=operationRequest.Status.ToString()});
+            return operationRequestsDto;
+        }
+            
     }
 }
