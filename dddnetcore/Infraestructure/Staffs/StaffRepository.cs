@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using dddnetcore.Domain.Staffs;
 using DDDSample1.DataAnnotations.Staffs;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
@@ -21,7 +22,8 @@ namespace dddnetcore.Infraestructure.Staffs
         }
 
         public async Task<List<Staff>> GetStaffsAsync(string firstName = null, string lastName = null, string fullName = null, string email = null, Guid? specializationId = null,
-            string phoneNumber = null, string id = null, string licenseNumber = null, int pageNumber = 1, int pageSize = 10) {
+            string phoneNumber = null, string id = null, string licenseNumber = null,
+            string status = null, int pageNumber = 1, int pageSize = 10) {
             try {
                 var query = _context.Staffs.AsQueryable();
     
@@ -39,9 +41,14 @@ namespace dddnetcore.Infraestructure.Staffs
                     query = query.Where(staff => staff.ContactInformation.PhoneNumber.Equals(new StaffPhone(phoneNumber)));
                 if (!string.IsNullOrEmpty(licenseNumber))
                     query = query.Where(staff => staff.LicenseNumber.Equals(new LicenseNumber(licenseNumber)));           
+                if (!string.IsNullOrEmpty(status)) {
+                    if (Enum.TryParse<StaffStatus>(status, true, out var parsedStatus)) {
+                        query = query.Where(staff => staff.Status == parsedStatus);
+                    } else
+                        return new List<Staff>();
+                }
                 if (specializationId.HasValue && specializationId.Value != Guid.Empty)
                     query = query.Where(staff => staff.Specialization.Id.Equals(new SpecializationId(specializationId.Value)));
-
                 query = query.Include(o => o.AvailabilitySlots);
                 query = query.Include(o => o.Specialization);
                 query = query.Include(o => o.User);

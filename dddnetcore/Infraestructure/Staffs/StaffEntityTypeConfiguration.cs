@@ -23,6 +23,7 @@ namespace dddnetcore.Infraestructure.Staffs
             });
             builder.Property(b => b.LicenseNumber).HasConversion(b => b.Number, b => new LicenseNumber(b));
             builder.HasIndex(b => b.LicenseNumber).IsUnique();
+            builder.Property(b => b.Status).HasConversion<string>().IsRequired();
             builder.HasMany(b => b.AvailabilitySlots).WithOne().HasForeignKey("StaffId").OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(b => b.Specialization).WithMany().HasForeignKey("SpecializationId").IsRequired();
             builder.HasOne(b => b.User).WithOne(b => b.Staff).HasForeignKey<Staff>(b => b.Username).IsRequired();

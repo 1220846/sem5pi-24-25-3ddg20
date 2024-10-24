@@ -121,6 +121,8 @@ package "<<aggregate>> Staff"{
     class StaffPhone <<Value Object>>{
         
     }
+
+    class StaffStatus <<Value Object>> {}
 }
 
 package "<<aggregate>> OperationRequest"{
@@ -300,6 +302,7 @@ StaffContactInformation <- Staff
 StaffContactInformation --> StaffEmail
 StaffContactInformation --> StaffPhone
 Staff ---> LicenseNumber
+Staff ---> StaffStatus
 Staff "1" ---> "*" AvailabilitySlot : has
 Staff "1" ---> "1" User: includes
 Staff "1" ---> "1" Specialization : has

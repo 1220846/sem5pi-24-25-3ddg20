@@ -1,0 +1,34 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "StaffsController" as Controller <<Controller>>
+participant "StaffService" as Service <<Service>>
+participant "Staff" as Staff <<Domain>>
+participant "StaffDto" as StaffDto <<Domain>>
+participant "IStaffRepository" as Repository <<Domain>>
+
+activate Admin
+    Admin -> Controller : DELETE /api/staffs/{id}
+    activate Controller
+        Controller -> Service : RemoveAsync(id)
+        activate Service
+            Service -> Repository : GetByIdAsync(id)
+            activate Repository
+                Repository --> Service : staff
+            deactivate Repository
+alt staff == null
+            Service --> Controller : NullreferenceException
+        Controller --> Admin : 404 Not Found
+end alt
+            Service -> Staff : Deactivate()
+            Service -> Repository : UpdateAsync(staff)
+            Service -> StaffDto : create(staff)
+            activate StaffDto
+                StaffDto --> Service : staffDto
+            deactivate StaffDto 
+            Service --> Controller : staffDto
+        deactivate Service
+        Controller --> Admin : 200 OK
+    deactivate Controller
+deactivate Admin

@@ -31,5 +31,10 @@ namespace DDDSample1.Domain.OperationTypes
         public Guid AsGuid(){
             return (Guid) base.ObjValue;
         }
+
+        internal bool Any(Func<object, bool> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
