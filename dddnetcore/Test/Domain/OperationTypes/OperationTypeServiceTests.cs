@@ -80,12 +80,9 @@ namespace DDDSample1.Tests.Domain.OperationTypes
                 .Callback<OperationTypeId>(id => capturedOperationTypeId = id)
                 .ReturnsAsync((OperationType)null);
 
-            var exception = await Assert.ThrowsAsync<NullReferenceException>(() =>
-                _operationTypeService.GetByIdAsync(operationTypeId));
+            var result = await _operationTypeService.GetByIdAsync(operationTypeId);
 
-            Assert.Equal($"Not Found Operation Type with Id: {operationTypeId}", exception.Message);
-
-            Assert.NotNull(capturedOperationTypeId);
+            Assert.Null(result);
             Assert.Equal(operationTypeId, capturedOperationTypeId);
 
             _operationTypeRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<OperationTypeId>(id => id == operationTypeId)), Times.Once);
