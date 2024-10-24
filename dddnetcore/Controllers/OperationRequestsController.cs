@@ -36,6 +36,7 @@ namespace DDDSample1.Controllers{
 
         // POST: api/operationRequests
         [HttpPost()]
+        [Authorize(Policy = "RequiredDoctorRole")]
         public async Task<ActionResult<OperationRequestDto>> Create(CreatingOperationRequestDto dto)
         {
             try{
@@ -54,7 +55,7 @@ namespace DDDSample1.Controllers{
 
         // GET: api/operationRequests/filter
         [HttpGet("filter")]
-        //[Authorize(Policy = "RequiredDoctorRole")]
+        [Authorize(Policy = "RequiredDoctorRole")]
         public async Task<ActionResult<IEnumerable<OperationRequestDto>>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority=null ,string status = null)
         {
             return await _service.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);
@@ -62,6 +63,7 @@ namespace DDDSample1.Controllers{
 
         // PUT: api/operationRequests/{id}
         [HttpPut("{id}")]
+        [Authorize(Policy = "RequiredDoctorRole")]
         public async Task<ActionResult<OperationRequestDto>> UpdateOperationRequest(Guid id,UpdateOperationRequestDto dto)
         {
             try{

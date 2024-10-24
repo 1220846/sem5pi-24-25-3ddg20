@@ -35,6 +35,7 @@ namespace DDDSample1.Controllers{
 
         // POST: api/users
         [HttpPost()]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
             try{

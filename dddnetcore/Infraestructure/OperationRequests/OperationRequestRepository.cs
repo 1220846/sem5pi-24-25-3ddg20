@@ -72,7 +72,7 @@ namespace DDDSample1.Infrastructure.OperationRequests{
             }
         }
 
-        public async Task<OperationRequest> UpdateOperationRequestAsync(OperationRequest operationRequest)
+        public async Task<OperationRequest> UpdateAsync(OperationRequest operationRequest)
         {
             _context.OperationRequest.Update(operationRequest);
             

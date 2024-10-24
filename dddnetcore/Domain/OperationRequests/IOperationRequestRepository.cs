@@ -9,6 +9,6 @@ namespace DDDSample1.Domain.OperationRequests
     public interface IOperationRequestRepository : IRepository<OperationRequest, OperationRequestId>
     {
         public Task<List<OperationRequest>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority=null ,string status = null);
-        Task<OperationRequest> UpdateOperationRequestAsync(OperationRequest operationRequest);
+        Task<OperationRequest> UpdateAsync(OperationRequest operationRequest);
     }
 }

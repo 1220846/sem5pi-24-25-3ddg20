@@ -125,7 +125,7 @@ namespace DDDSample1.Domain.OperationRequests
                 operationRequest.ChangeDeadline(DeadlineDate.FromString(updateOperationRequestDto.Deadline));
             }
 
-            await _repoOperationRequest.UpdateOperationRequestAsync(operationRequest);
+            await _repoOperationRequest.UpdateAsync(operationRequest);
 
             if (operationRequestChanges.Count > 0){
                 string operationRequestLog = string.Join(", ", operationRequestChanges);
