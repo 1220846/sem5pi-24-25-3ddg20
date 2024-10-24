@@ -48,5 +48,14 @@ namespace DDDSample1.Domain.OperationRequests{
             return Id.GetHashCode();
         }
 
+        public void ChangePriority(Priority priority){
+            ArgumentNullException.ThrowIfNull(priority);
+            this.Priority=priority;
+        }
+
+        public void ChangeDeadline(DeadlineDate deadline){
+            ArgumentNullException.ThrowIfNull(deadline);
+            this.DeadlineDate=deadline;
+        }
     }
 }

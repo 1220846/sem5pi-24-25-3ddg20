@@ -35,6 +35,7 @@ namespace DDDSample1.Controllers{
 
         // POST: api/users
         [HttpPost()]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
             try{
@@ -151,6 +152,28 @@ namespace DDDSample1.Controllers{
             }catch (Exception ex){
                 
                 return Unauthorized(new { Message ="Login failed. Please check your credentials and try again.", ErrorMessage = ex.Message});
+            }
+        }
+
+        [HttpPost("resetpassword")]
+        [Authorize(Policy = "RequiredBackofficeRole")]
+        public async Task<IActionResult> RequestResetPassword(RequestResetPasswordDto requestResetPasswordDto){
+            try
+            {
+                var isSuccessful = await _service.ResetPassword(requestResetPasswordDto);
+
+                if (isSuccessful)
+                {
+                    return Ok(new { Message = "Password reset link has been sent to your email." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to send password reset link. Please try again later." });
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "An error occurred while processing your request. Please try again later." });
             }
         }
     }
