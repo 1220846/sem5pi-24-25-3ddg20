@@ -16,7 +16,7 @@ activate Admin
 
     activate Controller
 
-        Controller -> Service : addAsync(creatingOperationTypeDto)
+        Controller -> Service : AddAsync(creatingOperationTypeDto)
 
         activate Service
 
@@ -36,7 +36,7 @@ activate Admin
 
             deactivate Repository
 
-            loop for each specializationDto
+            loop for each staffSpecialization
 
                 Service -> SpecializationRepository : GetByIdAsync(specializationId)
 
@@ -48,13 +48,13 @@ activate Admin
 
                 alt specialization == null 
 
-                    Service --> Controller : NotFoundException
+                    Service --> Controller : NullReferenceException
 
                     Admin <-- Controller : 404 Not Found
 
                 else 
                 
-                    Service -> OperationTypeSpecialization : create(OperationTypeId,SpecializationId,NumberOfStaff)
+                    Service -> OperationTypeSpecialization : create(operationType,specialization,staffSpecialization.NumberOfStaff)
 
                     activate OperationTypeSpecialization
 

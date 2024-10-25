@@ -1,4 +1,4 @@
-# US 5.1.3 - Add new types of operations
+# US 5.1.20 - Add new types of operations
 
 ## 1. Context
 

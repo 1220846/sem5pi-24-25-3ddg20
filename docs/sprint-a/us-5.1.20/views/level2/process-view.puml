@@ -9,7 +9,7 @@ activate Admin
     Admin-> BackendDataManagement : POST /api/operationtypes
     activate BackendDataManagement
 
-        BackendDataManagement -> BackendDataManagement : addOperationType(creatingOperationTypeDto)
+        BackendDataManagement -> BackendDataManagement : AddOperationType(creatingOperationTypeDto)
 
         Admin <-- BackendDataManagement : 201 Created
     deactivate BackendDataManagement
