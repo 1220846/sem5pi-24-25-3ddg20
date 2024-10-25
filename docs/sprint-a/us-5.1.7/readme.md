@@ -1,4 +1,4 @@
-# US 5.1.3 - Register a patient in the healthcare application
+# US 5.1.7 - Log in to the healthcare system using my external IAM credentials
 
 ## 1. Context
 
@@ -6,7 +6,7 @@
 
 ## 2. Requirements
 
-**US 5.1.3** As a Patient, I want to log in to the healthcare system using my external IAM credentials, so that I can access my appointments, medical records, and other features securely.
+**US 5.1.7** As a Patient, I want to log in to the healthcare system using my external IAM credentials, so that I can access my appointments, medical records, and other features securely.
 
 - Patients log in via an external Identity and Access Management (IAM) provider (e.g., Google, Facebook, or hospital SSO).
 - After successful authentication via the IAM, patients are redirected to the healthcare system with a valid session.

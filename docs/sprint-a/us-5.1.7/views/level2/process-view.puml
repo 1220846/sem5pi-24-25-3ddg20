@@ -8,9 +8,9 @@ activate Patient
     Patient -> BackendDataManagement : POST /api/users/login
     activate BackendDataManagement
 
-        BackendDataManagement -> BackendDataManagement : login(loginDto)
+        BackendDataManagement -> BackendDataManagement : Login(loginRequestDto)
 
-        Patient <-- BackendDataManagement : 200 Created
+        Patient <-- BackendDataManagement : 200 OK
     deactivate BackendDataManagement
 
 deactivate Patient
