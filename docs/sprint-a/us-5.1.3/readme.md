@@ -1,4 +1,4 @@
-# US 5.1.3 - Register a patient in the healthcare application
+# US 5.1.3 - A Patient can register for the healthcare application.
 
 ## 1. Context
 

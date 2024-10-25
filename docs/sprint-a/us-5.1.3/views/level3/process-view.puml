@@ -35,6 +35,8 @@ activate Patient
 
         deactivate Database
 
+        Note  right of Server: Add user in the auth0 api
+
         Patient <-- Server : 201 Created
 
     deactivate Server
