@@ -33,7 +33,7 @@ activate Admin
 
             else 
 
-            Service  -> OperationType : disable()
+            Service  -> OperationType : Disable()
             
             Service -> Repository : UpdateAsync(operationType)
 

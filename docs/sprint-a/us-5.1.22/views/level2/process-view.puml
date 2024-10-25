@@ -9,7 +9,7 @@ activate Admin
     Admin-> BackendDataManagement : DELETE /api/operationtypes/{id}
     activate BackendDataManagement
 
-        BackendDataManagement -> BackendDataManagement : removeOperationType(id)
+        BackendDataManagement -> BackendDataManagement : RemoveOperationType(id)
 
         Admin <-- BackendDataManagement : 200 OK
     deactivate BackendDataManagement
