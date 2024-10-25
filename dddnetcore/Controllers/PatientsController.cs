@@ -49,5 +49,46 @@ namespace DDDSample1.Controllers
                 return Forbid();
             }
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult<PatientDto>> EditPatient(string id, EditingPatientDto dto) {
+            try {
+                var patientDto = await _service.EditPatientAsync(id, dto);
+                return Ok(patientDto);
+            } catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+                
+            } catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+
+            }
+        }
+
+
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult<PatientDto>> DeletePatient(string id)
+        {
+            try{
+                var patientDto = await _service.DeletePatientAsync(id);
+
+                return Ok(patientDto);
+
+            }catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }
+            
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients(string firstName = null, string lastName = null, string fullName = null, string email = null, string birthDate = null,
+        string phoneNumber = null, string id = null, string gender = null, int pageNumber = 1, int pageSize = 10) {
+            return await _service.GetPatientsAsync(firstName, lastName, fullName, email, birthDate, phoneNumber, id, gender, pageNumber, pageSize);
+        }
     }
 }
