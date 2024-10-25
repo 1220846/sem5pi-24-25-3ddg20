@@ -12,7 +12,7 @@ database "IPatientRepository" as PatientRepository <<Domain>>
 
 activate PatientActor
 
-    PatientActor-> Controller : POST /api/users/patients/{username}
+    PatientActor-> Controller : PUT /api/users/patients/{username}
 
     activate Controller
 
@@ -49,21 +49,17 @@ activate PatientActor
                 PatientActor <-- Controller : 404 Not Found
 
             else    
-                
-                alt  updatePatientDto.Username != null
-                    Service -> User : ChangeUsername(updateUserPatientDto.Username)
-                end
 
                 alt  updatePatientDto.FirstName != null
-                    Service -> Patient : ChangeUsername(updateUserPatientDto.FirstName)
+                    Service -> Patient : ChangeFirstName(updateUserPatientDto.FirstName)
                 end
 
                 alt  updatePatientDto.LastName != null
-                    Service -> Patient : ChangeUsername(updateUserPatientDto.LastName)
+                    Service -> Patient : ChangeLastName(updateUserPatientDto.LastName)
                 end
 
                 alt  updatePatientDto.FullName != null
-                    Service -> Patient : ChangeUsername(updateUserPatientDto.FullName)
+                    Service -> Patient : ChangeFullName(updateUserPatientDto.FullName)
                 end
 
                 alt  updatePatientDto.Email != null
@@ -83,8 +79,6 @@ activate PatientActor
 
                 deactivate UserRepository
 
-                Service -> Patient : UpdateUser(user)
-
                 Service -> PatientRepository : UpdateAsync(patient)
 
                 activate PatientRepository
@@ -93,9 +87,9 @@ activate PatientActor
                 
                 deactivate PatientRepository
 
-                Note  right of Service: Update user in the auth0 api \nand send email by auth0 for for verification
+                Note  right of Service: Update user in the auth0 api \nand send email by auth0 for verification
 
-                Service -> UserDto : create(Username,Email,Role)
+                Service -> UserDto : create(user.Username,user.Email,user.Role)
 
                 activate UserDto
 

@@ -8,7 +8,7 @@ activate Patient
     Patient -> BackendDataManagement : PUT /api/users/patients/{username}
     activate BackendDataManagement
 
-        BackendDataManagement -> BackendDataManagement : updateUserPatient(username,updateUserPatientDto)
+        BackendDataManagement -> BackendDataManagement : UpdateUserPatient(username,updateUserPatientDto)
 
         Patient <-- BackendDataManagement : 200 OK
     deactivate BackendDataManagement

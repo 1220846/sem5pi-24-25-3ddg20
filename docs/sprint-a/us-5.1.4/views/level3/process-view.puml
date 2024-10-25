@@ -43,7 +43,7 @@ activate Patient
 
         deactivate Database
 
-        Note  right of Server: Update user in the auth0 api \nand send email by auth0 for for verification
+        Note  right of Server: Update user in the auth0 api \nand send email by auth0 for verification
 
         Patient <-- Server : 200 OK
 

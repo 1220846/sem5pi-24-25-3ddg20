@@ -2,7 +2,7 @@
 
 ## 1. Context
 
-*In this task it was proposed that a Patient can update my user patient profile*
+*In this task it was proposed that a Patient can update your user patient profile*
 
 ## 2. Requirements
 
