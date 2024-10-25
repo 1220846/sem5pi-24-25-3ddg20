@@ -64,10 +64,10 @@ namespace DDDSample1.Domain.OperationRequests
                     throw new NullReferenceException("The doctor with that Id does not exist!");
             }
             if(operationType.OperationTypeSpecializations.Any(specialization => specialization.Specialization.Id == doctor.Specialization.Id)){
-                /*var patient = (await _repoPatient.GetPatientAsync(id: dto.MedicalRecordNumber)).FirstOrDefault();
+                var patient = await _repoPatient.GetByIdAsync(new MedicalRecordNumber(dto.MedicalRecordNumber));
                 if(patient==null){
                     throw new NullReferenceException("The patient with that Id does not exist!");
-                }*/
+                }
                 var priority = Enum.Parse<Priority>(dto.Priority.ToUpper());
                 var operationRequest = new OperationRequest(new MedicalRecordNumber(dto.MedicalRecordNumber), new StaffId(dto.DoctorId), new OperationTypeId(dto.OperationTypeId), DeadlineDate.FromString(dto.Deadline), priority);
                 await _repoOperationRequest.AddAsync(operationRequest);
