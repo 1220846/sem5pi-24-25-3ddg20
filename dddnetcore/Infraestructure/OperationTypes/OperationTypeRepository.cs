@@ -21,7 +21,7 @@ namespace DDDSample1.Infrastructure.OperationTypes
 
         public new async Task<OperationType> GetByIdAsync(OperationTypeId id) {
         
-        return await _context.OperationTypes.Include(op => op.OperationTypeSpecializations).ThenInclude(ots => ots.     Specialization).FirstOrDefaultAsync(op => op.Id == id);
+            return await _context.OperationTypes.Include(op => op.OperationTypeSpecializations).ThenInclude(ots => ots.Specialization).FirstOrDefaultAsync(op => op.Id == id);
         }
 
         public async Task<List<OperationType>> GetOperationTypesAsync(string name = null, Guid? specializationId = null, string status = null){

@@ -36,7 +36,7 @@ namespace DDDSample1.Domain.OperationTypes
             var operationType = await this._repo.GetByIdAsync(id);
             
             if(operationType == null)
-                throw new NullReferenceException($"Not Found Operation Type with Id: {id}");
+                return null;
 
             return new OperationTypeDto{Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,
             CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes, OperationTypeStatus = operationType.OperationTypeStatus.ToString(),StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {

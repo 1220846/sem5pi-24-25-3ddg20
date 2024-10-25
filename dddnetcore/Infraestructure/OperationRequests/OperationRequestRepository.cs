@@ -19,6 +19,11 @@ namespace DDDSample1.Infrastructure.OperationRequests{
            _context=context;
         }
 
+        public new async Task<OperationRequest> GetByIdAsync(OperationRequestId id) {
+        
+            return await _context.OperationRequest.FirstOrDefaultAsync(op => op.Id == id);
+        }
+
         public async Task<List<OperationRequest>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority = null, string status = null)
         {
             try
@@ -65,6 +70,15 @@ namespace DDDSample1.Infrastructure.OperationRequests{
             {
                 return new List<OperationRequest>();
             }
+        }
+
+        public async Task<OperationRequest> UpdateAsync(OperationRequest operationRequest)
+        {
+            _context.OperationRequest.Update(operationRequest);
+            
+            await _context.SaveChangesAsync();
+
+            return operationRequest;
         }
     }
 }

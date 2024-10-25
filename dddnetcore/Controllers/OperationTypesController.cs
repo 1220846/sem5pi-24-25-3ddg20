@@ -27,7 +27,7 @@ namespace DDDSample1.Controllers{
 
             if (operationType == null)
             {
-                return NotFound();
+                return NotFound($"Not Found Operation Type with Id: {id}");
             }
 
             return operationType;
@@ -51,7 +51,7 @@ namespace DDDSample1.Controllers{
                 return NotFound(new {exception.Message});
             }catch(Exception){
                 
-                return Forbid();
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
 
@@ -75,7 +75,7 @@ namespace DDDSample1.Controllers{
                 return NotFound(new {exception.Message});
 
             }catch(Exception){
-                return Forbid();
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
     }

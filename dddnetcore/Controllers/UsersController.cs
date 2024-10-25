@@ -23,7 +23,6 @@ namespace DDDSample1.Controllers{
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetById(String id)
         {
-            Console.WriteLine(id);
             var user = await _service.GetByIdAsync(id);
 
             if (user == null)
@@ -36,6 +35,7 @@ namespace DDDSample1.Controllers{
 
         // POST: api/users
         [HttpPost()]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
             try{
@@ -65,8 +65,8 @@ namespace DDDSample1.Controllers{
                 
                 return NotFound(new {exception.Message});
             }catch(Exception){
-
-                return Forbid();
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
 
@@ -88,8 +88,8 @@ namespace DDDSample1.Controllers{
                 
                 return NotFound(new {exception.Message});
             }catch(Exception){
-
-                return Forbid();
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
             
         }
@@ -106,11 +106,15 @@ namespace DDDSample1.Controllers{
             }
             catch (NullReferenceException ex)
             {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
+                return NotFound(new {message = ex.Message});
+            
+            }catch(BusinessRuleValidationException ex){
+                
+                return StatusCode(400, new { message = ex.Message });
+
+            }catch(Exception){
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
 
@@ -132,7 +136,7 @@ namespace DDDSample1.Controllers{
                 return NotFound(new {exception.Message});
             }catch(Exception){
                 
-                return Forbid();
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
             
         }
@@ -148,6 +152,28 @@ namespace DDDSample1.Controllers{
             }catch (Exception ex){
                 
                 return Unauthorized(new { Message ="Login failed. Please check your credentials and try again.", ErrorMessage = ex.Message});
+            }
+        }
+
+        [HttpPost("resetpassword")]
+        [Authorize(Policy = "RequiredBackofficeRole")]
+        public async Task<IActionResult> RequestResetPassword(RequestResetPasswordDto requestResetPasswordDto){
+            try
+            {
+                var isSuccessful = await _service.ResetPassword(requestResetPasswordDto);
+
+                if (isSuccessful)
+                {
+                    return Ok(new { Message = "Password reset link has been sent to your email." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to send password reset link. Please try again later." });
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "An error occurred while processing your request. Please try again later." });
             }
         }
     }

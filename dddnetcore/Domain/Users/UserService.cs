@@ -121,6 +121,12 @@ namespace DDDSample1.Domain.Users
         }
 
         public async Task<UserDto>AddUserPatientAsync(CreatingUserPatientDto creatingUserPatientDto){
+            
+            try{
+                var patientEmail = new PatientEmail(creatingUserPatientDto.Email);
+            } catch (BusinessRuleValidationException ex){
+                throw new BusinessRuleValidationException(ex.Message);
+            }
 
             var patient = await _repoPatient.GetByEmailAsync(creatingUserPatientDto.Email) ?? throw new NullReferenceException("Not Found Patient: " + creatingUserPatientDto.Email);
 
@@ -183,10 +189,59 @@ namespace DDDSample1.Domain.Users
                 return new LoginDto {LoginToken = loginToken, Roles = roles};
             } else {
                 var error = await tokenResponse.Content.ReadAsStringAsync();
+
+                var user = await _repo.GetByEmail(new Email(loginRequestDto.Username));
+                
+                Console.WriteLine(user.Id.Name);
+                if(error.Contains("too_many_attempts") && user.Role!=Role.PATIENT){
+
+                    var admins = await _repo.GetByRole(Role.ADMIN);
+
+                    List<string> adminsEmails = new List<string>();
+                    foreach  (var admin in admins){
+                        adminsEmails.Add(admin.Email.Address);
+                    }
+                    string emailSubject = "Alert: Maximum Attempts Exceeded";
+                    string emailBody = $@"
+                            <p>Dear Admin,</p>
+                            <p>We would like to inform you that the user <strong>{loginRequestDto.Username}</strong> has exceeded the maximum number of allowed login attempts.</p>
+                            <p>Please review the situation and take the necessary steps.</p>
+                            <p>Best regards,<br>SARM Team</p>";
+
+                    await _emailService.SendEmailAsync(adminsEmails,emailSubject,emailBody);
+
+                }
                 throw new Exception($"Error retrieving access token: {error}");
             }
         }
 
+        public async Task<bool> ResetPassword(RequestResetPasswordDto requestResetPasswordDto){
+            var resetPasswordUrl = $"https://{_domain}/dbconnections/change_password";
+
+            var requestBody = new
+            {
+                client_id =_clientId ,
+                email = requestResetPasswordDto.Email,
+                connection = _connection
+            };
+
+            var content = new StringContent(
+                System.Text.Json.JsonSerializer.Serialize(requestBody), 
+                Encoding.UTF8, 
+                "application/json"
+            );
+
+            var response = await _httpClient.PostAsync(resetPasswordUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public async Task<UserDto> UpdateUserPatientAsync(string username,UpdateUserPatientDto updateUserPatientDto){
             
             var user = await _repo.GetByIdAsync(new Username(username)) ?? throw new NullReferenceException("Not Found user with: " + username);
@@ -197,29 +252,29 @@ namespace DDDSample1.Domain.Users
             var patientChanges = new List<string>();
 
             if(updateUserPatientDto.FirstName != null){
-                patientChanges.Add($"FirstName changed from {patient.FirstName} to {updateUserPatientDto.FirstName}");
+                patientChanges.Add($"FirstName changed from {patient.FirstName.Name} to {updateUserPatientDto.FirstName}");
                 patient.ChangeFirstName(new PatientFirstName(updateUserPatientDto.FirstName));
             }
 
             if(updateUserPatientDto.LastName != null){
-                patientChanges.Add($"LastName changed from {patient.LastName} to {updateUserPatientDto.LastName}");
+                patientChanges.Add($"LastName changed from {patient.LastName.Name} to {updateUserPatientDto.LastName}");
                 patient.ChangeLastName(new PatientLastName(updateUserPatientDto.LastName));
             }
 
             if(updateUserPatientDto.FullName != null){
-                patientChanges.Add($"FullName changed from {patient.FullName} to {updateUserPatientDto.FullName}");
+                patientChanges.Add($"FullName changed from {patient.FullName.Name} to {updateUserPatientDto.FullName}");
                 patient.ChangeFullName(new PatientFullName(updateUserPatientDto.FullName));
             }
 
             if(updateUserPatientDto.Email != null){
-                userChanges.Add($"Email changed from {user.Email} to {updateUserPatientDto.Email}");
+                userChanges.Add($"Email changed from {user.Email.Address} to {updateUserPatientDto.Email}");
                 patientChanges.Add($"Email changed from {patient.ContactInformation.Email} to {updateUserPatientDto.Email}");
                 user.ChangeEmail(new Email(updateUserPatientDto.Email));
                 patient.ChangeEmail(new PatientEmail(updateUserPatientDto.Email));
             }
 
             if(updateUserPatientDto.PhoneNumber != null){
-                patientChanges.Add($"PhoneNumber changed from {patient.ContactInformation.PhoneNumber} to {updateUserPatientDto.PhoneNumber}");
+                patientChanges.Add($"PhoneNumber changed from {patient.ContactInformation.PhoneNumber.PhoneNumber} to {updateUserPatientDto.PhoneNumber}");
                 patient.ChangePhoneNumber(new PatientPhone(updateUserPatientDto.PhoneNumber));
             }
             await this._repo.UpdateAsync(user);
@@ -254,7 +309,7 @@ namespace DDDSample1.Domain.Users
                     }
 
             } catch (Exception ex) {
-                throw new Exception($"Error creating user: " + ex.Message);
+                throw new Exception($"Error updating password: " + ex.Message);
             }
 
             if (userChanges.Count > 0){
@@ -352,5 +407,6 @@ namespace DDDSample1.Domain.Users
                 _ => "65+"
             };
         }
+
     }
 }
