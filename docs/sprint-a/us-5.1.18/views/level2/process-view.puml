@@ -1,0 +1,13 @@
+@startuml process-view
+autonumber
+
+actor "Doctor" as Doctor
+participant BackendDataManagement as "Backend Data Manager"
+
+activate Doctor
+    Doctor -> BackendDataManagement : DELETE /api/operationRequests/{id}
+    activate BackendDataManagement
+        BackendDataManagement -> BackendDataManagement : removeOperationRequisition(id)
+        BackendDataManagement --> Doctor : 200 OK
+    deactivate BackendDataManagement
+deactivate Doctor

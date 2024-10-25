@@ -57,5 +57,24 @@ namespace DDDSample1.Controllers{
         {
             return await _service.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);
         }
+
+        // DELETE api/operationRequests/filter
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "RequiredDoctorRole")]
+        public async Task<ActionResult<OperationRequestDto>> RemoveOperationRequisition(Guid id) {
+            try {
+                var dto = await _service.RemoveAsync(id);
+                return Ok(dto);
+            } catch(NullReferenceException exception){
+                return NotFound(new {exception.Message});
+            } catch (BusinessRuleValidationException exception) {
+                var message = exception.Message;
+                if (message.Equals("Cannot remove scheduled operation requests!"))
+                    return Forbid();
+                return BadRequest();
+            } catch(Exception){
+                return Forbid();
+            }
+        } 
     }
 }

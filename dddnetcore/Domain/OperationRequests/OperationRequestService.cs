@@ -86,6 +86,20 @@ namespace DDDSample1.Domain.OperationRequests
                         Status=operationRequest.Status.ToString()});
             return operationRequestsDto;
         }
-            
+
+        public async Task<OperationRequestDto> RemoveAsync(Guid id) {
+            OperationRequest operationRequest = await this._repoOperationRequest.GetByIdAsync(new OperationRequestId(id)) ?? throw new NullReferenceException("Operation request not found!");
+
+            //TODO check if operation request is mine
+
+            if (operationRequest.Status.Equals(OperationRequestStatus.SCHEDULED))
+                throw new BusinessRuleValidationException("Cannot remove scheduled operation requests!");
+
+            OperationRequestDto dto = new(operationRequest);
+
+            this._repoOperationRequest.Remove(operationRequest);
+
+            return dto;
+        }
     }
 }

@@ -1,0 +1,18 @@
+@startuml process-view
+autonumber
+
+actor "Doctor" as Doctor
+participant "Server" as Server
+participant "Database" as Database
+
+activate Doctor
+    Doctor -> Server : DELETE /api/operationRequests/{id}
+    activate Server
+        Server -> Database : get operation requisition by id
+        activate Database
+            Database --> Server : operation requisition
+        deactivate Database
+        Server -> Database : chage requisition status
+        Server --> Doctor : 200 OK
+    deactivate Server
+deactivate Doctor

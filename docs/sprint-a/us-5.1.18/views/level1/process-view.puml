@@ -1,0 +1,14 @@
+@startuml process-view
+autonumber
+
+actor "Doctor" as Doctor
+participant SARM as "SARM" <<system (C4)>>
+
+activate Doctor
+    Doctor -> SARM : asks to remove operation requisition
+    activate SARM
+        SARM --> Doctor : confirms removal 
+    deactivate SARM
+deactivate Doctor
+
+@enduml

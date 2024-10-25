@@ -3,7 +3,7 @@ using DDDSample1.Domain.Shared;
 
 namespace dddnetcore.Domain.AvailabilitySlots
 {
-    public class StartTime
+    public class StartTime : IValueObject
     {
         public DateTime Time {get; private set;}
 

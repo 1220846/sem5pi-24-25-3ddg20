@@ -18,5 +18,16 @@ namespace DDDSample1.Domain.OperationRequests
         public string Priority {get;set;}
 
         public string Status{get;set;}
+
+        public OperationRequestDto() {}
+
+        public OperationRequestDto(OperationRequest operationRequest) {
+            this.Id = operationRequest.Id.AsGuid();
+            this.OperationTypeId = operationRequest.OperationTypeId.AsGuid().ToString();
+            this.MedicalRecordNumber = operationRequest.MedicalRecordNumber.Id;
+            this.Deadline = operationRequest.DeadlineDate.Date.ToString();
+            this.Priority = operationRequest.Priority.ToString();
+            this.Status = operationRequest.Status.ToString();
+        }
     }
 }
