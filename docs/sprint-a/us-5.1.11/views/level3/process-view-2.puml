@@ -1,0 +1,25 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "PatientsController" as Controller <<Controller>>
+participant "PatientService" as Service <<Service>>
+database "IPatientRepository" as Repository <<Domain>>
+
+activate Admin
+        Admin -> Controller : GET /api/patients/filter
+        activate Controller 
+            Controller -> Service : GetPatients(filters)
+            activate Service
+                Service ->  Repository : GetPatientsAsync(filters)
+                activate Repository
+                    Repository -->  Service : patients
+                deactivate Repository
+                Service -->  Controller : patientsDto
+            deactivate Service
+        Controller --> Admin : 200 OK
+    deactivate Controller
+deactivate Admin
+
+
+@enduml

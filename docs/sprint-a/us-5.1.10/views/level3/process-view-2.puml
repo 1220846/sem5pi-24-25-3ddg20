@@ -1,0 +1,100 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "PatientsController" as Controller <<Controller>>
+participant "PatientService" as Service <<Service>>
+participant "PatientDto" as PatientDto <<Domain>>
+participant "AnonymizedPatientData" as AnonymizedPatientData <<Domain>>
+participant "IEmailService" as IEmailService <<Domain>>
+database "IUserRepository" as UserRepository <<Domain>>
+database "IPatientRepository" as PatientRepository <<Domain>>
+database "IAnonymizedPatientDataRepository" as AnonymizedPatientDataRepository <<Domain>>
+
+activate Admin
+
+    Admin -> Controller : DELETE api/patients/{id}
+
+    activate Controller
+
+        Controller -> Service : DeletePatientAsync(id)
+
+        activate Service
+
+            Service -> PatientRepository : GetByIdAsync(id)
+
+            activate PatientRepository
+
+                PatientRepository --> Service  : patient
+
+            deactivate PatientRepository
+
+            alt patient == null
+
+                Service --> Controller : NullReferenceException
+
+                Admin <-- Controller : 404 Not Found
+
+            alt user !=null
+            Service -> UserRepository : GetByIdAsync(id)
+
+            activate UserRepository
+
+                UserRepository --> Service : user
+
+            deactivate UserRepository
+            end alt
+
+                Service  -> Service : CalculateAgeRange(patient.DateOfBirth)
+
+                activate Service
+
+                    Service --> Service : ageRange
+                
+                deactivate Service
+
+                Service -> AnonymizedPatientData : create(ageRange, patient.Gender, patient.MedicalConditions, patient.AppointmentHistory)
+
+                activate AnonymizedPatientData
+
+                    AnonymizedPatientData --> Service :  anonymizedPatientData
+
+                deactivate AnonymizedPatientData
+
+                Service -> AnonymizedPatientDataRepository : AddAsync(anonymizedPatientData)
+
+                activate  AnonymizedPatientDataRepository
+
+                    AnonymizedPatientDataRepository --> Service: anonymizedPatientData
+
+                deactivate AnonymizedPatientDataRepository
+
+                Service -> PatientRepository : Remove(patient)
+
+                alt user!=null
+                Service  -> UserRepository : Remove(user)
+
+                Note  right of Service: Delete user in the auth0 api
+                Service -> IEmailService : SendEmailAsync(to,subject,body)
+                
+                end
+                Service -> PatientDto : create(patient)
+
+                activate PatientDto
+
+                    PatientDto --> Service : patientDto
+
+                deactivate PatientDto
+
+                Service --> Controller : patientDto
+
+        deactivate Service
+
+        Admin <-- Controller : 200 OK
+
+    deactivate Controller
+
+deactivate Admin
+
+
+@enduml

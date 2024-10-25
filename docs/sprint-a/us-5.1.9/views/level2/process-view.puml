@@ -5,7 +5,7 @@ actor "Admin" as ADM
 participant "Backend Data Management" as BDM
 
 activate ADM
-ADM-> BDM : POST /api/patients/{id}
+ADM-> BDM : PUT /api/patients/{id}
 activate BDM
     BDM -> BDM : editPatientProfile(editingPatientDto)
     ADM<-- BDM : 200 OK
