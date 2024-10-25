@@ -1,0 +1,56 @@
+@startuml process-view-2
+autonumber
+
+actor "Doctor" as Doctor
+participant "OperationRequestsController" as Controller <<Controller>>
+participant "OperationRequestService" as Service <<Service>>
+participant "AuthenticationService" as AuthService <<Service>>
+participant "OperationTypeDto" as Dto <<Domain>>
+database "IOperationRequestRepository" as Repository <<Domain>>
+database "IStaffRepository" as StaffRepository <<Domain>>
+
+activate Doctor
+    Doctor -> Controller : DELETE api/operationRequests/{id}
+    activate Controller
+        Controller -> Service : RemoveAsync(id)
+        activate Service
+            Service -> Repository : GetById(id)
+            activate Repository
+                Repository --> Service : operationRequest
+            deactivate Repository
+            Service -> StaffRepository : GetById(operationRequest.StaffId)
+            activate StaffRepository
+                StaffRepository --> Service : staff
+            deactivate StaffRepository
+alt operationRequest == null
+            Service --> Controller : NullReferenceException
+        Controller --> Doctor : 404 Not Found
+end alt
+alt staff == null
+            Service --> Controller : NullReferenceException
+        Controller --> Doctor : 404 Not Found
+end alt
+            Service -> AuthService : GetLoggedInUsername(removeDto.token)
+            activate AuthService
+                AuthService --> Service : username
+            deactivate AuthService
+alt staff.Username.name != username
+            Service --> Controller : BusinessRuleValidationException
+        Controller --> Doctor : 401 Unauthorized
+end alt
+alt operationRequest.Status == SCHEDULED
+            Service --> Controller : BusinessRuleValidationException
+        Controller --> Doctor : 403 Forbidden
+end alt 
+            Service -> Dto : create(operationRequest)
+            activate Dto
+                Dto -> Service : dto
+            deactivate Dto
+            Service -> Repository : Remove(operationRequest)
+            Service --> Controller : dto
+        deactivate Service
+        Controller --> Doctor : 200 OK
+    deactivate Controller
+deactivate Doctor
+
+@enduml

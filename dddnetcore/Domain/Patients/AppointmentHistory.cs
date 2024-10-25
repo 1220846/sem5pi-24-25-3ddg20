@@ -8,7 +8,7 @@ namespace DDDSample1.Domain.Patients{
             this.History = history;
         }
         public void UpdateAppointmentHistory(String appointment){
-            this.History = appointment + this.History;
+            this.History = appointment;
         }
     }
 }

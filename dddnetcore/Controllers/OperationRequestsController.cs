@@ -6,6 +6,7 @@ using DDDSample1.Domain.OperationRequests;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using dddnetcore.Domain.OperationRequests.UpdateOperationRequestDto;
+using dddnetcore.Domain.OperationRequests;
 
 namespace DDDSample1.Controllers{
 
@@ -85,19 +86,21 @@ namespace DDDSample1.Controllers{
             
         }
 
-                // DELETE api/operationRequests/filter
+        // DELETE api/operationRequests/{id}
         [HttpDelete("{id}")]
         [Authorize(Policy = "RequiredDoctorRole")]
-        public async Task<ActionResult<OperationRequestDto>> RemoveOperationRequisition(Guid id) {
+        public async Task<ActionResult<OperationRequestDto>> RemoveOperationRequisition(Guid id, RemoveOperationRequestDto dto) {
             try {
-                var dto = await _service.RemoveAsync(id);
-                return Ok(dto);
+                var _dto = await _service.RemoveAsync(id, dto);
+                return Ok(_dto);
             } catch(NullReferenceException exception){
                 return NotFound(new {exception.Message});
             } catch (BusinessRuleValidationException exception) {
                 var message = exception.Message;
                 if (message.Equals("Cannot remove scheduled operation requests!"))
                     return Forbid();
+                if (message.Equals("Cannot remove other's operation requests!"))
+                    return Unauthorized(message);
                 return BadRequest();
             } catch(Exception){
                 return Forbid();

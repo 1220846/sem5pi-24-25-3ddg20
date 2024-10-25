@@ -13,6 +13,9 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using dddnetcore.Domain.OperationRequests.UpdateOperationRequestDto;
 using DDDSample1.Domain.SystemLogs;
+using System.Net;
+using DDDSample1.Domain.Auth;
+using dddnetcore.Domain.OperationRequests;
 
 namespace DDDSample1.Domain.OperationRequests
 {
@@ -29,14 +32,16 @@ namespace DDDSample1.Domain.OperationRequests
         private readonly IPatientRepository _repoPatient;
 
         private readonly IStaffRepository _repoStaff;
+        private readonly AuthenticationService _authService;
 
-        public OperationRequestService(IUnitOfWork unitOfWork, IOperationRequestRepository repo, IStaffRepository repoS, IOperationTypeRepository repoOpTy, IPatientRepository repoPat, ISystemLogRepository systemLogRepository){
+        public OperationRequestService(IUnitOfWork unitOfWork, IOperationRequestRepository repo, IStaffRepository repoS, IOperationTypeRepository repoOpTy, IPatientRepository repoPat, ISystemLogRepository systemLogRepository, AuthenticationService authService){
             this._unitOfWork = unitOfWork;
             this._repoOperationRequest = repo;
             this._repoStaff=repoS;
             this._repoOperationType=repoOpTy;
             this._repoPatient=repoPat;
             this._repoSystemLog=systemLogRepository;
+            this._authService = authService;
         }
 
         public async Task<OperationRequestDto> GetByIdAsync(OperationRequestId id)
@@ -147,10 +152,12 @@ namespace DDDSample1.Domain.OperationRequests
         }
 
 
-        public async Task<OperationRequestDto> RemoveAsync(Guid id) {
+        public async Task<OperationRequestDto> RemoveAsync(Guid id, RemoveOperationRequestDto removeDto) {
             OperationRequest operationRequest = await this._repoOperationRequest.GetByIdAsync(new OperationRequestId(id)) ?? throw new NullReferenceException("Operation request not found!");
-
-            //TODO check if operation request is mine
+            Staff staff = (await this._repoStaff.GetStaffsAsync(id: operationRequest.StaffId.Id)).FirstOrDefault() ?? throw new NullReferenceException("Owner of operation request not found!");
+            
+            if (!staff.Username.Name.Equals(_authService.GetLoggedInUsername(removeDto.token)))
+                throw new BusinessRuleValidationException("Cannot remove other's operation requests!");
 
             if (operationRequest.Status.Equals(OperationRequestStatus.SCHEDULED))
                 throw new BusinessRuleValidationException("Cannot remove scheduled operation requests!");
@@ -158,6 +165,7 @@ namespace DDDSample1.Domain.OperationRequests
             OperationRequestDto dto = new(operationRequest);
 
             this._repoOperationRequest.Remove(operationRequest);
+            await this._unitOfWork.CommitAsync();
 
             return dto;
         }
