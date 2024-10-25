@@ -120,7 +120,7 @@ activate PatientActor
 
                 Note  right of Service: Delete user in the auth0 api
 
-                Service -> UserDto : create(Username,Email,Role)
+                Service -> UserDto : create(user.Username,user.Email,user.Role)
 
                 activate UserDto
 

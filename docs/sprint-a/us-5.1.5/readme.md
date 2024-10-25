@@ -2,7 +2,7 @@
 
 ## 1. Context
 
-*In this task it was proposed that a Patient can delete my account and all associated data*
+*In this task it was proposed that a Patient can delete your account and all associated data*
 
 ## 2. Requirements
 
