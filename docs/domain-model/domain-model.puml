@@ -318,7 +318,7 @@ OperationRequest --> Priority
 OperationRequest "*" --> "1" Patient: of
 OperationRequest "*" ----> "1" Staff: to
 OperationRequest "*" ---> "1" OperationType: of
-OperationRequest --> Status
+OperationRequest --> OperationRequestStatus
 
 'OperationType'
 OperationType --> OperationTypeId
@@ -328,7 +328,7 @@ OperationType --> AnesthesiaTime
 OperationType --> SurgeryTime
 OperationType --> CleaningTime
 OperationType --> OperationTypeStatus
-OperationType "*" --> "*" Specialization: has
+OperationType "*" ---> "*" Specialization: has
 
 'Appointment'
 AppointmentId <- Appointment
