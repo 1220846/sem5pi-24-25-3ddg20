@@ -22,6 +22,20 @@ namespace DDDSample1.Domain.Patients{
             this.AppointmentHistory = appointmentHistory;
             this.AnonymizedDate = DateTime.Now;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            var other = (AnonymizedPatientData)obj;
+            return Id.Equals(other.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 
 }
