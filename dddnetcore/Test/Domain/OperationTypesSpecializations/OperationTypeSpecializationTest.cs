@@ -66,5 +66,37 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
 
             Assert.False(result);
         }
+
+        [Fact]
+        public void ChangeNumberOfStaff_ShouldUpdateStaff_WhenValidNumberProvided()
+        {
+            // Arrange
+            var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var numberOfStaff = new NumberOfStaff(5);
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
+
+            var newNumberOfStaff = new NumberOfStaff(10);
+
+            // Act
+            operationTypeSpecialization.ChangeNumberOfStaff(newNumberOfStaff);
+
+            // Assert
+            Assert.Equal(newNumberOfStaff, operationTypeSpecialization.NumberOfStaff);
+        }
+
+        [Fact]
+        public void ChangeNumberOfStaff_ShouldThrowArgumentNullException_WhenNullProvided()
+        {
+            // Arrange
+            var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var numberOfStaff = new NumberOfStaff(5);
+            var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => operationTypeSpecialization.ChangeNumberOfStaff(null));
+        }
     }
+    
 }
