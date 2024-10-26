@@ -118,8 +118,9 @@ namespace DDDSample1.Controllers{
             }
         }
 
-        // DELETE: api/users/patients/confirm-delete/{username}
-        [HttpDelete("patients/confirm-delete/{username}")]
+        // Get: api/users/patients/confirm-delete/{username}
+        // As we don't have a frontend yet, get is the only endpoint that email accepts.
+        [HttpGet("patients/confirm-delete/{username}")]
         public async Task<ActionResult<UserDto>> DeleteUserPatient(string username)
         {
             try{
