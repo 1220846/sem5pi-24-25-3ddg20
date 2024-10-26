@@ -134,6 +134,11 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(capturedOperationType.Id.AsGuid(), capturedOperationTypeSpecialization.Id.OperationTypeId.AsGuid());
             Assert.Equal(specialization.Id.AsGuid(), capturedOperationTypeSpecialization.Id.SpecializationId.AsGuid());
 
+            _systemLogRepoMock.Verify(repo => repo.AddAsync(It.Is<SystemLog>(log =>
+                        log.Operation == Operation.INSERT &&log.Entity == Entity.OPERATION_TYPE &&
+                        log.EntityId == capturedOperationType.Id.AsString() &&
+                        log.Content.Contains("ACL Reconstruction Surgery"))), Times.Once);
+
             _operationTypeRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationType>()), Times.Once);
             _operationTypeSpecializationRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationTypeSpecialization>()), Times.Once);
             _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(), Times.Once);
@@ -162,8 +167,10 @@ namespace DDDSample1.Tests.Domain.OperationTypes
 
             Assert.NotNull(capturedSpecializationId);
             Assert.Equal(new SpecializationId(specializationId), capturedSpecializationId);
-
+            
             _specializationRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<SpecializationId>(id => id.Equals(new SpecializationId(specializationId)))), Times.Once);
+            
+            _systemLogRepoMock.Verify(repo => repo.AddAsync(It.IsAny<SystemLog>()), Times.Never);
         }
 
         [Fact]
@@ -490,6 +497,107 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             Assert.Equal(25, result.CleaningTime);
             Assert.Equal(55, result.SurgeryTime);
             Assert.Equal(OperationTypeStatus.INACTIVE.ToString(), result.OperationTypeStatus);
+        }
+
+        [Fact]
+        public async Task EditOperationTypeWithValidDataShouldUpdateOperationTypeAndSpecializations(){
+            var operationTypeId = Guid.NewGuid();
+            var specializationId = Guid.NewGuid();
+            
+            var existingSpecialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var existingOperationType = new OperationType(
+                        new OperationTypeName("ACL Reconstruction Surgery"),
+                        new EstimatedDuration(135),
+                        new AnesthesiaTime(45),
+                        new CleaningTime(30),
+                        new SurgeryTime(60)
+                    );
+            
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                .ReturnsAsync(existingOperationType);
+
+            var updatingDto = new EditingOperationTypeDto {
+                Name = "Updated Surgery",
+                EstimatedDuration = 90,
+                StaffBySpecializations = new Dictionary<string, int>{
+                    { specializationId.ToString(), 3 }}};
+
+            var operationTypeSpecializationId = new OperationTypeSpecializationId(new OperationTypeId(operationTypeId), new SpecializationId(specializationId));
+            
+            var existingOperationTypeSpecialization = new OperationTypeSpecialization(existingOperationType, existingSpecialization, new NumberOfStaff(2));
+
+            _operationTypeSpecializationRepoMock.Setup(repo => repo.GetByIdAsync(operationTypeSpecializationId))
+                .ReturnsAsync(existingOperationTypeSpecialization);
+
+            var result = await _operationTypeService.EditOperationType(operationTypeId, updatingDto);
+
+            Assert.NotNull(result);
+            Assert.Equal(existingOperationType.Id.AsGuid(), result.Id);
+            Assert.Equal(updatingDto.Name, result.Name);
+            Assert.Equal(updatingDto.EstimatedDuration.Value, result.EstimatedDuration);
+            
+            _operationTypeRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<OperationType>()), Times.Once);
+            
+            _operationTypeSpecializationRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<OperationTypeSpecialization>()), Times.Once);
+            
+            _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(), Times.Once);
+
+            Assert.Equal(3, existingOperationTypeSpecialization.NumberOfStaff.Number);
+        }
+
+
+        [Fact]
+        public async Task EditOperationTypeOperationTypeNotFoundShouldThrowException(){
+            var operationTypeId = Guid.NewGuid();
+            
+            var updatingDto = new EditingOperationTypeDto
+            {
+                Name = "Updated Surgery",
+                EstimatedDuration = 90,
+                StaffBySpecializations = new Dictionary<string, int>{
+                    { Guid.NewGuid().ToString(), 3 }
+                }};
+
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                .ReturnsAsync((OperationType)null);
+
+            var exception = await Assert.ThrowsAsync<NullReferenceException>(() => 
+                _operationTypeService.EditOperationType(operationTypeId, updatingDto));
+            
+            Assert.Equal("Not Found Operation Type: " + operationTypeId, exception.Message);
+        }
+
+        [Fact]
+        public async Task EditOperationTypeNoUpdateDataShouldNotChangeOperationType()
+        {
+            var operationTypeId = Guid.NewGuid();
+            var existingOperationType = new OperationType(
+                new OperationTypeName("Knee Reconstruction Surgery"),
+                new EstimatedDuration(120),
+                new AnesthesiaTime(40),
+                new CleaningTime(25),
+                new SurgeryTime(55)
+            );
+            
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                .ReturnsAsync(existingOperationType);
+
+            var updatingDto = new EditingOperationTypeDto
+            {
+                Name = null,
+                EstimatedDuration = null,
+                StaffBySpecializations = null
+            };
+
+            var result = await _operationTypeService.EditOperationType(operationTypeId, updatingDto);
+
+            Assert.NotNull(result);
+            Assert.Equal(existingOperationType.Id.AsGuid(), result.Id);
+            Assert.Equal(existingOperationType.Name.Name, result.Name);
+            Assert.Equal(existingOperationType.EstimatedDuration.Minutes, result.EstimatedDuration);
+            
+            _operationTypeRepoMock.Verify(repo => repo.UpdateAsync(It.IsAny<OperationType>()), Times.Once);
+            _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(), Times.Once);
         }
     }
 }
