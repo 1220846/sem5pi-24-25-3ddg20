@@ -20,7 +20,7 @@ namespace DDDSample1.Domain.Patients{
             return Conditions.GetHashCode();
         }
         public void UpdateMedicalConditions(string conditions){
-            this.Conditions = conditions + Conditions;
+            this.Conditions = conditions;
         }
     }
 }

@@ -11,9 +11,9 @@ database "IPatientRepository" as PatientRepository <<Domain>>
 activate ADM
 ADM-> Controller : POST /api/patients
 activate Controller
-    Controller -> Service : createPatientProfileAsync(creatingPatientDto)
+    Controller -> Service : addAsync(creatingPatientDto)
     activate Service
-        Service -> Patient : create(creatingPatientDto)
+        Service -> Patient : create(id, appointmentHistory, dateOfBirth, \nemergencyContact, gender, medicalConditions, \ncontactInformation, firstName, lastName, fullName, user)
         activate Patient
             Patient --> Service : Patient
         deactivate Patient

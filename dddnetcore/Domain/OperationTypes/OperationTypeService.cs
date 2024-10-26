@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using DDDSample1.Domain.SystemLogs;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DDDSample1.Domain.OperationTypes
 {
@@ -93,6 +94,29 @@ namespace DDDSample1.Domain.OperationTypes
 
             await this._unitOfWork.CommitAsync();
 
+            return new OperationTypeDto{Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,
+            CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes, OperationTypeStatus = operationType.OperationTypeStatus.ToString(),StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
+            SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()};
+        }
+
+        public async Task<OperationTypeDto> EditOperationType(Guid id, EditingOperationTypeDto dto){
+            var operationType = await this._repo.GetByIdAsync(new OperationTypeId(id)) ?? throw new NullReferenceException("Not Found Operation Type: " + id);
+            if (dto.Name!=null){
+                operationType.ChangeName(new OperationTypeName(dto.Name));
+            }
+            if (dto.EstimatedDuration!=null){
+                operationType.ChangeEstimatedDuration(new EstimatedDuration(dto.EstimatedDuration.Value));
+            }
+            if (!dto.StaffBySpecializations.IsNullOrEmpty()){
+                foreach(var staffBySpecialization in dto.StaffBySpecializations){
+                    var id1 = new OperationTypeSpecializationId(new OperationTypeId(id), new SpecializationId(staffBySpecialization.Key));
+                    var operationTypeSpecialization = await _operationTypeSpecializationRepo.GetByIdAsync(id1) ?? throw new NullReferenceException("Not Found Operation Type: " + id1);
+                    operationTypeSpecialization.ChangeNumberOfStaff(new NumberOfStaff(staffBySpecialization.Value));
+                    await this._operationTypeSpecializationRepo.UpdateAsync(operationTypeSpecialization);
+                }
+            }
+            await this._repo.UpdateAsync(operationType);
+            await this._unitOfWork.CommitAsync();
             return new OperationTypeDto{Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,
             CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes, OperationTypeStatus = operationType.OperationTypeStatus.ToString(),StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
             SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()};

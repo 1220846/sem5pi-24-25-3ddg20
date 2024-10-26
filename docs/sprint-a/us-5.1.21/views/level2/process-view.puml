@@ -5,9 +5,9 @@ actor "Admin" as ADM
 participant "Backend Data Management" as BDM
 
 activate ADM
-ADM-> BDM : DELETE /api/patients/{id}
+ADM-> BDM : PUT /api/operationtypes/{id}
 activate BDM
-    BDM -> BDM : deletePatientProfile()
+    BDM -> BDM : editOperationType(editingOperationTypeDto)
     ADM<-- BDM : 200 OK
 deactivate BDM
 deactivate ADM

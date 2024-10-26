@@ -1,0 +1,48 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "OperationTypesController" as Controller <<Controller>>
+participant "OperationTypeService" as Service <<Service>>
+participant "OperationType" as OperationType <<Domain>>
+participant "OperationTypeSpecialization" as OperationTypeSpecialization <<Domain>>
+database "IOperationTypeRepository" as OperationTypeRepository <<Domain>>
+database "IOperationTypeSpecializationRepository" as OperationTypeSpecializationRepository <<Domain>>
+
+activate Admin
+    Admin -> Controller : PUT /api/operationtypes/{id}
+    activate Controller
+        Controller -> Service : EditOperationTypeAsync(id, editingOperationTypeDto)
+        activate Service
+            Service -> OperationTypeRepository : GetByIdAsync(id)
+            activate OperationTypeRepository
+                OperationTypeRepository --> Service : operationType
+            deactivate OperationTypeRepository
+            alt operationType == null
+                        Service --> Controller : NullReferenceException
+                    Controller --> Admin : 404 Not Found
+            end alt
+            alt dto.Name != null
+                        Service -> OperationType : ChangeName(new OperationTypeName(dto.Name))            
+            end alt
+            alt dto.EstimatedDuration != null
+                        Service -> OperationType : ChangeEstimatedDuration(new EstimatedDuration(dto.EstimatedDuration))            
+            end alt
+            alt dto.staffBySpecialization != null
+                        Service -> OperationTypeSpecializationRepository : GetByIdAsync(id)
+                        activate OperationTypeSpecializationRepository
+                            OperationTypeSpecializationRepository --> Service : operationTypeSpecialization
+                        deactivate OperationTypeSpecializationRepository
+                        alt operationType == null
+                            Service --> Controller : NullReferenceException
+                            Controller --> Admin : 404 Not Found
+                        end alt
+                        Service -> OperationTypeSpecialization : ChangeNumberOfStaff(new NumberOffStaff(dto.Specialization.numberOfStaff))            
+            end alt
+
+            Service --> Controller : operationTypeDto
+        deactivate Service
+    Controller --> Admin : 200 OK
+    deactivate Controller
+
+deactivate Admin

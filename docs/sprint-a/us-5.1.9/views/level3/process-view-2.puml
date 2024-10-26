@@ -1,0 +1,56 @@
+@startuml process-view-2
+autonumber
+
+actor "Admin" as Admin
+participant "PatientsController" as Controller <<Controller>>
+participant "PatientService" as Service <<Service>>
+participant "IEmailService" as EmailService <<Service>> 
+participant "Patient" as Patient <<Domain>>
+database "IPatientRepository" as PatientRepository <<Domain>>
+
+activate Admin
+    Admin -> Controller : PUT /api/patients/{id}
+    activate Controller
+        Controller -> Service : EditPatientAsync(id, editingPatientDto)
+        activate Service
+            Service -> PatientRepository : GetByIdAsync(id)
+            activate PatientRepository
+                PatientRepository --> Service : patient
+            deactivate PatientRepository
+alt patient == null
+            Service --> Controller : NullReferenceException
+        Controller --> Admin : 404 Not Found
+end alt
+alt dto.AppointmentHistory != null
+            Service -> Patient : ChangeEmail(new AppointmentHistory(dto.AppointmentHistory))            
+end alt
+alt dto.MedicalConditions != null
+            Service -> Patient : ChangeMedicalConditions(new MedicalConditions(dto.MedicalConditions))            
+end alt
+alt dto.FirstName != null
+            Service -> Patient : ChangeFirstName(new PatientFirstName(dto.FirstName))            
+end alt
+alt dto.LastName != null
+            Service -> Patient : ChangeLastName(new PatientLastName(dto.LastName))            
+end alt
+alt dto.FullName != null
+            Service -> Patient : ChangeFullName(new PatientFullName(dto.FullName))            
+end alt
+alt dto.Email != null
+            Service -> Patient : ContactInformation.ChangeEmail(new PatientEmail(dto.Email))            
+end alt
+alt dto.PhoneNumber != null
+            Service -> Patient : ContactInformation.ChangePhoneNumber(new PatientPhone(dto.PhoneNumber))
+end alt
+            Service -> PatientRepository : UpdateAsync(patient)
+            Activate PatientRepository
+            PatientRepository --> Service : patient
+alt ContactInformation changes happened
+            Service -> EmailService : SendEmailAsync(to, subject, body)
+end alt
+            Service --> Controller : patientDto
+        deactivate Service
+    Controller --> Admin : 200 OK
+    deactivate Controller
+
+deactivate Admin

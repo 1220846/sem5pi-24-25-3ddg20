@@ -1,0 +1,14 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as adm
+participant "SARM" as sarm <<system (C4)>>
+
+activate adm
+    adm -> sarm : asks to edit an operation type
+    activate sarm
+        sarm --> adm : confirms the operation type edition
+    deactivate sarm
+deactivate adm
+
+@endum

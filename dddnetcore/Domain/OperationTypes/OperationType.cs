@@ -60,5 +60,15 @@ namespace DDDSample1.Domain.OperationTypes{
                 $"  Cleaning Time: {CleaningTime.Minutes} minutes\n" +
                 $"  Status: {OperationTypeStatus}\n";
         }
+
+        public void ChangeName(OperationTypeName newOperationTypeName){
+            ArgumentNullException.ThrowIfNull(newOperationTypeName);
+            this.Name = newOperationTypeName;
+        }
+
+        public void ChangeEstimatedDuration(EstimatedDuration newEstimatedDuration){
+            ArgumentNullException.ThrowIfNull(newEstimatedDuration);
+            this.EstimatedDuration = newEstimatedDuration;
+        }
     }
 }
