@@ -108,7 +108,7 @@ namespace DDDSample1.Domain.OperationTypes
             if (!dto.StaffBySpecializations.IsNullOrEmpty()){
                 foreach(var staffBySpecialization in dto.StaffBySpecializations){
                     var id1 = new OperationTypeSpecializationId(new OperationTypeId(id), new SpecializationId(staffBySpecialization.Key));
-                    var operationTypeSpecialization = await _operationTypeSpecializationRepo.GetByIdAsync(id1) ?? throw new NullReferenceException("Not Found Operation Type: " + id1);
+                    var operationTypeSpecialization = await _operationTypeSpecializationRepo.GetByIdAsync(id1) ?? throw new NullReferenceException("Not Found Operation Type Specialization: " + id1);
                     operationTypeSpecialization.ChangeNumberOfStaff(new NumberOfStaff(staffBySpecialization.Value));
                     await this._operationTypeSpecializationRepo.UpdateAsync(operationTypeSpecialization);
                 }
