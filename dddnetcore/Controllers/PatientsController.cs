@@ -66,7 +66,7 @@ namespace DDDSample1.Controllers
         }
 
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<PatientDto>> DeletePatient(string id)
         {
             try{

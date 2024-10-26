@@ -5,10 +5,10 @@ actor "Admin" as ADM
 participant "Backend Data Management" as BDM
 
 activate ADM
-ADM-> BDM : DELETE /api/patients/{id}
+ADM-> BDM : POST /api/patients/filter
 activate BDM
-    BDM -> BDM : deletePatientProfile()
-    ADM<-- BDM : 200 OK
+    BDM -> BDM : listPatientProfiles(filter)
+    ADM<-- BDM : 200 List of patients
 deactivate BDM
 deactivate ADM
 

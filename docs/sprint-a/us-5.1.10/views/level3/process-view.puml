@@ -5,16 +5,25 @@ participant "Server" as srv
 participant "Database" as db
 
 activate adm
-    adm -> srv : PUT /api/patients/{id}
+    adm -> srv : DELETE /api/patients/{id}
     activate srv
         srv -> db : get patient
         activate db
             db --> srv : patient
+        alt user!=null
+                db --> srv : user
+                srv -> db : delete user
+                Note  right of srv: Delete user in the auth0 api
+        end alt
+        deactivate db
+        srv -> db : save anonymized patient data
+
+        activate db
+
+            db --> srv : anonymized patient data
+
         deactivate db
         srv -> db : delete patient
-        activate db
-            db --> srv : patient
-        deactivate db
         srv --> adm : 200 OK
     deactivate srv
 deactivate adm

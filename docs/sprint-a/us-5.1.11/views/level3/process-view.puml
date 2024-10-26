@@ -1,0 +1,16 @@
+@startuml process-view
+
+actor "Admin" as ADM
+
+activate ADM
+ADM-> Server : POST /api/patients/filter
+activate Server
+    Server -> Database : list patients
+    activate Database
+        Database --> Server : patients
+    deactivate Database
+    ADM <-- Server : 200 OK
+deactivate Server
+deactivate ADM
+
+@enduml
