@@ -22,7 +22,7 @@ activate Patient
 
     deactivate Server
 
-    Patient-> Server : DELETE api/users/patients/confirm-delete/{username}
+    Patient-> Server : GET api/users/patients/confirm-delete/{username}
 
     activate Server
 

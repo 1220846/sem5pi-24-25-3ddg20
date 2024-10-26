@@ -15,7 +15,7 @@ activate Patient
         Patient <-- BackendDataManagement : 200 OK
     deactivate BackendDataManagement
 
-    Patient -> BackendDataManagement : DELETE api/users/patients/confirm-delete/{username}
+    Patient -> BackendDataManagement : GET api/users/patients/confirm-delete/{username}
     activate BackendDataManagement
 
         BackendDataManagement -> BackendDataManagement : DeleteUserPatient(username)

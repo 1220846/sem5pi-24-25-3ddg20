@@ -52,7 +52,7 @@ activate PatientActor
 
     deactivate Controller
 
-    PatientActor-> Controller : DELETE api/users/patients/confirm-delete/{username}
+    PatientActor-> Controller : GET api/users/patients/confirm-delete/{username}
 
     activate Controller
 
