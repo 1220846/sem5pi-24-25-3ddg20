@@ -62,11 +62,12 @@ namespace DDDSample1.Domain.OperationRequests
         public async Task<OperationRequestDto> AddOperationRequestAsync(CreatingOperationRequestDto dto)
         {
             var doctor=(await _repoStaff.GetStaffsAsync(id: dto.DoctorId)).FirstOrDefault();
-            Console.WriteLine(doctor.ToString());
-            var operationType= await _repoOperationType.GetByIdAsync(new OperationTypeId(dto.OperationTypeId));
-            Console.WriteLine(operationType);
             if(doctor==null){
-                    throw new NullReferenceException("The doctor with that Id does not exist!");
+                throw new NullReferenceException("The doctor with that Id does not exist!");
+            }
+            var operationType= await _repoOperationType.GetByIdAsync(new OperationTypeId(dto.OperationTypeId));
+            if(operationType.OperationTypeStatus.Equals(OperationTypeStatus.INACTIVE)){
+                throw new BusinessRuleValidationException("The operation Type Is Inactive");
             }
             if(operationType.OperationTypeSpecializations.Any(specialization => specialization.Specialization.Id == doctor.Specialization.Id)){
                 var patient = await _repoPatient.GetByIdAsync(new MedicalRecordNumber(dto.MedicalRecordNumber));
