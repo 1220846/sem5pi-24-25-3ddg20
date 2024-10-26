@@ -21,6 +21,8 @@ namespace dddnetcore.Domain.Staffs
         public SpecializationDto Specialization {get;set;}
         public UserDto User {get;set;}
 
+        public StaffDto() {}
+
         public StaffDto(Staff staff) {
             this.Id = staff.Id.Id;
             this.FirstName = staff.FirstName.Name;
