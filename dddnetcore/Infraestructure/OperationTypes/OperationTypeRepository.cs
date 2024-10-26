@@ -35,7 +35,7 @@ namespace DDDSample1.Infrastructure.OperationTypes
 
                 if (specializationId.HasValue && specializationId.Value != Guid.Empty)
                 {
-                    query = query.Where(operationType => operationType.OperationTypeSpecializations.Any(specialization => specialization.Id == new SpecializationId(specializationId.Value)));
+                    query = query.Where(op => op.OperationTypeSpecializations.Any(ots => ots.Specialization.Id == new SpecializationId(specializationId.Value)));
                 }
 
                 if (!string.IsNullOrEmpty(status))
