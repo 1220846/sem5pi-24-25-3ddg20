@@ -7,9 +7,9 @@ participant "StaffService" as Service <<Service>>
 database "IStaffRepository" as Repository <<Domain>>
 
 activate Admin
-        Admin -> Controller : GET /api/staffss/filter
+        Admin -> Controller : GET /api/staffs/filter
         activate Controller 
-            Controller -> Service : GetOperationTypes(filters)
+            Controller -> Service : GetStaffsAsync(filters)
             activate Service
                 Service ->  Repository : GetStaffsAsync(filters)
                 activate Repository
