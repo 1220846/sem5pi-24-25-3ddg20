@@ -1,0 +1,30 @@
+@startuml process-view
+
+actor "Admin" as adm
+participant "Server" as srv
+participant "Database" as db
+
+activate adm
+    adm -> srv : PUT /api/operationtypes/{id}
+    activate srv
+        srv -> db : get operationType
+        activate db
+            db --> srv : operationType
+        deactivate db
+        srv -> db : update operationType
+        activate db
+            db --> srv : operationType
+        deactivate db
+        srv -> db : get operationTypeSpecialization
+        activate db
+            db --> srv : operationTypeSpecialization
+        deactivate db
+        srv -> db : update operationTypeSpecialization
+        activate db
+            db --> srv : operationTypeSpecialization
+        deactivate db
+        srv --> adm : 200 OK
+    deactivate srv
+deactivate adm
+
+@enduml

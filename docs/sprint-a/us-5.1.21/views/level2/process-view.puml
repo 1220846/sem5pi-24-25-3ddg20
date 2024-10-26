@@ -1,0 +1,15 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as ADM
+participant "Backend Data Management" as BDM
+
+activate ADM
+ADM-> BDM : PUT /api/operationtypes/{id}
+activate BDM
+    BDM -> BDM : editOperationType(editingOperationTypeDto)
+    ADM<-- BDM : 200 OK
+deactivate BDM
+deactivate ADM
+
+@enduml

@@ -78,5 +78,21 @@ namespace DDDSample1.Controllers{
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
+
+        // PUT: api/operationtypes/{id}
+        [HttpPut("{id}")]
+        [Authorize(Policy = "RequiredAdminRole")]
+        public async Task<ActionResult<OperationTypeDto>> EditOperationType(Guid id, EditingOperationTypeDto dto)
+        {
+            try{
+                return await _service.EditOperationType(id, dto);
+
+            }catch(NullReferenceException exception){
+                return NotFound(new {exception.Message});
+
+            }catch(Exception){
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
     }
 }

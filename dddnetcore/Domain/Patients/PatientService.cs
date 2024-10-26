@@ -93,42 +93,45 @@ namespace dddnetcore.Domain.Patients
             bool changedContactInfo = false;
             Patient patient = await _repo.GetByIdAsync(new MedicalRecordNumber(id)) ?? throw new NullReferenceException("Patient not found");
             PatientEmail previousEmail = patient.ContactInformation.Email;
-            string logMessage = $"Patient '{id}' was updated:";;
+            var patientChanges=new List<string>();
             
             if (dto.AppointmentHistory != null){
+                patientChanges.Add($"Appointment history was updated");
                 patient.ChangeAppointmentHistory(new AppointmentHistory(dto.AppointmentHistory));
-                logMessage += " appointment history;";
             }
             if (dto.MedicalConditions != null){
+                patientChanges.Add($"Medical conditions / allergies was updated");
                 patient.ChangeMedicalConditions(new MedicalConditions(dto.MedicalConditions));
-                logMessage += " medical conditions;";
             }
             if (dto.FirstName != null){
+                patientChanges.Add($"First Name was updated from  {patient.FirstName.Name} to {dto.FirstName}");
                 patient.ChangeFirstName(new PatientFirstName(dto.FirstName));
-                logMessage += " first name;";
             }
             if (dto.LastName != null){
+                patientChanges.Add($"Last Name was updated from  {patient.LastName.Name} to {dto.LastName}");
                 patient.ChangeLastName(new PatientLastName(dto.LastName));
-                logMessage += " last name;";
             }
             if (dto.FullName != null){
+                patientChanges.Add($"Full Name was updated from  {patient.FullName.Name} to {dto.FullName}");
                 patient.ChangeFullName(new PatientFullName(dto.FullName));
-                logMessage += " full name;";
             }
             if (dto.Email != null){
+                patientChanges.Add($"Email was updated from  {patient.ContactInformation.Email.Email} to {dto.Email}");
                 patient.ChangeEmail(new PatientEmail(dto.Email));
                 changedContactInfo = true;
-                logMessage += " email;";
             }
 
             if (dto.PhoneNumber != null){
+                patientChanges.Add($"Phone Number was updated from  {patient.ContactInformation.PhoneNumber.PhoneNumber} to {dto.PhoneNumber}");
                 patient.ChangePhoneNumber(new PatientPhone(dto.PhoneNumber));
                 changedContactInfo = true;
-                logMessage += " phone number.";
             }
 
             await this._repo.UpdateAsync(patient);
-            await this._repoSystemLog.AddAsync(new SystemLog(Operation.UPDATE, Entity.PATIENT, logMessage, patient.Id.Id));
+            if (patientChanges.Count>0){
+                string logMessage = string.Join(", ", patientChanges);
+                await this._repoSystemLog.AddAsync(new SystemLog(Operation.UPDATE, Entity.PATIENT, logMessage, patient.Id.Id));
+            }
             await this._unitOfWork.CommitAsync();
 
             if (changedContactInfo) {

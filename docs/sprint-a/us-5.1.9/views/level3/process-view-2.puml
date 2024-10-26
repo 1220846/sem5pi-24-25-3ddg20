@@ -17,7 +17,7 @@ activate Admin
             activate PatientRepository
                 PatientRepository --> Service : patient
             deactivate PatientRepository
-alt patient != null
+alt patient == null
             Service --> Controller : NullReferenceException
         Controller --> Admin : 404 Not Found
 end alt

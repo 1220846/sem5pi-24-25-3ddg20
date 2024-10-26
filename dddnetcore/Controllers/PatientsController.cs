@@ -6,6 +6,7 @@ using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Patients;
 using Microsoft.AspNetCore.Mvc;
 using dddnetcore.Domain.Patients;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DDDSample1.Controllers
 {
@@ -33,6 +34,7 @@ namespace DDDSample1.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> Create(CreatingPatientDto dto) {
             try {
                 PatientDto patient = await _service.AddAsync(dto);
@@ -49,7 +51,9 @@ namespace DDDSample1.Controllers
                 return Forbid();
             }
         }
+
         [HttpPut("{id}")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> EditPatient(string id, EditingPatientDto dto) {
             try {
                 var patientDto = await _service.EditPatientAsync(id, dto);
@@ -67,6 +71,7 @@ namespace DDDSample1.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> DeletePatient(string id)
         {
             try{
@@ -86,6 +91,7 @@ namespace DDDSample1.Controllers
         }
 
         [HttpGet("filter")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients(string firstName = null, string lastName = null, string fullName = null, string email = null, string birthDate = null,
         string phoneNumber = null, string id = null, string gender = null, int pageNumber = 1, int pageSize = 10) {
             return await _service.GetPatientsAsync(firstName, lastName, fullName, email, birthDate, phoneNumber, id, gender, pageNumber, pageSize);
