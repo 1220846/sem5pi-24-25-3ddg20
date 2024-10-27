@@ -1,31 +1,22 @@
-@startuml level3
+@startuml process-view2
 
 autonumber
 
-actor "User" as UserP
-participant "UsersController" as Controller <<Controller>>
-participant "UserService" as Service <<Service>>
+actor "Doctor" as UserP
+participant "OperationRequestsController" as Controller <<Controller>>
+participant "OperationRequestService" as Service <<Service>>
 participant "OperationRequest" as OperationRequest <<Domain>>
+participant "OperationRequestDto" as OperationRequestDto <<Domain>>
 database "IUserRepository" as UserRepository <<Domain>>
 database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
 
 activate UserP
-    UserP->Controller:PATCH /api/OperationRequest
+    UserP->Controller:PUT /api/operationRequest/{id}
 
 activate Controller
 
-    Controller->Service:UpdateOperationRequestAsync(operationRequestUpdateDto)
+    Controller->Service:UpdateOperationRequestAsync(id,operationRequestUpdateDto)
     activate Service
-        Service->UserRepository:GetByIdAsync(username)
-        activate UserRepository
-
-            UserRepository-->Service:user
-        deactivate UserRepository
-
-        opt user==null or user.Role==Patient then
-            Service-->Controller:error
-            Controller-->UserP:404 NOT FOUND
-        end opt
 
         Service->OperationRequestRepository:getById(operationRequestId)
         activate OperationRequestRepository
@@ -33,32 +24,33 @@ activate Controller
             OperationRequestRepository-->Service:operationRequest
         deactivate OperationRequestRepository
 
-        opt operationRequest==null then
-            Service-->Controller:error
+        alt operationRequest==null then
+            Service-->Controller:BusinessRuleValidationException
             Controller-->UserP:404 NOT FOUND
-        end opt
+        else
 
-        Service->OperationRequest:updateData(operationRequestUpdateDto)
-        activate OperationRequest
+        alt operationRequest.priority!=null then
+        Service->OperationRequest:ChangePriority(operationRequestUpdateDto.Priority)
+        end alt
 
-            OperationRequest-->Service:operationRequest
-        deactivate OperationRequest
+        alt operationRequest.deadline!=null then
+        Service->OperationRequest:ChangeDeadline(operationRequestUpdateDto.Deadline)
+        end alt
 
+        Service->OperationRequestRepository:UpdateAsync(operationRequest)
 
-        Service->OperationRequestRepository:UpdateOperationRequestAsync(operationRequest)
-        activate OperationRequestRepository
+        Service->OperationRequestDto:create(PatientId, DoctorId, OperationType,Deadline, Priority, Status)
+        activate OperationRequestDto
 
-            OperationRequestRepository-->Service:statusCode
-        deactivate OperationRequestRepository
+            OperationRequestDto-->Service:operationRequestDto
+        deactivate OperationRequestDto
 
-        opt statusCode=500 then
-            Service-->Controller:error
-            Controller-->UserP:500 ERROR OCCURRED
-        end opt
-        Service --> Controller:userDto
+        Service --> Controller:operationRequestDto
     deactivate Service
 
-    UserP<--Controller:201 Updated
+    UserP<--Controller:200 OK
 deactivate Controller
+end alt
+
 
 @enduml

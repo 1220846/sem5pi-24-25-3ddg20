@@ -1,12 +1,15 @@
-@startuml ssdlevel2
+@startuml process-view
 
+actor "Doctor" as Doctor
 participant SYS as "SARM" <<C4:System>>
 
-?o->SYS:PATCH /api/OperationRequest
-activate SYS
+activate Doctor
+Doctor->SYS:PUT /api/OperationRequest/{id}
+    activate SYS
 
-    SYS->SYS:UpdateOperationRequestAsync(operationRequestUpdateDto)
+        SYS->SYS:UpdateOperationRequestAsync(id,operationRequestUpdateDto)
 
-    <--SYS:201 OK
-deactivate SYS
+        Doctor<--SYS:200 OK
+    deactivate SYS
+deactivate Doctor
 @enduml

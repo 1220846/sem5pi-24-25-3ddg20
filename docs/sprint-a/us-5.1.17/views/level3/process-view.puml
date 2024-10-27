@@ -1,0 +1,26 @@
+@startuml process-view
+
+autonumber
+
+actor Doctor as  "Doctor"
+participant "Server" as Server
+participant "Database" as Database
+
+activate Doctor
+    Doctor->Server:PUT /api/operationRequests/{id}
+    activate Server
+
+        Server->Database:getByIdAsync(operationRequestId)
+        activate Database
+
+            Server<-Database:operationRequest
+        deactivate Database
+
+        Server->Database:UpdateAsync(operationRequest)
+        
+
+        Doctor<-Server:200 OK
+    deactivate Server
+deactivate Doctor
+
+@enduml
