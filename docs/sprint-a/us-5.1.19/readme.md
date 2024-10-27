@@ -20,12 +20,14 @@ Acceptance Criteria:
 
 ### Level 1
 
-![Process view level 1]()
+![Process view level 1](views/level1/process-view.svg)
 
 ### Level 2
 
-![Process view level 2]()
+![Process view level 2](views/level2/process-view.svg)
 
 ### Level 3
 
-![Process view level 3]()
+![Process view level 3](views/level3/process-view.svg)
+
+![Process view level 3](views/level3/process-view2.svg)

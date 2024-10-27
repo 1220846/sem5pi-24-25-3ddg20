@@ -7,7 +7,7 @@ participant "Database" as Database
 
 activate Doctor
 
-    Doctor-> Server : GET /api/operationrequests/filter
+    Doctor-> Server : GET /api/operationRequests/filter
     
     activate Server
 

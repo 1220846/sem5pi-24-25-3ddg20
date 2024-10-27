@@ -1,5 +1,5 @@
-
 @startuml process-view
+
 autonumber
 
 actor "Doctor" as Doctor
@@ -8,11 +8,11 @@ participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
 activate Doctor
 
     alt Get operation types
-        Doctor-> BackendDataManagement : GET /api/operationrequests/filter
+        Doctor-> BackendDataManagement : GET /api/operationRequests/filter
 
         activate BackendDataManagement
 
-            BackendDataManagement -> BackendDataManagement : GetOperationRequests(patientId,\n operationTypeId, priority, status)
+            BackendDataManagement -> BackendDataManagement : GetOperationRequestsAsync(patientId,\n operationTypeId, priority, status)
 
         Doctor <-- BackendDataManagement : 200 OK
         deactivate BackendDataManagement

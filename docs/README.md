@@ -53,5 +53,5 @@
 | ----------- | --------------- |--------------- |
 |1220829      | Diogo Ferreira  |                |
 |1220846      | Francisco Osório|[US-5.1.3](sprint-a/us-5.1.3/readme.md) [US-5.1.4](sprint-a/us-5.1.4/readme.md) [US-5.1.5](sprint-a/us-5.1.5/readme.md)  [US-5.1.7](sprint-a/us-5.1.7/readme.md)  [US-5.1.20](sprint-a/us-5.1.20/readme.md) [US-5.1.22](sprint-a/us-5.1.22/readme.md) [US-5.1.23](sprint-a/us-5.1.23/readme.md)                |
-|1220890      | Sérgio Moreira  |                |
+|1220890      | Sérgio Moreira  | [US-5.1.1](sprint-a/us-5.1.1/readme.md) [US-5.1.2](sprint-a/us-5.1.2/readme.md) [US-5.1.6](sprint-a/us-5.1.6/readme.md)  [US-5.1.16](sprint-a/us-5.1.16/readme.md)  [US-5.1.17](sprint-a/us-5.1.17/readme.md) [US-5.1.19](sprint-a/us-5.1.19/readme.md)  |
 |1221104      | Rafael Ferraz   |                |
