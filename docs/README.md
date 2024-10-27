@@ -51,7 +51,7 @@
 
 | Student Nr. | Name            |Tasks Assigment |
 | ----------- | --------------- |--------------- |
-|1220829      | Diogo Ferreira  |                |
+|1220829      | Diogo Ferreira  | [US-5.1.8](sprint-a/us-5.1.8/readme.md) [US-5.1.9](sprint-a/us-5.1.9/readme.md) [US-5.1.10](sprint-a/us-5.1.10/readme.md)  [US-5.1.11](sprint-a/us-5.1.11/readme.md)  [US-5.1.21](sprint-a/us-5.1.21/readme.md)            |
 |1220846      | Francisco Osório|[US-5.1.3](sprint-a/us-5.1.3/readme.md) [US-5.1.4](sprint-a/us-5.1.4/readme.md) [US-5.1.5](sprint-a/us-5.1.5/readme.md)  [US-5.1.7](sprint-a/us-5.1.7/readme.md)  [US-5.1.20](sprint-a/us-5.1.20/readme.md) [US-5.1.22](sprint-a/us-5.1.22/readme.md) [US-5.1.23](sprint-a/us-5.1.23/readme.md)                |
 |1220890      | Sérgio Moreira  | [US-5.1.1](sprint-a/us-5.1.1/readme.md) [US-5.1.2](sprint-a/us-5.1.2/readme.md) [US-5.1.6](sprint-a/us-5.1.6/readme.md)  [US-5.1.16](sprint-a/us-5.1.16/readme.md)  [US-5.1.17](sprint-a/us-5.1.17/readme.md) [US-5.1.19](sprint-a/us-5.1.19/readme.md)  |
-|1221104      | Rafael Ferraz   |                |
+|1221104      | Rafael Ferraz   |  [US-5.1.12](sprint-a/us-5.1.12/readme.md) [US-5.1.13](sprint-a/us-5.1.13/readme.md) [US-5.1.14](sprint-a/us-5.1.14/readme.md)  [US-5.1.15](sprint-a/us-5.1.15/readme.md)  [US-5.1.18](sprint-a/us-5.1.18/readme.md)   |
