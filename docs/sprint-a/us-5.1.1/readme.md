@@ -18,4 +18,14 @@ In this task it was proposed that an Admin can register new backoffice users via
 
 ### Level 1
 
-![Process view level 1]( "A process view level 1")
+![Process view level 1](views/level1/process-view.svg "A process view level 1")
+
+### Level 2
+
+![Process view level 2](views/level2/process-view.svg "A process view level 2")
+
+### Level 3
+
+![Process view level 3](views/level3/process-view.svg "A process view level 3")
+
+![Process view level 3](views/level3/process-view2.svg "A process view level 3")

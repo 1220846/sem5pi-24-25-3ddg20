@@ -1,4 +1,4 @@
-@startuml ssdlevel1
+@startuml process-view
 
 actor "Administrator" as Admin
 participant SYS as "SARM" <<C4:System>>

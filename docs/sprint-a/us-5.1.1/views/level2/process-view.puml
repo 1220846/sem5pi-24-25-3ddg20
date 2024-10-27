@@ -1,12 +1,15 @@
-@startuml ssdlevel2
+@startuml process-view
 
+actor "Admin" as Admin
 participant SYS as "SARM" <<C4:System>>
 
-?o->SYS:POST /api/users
+activate Admin
+Admin->SYS:POST /api/users
 activate SYS
 
-    SYS->SYS:addBackofficeAsync(creatingUserDto)
+    SYS->SYS:addBackofficeUserAsync(creatingUserDto)
 
-    <--SYS:201 Created
+    Admin<--SYS:201 CREATED
 deactivate SYS
+deactivate Admin
 @enduml

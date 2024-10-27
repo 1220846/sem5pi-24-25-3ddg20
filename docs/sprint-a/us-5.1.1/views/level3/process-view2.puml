@@ -1,8 +1,8 @@
-@startuml level3
+@startuml process-view2
 
 autonumber
 
-actor "User" as UserP
+actor "Admin" as UserP
 participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
 participant "User" as User <<Domain>>
@@ -34,6 +34,8 @@ activate Controller
 
             UserRepository-->Service:user
         deactivate UserRepository
+
+        note right of Service: Create User in Auth0
 
         Service->UserDto:create(user.Username,user.email,user.Role)
         activate UserDto
