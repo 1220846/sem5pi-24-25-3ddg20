@@ -1,4 +1,4 @@
-@startuml level3
+@startuml process-view
 
 actor "BackofficeUser" as UserP
 participant "UserController" as Controller <<Controller>>
@@ -10,7 +10,7 @@ activate UserP
 
     activate Controller
 
-        Controller -> Service : loginAsync(loginRequestDto)
+        Controller -> Service : Login(loginRequestDto)
 
         activate Service
 

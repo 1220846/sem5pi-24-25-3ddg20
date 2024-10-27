@@ -1,12 +1,15 @@
-@startuml ssdlevel1
+@startuml process-view
 
+actor "BackofficeUser" as User
 participant SYS as "SARM" <<C4:System>>
 
-?o->SYS:POST /api/users/login
-activate SYS
+activate User
+User->SYS:POST /api/users/login
+    activate SYS
 
-    SYS-->SYS:loginAsync(username,password)
+        SYS->SYS:Login(LoginRequestDto)
 
-    <--SYS:200 Ok
-deactivate SYS
+        User<--SYS:200 Ok
+    deactivate SYS
+deactivate User
 @enduml
