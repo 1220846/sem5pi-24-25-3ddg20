@@ -1,39 +1,21 @@
-@startuml level3
+@startuml process-view
 autonumber
 
-actor "User" as UserP
+actor "BackofficeUser" as UserP
 participant "UsersController" as Controller <<Controller>>
 participant "UserService" as Service <<Service>>
-participant "User" as User <<Domain>>
-database "IUserRepository" as UserRepository <<Domain>>
 
 activate UserP
-UserP->Controller:PUT /api/users
+UserP->Controller:POST /api/users/resetpassword
 activate Controller
     
-    Controller->Service:resetPasswordAsync(userEmail)
+    Controller->Service:ResetPassword(RequestResetPasswordDto)
     activate Service
 
-        /'Service->SendNotification:notifyStaffWithLink(userEmail)
-        activate SendNotification
-
-            SendNotification-->Service:sendLink
-        deactivate SendNotification
-
-        note over Service
-            "Fazer auth ao Staff"
-        end note
-        '/
-        /'
-        Service->Auth:setPassword()
-
-        '/
-
-
-    
+        note right of Service: Reset Password with Auth0
 
         Service-->Controller:message
     deactivate Service
-    UserP<-- Controller:201 confirmation\n of password reset
+    UserP<-- Controller:200 OK
 deactivate Controller
 @enduml 

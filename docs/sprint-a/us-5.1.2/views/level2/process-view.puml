@@ -1,12 +1,15 @@
-@startuml ssdlevel1
+@startuml process-view
 
+actor "BackofficeUser" as BackofficeUser
 participant SYS as "SARM" <<C4:System>>
 
-?o->SYS:PUT /api/user
+activate BackofficeUser
+BackofficeUser->SYS:POST /api/user/resetpassword
 activate SYS
 
-    SYS-->SYS:updadePassword(password)
+    SYS-->SYS:RequestResetPassword(RequestResetPasswordDto)
 
-    <--SYS:201 Password Updated
+    BackofficeUser<--SYS:200 OK
 deactivate SYS
+deactivate BackofficeUser
 @enduml

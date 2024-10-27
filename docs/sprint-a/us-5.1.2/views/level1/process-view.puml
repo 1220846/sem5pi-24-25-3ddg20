@@ -1,15 +1,15 @@
-@startuml ssdlevel1
+@startuml process-view
 
-actor "Backoffice User" as Admin
+actor "BackofficeUser" as User
 participant SYS as "SARM" <<C4:System>>
 
-activate Admin
+activate User
 
-    Admin -> SYS : Asks to reseat the password
+    User -> SYS : Asks to reseat the password
     activate SYS
         
-        SYS-->Admin: Confirmation of password reseated
+        SYS-->User: Confirmation of password reseated
     deactivate SYS
-deactivate Admin
+deactivate User
 
 @enduml
