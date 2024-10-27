@@ -43,9 +43,12 @@ namespace DDDSample1.Controllers{
 
                 return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
 
-            }catch(Exception exception){
+            }catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
+            }catch(Exception){
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
 
