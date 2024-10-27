@@ -1,0 +1,15 @@
+@startuml process-view
+
+actor "Doctor" as Doctor
+participant SYS as "SARM" <<C4:System>>
+
+activate Doctor
+Doctor->SYS:POST /api/OperationRequests
+activate SYS
+
+    SYS->SYS:createOperationRequest(creatingRequestOperationDto)
+
+    Doctor<--SYS:201 created
+deactivate SYS
+deactivate Doctor
+@enduml

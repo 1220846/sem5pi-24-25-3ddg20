@@ -1,8 +1,8 @@
-@startuml level3
+@startuml process-view2
 
 autonumber
 
-actor "User" as UserP
+actor "Doctor" as UserP
 participant "OperationRequestsController" as Controller <<Controller>>
 participant "OperationRequestService" as Service <<Service>>
 participant "Patient" as Patient <<Domain>>
@@ -14,23 +14,33 @@ database "IPatientRepository" as PatientRepository <<Domain>>
 database "IOperationRequestRepository" as OperationRequestRepository <<Domain>>
 
 activate UserP
-UserP->Controller: POST /api/operationrequests
+UserP->Controller: POST /api/operationRequests
 activate Controller
 
-    Controller->Service:addOperationRequestAsync(operationRequestDto)
+    Controller->Service:AddOperationRequestAsync(operationRequestDto)
     activate Service
 
-        Service -> StaffRepository:getByIdAsync(operationRequestDto.doctorID)
+        Service -> StaffRepository:getStaffsAsync(operationRequestDto.doctorID)
         activate StaffRepository
 
             StaffRepository-->Service:doctor
         deactivate StaffRepository
+
+        alt doctor==null
+            Service-->Controller:NullReferenceException
+        Controller-->UserP:404 Not Found
+        else 
         
         Service -> OperationTypeRepository:getByIdAsync(operationRequestDto.operationTypeID)
         activate OperationTypeRepository
 
             OperationTypeRepository-->Service:operationType
         deactivate OperationTypeRepository
+
+        alt operationType==null
+            Service-->Controller:BusinessRuleValidationException
+        Controller-->UserP:404 Not Found
+        else 
 
         alt doctor.specialization.OperationTypeSpecialization == operationType then
         
@@ -40,10 +50,10 @@ activate Controller
             PatientRepository-->Service:patient
         deactivate PatientRepository
 
-        opt patient==null
+        alt patient==null
             Service-->Controller:BusinessRuleValidationException
         Controller-->UserP:404 Not Found
-        end opt
+        else 
 
         Service->OperationRequest:create(operationRequestDto.PatientId, operationRequestDto.doctorID, operationRequestDto.OperationTypeId, operationRequestDto.deadline, operationRequestDto.priority)
         activate OperationRequest
@@ -77,6 +87,9 @@ activate Controller
             Controller<--Service:BusinessRuleValidationException
         deactivate Service
         UserP<--Controller:403 Forbidden
+        end alt
+        end alt
+        end alt
     deactivate Controller
 
 

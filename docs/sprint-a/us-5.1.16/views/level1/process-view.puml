@@ -1,4 +1,4 @@
-@startuml level1
+@startuml process-view
 
 actor "Doctor" as Doctor
 participant SYS as "SARM" <<C4:System>>
