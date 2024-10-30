@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button'; 
 import { ToolbarModule } from 'primeng/toolbar'; 
 import { MenuModule } from 'primeng/menu'; 
-import { SidebarModule } from 'primeng/sidebar';
+import { MenubarModule } from 'primeng/menubar';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,7 +15,7 @@ import { SidebarModule } from 'primeng/sidebar';
     ButtonModule,
     ToolbarModule,
     MenuModule,
-    SidebarModule
+    MenubarModule
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
