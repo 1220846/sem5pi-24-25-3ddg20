@@ -1,21 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild } from '@angular/core';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
+import { Component, Input } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button'; 
+import { ToolbarModule } from 'primeng/toolbar'; 
+import { MenuModule } from 'primeng/menu'; 
+import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [ CommonModule, MatSidenavModule, MatToolbarModule, MatIconModule, MatListModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ButtonModule,
+    ToolbarModule,
+    MenuModule,
+    SidebarModule
+  ],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
   @Input() userType: string = 'user';
-  //@Input() items: Array<{ label: string; icon: string; link: string }> = [];
   items = [
     { label: 'Início', icon: 'home', link: '/home' },
     { label: 'Sobre', icon: 'info', link: '/about' },
@@ -24,11 +30,15 @@ export class SidebarComponent {
   ];
 
   username: string = 'Username';
-  
+  isSidenavOpen: boolean = true;
+
   constructor(private router: Router) {}
 
   logout() {
     this.router.navigate(['/login']);
   }
 
+  toggleSidenav() {
+    this.isSidenavOpen = !this.isSidenavOpen;
+  }
 }

@@ -1,34 +1,71 @@
-/*Sidebar */
+/* Sidebar */
 @import '../../../assets/styles/variables.scss';
 
-.sidenav {
-  width: 250px;
-  background-color: $color-secundary;
-  color: white;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+/* Estilo para a Sidebar */
+.custom-sidebar {
+  background-color: $color-secundary; /* Fundo da sidebar */
+  color: white; /* Cor do texto */
+  height: 100vh; /* Altura total da viewport */
+  display: flex;
+  flex-direction: column; /* Para organizar o conteúdo verticalmente */
+  position: fixed; /* Fixa a sidebar no lado esquerdo */
+  top: 0; /* Inicia no topo */
+  left: 0; /* Posiciona à esquerda */
+  z-index: 1000; /* Garante que a sidebar fique acima de outros elementos */
 }
 
-.mat-nav-list a {
-  color: white;
+/* Estilo para o Menu dentro da Sidebar */
+.custom-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; /* Faz o menu ocupar todo o espaço disponível */
 }
 
-.top-toolbar {
-  background-color: white;
-  color: #2c3e50;
-  height: 64px;
+.custom-menu li {
+  transition: background-color 0.3s;
+}
+
+.custom-menu li a {
+  color: white; /* Cor do texto dos links */
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding-right: 16px;
-  border-bottom: 1px solid #e0e0e0; 
+  width: 100%; 
+  padding: 10px 15px;
+  border-radius: 4px; 
+  text-decoration: none; 
+  font-weight: 500; /* Para tornar o texto mais legível */
 }
 
-.content {
-  margin-left: 250px;
-  padding: 20px;
-  background-color: white;
-  min-height: 100vh;
+.custom-menu li a:hover {
+  background-color: $color-primary; 
+  color: white; 
+}
+
+/* Para manter a cor do texto sempre visível */
+.custom-menu li a {
+  background-color: transparent; /* Sem fundo */
+}
+
+.custom-menu li i {
+  margin-right: 8px; 
+  font-size: 20px; 
+}
+
+/* Estilo para a Informação do Usuário */
+.user-info {
+  display: flex; 
+  align-items: center;
+  margin: 10px 15px; /* Espaçamento em relação ao topo */
+  color: white; /* Cor do texto do usuário */
+}
+
+.user-info i { 
+  font-size: 24px; 
+  margin-right: 8px; 
+}
+
+.username {
+  font-weight: 500; 
+  color: white; /* Cor do nome do usuário */
 }
