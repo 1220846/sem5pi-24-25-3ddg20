@@ -1,0 +1,34 @@
+/*Sidebar */
+@import '../../../assets/styles/variables.scss';
+
+.sidenav {
+  width: 250px;
+  background-color: $color-secundary;
+  color: white;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.mat-nav-list a {
+  color: white;
+}
+
+.top-toolbar {
+  background-color: white;
+  color: #2c3e50;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 16px;
+  border-bottom: 1px solid #e0e0e0; 
+}
+
+.content {
+  margin-left: 250px;
+  padding: 20px;
+  background-color: white;
+  min-height: 100vh;
+}
