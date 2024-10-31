@@ -18,6 +18,16 @@ namespace DDDSample1.Domain.Specializations
             this._repo = repo;
         }
 
+        public async Task<List<SpecializationDto>> GetAllAsync()
+        {
+            var list = await this._repo.GetAllAsync();
+            
+            List<SpecializationDto> listDto = list.ConvertAll<SpecializationDto>(specialization => 
+                new SpecializationDto{Id = specialization.Id.AsGuid(), Name = specialization.Name.Name});
+
+            return listDto;
+        }
+
         public async Task<SpecializationDto> GetByIdAsync(SpecializationId id)
         {
             var specialization = await this._repo.GetByIdAsync(id);

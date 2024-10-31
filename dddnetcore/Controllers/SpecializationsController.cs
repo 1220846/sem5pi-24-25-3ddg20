@@ -19,6 +19,13 @@ namespace DDDSample1.Controllers{
             _service = service;
         }
 
+        // GET: api/specializations
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SpecializationDto>>> GetAll()
+        {
+            return await _service.GetAllAsync();
+        }
+
         // GET: api/specializations/
         [HttpGet("{id}")]
         public async Task<ActionResult<SpecializationDto>> GetById(Guid id)
