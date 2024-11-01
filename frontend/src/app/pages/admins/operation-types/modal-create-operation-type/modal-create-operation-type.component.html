@@ -1,38 +1,67 @@
 <div class="card flex justify-content-center">
-    <p-button (onClick)="showDialog()" label="Show" />
-    <p-dialog header="Add Operation Type" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem', height: '35rem' }">
-        <span class="p-text-secondary block mb-4">Insert information.</span>
-        <div class="p-fluid">
+    <p-button (onClick)="showDialog()" label="Add Operation Type" />
+    <p-dialog header="Add Operation Type" [modal]="true" [(visible)]="visible" [style]="{ width: '32rem', height: 'auto' }">
+        <span class="p-text-secondary block mb-2">Insert information.</span>
+        <div class="p-fluid dialog-content">
             <div class="flex flex-column gap-2 mb-2 input-large">
                 <label for="name">Name</label>
                 <input pInputText id="name" aria-describedby="name-help" [(ngModel)]="name" />
             </div>
-            <div class="flex flex-wrap gap-5">
+            <div class="flex flex-wrap gap-7">
                 <div class="flex flex-column gap-2 mb-2 input-small">
                     <label for="estimated-duration">Estimated Duration</label>
-                    <p-inputNumber [(ngModel)]="estimatedDuration" inputId="estimated-duration" mode="decimal" [min]="0"
-                        [max]="100" />
+                    <p-inputNumber [(ngModel)]="estimatedDuration" inputId="estimated-duration" mode="decimal" [min]="1"
+                     suffix=" min" />
                 </div>
                 <div class="flex flex-column gap-2 mb-2 input-small">
                     <label for="surgery-time">Surgery Time</label>
-                    <p-inputNumber [(ngModel)]="surgeryTime" inputId="surgery-time" mode="decimal" [min]="0"
-                        [max]="100" />
+                    <p-inputNumber [(ngModel)]="surgeryTime" inputId="surgery-time" mode="decimal" [min]="1" suffix=" min"/>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-5">
+            <div class="flex flex-wrap gap-7">
                 <div class="flex flex-column gap-2 mb-2 input-small">
                     <label for="anesthesia-time">Anesthesia Time</label>
-                    <p-inputNumber [(ngModel)]="anesthesiaTime" inputId="anesthesia-time" mode="decimal" [min]="0"
-                        [max]="100" />
+                    <p-inputNumber [(ngModel)]="anesthesiaTime" inputId="anesthesia-time" mode="decimal" [min]="1" suffix=" min"/>
                 </div>
                 <div class="flex flex-column gap-2 mb-2 input-small">
                     <label for="cleaning-time">Cleaning Time</label>
-                    <p-inputNumber [(ngModel)]="cleaningTime" inputId="cleaning-time" mode="decimal" [min]="0"
-                        [max]="100" />
+                    <p-inputNumber [(ngModel)]="cleaningTime" inputId="cleaning-time" mode="decimal" [min]="1" suffix=" min"/>
                 </div>
             </div>
+            <div class="flex flex-column gap-2 mb-2 input-large">
+                <label for="specialization">Select Specializations</label>
+                <p-dropdown 
+                    [options]="availableSpecializations" 
+                    [(ngModel)]="selectedSpecialization" 
+                    placeholder="Select a Specialization" 
+                    optionLabel="name"
+                    (onChange)="addSpecialization()">
+                </p-dropdown>
+            </div>
+            <div *ngIf="selectedSpecializations.length > 0" class="table-container">
+                <table class="p-table p-component">
+                    <thead>
+                        <tr>
+                            <th>Specialization</th>
+                            <th>Number Of Staff</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of selectedSpecializations">
+                            <td>{{ item.specialization.name }}</td>
+                            <td>
+                                <p-inputNumber [(ngModel)]="item.staffCount" [min]="0" />
+                            </td>
+                            <td>
+                                <p-button icon="pi pi-times" [rounded]="true" severity="danger" [outlined]="true" (onClick)="removeSpecialization(item)"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="flex justify-content-center mt-3 gap-2">
+        <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
             <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
             <p-button label="Save" (onClick)="visible = false" />
         </div>

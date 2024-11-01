@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Specialization } from '../domain/Specialization';
+import { Specialization } from '../domain/specialization';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SpecializationService {
-  private apiUrl = 'http://localhost:5000/api/specializations';
+  private apiUrl = 'https://localhost:5001/api/specializations';
 
   constructor(private http: HttpClient) {}
 

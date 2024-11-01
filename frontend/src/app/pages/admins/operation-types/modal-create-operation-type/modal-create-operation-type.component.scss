@@ -1,8 +1,35 @@
 .input-large input {
-    width: 22rem;
+    width: 24rem;
+}
+
+.input-large p-dropdown {
+    width: 24rem;
 }
 
 .input-small p-inputNumber {
     width: 10rem;
 }
+
+.dialog-content {
+    background-color: white; 
+    padding: 1rem; 
+    max-height: calc(35rem - 8rem); 
+    overflow-y: auto; 
+}
+
+p-dropdown {
+    z-index: 1000;
+}
+
+.dialog-footer {
+    padding: 0.5rem; 
+    border-top: 1px solid #e0e0e0; 
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+
+
 

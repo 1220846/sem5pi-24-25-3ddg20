@@ -10,8 +10,10 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
-import { Specialization } from '../../../../domain/Specialization';
 import { SpecializationService } from '../../../../services/specialization.service';
+import { Specialization } from '../../../../domain/specialization';
+import { OperationTypeService } from '../../../../services/operation-type.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'modal-create-operation-type',
@@ -23,8 +25,13 @@ import { SpecializationService } from '../../../../services/specialization.servi
 
 export class ModalCreateOperationTypeComponent implements OnInit{
 
-  constructor(private specializationService: SpecializationService) {}
+  constructor(private specializationService: SpecializationService, private operationTypeService: OperationTypeService) {
+
+  }
+
   specializations: Specialization[] = [];
+  selectedSpecializations: { specialization: Specialization; staffCount: number }[] = []; 
+  availableSpecializations: Specialization[] = [];
 
   ngOnInit(): void {
     this.loadSpecializations();
@@ -33,6 +40,7 @@ export class ModalCreateOperationTypeComponent implements OnInit{
   loadSpecializations() {
     this.specializationService.getAll().subscribe((data) => {
       this.specializations = data;
+      this.availableSpecializations = [...this.specializations];
     });
   }
   
@@ -43,14 +51,31 @@ export class ModalCreateOperationTypeComponent implements OnInit{
   anesthesiaTime: number | undefined;
   cleaningTime: number | undefined;
 
-  selectedSpecializationIds!: Specialization[];
+  selectedSpecialization: Specialization | null = null;
 
   showDialog() {
     this.visible = true;
+    this.selectedSpecializations = [];
+    this.availableSpecializations = [...this.specializations];
+  }
+
+  addSpecialization() {
+    if (this.selectedSpecialization) {
+      if (!this.selectedSpecializations.some(item => item.specialization.id === this.selectedSpecialization?.id)) {
+        this.selectedSpecializations.push({ specialization: this.selectedSpecialization, staffCount: 0 });
+        this.availableSpecializations = this.availableSpecializations.filter(sp => sp.id !== this.selectedSpecialization?.id);
+        this.selectedSpecialization = null;
+      }
+    }
+  }
+
+  removeSpecialization(item: { specialization: Specialization; staffCount: number }) {
+    this.selectedSpecializations = this.selectedSpecializations.filter(i => i !== item);
+    this.availableSpecializations.push(item.specialization); 
   }
     
-
   saveData() {
     this.visible = false;
+    this.selectedSpecializations = [];
   }
 }
