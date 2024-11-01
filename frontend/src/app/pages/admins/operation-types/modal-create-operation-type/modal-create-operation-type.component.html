@@ -1,0 +1,40 @@
+<div class="card flex justify-content-center">
+    <p-button (onClick)="showDialog()" label="Show" />
+    <p-dialog header="Add Operation Type" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem', height: '35rem' }">
+        <span class="p-text-secondary block mb-4">Insert information.</span>
+        <div class="p-fluid">
+            <div class="flex flex-column gap-2 mb-2 input-large">
+                <label for="name">Name</label>
+                <input pInputText id="name" aria-describedby="name-help" [(ngModel)]="name" />
+            </div>
+            <div class="flex flex-wrap gap-5">
+                <div class="flex flex-column gap-2 mb-2 input-small">
+                    <label for="estimated-duration">Estimated Duration</label>
+                    <p-inputNumber [(ngModel)]="estimatedDuration" inputId="estimated-duration" mode="decimal" [min]="0"
+                        [max]="100" />
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-small">
+                    <label for="surgery-time">Surgery Time</label>
+                    <p-inputNumber [(ngModel)]="surgeryTime" inputId="surgery-time" mode="decimal" [min]="0"
+                        [max]="100" />
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-5">
+                <div class="flex flex-column gap-2 mb-2 input-small">
+                    <label for="anesthesia-time">Anesthesia Time</label>
+                    <p-inputNumber [(ngModel)]="anesthesiaTime" inputId="anesthesia-time" mode="decimal" [min]="0"
+                        [max]="100" />
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-small">
+                    <label for="cleaning-time">Cleaning Time</label>
+                    <p-inputNumber [(ngModel)]="cleaningTime" inputId="cleaning-time" mode="decimal" [min]="0"
+                        [max]="100" />
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-content-center mt-3 gap-2">
+            <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+            <p-button label="Save" (onClick)="visible = false" />
+        </div>
+    </p-dialog>
+</div>
