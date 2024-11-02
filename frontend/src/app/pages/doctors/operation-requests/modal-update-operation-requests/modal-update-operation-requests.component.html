@@ -1,0 +1,40 @@
+<div class="btn">
+    <p-button class="cardbtn" (onClick)="showDialog()" label="Update Operation Request" />
+</div>
+<div class="card">
+    <p-dialog header="Update Operation Request" [(visible)]="visible" [style]="{ width: '25rem' }">
+
+        <div class="btns flex justify-content-left">
+            <p-floatLabel>
+                <input pInputText id="MedicalRecordNumber" [(ngModel)]="MedicalRecordNumber" />
+                <label for="MedicalRecordNumber">Patient Medical Record Number:</label>
+            </p-floatLabel>
+        </div>
+
+        <div class="btns flex justify-content-left">
+            <p-floatLabel>
+                <p-dropdown
+                    [options]="options"
+                    [(ngModel)]="selectedPriority"
+                    optionLabel="label"
+                    inputId="priority" />
+                <label for="priority">Select a Priority</label>
+            </p-floatLabel>
+        </div>
+
+        <div class="btns flex justify-content-left">
+            <p-floatLabel>
+                <input pInputText id="Deadline" [(ngModel)]="Deadline" />
+                <label for="Deadline">Date:</label>
+            </p-floatLabel>
+        </div>
+        <div class="btns flex justify-content-center">
+            <button 
+                pButton 
+                pRipple 
+                label="Update Operation Request" 
+                class="p-button-success">
+            </button>
+        </div>
+    </p-dialog>
+</div>
