@@ -105,6 +105,18 @@ namespace DDDSample1
                 
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             
+            //Add Cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             services.AddControllers().AddNewtonsoftJson();
         }
 
@@ -124,6 +136,9 @@ namespace DDDSample1
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // Add CORS
+            app.UseCors("AllowFrontend");
 
             app.UseAuthentication(); //Add
             app.UseAuthorization();
