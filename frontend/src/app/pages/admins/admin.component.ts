@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { ModalCreateOperationTypeComponent } from "./operation-types/modal-create-operation-type/modal-create-operation-type.component";
 
@@ -11,5 +11,16 @@ import { ModalCreateOperationTypeComponent } from "./operation-types/modal-creat
 })
 
 export class AdminComponent {
+  @ViewChild('sidebar') sidebar: SidebarComponent | undefined;
 
+  updateSidebarItems() {
+    if (this.sidebar) {
+      this.sidebar.items = [
+        { label: 'Home', icon: 'home', link: '/doctors' },
+        { label: 'Informations', icon: 'info', link: '/' }
+      ];
+      this.sidebar.setUserTitle('Admin');
+      //this.sidebar.setUserType();
+    }
+  }
 }
