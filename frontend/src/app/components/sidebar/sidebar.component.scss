@@ -1,0 +1,19 @@
+@import '../../../assets/styles/variables';
+.no-bullets{
+    list-style-type: none;
+    padding: 20px;
+}
+
+.no-bullets li{
+    margin-bottom: 10px;
+    margin-left: -10px;
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
+.Title{
+    margin-left: 22px;
+    color: $color-neutral-dark;
+}
