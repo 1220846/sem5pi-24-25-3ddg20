@@ -57,7 +57,7 @@ namespace DDDSample1.Controllers{
 
         // GET: api/operationtypes/filter
         [HttpGet("filter")]
-        [Authorize(Policy = "RequiredAdminRole")]
+        //[Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<OperationTypeDto>>> GetOperationTypes(string name = null, Guid? specializationId = null, string status = null)
         {   
             return await _service.GetOperationTypesAsync(name,specializationId,status);

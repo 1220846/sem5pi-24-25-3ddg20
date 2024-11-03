@@ -15,6 +15,10 @@ export class OperationTypeService {
 
   }
 
+  getAllAndFilter(): Observable<OperationType[]> {
+    return this.httpClient.get<OperationType[]>(`${this.apiUrl}/filter`);
+  }
+
   add(operationType: CreatingOperationTypeDto):Observable<OperationType>{
     return this.httpClient.post<OperationType>(this.apiUrl, operationType, { headers: this.header });
   }

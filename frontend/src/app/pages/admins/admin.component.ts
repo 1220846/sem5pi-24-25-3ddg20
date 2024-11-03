@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { ModalCreateOperationTypeComponent } from "./operation-types/modal-create-operation-type/modal-create-operation-type.component";
+import { ListOperationTypesComponent } from "./operation-types/list-operation-types/list-operation-types.component";
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [ModalCreateOperationTypeComponent,SidebarComponent],
+  imports: [ModalCreateOperationTypeComponent, SidebarComponent, ListOperationTypesComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
