@@ -18,24 +18,18 @@ import { ScrollerModule } from 'primeng/scroller';
 export class ListOperationTypesComponent implements OnInit{
 
   items: { label?: string; icon?: string; separator?: boolean }[] = [];
+  expandedPanels: string[] = [];
+  operationTypes: OperationType[] = [];
 
   constructor(private operationTypeService:OperationTypeService){}
 
-  operationTypes: OperationType[] = [];
-
-  expandedPanels: string[] = [];
 
   ngOnInit() {
-    this.items = [
-      { label: 'Refresh', icon: 'pi pi-refresh' },
-      { label: 'Search', icon: 'pi pi-search' },
-      { separator: true },
-      { label: 'Delete', icon: 'pi pi-times' }
-    ];
     this.loadOperationTypes();
   }
 
-  loadOperationTypes(){
+  public loadOperationTypes(){
+    
     this.operationTypeService.getAllAndFilter().subscribe((data) => {
         this.operationTypes = data;
       });
