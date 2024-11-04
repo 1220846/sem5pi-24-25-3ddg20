@@ -1,4 +1,33 @@
-<div class="card flex justify-content-center m-5">
+<div class="flex justify-content-end mt-2 mr-5">
+    <p-button icon="pi pi-filter"(click)="filterPanel.toggle($event)"class="p-button-rounded p-button-outlined" styleClass="p-button-text"></p-button>
+    <p-overlayPanel #filterPanel [dismissable]="true" [showCloseIcon]="true">
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterName">Name</label>
+                <input id="filterName" pInputText [(ngModel)]="filterName" placeholder="Search by Name" 
+                    class="p-input-sm"/>
+            </div>
+          <div class="p-field p-col-12 mt-2">
+            <label for="specialization">Specialization</label>
+            <p-dropdown [options]="specializations" [(ngModel)]="filterSpecializationId" optionLabel="name" optionValue="id" placeholder="Select Specialization" class="p-input-sm">
+            </p-dropdown>
+          </div>
+          <div class="p-field p-col-12 mt-2">
+            <label for="status">Status</label>
+            <p-dropdown [options]="specializations" [(ngModel)]="filterSpecializationId" optionLabel="name" optionValue="id" placeholder="Select Specialization" class="p-input-sm">
+            </p-dropdown>
+          </div>
+          <div class="p-col-12 text-right mt-3 flex gap-2">            
+            <p-button label="Apply" (click)="applyFilters()" class="p-button-sm"></p-button>
+            <p-button
+                label="Clear"
+                (click)="clearFilters()"
+                class="p-button-sm p-button-danger"></p-button>
+        </div>
+        </div>
+      </p-overlayPanel>
+  </div>
+<div class="card flex justify-content-center ml-5 mr-5 mt-2">
     <p-scroller [items]="operationTypes"
                 [itemSize]="90" 
                 [style]="{ height: '480px', width: '100%' }"
