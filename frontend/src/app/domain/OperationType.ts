@@ -7,5 +7,6 @@ export interface OperationType{
     surgeryTime: number;
     anesthesiaTime: number;
     cleaningTime: number;
-    staffSpecialization: StaffSpecialization
+    operationTypeStatus:string;
+    staffSpecializationDtos: StaffSpecialization[];
 }

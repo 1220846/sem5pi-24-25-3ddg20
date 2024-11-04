@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -26,7 +26,8 @@ import { CreatingOperationTypeDto } from '../../../../domain/creatingOperationTy
 export class ModalCreateOperationTypeComponent implements OnInit{
 
   operationTypeForm: FormGroup;
-
+  @Output() operationTypeCreated = new EventEmitter<CreatingOperationTypeDto>();
+  
   constructor(private specializationService: SpecializationService, private operationTypeService: OperationTypeService, private fb: FormBuilder
   ) {
     this.operationTypeForm = this.fb.group({
@@ -93,10 +94,12 @@ export class ModalCreateOperationTypeComponent implements OnInit{
       this.operationTypeService.add(operationType).subscribe(
         (response) => {
           console.log("Operation Type added successfully:", response);
-          this.visible = false; // Fecha o diálogo
-          this.selectedSpecializations = []; // Reseta a lista de especializações
-          this.operationTypeForm.reset(); // Reseta o formulário
-          this.loadSpecializations(); // Recarrega as especializações, se necessário
+          this.visible = false; 
+          this.selectedSpecializations = [];
+          this.operationTypeForm.reset();
+          this.loadSpecializations();
+          this.operationTypeCreated.emit(operationType);
+          console.log("Evento operationTypeCreated emitido");
         },
         (error) => {
           console.error("Error adding operation type:", error);
