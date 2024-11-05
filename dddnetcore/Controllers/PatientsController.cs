@@ -52,7 +52,7 @@ namespace DDDSample1.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> EditPatient(string id, EditingPatientDto dto) {
             try {
@@ -90,7 +90,7 @@ namespace DDDSample1.Controllers
             
         }
 
-        [HttpGet("filter")]
+        [HttpGet]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients(string firstName = null, string lastName = null, string fullName = null, string email = null, string birthDate = null,
         string phoneNumber = null, string id = null, string gender = null, int pageNumber = 1, int pageSize = 10) {
