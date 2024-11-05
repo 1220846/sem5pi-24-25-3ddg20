@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OperationType } from '../domain/operationType';
 import { CreatingOperationTypeDto } from '../domain/creatingOperationTypeDto';
@@ -15,8 +15,16 @@ export class OperationTypeService {
 
   }
 
-  getAllAndFilter(): Observable<OperationType[]> {
-    return this.httpClient.get<OperationType[]>(`${this.apiUrl}/filter`);
+  getAllAndFilter(name?: string, specializationId?: string, status?: string): Observable<OperationType[]> {
+    let params = new HttpParams();
+    if (name) 
+      params = params.set('name', name);
+    if (specializationId) 
+      params = params.set('specializationId', specializationId);
+    if (status) 
+      params = params.set('status', status);
+
+    return this.httpClient.get<OperationType[]>(`${this.apiUrl}/filter`, { params });
   }
 
   add(operationType: CreatingOperationTypeDto):Observable<OperationType>{
