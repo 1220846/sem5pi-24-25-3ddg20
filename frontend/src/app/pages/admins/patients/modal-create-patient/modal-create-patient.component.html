@@ -1,0 +1,92 @@
+<div class="card flex justify-content-center">
+    <p-button (onClick)="showDialog()" label="Add Patient" />
+    <p-dialog header="Add Add Patient" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <form [formGroup]="patientForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-wrap gap-7">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="firstName">First Name</label>
+                        <input pInputText id="firstName" formControlName="firstName" />
+                        <small
+                            *ngIf="patientForm.controls['firstName'].invalid && (patientForm.controls['firstName'].dirty || patientForm.controls['firstName'].touched)"
+                            class="p-error">
+                            Insert First Name.
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="lastName">Last Name</label>
+                        <input pInputText id="lastName" formControlName="lastName" />
+                        <small
+                            *ngIf="patientForm.controls['lastName'].invalid && (patientForm.controls['lastName'].dirty || patientForm.controls['lastName'].touched)"
+                            class="p-error">
+                            Insert Last Name.
+                        </small>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="fullName">Full Name</label>
+                    <input pInputText id="fullName" formControlName="fullName" />
+                    <small
+                        *ngIf="patientForm.controls['fullName'].invalid && (patientForm.controls['fullName'].dirty || patientForm.controls['fullName'].touched)"
+                        class="p-error">
+                        Insert Full Name.
+                    </small>
+                </div>
+                <div class="flex flex-wrap gap-7">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="birthDate">Birth Date</label>
+                        <p-calendar id="birthDate" formControlName="birthDate" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" [showIcon]="true" appendTo="body" [iconDisplay]="'input'" [showOnFocus]="false" />
+                        <small
+                            *ngIf="patientForm.controls['birthDate'].invalid && (patientForm.controls['birthDate'].dirty || patientForm.controls['birthDate'].touched)"
+                            class="p-error">
+                            Select Birth Date.
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="gender">Gender</label>
+                        <p-dropdown id="gender" formControlName="gender" [options]="genderOptions" />
+                        <small
+                            *ngIf="patientForm.controls['gender'].invalid && (patientForm.controls['gender'].dirty || patientForm.controls['gender'].touched)"
+                            class="p-error">
+                            Select Gender.
+                        </small>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-7">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input pInputText id="phoneNumber" formControlName="phoneNumber" />
+                        <small
+                            *ngIf="patientForm.controls['phoneNumber'].invalid && (patientForm.controls['phoneNumber'].dirty || patientForm.controls['phoneNumber'].touched)"
+                            class="p-error">
+                            Insert Phone Number.
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="emergencyContact">Emergency Contact</label>
+                        <input pInputText id="emergencyContact" formControlName="emergencyContact" />
+                        <small
+                            *ngIf="patientForm.controls['emergencyContact'].invalid && (patientForm.controls['emergencyContact'].dirty || patientForm.controls['emergencyContact'].touched)"
+                            class="p-error">
+                            Insert Emergency Contact.
+                        </small>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="email">Email</label>
+                    <input pInputText id="email" formControlName="email" />
+                    <small
+                        *ngIf="patientForm.controls['email'].invalid && (patientForm.controls['email'].dirty || patientForm.controls['email'].touched)"
+                        class="p-error">
+                        Insert Email.
+                    </small>
+                </div>
+            </div>
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                <p-button label="Save" (onClick)="saveData()" />
+            </div>
+        </form>
+    </p-dialog>
+</div>
