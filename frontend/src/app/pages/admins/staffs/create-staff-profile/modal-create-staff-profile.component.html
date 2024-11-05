@@ -1,0 +1,99 @@
+<div class="card flex justify-content-center">
+    <p-button (onClick)="showDialog()" label="Create Staff Profile" />
+    <p-dialog header="Create Staff Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <span class="p-text-secondary block mb-5">Insert staff data.</span>
+        <form [formGroup]="staffForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <div class="flex flex-wrap gap-7">
+                        <div class="flex flex-column gap-2 mb-2 input-small">
+                            <label for="firstName">First Name</label>
+                            <input pInputText id="firstName" formControlName="firstName" />
+                            <small
+                                *ngIf="staffForm.controls['firstName'].invalid && (staffForm.controls['firstName'].dirty || staffForm.controls['firstName'].touched)"
+                                class="p-error">
+                                Is required.
+                            </small>
+                        </div>
+                        <div class="flex flex-column gap-2 mb-2 input-small">
+                            <label for="lastName">Last Name</label>
+                            <input pInputText id="lastName" formControlName="lastName" />
+                            <small
+                                *ngIf="staffForm.controls['lastName'].invalid && (staffForm.controls['lastName'].dirty || staffForm.controls['lastName'].touched)"
+                                class="p-error">
+                                Is required.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-large">
+                        <label for="fullName">Full Name</label>
+                        <input pInputText id="fullName" aria-describedby="name-help" formControlName="fullName" />
+                        <small
+                            *ngIf="staffForm.controls['fullName'].invalid && (staffForm.controls['fullName'].dirty || staffForm.controls['fullName'].touched)"
+                            class="p-error">
+                            Is required.
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-large">
+                        <label for="email">Email</label>
+                        <input pInputText id="email" aria-describedby="name-help" formControlName="email" />
+                        <small
+                            *ngIf="staffForm.controls['email'].invalid && (staffForm.controls['email'].dirty || staffForm.controls['email'].touched)"
+                            class="p-error">
+                            Is required.
+                        </small>
+                    </div>
+                    <div class="flex flex-wrap gap-7">
+                        <div class="flex flex-column gap-2 mb-2 input-small">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input pInputText id="phoneNumber" formControlName="phoneNumber" />
+                            <small
+                                *ngIf="staffForm.controls['phoneNumber'].invalid && (staffForm.controls['phoneNumber'].dirty || staffForm.controls['phoneNumber'].touched)"
+                                class="p-error">
+                                Is required.
+                            </small>
+                        </div>
+                        <div class="flex flex-column gap-2 mb-2 input-small">
+                            <label for="licenseNumber">License Number</label>
+                            <input pInputText id="licenseNumber" formControlName="licenseNumber" />
+                            <small
+                                *ngIf="staffForm.controls['licenseNumber'].invalid && (staffForm.controls['licenseNumber'].dirty || staffForm.controls['licenseNumber'].touched)"
+                                class="p-error">
+                                Is required.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-large">
+                        <label for="specialization">Specialization</label>
+                        <p-dropdown [options]="availableSpecializations" 
+                        [appendTo]="'body'"
+                        formControlName="specialization" [filter]="true"
+                        filterBy="name" [virtualScroll]="true"
+                        [virtualScrollItemSize]="40"
+                        scrollHeight="120px"
+                            placeholder="Select a Specialization" optionLabel="name">
+                        </p-dropdown>
+                        <small
+                            *ngIf="staffForm.controls['specialization'].invalid && (staffForm.controls['specialization'].dirty || staffForm.controls['specialization'].touched)"
+                            class="p-error">
+                            Please select a specialization.
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-large">
+                        <label for="userEmail">User Email</label>
+                        <input pInputText id="userEmail" aria-describedby="name-help" formControlName="userEmail" />
+                        <small
+                            *ngIf="staffForm.controls['userEmail'].invalid && (staffForm.controls['userEmail'].dirty || staffForm.controls['userEmail'].touched)"
+                            class="p-error">
+                            Is required.
+                        </small>
+                    </div>
+                    <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                        <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                        <p-button label="Save" (onClick)="saveData()" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+</div>
