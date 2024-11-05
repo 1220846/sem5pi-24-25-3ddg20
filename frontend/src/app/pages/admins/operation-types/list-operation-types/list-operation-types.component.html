@@ -14,15 +14,12 @@
           </div>
           <div class="p-field p-col-12 mt-2">
             <label for="status">Status</label>
-            <p-dropdown [options]="specializations" [(ngModel)]="filterSpecializationId" optionLabel="name" optionValue="id" placeholder="Select Specialization" class="p-input-sm">
+            <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" optionLabel="label" optionValue="value" placeholder="Select Status" class="p-input-sm">
             </p-dropdown>
           </div>
-          <div class="p-col-12 text-right mt-3 flex gap-2">            
+          <div class="p-col-12 mt-3 flex justify-content-center gap-2">            
             <p-button label="Apply" (click)="applyFilters()" class="p-button-sm"></p-button>
-            <p-button
-                label="Clear"
-                (click)="clearFilters()"
-                class="p-button-sm p-button-danger"></p-button>
+            <p-button label="Clear" (click)="clearFilters()" class="p-button-sm" severity="secondary"></p-button>
         </div>
         </div>
       </p-overlayPanel>
