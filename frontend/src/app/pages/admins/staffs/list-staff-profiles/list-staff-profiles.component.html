@@ -1,0 +1,102 @@
+<div class="flex justify-content-end mt-2 mr-5">
+    <p-button icon="pi pi-filter" (click)="filterPanel.toggle($event)" class="p-button-rounded p-button-outlined"
+        styleClass="p-button-text"></p-button>
+    <p-overlayPanel #filterPanel [dismissable]="true" [showCloseIcon]="true">
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterFirstName">First Name</label>
+                <input id="filterFirstName" pInputText [(ngModel)]="filterFirstName" placeholder="Search by First Name"
+                    class="p-input-sm" />
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterLastName">Last Name</label>
+                <input id="filterLastName" pInputText [(ngModel)]="filterLastName" placeholder="Search by Last Name"
+                    class="p-input-sm" />
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterFullName">Full Name</label>
+                <input id="filterFullName" pInputText [(ngModel)]="filterFullName" placeholder="Search by Full Name"
+                    class="p-input-sm" />
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterEmail">Email</label>
+                <input id="filterEmail" pInputText [(ngModel)]="filterEmail" placeholder="Search by Email"
+                    class="p-input-sm" />
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="specialization">Specialization</label>
+                <p-dropdown [options]="specializations" [(ngModel)]="filterSpecializationId" optionLabel="name"
+                    optionValue="id" placeholder="None" class="p-input-sm">
+                </p-dropdown>
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterPhoneNumber">Phone Number</label>
+                <input id="filterPhoneNumber" pInputText [(ngModel)]="filterPhoneNumber" placeholder="Search by Phone Number" 
+                    class="p-input-sm"/>
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterId">Staff Id</label>
+                <input id="filterId" pInputText [(ngModel)]="filterId" placeholder="Search by Staff Id" 
+                    class="p-input-sm"/>
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterLicenseNumber">License Number</label>
+                <input id="filterLicenseNumber" pInputText [(ngModel)]="filterLicenseNumber" placeholder="Search by License Number" 
+                    class="p-input-sm"/>
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="status">Status</label>
+                <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" optionLabel="label" optionValue="value"
+                    placeholder="None" class="p-input-sm">
+                </p-dropdown>
+            </div>
+            <div class="p-col-12 mt-3 flex justify-content-center gap-2">
+                <p-button label="Apply" (click)="applyFilters()" class="p-button-sm"></p-button>
+                <p-button label="Clear" (click)="clearFilters()" class="p-button-sm" severity="secondary"></p-button>
+            </div>
+        </div>
+    </p-overlayPanel>
+</div>
+<div class="card flex justify-content-center ml-5 mr-5 mt-2">
+    <p-scroller [items]="staffs" [itemSize]="90" [style]="{ height: '480px', width: '100%' }"
+        scrollHeight="480px" styleClass="border-1 surface-border">
+        <ng-template let-staff pTemplate="item">
+            <p-accordion class="w-full">
+                <p-accordionTab>
+                    <ng-template pTemplate="header">
+                        <span class="flex align-items-center gap-1 w-full">
+                            <div class="flex flex-column">
+                                <span class="font-bold white-space-nowrap">
+                                    {{ staff.fullName }}
+                                    <span class="font-normal ml-3;">
+                                        ({{ staff.id }})
+                                    </span>
+                                </span>s
+                                <p-tag class="mt-1"
+                                    [severity]="staff.staffStatus === 'ACTIVE' ? 'success' : 'danger'"
+                                    [rounded]="true">
+                                    {{ staff.staffStatus.toLowerCase() }}
+                                </p-tag>
+                            </div>
+                        </span>
+                    </ng-template>
+                    <div class="flex ml-3 gap-6">
+                        <p><strong>First Name:</strong> {{ staff.firstName }}</p>
+                        <p><strong>Last Name:</strong> {{ staff.lastName }}</p>
+                        <p><strong>Email:</strong> {{ staff.email }}</p>
+                        <p><strong>Phone Number:</strong> {{ staff.phoneNumber }}</p>
+                    </div>
+                    <!--<div class="ml-3">
+                        <p><strong>Staff Specializations: </strong></p>
+                        <ul>
+                            <li class="mt-1" *ngFor="let specialization of operationType.staffSpecializationDtos">
+                                <i class="pi pi-users mr-1" style="font-size: 1rem;"></i>
+                                {{ specialization.specializationName }}: {{ specialization.numberOfStaff }}
+                            </li>
+                        </ul>
+                    </div>-->
+                </p-accordionTab>
+            </p-accordion>
+        </ng-template>
+    </p-scroller>
+</div>
