@@ -5,15 +5,26 @@ import { AdminComponent } from './pages/admins/admin.component';
 import { DoctorsComponent } from './pages/doctors/doctors.component';
 import { ModalCreateUserPatientComponent } from './pages/authentication/modal-create-user-patient/modal-create-user-patient.component';
 import { OperationTypesComponent } from './pages/admins/operation-types/operation-types.component';
+import { LoginComponent } from './pages/authentication/login/login.component';
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  { path: 'doctor', component: DoctorsComponent },
+  { path: 'doctor', component: DoctorsComponent
+    //,canActivate: [roleGuard],  
+    //data: { roles: ['Doctor']} 
+  },
   { path: 'sidebar', component: SidebarComponent },
-  { path: 'admin', component: AdminComponent, children: [
-    { path: 'operation-types', component: OperationTypesComponent },
-    { path: '', redirectTo: 'operation-types', pathMatch: 'full' }] },
+  { 
+    path: 'admin', 
+    component: AdminComponent,
+    //canActivate: [roleGuard],  
+    //data: { roles: ['Admin'] },
+    children: [{ path: 'operation-types', component: OperationTypesComponent },
+              { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
+  },
   { path: 'create-user-patient', component: ModalCreateUserPatientComponent },
+  { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 
