@@ -1,0 +1,30 @@
+  /* No arquivo de estilos (por exemplo, styles.css ou no arquivo de estilos do componente) */
+  .header {
+    text-align: center;
+    width: 100%;
+}
+
+.input-large input{
+    width: 20rem;
+}
+
+::ng-deep .p-password input {
+    width: 20rem ;
+}
+
+.dialog-footer {
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+    background-color: white;
+    z-index: 1;
+    position: sticky;
+    bottom: 0;
+}
+
+.dialog-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os inputs e labels horizontalmente */
+  }
+
+

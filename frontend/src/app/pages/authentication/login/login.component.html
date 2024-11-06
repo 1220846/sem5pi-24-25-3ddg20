@@ -1,0 +1,31 @@
+<div class="card flex justify-content-center">
+    <p-card class="header" header="Log In" [style]="{ width: '25rem'}">
+        <ng-template pTemplate="content">
+            <form [formGroup]="loginForm" class="dialog-form">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="email">Email</label>
+                    <input pInputText id="email" aria-describedby="email-help" formControlName="email" />
+                    <small
+                        *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)"
+                        class="p-error">
+                        Email is required.
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="password">Password</label>
+                    <p-password class="password" formControlName="password" [toggleMask]="true" [feedback]="false"/>
+                    <small
+                        *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)"
+                        class="p-error">
+                        Password is required.
+                    </small>
+                </div>
+            </form>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Log In" [style]="{ width: '20rem' }"></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</div>
