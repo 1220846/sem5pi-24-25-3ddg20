@@ -1,0 +1,30 @@
+@import '../../../../assets/styles/variables';
+
+.signup-link {
+    color: $color-text; 
+    text-decoration: none;
+    cursor: pointer;
+    
+}
+
+.signup-link:hover {
+    color: #000000;
+}
+
+.input-large input{
+    width: 20rem;
+}
+
+::ng-deep .p-password input {
+    width: 20rem ;
+}
+
+.dialog-footer {
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+    background-color: white;
+    z-index: 1;
+    position: sticky;
+    bottom: 0;
+}
+
