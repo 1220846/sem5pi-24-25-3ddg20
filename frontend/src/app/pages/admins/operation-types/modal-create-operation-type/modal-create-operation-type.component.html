@@ -1,4 +1,5 @@
 <div class="card flex justify-content-end">
+    <p-toast></p-toast>
     <p-button class="mr-5" (onClick)="showDialog()" label="Add Operation Type" />
     <p-dialog header="Add Operation Type" [modal]="true" [(visible)]="visible"
         [style]="{ width: '32rem', maxHeight: '40rem' }">
@@ -16,16 +17,6 @@
                 </div>
                 <div class="flex flex-wrap gap-7">
                     <div class="flex flex-column gap-2 mb-2 input-small">
-                        <label for="estimated-duration">Estimated Duration</label>
-                        <p-inputNumber formControlName="estimatedDuration" inputId="estimated-duration" mode="decimal"
-                            [min]="1" suffix=" min" />
-                        <small
-                            *ngIf="operationTypeForm.controls['estimatedDuration'].invalid && (operationTypeForm.controls['estimatedDuration'].dirty || operationTypeForm.controls['estimatedDuration'].touched)"
-                            class="p-error">
-                            Is required.
-                        </small>
-                    </div>
-                    <div class="flex flex-column gap-2 mb-2 input-small">
                         <label for="surgery-time">Surgery Time</label>
                         <p-inputNumber formControlName="surgeryTime" inputId="surgery-time" mode="decimal" [min]="1"
                             suffix=" min" />
@@ -35,8 +26,6 @@
                             Is required.
                         </small>
                     </div>
-                </div>
-                <div class="flex flex-wrap gap-7">
                     <div class="flex flex-column gap-2 mb-2 input-small">
                         <label for="anesthesia-time">Anesthesia Time</label>
                         <p-inputNumber formControlName="anesthesiaTime" inputId="anesthesia-time" mode="decimal"
@@ -47,26 +36,23 @@
                             Is required.
                         </small>
                     </div>
-                    <div class="flex flex-column gap-2 mb-2 input-small">
-                        <label for="cleaning-time">Cleaning Time</label>
-                        <p-inputNumber formControlName="cleaningTime" inputId="cleaning-time" mode="decimal" [min]="1"
-                            suffix=" min" />
-                        <small
-                            *ngIf="operationTypeForm.controls['cleaningTime'].invalid && (operationTypeForm.controls['cleaningTime'].dirty || operationTypeForm.controls['cleaningTime'].touched)"
-                            class="p-error">
-                            Is required.
-                        </small>
-                    </div>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-small">
+                    <label for="cleaning-time">Cleaning Time</label>
+                    <p-inputNumber formControlName="cleaningTime" inputId="cleaning-time" mode="decimal" [min]="1"
+                        suffix=" min" />
+                    <small
+                        *ngIf="operationTypeForm.controls['cleaningTime'].invalid && (operationTypeForm.controls['cleaningTime'].dirty || operationTypeForm.controls['cleaningTime'].touched)"
+                        class="p-error">
+                        Is required.
+                    </small>
                 </div>
                 <div class="flex flex-column gap-2 mb-2 input-large">
                     <label for="specialization">Select Specializations</label>
-                    <p-dropdown [options]="availableSpecializations" 
-                    [appendTo]="'body'"
-                    formControlName="selectedSpecialization" [filter]="true"
-                    filterBy="name" [virtualScroll]="true"
-                    [virtualScrollItemSize]="40"
-                    scrollHeight="120px"
-                        placeholder="Select a Specialization" optionLabel="name" (onChange)="addSpecialization()">
+                    <p-dropdown [options]="availableSpecializations" [appendTo]="'body'"
+                        formControlName="selectedSpecialization" [filter]="true" filterBy="name" [virtualScroll]="true"
+                        [virtualScrollItemSize]="40" scrollHeight="120px" placeholder="Select a Specialization"
+                        optionLabel="name" (onChange)="addSpecialization()">
                     </p-dropdown>
                     <small
                         *ngIf="operationTypeForm.controls['selectedSpecialization'].invalid && (operationTypeForm.controls['selectedSpecialization'].dirty || operationTypeForm.controls['selectedSpecialization'].touched)"
@@ -74,7 +60,7 @@
                         Please select a specialization.
                     </small>
                 </div>
-                <div *ngIf="selectedSpecializations.length > 0" class="table-container" >
+                <div *ngIf="selectedSpecializations.length > 0" class="table-container">
                     <table class="p-table p-component">
                         <thead>
                             <tr>
@@ -97,10 +83,12 @@
                     </table>
                 </div>
             </div>
-            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center gap-2 dialog-footer">
                 <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
                 <p-button label="Save" (onClick)="saveData()" />
             </div>
-        </form>
+        </ng-template>
     </p-dialog>
 </div>
