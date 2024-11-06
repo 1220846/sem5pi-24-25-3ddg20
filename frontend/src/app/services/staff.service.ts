@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { last, Observable } from 'rxjs';
 import { Staff } from '../domain/Staff';
 import { CreatingStaffDto } from '../domain/CreatingStaffDto';
 
@@ -14,8 +14,33 @@ export class StaffService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getAllAndFilter(): Observable<Staff[]> {
-    return this.httpClient.get<Staff[]>(`${this.apiUrl}/filter`);
+  getAllAndFilter(firstName?: string, lastName?: string, fullName?: string, email?: string, specializationId?: string,
+    phoneNumber?: string, id?: string, licenseNumber?:
+    string, status?: string): Observable<Staff[]>
+  {
+    let params = new HttpParams();
+    if (firstName)
+      params = params.set('firstName', firstName);
+    if (lastName)
+      params = params.set('lastName', lastName);
+    if (fullName)
+      params = params.set('fullName', fullName);
+    if (email)
+      params = params.set('email', email);
+    if (specializationId)
+      params = params.set('specializationId', specializationId);
+    if (phoneNumber)
+      params = params.set('phoneNumber', phoneNumber);
+    if (id)
+      params = params.set('id', id);
+    if (licenseNumber)
+      params = params.set('licenseNumber', licenseNumber);
+    if (status)
+      params = params.set('status', status);
+
+    params = params.set('pageSize?', 0x7fffffff); //pagination done by primeng
+    
+    return this.httpClient.get<Staff[]>(`${this.apiUrl}/filter`, {params});
   }
 
   add(staff: CreatingStaffDto): Observable<Staff>{
