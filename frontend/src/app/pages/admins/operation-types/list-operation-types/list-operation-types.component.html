@@ -9,12 +9,12 @@
             </div>
           <div class="p-field p-col-12 mt-2">
             <label for="specialization">Specialization</label>
-            <p-dropdown [options]="specializations" [(ngModel)]="filterSpecializationId" optionLabel="name" optionValue="id" placeholder="Select Specialization" class="p-input-sm">
+            <p-dropdown [options]="specializations" [(ngModel)]="filterSpecializationId" optionLabel="name" optionValue="id" placeholder="None" class="p-input-sm">
             </p-dropdown>
           </div>
           <div class="p-field p-col-12 mt-2">
             <label for="status">Status</label>
-            <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" optionLabel="label" optionValue="value" placeholder="Select Status" class="p-input-sm">
+            <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" optionLabel="label" optionValue="value" placeholder="None" class="p-input-sm">
             </p-dropdown>
           </div>
           <div class="p-col-12 mt-3 flex justify-content-center gap-2">            
@@ -31,7 +31,7 @@
                 scrollHeight="480px"
                 styleClass="border-1 surface-border">
         <ng-template let-operationType pTemplate="item">
-            <p-accordion class="w-full" expandIcon="pi pi-plus" collapseIcon="pi pi-minus">
+            <p-accordion class="w-full" >
                 <p-accordionTab>
                     <ng-template pTemplate="header">
                         <span class="flex align-items-center gap-1 w-full">
