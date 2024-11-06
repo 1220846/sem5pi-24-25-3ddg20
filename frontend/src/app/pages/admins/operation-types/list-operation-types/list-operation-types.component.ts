@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { OperationTypeService } from '../../../../services/operation-type.service';
-import { OperationType } from '../../../../domain/operationType';
+import { OperationType } from '../../../../domain/OperationType';
 import { AccordionModule } from 'primeng/accordion';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
