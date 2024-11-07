@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 /*
  * parameters = {
@@ -78,11 +78,12 @@ export default class Player {
     }
 
     setShadow(object) {
+        /* To-do #37 - Set the object and descendants to cast shadows but not receive them
         object.traverseVisible(function (child) { // Modifying the scene graph inside the callback is discouraged: https://threejs.org/docs/index.html?q=object3d#api/en/core/Object3D.traverseVisible
             if (child instanceof THREE.Object3D) {
-                child.castShadow = true;
-                child.receiveShadow = false;
+                child... = ...;
+                child... = ...;
             }
-        });
+        }); */
     }
 }

@@ -7,6 +7,7 @@ import { ModalCreateUserPatientComponent } from './pages/authentication/modal-cr
 import { OperationTypesComponent } from './pages/admins/operation-types/operation-types.component';
 import { LoginComponent } from './pages/authentication/login/login.component';
 import { roleGuard } from './guards/role.guard';
+import { HospitalComponent } from './components/hospital/hospital.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -25,6 +26,7 @@ export const routes: Routes = [
   },
   { path: 'create-user-patient', component: ModalCreateUserPatientComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'hospital', component: HospitalComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

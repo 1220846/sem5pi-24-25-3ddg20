@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import Ground from "./ground.js";
-import Wall from "./wall.js";
+import Ground from "./ground_template.js";
+import Wall from "./wall_template.js";
 
 /*
  * parameters = {
@@ -46,17 +46,27 @@ export default class Maze {
                      *          2          |    Yes     |     No
                      *          3          |    Yes     |    Yes
                      */
-                    if (description.map[j][i] == 2 || description.map[j][i] == 3) {
+                    /* To-do #5 - Create the north walls
+                        - cell coordinates: i (column) and j (row)
+                        - map: description.map[][]
+                        - maze width: description.size.width
+                        - maze height: description.size.height
+                    if (description.map[j][i] == ... || description.map[j][i] == ...) {
                         wallObject = this.wall.object.clone();
-                        wallObject.position.set(i - description.size.width / 2.0 + 0.5, 0.5, j - description.size.height / 2.0);
+                        wallObject.position.set(i - ... + 0.5, ..., j - ...);
                         this.object.add(wallObject);
                     }
-                    if (description.map[j][i] == 1 || description.map[j][i] == 3) {
-                        wallObject = this.wall.object.clone();
-                        wallObject.rotateY(Math.PI / 2.0);
-                        wallObject.position.set(i - description.size.width / 2.0, 0.5, j - description.size.height / 2.0 + 0.5);
-                        this.object.add(wallObject);
-                    }
+                    /* To-do #6 - Create the west walls
+                        - cell coordinates: i (column), j (row)
+                        - map: description.map[][]
+                        - maze width: description.size.width
+                        - maze height: description.size.height
+                    if (...) {
+                        ...;
+                        wallObject.rotate...(...);
+                        ...;
+                        ...;
+                    } */
                 }
             }
 
@@ -112,6 +122,8 @@ export default class Maze {
         return [Math.floor(position.z / this.scale.z + this.size.height / 2.0), Math.floor(position.x / this.scale.x + this.size.width / 2.0)];
     }
 
+    /* To-do #23 - Measure the player’s distance to the walls
+        - player position: position
     distanceToWestWall(position) {
         const indices = this.cartesianToCell(position);
         if (this.map[indices[0]][indices[1]] == 1 || this.map[indices[0]][indices[1]] == 3) {
@@ -121,32 +133,39 @@ export default class Maze {
     }
 
     distanceToEastWall(position) {
-        const indices = this.cartesianToCell(position);
+        const indices = ...;
         indices[1]++;
-        if (this.map[indices[0]][indices[1]] == 1 || this.map[indices[0]][indices[1]] == 3) {
-            return this.cellToCartesian(indices).x - this.scale.x / 2.0 - position.x;
+        if (... || ...) {
+            return ...;
         }
-        return Infinity;
+        return ...;
     }
 
     distanceToNorthWall(position) {
-        const indices = this.cartesianToCell(position);
-        if (this.map[indices[0]][indices[1]] == 2 || this.map[indices[0]][indices[1]] == 3) {
-            return position.z - this.cellToCartesian(indices).z + this.scale.z / 2.0;
+        const indices = ...;
+        if (... || ...) {
+            return ...;
         }
-        return Infinity;
+        return ...;
     }
 
     distanceToSouthWall(position) {
-        const indices = this.cartesianToCell(position);
-        indices[0]++;
-        if (this.map[indices[0]][indices[1]] == 2 || this.map[indices[0]][indices[1]] == 3) {
-            return this.cellToCartesian(indices).z - this.scale.z / 2.0 - position.z;
+        const indices = ...;
+        ...++;
+        if (... || ...3) {
+            return ...z;
         }
-        return Infinity;
-    }
+        return ...;
+    } */
 
     foundExit(position) {
-        return Math.abs(position.x - this.exitLocation.x) < 0.5 * this.scale.x && Math.abs(position.z - this.exitLocation.z) < 0.5 * this.scale.z
+        return false;
+        /* To-do #42 - Check if the player found the exit
+            - assume that the exit is found if the distance between the player position and the exit location is less than (0.5 * maze scale) in both the X- and Z-dimensions
+            - player position: position
+            - exit location: this.exitLocation
+            - maze scale: this.scale
+            - remove the previous instruction and replace it with the following one (after completing it)
+        return ... < ... && ... */
     };
 }

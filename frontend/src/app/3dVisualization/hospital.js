@@ -15,13 +15,13 @@ import Stats from "three/addons/libs/stats.module.js";
 import Orientation from "./orientation.js";
 import { generalData, mazeData, playerData, lightsData, fogData, cameraData } from "./default_data.js";
 import { merge } from "./merge.js";
-import Maze from "./maze.js";
-import Player from "./player.js";
-import Lights from "./lights.js";
-import Fog from "./fog.js";
-import Camera from "./camera.js";
-import Animations from "./animations.js";
-import UserInterface from "./user_interface.js";
+import Maze from "./maze_template.js";
+import Player from "./player_template.js";
+import Lights from "./lights_template.js";
+import Fog from "./fog_template.js";
+import Camera from "./camera_template.js";
+import Animations from "./animations_template.js";
+import UserInterface from "./user_interface_template.js";
 
 /*
  * generalParameters = {
@@ -149,7 +149,7 @@ import UserInterface from "./user_interface.js";
  * }
  */
 
-export default class Hospital {
+export default class ThumbRaiser {
     constructor(generalParameters, mazeParameters, playerParameters, lightsParameters, fogParameters, fixedViewCameraParameters, firstPersonViewCameraParameters, thirdPersonViewCameraParameters, topViewCameraParameters, miniMapCameraParameters) {
         this.generalParameters = merge({}, generalData, generalParameters);
         this.mazeParameters = merge({}, mazeData, mazeParameters);
@@ -210,8 +210,9 @@ export default class Hospital {
             this.renderer.setPixelRatio(window.devicePixelRatio);
         }
         this.renderer.autoClear = false;
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        /* To-do #30 - Turn on shadows in the renderer and filter shadow maps using the Percentage-Closer Filtering (PCF) algorithm
+        this.renderer.shadowMap.enabled = ...;
+        this.renderer.shadowMap.type = ...; */
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
@@ -440,9 +441,12 @@ export default class Hospital {
             if (event.code == this.player.keyCodes.viewMode && state) { // Single-view mode / multiple-views mode
                 this.setViewMode(!this.multipleViewsCheckBox.checked);
             }
-            if (event.code == this.player.keyCodes.userInterface && state) { // Display / hide user interface
+            /* To-do #41 - Toggle the user interface visibility
+                - event code: this.player.keyCodes.userInterface
+                - state: true
+            if (... && ...) { // Display / hide user interface
                 this.setUserInterfaceVisibility(!this.userInterfaceCheckBox.checked);
-            }
+            } */
             if (event.code == this.player.keyCodes.miniMap && state) { // Display / hide mini-map
                 this.setMiniMapVisibility(!this.miniMapCheckBox.checked);
             }
@@ -632,22 +636,37 @@ export default class Hospital {
     }
 
     finalSequence() {
-        // Disable the fog
-        this.fog.enabled = false;
-        // Reconfigure the third-person view camera
-        this.thirdPersonViewCamera.setOrientation(new Orientation(180.0, this.thirdPersonViewCamera.initialOrientation.v));
-        this.thirdPersonViewCamera.setDistance(this.thirdPersonViewCamera.initialDistance);
-        this.thirdPersonViewCamera.setZoom(2.0);
-        // Set it as the active view camera
-        this.setActiveViewCamera(this.thirdPersonViewCamera);
-        // Set single-view mode
-        this.setViewMode(false);
-        // Set the final action
-        this.animations.fadeToAction("Dance", 0.2);
+        /* To-do #43 - Trigger the final sequence
+            1 - Disable the fog
+            2 - Reconfigure the third-person view camera:
+                - horizontal orientation: -180.0
+                - vertical orientation: this.thirdPersonViewCamera.initialOrientation.v
+                - distance: this.thirdPersonViewCamera.initialDistance
+                - zoom factor: 2.0
+            3 - Set it as the active view camera
+            4 - Set single-view mode:
+                - false: single-view
+                - true: multiple-views
+            5 - Set the final action:
+                - action: "Dance"
+                - duration: 0.2 seconds
+        this.fog.enabled = ...;
+        this.thirdPersonViewCamera.setOrientation(new Orientation(..., ...));
+        this.thirdPersonViewCamera.setDistance(...);
+        this.thirdPersonViewCamera.setZoom(...);
+        this.setActiveViewCamera(...);
+        this.setViewMode(...);
+        this.animations.fadeToAction(..., ...); */
     }
 
     collision(position) {
-        return this.maze.distanceToWestWall(position) < this.player.radius || this.maze.distanceToEastWall(position) < this.player.radius || this.maze.distanceToNorthWall(position) < this.player.radius || this.maze.distanceToSouthWall(position) < this.player.radius;
+        return false;
+        /* To-do #24 - Check if the player collided with a wall
+            - assume that a collision is detected if the distance between the player position and any of the walls is less than the player radius.
+            - player position: position
+            - player radius: this.player.radius
+            - remove the previous instruction and replace it with the following one (after completing it)
+        return this.maze.distanceToWestWall(position) < ... || ... || ... || ...; */
     }
 
     update() {
@@ -655,7 +674,9 @@ export default class Hospital {
             if (this.maze.loaded && this.player.loaded) { // If all resources have been loaded
                 // Add the maze, the player and the lights to the scene
                 this.scene3D.add(this.maze.object);
-                this.scene3D.add(this.player.object);
+                /* To-do #11 - Add the player to the scene
+                    - player: this.player.object
+                ...; */
                 this.scene3D.add(this.lights.object);
 
                 // Create the clock
@@ -668,8 +689,9 @@ export default class Hospital {
                 this.player.position = this.maze.initialPosition.clone();
                 this.player.direction = this.maze.initialDirection;
 
-                // Create the user interface
-                this.userInterface = new UserInterface(this.scene3D, this.renderer, this.lights, this.fog, this.player.object, this.animations);
+                /* To-do #40 - Create the user interface
+                    - parameters: this.scene3D, this.renderer, this.lights, this.fog, this.player.object, this.animations
+                this.userInterface = new UserInterface(...); */
 
                 // Start the game
                 this.gameRunning = true;
@@ -687,62 +709,134 @@ export default class Hospital {
                     this.finalSequence();
                 }
                 else {
-                    let coveredDistance = this.player.walkingSpeed * deltaT;
-                    let directionIncrement = this.player.turningSpeed * deltaT;
+                    /* To-do #12 - Compute the distance covered by the player
+                        - start by assuming that the player is walking:
+                            covered distance = walking speed * elapsed time
+                        - walking speed: this.player.walkingSpeed
+                        - elapsed time: deltaT
+                    let coveredDistance = ...; */
+                    /* To-do #13 - Compute the player's direction increment
+                        - assume that the player is turning left or right while walking:
+                            direction increment = turning speed * elapsed time
+                        - turning speed: this.player.turningSpeed
+                        - elapsed time: deltaT
+                    let directionIncrement = ...; */
                     if (this.player.keyStates.run) {
-                        coveredDistance *= this.player.runningFactor;
-                        directionIncrement *= this.player.runningFactor;
+                        /* To-do #14 - Adjust the distance covered by the player
+                            - now assume that the player is running:
+                            - multiply the covered distance by this.player.runningFactor
+
+                        ...; */
+                        /* To-do #15 - Adjust the player's direction increment
+                            - now assume that the player is running:
+                            - multiply the direction increment by this.player.runningFactor
+                        ...; */
                     }
-                    if (this.player.keyStates.left) {
-                        this.player.direction += directionIncrement;
+                    /* To-do #16 - Check if the player is turning left or right and update the player direction accordingly by adding or subtracting the direction increment
+                        - left key state: this.player.keyStates.left
+                        - right key state: this.player.keyStates.right
+                        - current direction: this.player.direction
+                        - direction increment: directionIncrement
+
+                    if (...) { // The player is turning left
+                        ...;
                     }
-                    else if (this.player.keyStates.right) {
-                        this.player.direction -= directionIncrement;
-                    }
+                    else if (...) { // The player is turning right
+                        ...;
+                    } */
                     const direction = THREE.MathUtils.degToRad(this.player.direction);
-                    if (this.player.keyStates.backward) {
-                        const newPosition = new THREE.Vector3(-coveredDistance * Math.sin(direction), 0.0, -coveredDistance * Math.cos(direction)).add(this.player.position);
+                    /* To-do #17 - Check if the player is moving backward or forward and update the player position accordingly
+                        - backward key state: this.player.keyStates.backward
+                        - forward key state: this.player.keyStates.forward
+                        - current position: this.player.position
+                        - covered distance: coveredDistance
+                        - current direction: direction (expressed in radians)
+
+                        - use the parametric form of the circle equation to compute the player's new position:
+                            x = r * sin(t) + x0
+                            y = y0;
+                            z = r * cos(t) + z0
+
+                            where:
+                            - (x, y, z) are the player's new coordinates
+                            - (x0, y0, z0) are the player's current coordinates
+                            - r is the distance covered by the player
+                            - t is the player direction (expressed in radians)
+
+                    if (...) { // The player is moving backward
+                        const newPosition = new THREE.Vector3(..., ..., ...).add(this.player.position);
+                        /* To-do #18 - If the player collided with a wall, then trigger the death action; else, trigger either the walking or the running action
+                            - death action: "Death"
+                            - walking action: "Walking"
+                            - running action: "Running"
+                            - duration: 0.2 seconds
                         if (this.collision(newPosition)) {
-                            this.animations.fadeToAction("Death", 0.2);
+                            this.animations.fadeToAction(/* action, duration */ /*);
+}
+else {
+    this.animations.fadeToAction(this.player.keyStates.run ? /* action : action, duration */ /*);
+                            this.player.position = newPosition;
                         }
-                        else {
-                            this.animations.fadeToAction(this.player.keyStates.run ? "Running" : "Walking", 0.2);
+                    } */ /*
+                                    else if (...) { // The player is moving forward
+                                        const newPosition = new THREE.Vector3(..., ..., ...).add(this.player.position);
+                                        /* To-do #19 - If the player collided with a wall, then trigger the death action; else, trigger either the walking or the running action
+                                            - death action: "Death"
+                                            - walking action: "Walking"
+                                            - running action: "Running"
+                                            - duration: 0.2 seconds
+                                        if (this.collision(newPosition)) {
+                                            this.animations.fadeToAction(/* action, duration */ /*);
+}
+else {
+this.animations.fadeToAction(this.player.keyStates.run ? /* action : action, duration */ /*);
                             this.player.position = newPosition;
                         }
                     }
-                    else if (this.player.keyStates.forward) {
-                        const newPosition = new THREE.Vector3(coveredDistance * Math.sin(direction), 0.0, coveredDistance * Math.cos(direction)).add(this.player.position);
-                        if (this.collision(newPosition)) {
-                            this.animations.fadeToAction("Death", 0.2);
-                        }
-                        else {
-                            this.animations.fadeToAction(this.player.keyStates.run ? "Running" : "Walking", 0.2);
-                            this.player.position = newPosition;
-                        }
+                    else */
+                    /* To-do #20 - Check the player emotes
+                        - jump key state: this.player.keyStates.jump
+                        - jump emote: "Jump"
+                        - yes key state: this.player.keyStates.yes
+                        - yes emote: "Yes"
+                        - no key state: this.player.keyStates.no
+                        - no emote: "No"
+                        - wave key state: this.player.keyStates.wave
+                        - wave emote: "Wave"
+                        - punch key state: this.player.keyStates.punch
+                        - punch emote: "Punch"
+                        - thumbs up key state: this.player.keyStates.thumbsUp
+                        - thumbs up emote: "ThumbsUp"
+                        - duration: 0.2 seconds
+                    if (...) {
+                        this.animations.fadeToAction(/* emote, duration */ /*);
+        }
+        else if (...) {
+            this.animations.fadeToAction(/* emote, duration */ /*);
                     }
-                    else if (this.player.keyStates.jump) {
-                        this.animations.fadeToAction("Jump", 0.2);
-                    }
-                    else if (this.player.keyStates.yes) {
-                        this.animations.fadeToAction("Yes", 0.2);
-                    }
-                    else if (this.player.keyStates.no) {
-                        this.animations.fadeToAction("No", 0.2);
-                    }
-                    else if (this.player.keyStates.wave) {
-                        this.animations.fadeToAction("Wave", 0.2);
-                    }
-                    else if (this.player.keyStates.punch) {
-                        this.animations.fadeToAction("Punch", 0.2);
-                    }
-                    else if (this.player.keyStates.thumbsUp) {
-                        this.animations.fadeToAction("ThumbsUp", 0.2);
-                    }
+                    else if (...) {
+                        this.animations.fadeToAction(/* emote, duration */ /*);
+                }
+                else if (...) {
+                    this.animations.fadeToAction(/* emote, duration */ /*);
+                }
+                else if (...) {
+                    this.animations.fadeToAction(/* emote, duration */ /*);
+                }
+                else if (...) {
+                    this.animations.fadeToAction(/* emote, duration */ /*);
+                } */
+                    /* To-do #21 - If the player is not moving nor emoting, then trigger the idle action
+                        - idle ation: "Idle"
+                        - duration: 0.6 or 0.2 seconds, depending whether the player is recovering from a death action (long recovery) or from some other action (short recovery)
                     else {
-                        this.animations.fadeToAction("Idle", this.animations.activeName != "Death" ? 0.2 : 0.6);
-                    }
-                    this.player.object.position.set(this.player.position.x, this.player.position.y, this.player.position.z);
-                    this.player.object.rotation.y = direction - this.player.initialDirection;
+                        this.animations.fadeToAction(..., this.animations.activeName != "Death" ? ... : ...);
+                    } */
+                    /* To-do #22 - Set the player's new position and orientation
+                        - new position: this.player.position
+                        - new orientation:  direction - this.player.initialDirection
+                    this.player.object...;
+                    this.player.object...; */
                 }
             }
 
@@ -761,12 +855,15 @@ export default class Hospital {
             // Render primary viewport(s)
             this.renderer.clear();
 
-            if (this.fog.enabled) {
-                this.scene3D.fog = this.fog.object;
+            /* To-do #39 - If the fog is enabled, then assign it to the scene; else, assign null
+                - fog enabled: this.fog.enabled
+                - fog: this.fog.object
+            if (...) {
+                this.scene3D... = ...;
             }
             else {
-                this.scene3D.fog = null;
-            }
+                this.scene3D... = ...;
+            } */
             let cameras;
             if (this.multipleViewsCheckBox.checked) {
                 cameras = [this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera];
