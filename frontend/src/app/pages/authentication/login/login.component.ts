@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -8,16 +8,21 @@ import { UserService } from '../../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { LoginRequestDto } from '../../../domain/LoginRequestDto';
 import { Router } from '@angular/router';
+import { ModalCreateUserPatientComponent } from '../modal-create-user-patient/modal-create-user-patient.component';
         
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule,CardModule,ButtonModule,PasswordModule,InputTextModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, CardModule, ButtonModule, PasswordModule, InputTextModule, FormsModule, ReactiveFormsModule, ModalCreateUserPatientComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit{
+loginWithGoogle() {
+throw new Error('Method not implemented.');
+}
+  @ViewChild('create-user-patient') modalCreateUserPatientComponent!: ModalCreateUserPatientComponent;
 
   loginForm: FormGroup;
 
