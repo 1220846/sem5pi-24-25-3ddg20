@@ -149,7 +149,7 @@ import UserInterface from "./user_interface_template.js";
  * }
  */
 
-export default class ThumbRaiser {
+export default class Hospital {
     constructor(generalParameters, mazeParameters, playerParameters, lightsParameters, fogParameters, fixedViewCameraParameters, firstPersonViewCameraParameters, thirdPersonViewCameraParameters, topViewCameraParameters, miniMapCameraParameters) {
         this.generalParameters = merge({}, generalData, generalParameters);
         this.mazeParameters = merge({}, mazeData, mazeParameters);
