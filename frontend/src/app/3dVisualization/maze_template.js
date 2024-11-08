@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import Ground from "./ground_template.js";
-import Wall from "./wall_template.js";
+import Ground from "./ground.js";
+import Wall from "./wall.js";
 import { texture } from "three/webgpu";
 
 /*
