@@ -2,9 +2,8 @@
 
 .signup-link {
     color: $color-text; 
-    text-decoration: none;
+    text-decoration: underline;
     cursor: pointer;
-    
 }
 
 .signup-link:hover {
@@ -26,5 +25,11 @@
     z-index: 1;
     position: sticky;
     bottom: 0;
+}
+
+.need-account-text {
+    font-size: 1rem;
+    color: $color-text;
+    margin-right: 4px;
 }
 
