@@ -8,6 +8,7 @@ import { OperationTypesComponent } from './pages/admins/operation-types/operatio
 import { LoginComponent } from './pages/authentication/login/login.component';
 import { roleGuard } from './guards/role.guard';
 import { HospitalComponent } from './components/hospital/hospital.component';
+import { ListStaffProfilesComponent } from './pages/admins/staffs/list-staff-profiles/list-staff-profiles.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -28,5 +29,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'hospital', component: HospitalComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'ads', component: ListStaffProfilesComponent},
 ];
 

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Ground from "./ground_template.js";
 import Wall from "./wall_template.js";
+import { texture } from "three/webgpu";
 
 /*
  * parameters = {
@@ -45,28 +46,34 @@ export default class Maze {
                      *          1          |     No     |    Yes
                      *          2          |    Yes     |     No
                      *          3          |    Yes     |    Yes
+                     *          4          |     No     |    Door
+                     *          5          |    Yes     |    Door
                      */
                     /* To-do #5 - Create the north walls
                         - cell coordinates: i (column) and j (row)
                         - map: description.map[][]
                         - maze width: description.size.width
-                        - maze height: description.size.height
-                    if (description.map[j][i] == ... || description.map[j][i] == ...) {
+                        - maze height: description.size.height */
+                    if (description.map[j][i] == 2 || description.map[j][i] == 3 || description.map[j][i] == 5) {
                         wallObject = this.wall.object.clone();
-                        wallObject.position.set(i - ... + 0.5, ..., j - ...);
+                        wallObject.position.set(i - description.size.width / 2.0 + 0.5, 0.5, j - description.size.height / 2.0);
                         this.object.add(wallObject);
                     }
                     /* To-do #6 - Create the west walls
                         - cell coordinates: i (column), j (row)
                         - map: description.map[][]
                         - maze width: description.size.width
-                        - maze height: description.size.height
-                    if (...) {
-                        ...;
-                        wallObject.rotate...(...);
-                        ...;
-                        ...;
-                    } */
+                        - maze height: description.size.height */
+                    if (description.map[j][i] == 1 || description.map[j][i] == 3) {
+                        wallObject = this.wall.object.clone();
+                        wallObject.rotateY(Math.PI / 2.0);
+                        wallObject.position.set(i - description.size.width / 2.0, 0.5, j - description.size.height / 2.0 + 0.5);
+                        this.object.add(wallObject);
+                    }
+                    // Doors
+                    if (description.map[j][i] == 4 || description.map[j][i] == 5) {
+                        // TODO - doors
+                    }
                 }
             }
 
