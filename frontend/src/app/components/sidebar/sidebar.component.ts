@@ -30,13 +30,13 @@ export class SidebarComponent {
 
   @ViewChild('sidebarRef') sidebarRef!: Sidebar;
 
-    closeCallback(e:Event): void {
-        this.sidebarRef.close(e);
-    }
+  closeCallback(e:Event): void {
+      this.sidebarRef.close(e);
+  }
 
-    sidebarVisible: boolean = false;
+  sidebarVisible: boolean = false;
 
-  username: string = 'Username';
+  @Input() username: string = 'Username';
   isSidenavOpen: boolean = true;
 
   constructor(private router: Router, private userService: UserService) {}
@@ -60,8 +60,8 @@ export class SidebarComponent {
     }
   }
 
-  setUserType(usernumber: string){
-    this.username=usernumber;
+  setUsername(username: string){
+    this.username=username;
   }
 
   toggleSidenav() {

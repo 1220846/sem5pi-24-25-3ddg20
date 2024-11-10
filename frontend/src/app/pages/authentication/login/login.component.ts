@@ -59,7 +59,7 @@ throw new Error('Method not implemented.');
     if (roles.includes('Admin')) {
       this.router.navigate(['/admin']);
     } else if (roles.includes('Patient')) {
-      this.router.navigate(['/user']);
+      this.router.navigate(['/patient']);
     } else {
       this.router.navigate(['/doctor']);
     }
