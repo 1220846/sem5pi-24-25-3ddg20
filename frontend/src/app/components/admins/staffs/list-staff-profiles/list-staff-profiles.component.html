@@ -1,7 +1,7 @@
 <div class="flex justify-content-end mt-2 mr-5">
     <p-button icon="pi pi-filter" (click)="filterPanel.toggle($event)" class="p-button-rounded p-button-outlined"
         styleClass="p-button-text"></p-button>
-    <p-overlayPanel #filterPanel [dismissable]="true" [showCloseIcon]="true">
+    <p-overlayPanel #filterPanel [dismissable]="true" [style]="{ 'max-height': '28rem', 'overflow-y': 'auto' }">
         <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col-12 mt-2">
                 <label for="filterFirstName">First Name</label>
@@ -71,11 +71,11 @@
                                     <span class="font-normal ml-3;">
                                         ({{ staff.id }})
                                     </span>
-                                </span>s
+                                </span>
                                 <p-tag class="mt-1"
-                                    [severity]="staff.staffStatus === 'ACTIVE' ? 'success' : 'danger'"
+                                    [severity]="staff.status === 'ACTIVE' ? 'success' : 'danger'"
                                     [rounded]="true">
-                                    {{ staff.staffStatus.toLowerCase() }}
+                                    {{ staff.status.toLowerCase() }}
                                 </p-tag>
                             </div>
                         </span>
@@ -85,8 +85,12 @@
                         <p><strong>Last Name:</strong> {{ staff.lastName }}</p>
                         <p><strong>Email:</strong> {{ staff.email }}</p>
                         <p><strong>Phone Number:</strong> {{ staff.phoneNumber }}</p>
+                    </div><div class="flex ml-3 gap-6">
+                        <p><strong>License Number:</strong> {{ staff.licenseNumber }}</p>
+                        <p><strong>Specialization:</strong> {{ staff.specialization.name }}</p>
+                        <p><strong>Username:</strong> {{ staff.user.username }}</p>
                     </div>
-                    <!--<div class="ml-3">
+                    <!--<div class="ml-3"> pode ser util guardar isto
                         <p><strong>Staff Specializations: </strong></p>
                         <ul>
                             <li class="mt-1" *ngFor="let specialization of operationType.staffSpecializationDtos">

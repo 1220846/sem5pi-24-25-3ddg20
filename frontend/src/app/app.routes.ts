@@ -11,6 +11,7 @@ import { HospitalComponent } from './components/hospital/hospital.component';
 import { ListStaffProfilesComponent } from './components/admins/staffs/list-staff-profiles/list-staff-profiles.component';
 import { AccountComponent } from './components/patients/account/account.component';
 import { PatientsComponent } from './components/patients/patients.component';
+import { StaffsComponent } from './components/admins/staffs/staffs.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -25,6 +26,7 @@ export const routes: Routes = [
     //canActivate: [roleGuard],  
     //data: { roles: ['Admin'] },
     children: [{ path: 'operation-types', component: OperationTypesComponent },
+              { path: 'staffs', component: StaffsComponent},
               { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
   },
   { path: 'login', component: LoginComponent },
@@ -39,5 +41,6 @@ export const routes: Routes = [
     children: [{ path: 'account', component: AccountComponent },
               { path: '', redirectTo: 'account', pathMatch: 'full' }]
   }
+  
 ];
 

@@ -18,12 +18,12 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-list-staff-profiles',
   standalone: true,
-  imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,InputTextModule,FormsModule,OverlayPanelModule,ButtonModule],
+  imports: [AccordionModule, AvatarModule, BadgeModule, TagModule, CommonModule, ScrollerModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule],
   templateUrl: './list-staff-profiles.component.html',
   styleUrl: './list-staff-profiles.component.scss'
 })
 export class ListStaffProfilesComponent implements OnInit {
-  
+
   @ViewChild('filterPanel') filterPanel!: OverlayPanel;
 
   staffs: Staff[] = [];
@@ -36,8 +36,8 @@ export class ListStaffProfilesComponent implements OnInit {
   filterSpecializationId: string = '';
   filterPhoneNumber: string = '';
   filterId: string = '';
-  filterLicenseNumber: string  = '';
-  filterStatus: string = ''; 
+  filterLicenseNumber: string = '';
+  filterStatus: string = '';
 
   statusOptions = [
     { label: 'None', value: null },
@@ -48,7 +48,7 @@ export class ListStaffProfilesComponent implements OnInit {
   constructor(
     private staffService: StaffService,
     private specializationService: SpecializationService
-  ) {}
+  ) { }
 
 
   ngOnInit(): void {
@@ -63,14 +63,14 @@ export class ListStaffProfilesComponent implements OnInit {
 
   clearFilters(): void {
     this.filterFirstName = '';
-    this.filterLastName= '';
-    this.filterFullName= '';
-    this.filterEmail= '';
-    this.filterSpecializationId= '';
-    this.filterPhoneNumber= '';
-    this.filterId= '';
+    this.filterLastName = '';
+    this.filterFullName = '';
+    this.filterEmail = '';
+    this.filterSpecializationId = '';
+    this.filterPhoneNumber = '';
+    this.filterId = '';
     this.filterLicenseNumber = '';
-    this.filterStatus= ''; 
+    this.filterStatus = '';
   }
 
   loadStaffs(): void {
@@ -86,7 +86,7 @@ export class ListStaffProfilesComponent implements OnInit {
       this.filterStatus
     ).subscribe({
       next: (data) => { this.staffs = data; },
-        error: (error) => console.error('Error fetching staffs:', error)
+      error: (error) => console.error('Error fetching staffs:', error)
     });
   }
 
@@ -94,7 +94,7 @@ export class ListStaffProfilesComponent implements OnInit {
     this.specializationService.getAll().subscribe({
       next: (data) => {
         this.specializations = [{ id: '', name: 'None' }, ...data];
-        this.filterSpecializationId = ''; 
+        this.filterSpecializationId = '';
       },
       error: (error) => console.error('Error fetching specializations:', error)
     });
