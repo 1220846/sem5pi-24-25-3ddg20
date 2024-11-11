@@ -76,8 +76,8 @@ export class ModalCreatePatientComponent implements OnInit{
       this.patientService.add(patient).subscribe(
         (response) => {
           console.log("Patient added successfully:", response);
-          this.visible = false; // Fecha o diálogo
-          this.patientForm.reset(); // Reseta o formulário
+          this.visible = false;
+          this.patientForm.reset();
         },
         (error) => {
           console.error("Error adding patient:", error);

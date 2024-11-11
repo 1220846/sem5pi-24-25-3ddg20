@@ -12,6 +12,7 @@ import { ListStaffProfilesComponent } from './components/admins/staffs/list-staf
 import { AccountComponent } from './components/patients/account/account.component';
 import { PatientsComponent } from './components/patients/patients.component';
 import { StaffsComponent } from './components/admins/staffs/staffs.component';
+import { AdminPatientsComponent } from './components/admins/patients/admin-patients.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -27,6 +28,7 @@ export const routes: Routes = [
     //data: { roles: ['Admin'] },
     children: [{ path: 'operation-types', component: OperationTypesComponent },
               { path: 'staffs', component: StaffsComponent},
+              { path: 'patients', component: AdminPatientsComponent},
               { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
   },
   { path: 'login', component: LoginComponent },
