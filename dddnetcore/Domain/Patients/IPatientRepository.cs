@@ -13,5 +13,7 @@ namespace DDDSample1.DataAnnotations.Patients
         Task<Patient> GetByUserIdAsync(string username);
         Task<Patient> UpdateAsync(Patient patient);
         Task<List<Patient>> GetPatientsAsync(string firstName, string lastName, string fullName, string email, string birthDate, string phoneNumber, string id, string gender, int pageNumber, int pageSize);
+        
+        Task<int> GetPatientsCountAsync();
     }
 }

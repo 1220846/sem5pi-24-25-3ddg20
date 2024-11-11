@@ -7,6 +7,7 @@ using DDDSample1.Domain.Patients;
 using Microsoft.AspNetCore.Mvc;
 using dddnetcore.Domain.Patients;
 using Microsoft.AspNetCore.Authorization;
+using System.Numerics;
 
 namespace DDDSample1.Controllers
 {
@@ -94,6 +95,20 @@ namespace DDDSample1.Controllers
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients(string firstName = null, string lastName = null, string fullName = null, string email = null, string birthDate = null,
         string phoneNumber = null, string id = null, string gender = null, int pageNumber = 1, int pageSize = 10) {
             return await _service.GetPatientsAsync(firstName, lastName, fullName, email, birthDate, phoneNumber, id, gender, pageNumber, pageSize);
+        }
+
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetPatientCount()
+        {
+            try
+            {
+                var count = await _service.GetPatientsCountAsync();
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
         }
     }
 }

@@ -218,5 +218,17 @@ namespace dddnetcore.Domain.Patients
                 return new List<PatientDto>();
             }
         }
+
+        public async Task<int> GetPatientsCountAsync()
+        {
+            try
+            {
+                return await _repo.GetPatientsCountAsync(); // Método que faz a contagem no repositório
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error counting patients", ex);
+            }
+        }
     }
 }
