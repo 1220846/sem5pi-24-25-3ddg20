@@ -1,6 +1,6 @@
 <div class="flex justify-content-end mt-2 mr-5">
     <p-button icon="pi pi-filter"(click)="filterPanel.toggle($event)"class="p-button-rounded p-button-outlined" styleClass="p-button-text"></p-button>
-    <p-overlayPanel #filterPanel [dismissable]="true" [showCloseIcon]="true">
+    <p-overlayPanel #filterPanel [dismissable]="true" [showCloseIcon]="false">
         <div class="p-fluid p-formgrid p-grid" [style]="{ 'max-height': '28rem', 'overflow-y': 'auto' }">
             <div class="p-field p-col-12 mt-2">
                 <label for="filterfirstName">First Name</label>
@@ -65,9 +65,9 @@
                             <div class="flex flex-column">
                                 <span class="font-bold white-space-nowrap">
                                     {{ patient.firstName }} {{ patient.lastName }}
-                                    <!--span class="font-normal ml-3;">
-                                        ({{ calculateAge() }}y)
-                                    </span-->
+                                    <span class="font-normal ml-3;">
+                                        ({{ calculateAge(patient.dateOfBirth) }}y)
+                                    </span>
                                 </span>
                                 <p-tag class="mt-1" [rounded]="true" severity="info" >{{ patient.id }}</p-tag>
                             </div>
@@ -93,5 +93,13 @@
     <p-dialog header="Medical Conditions" [(visible)]="visible" [style]="{ width: '60rem', 'max-height': '40rem' }">
         <p>{{ selectedPatient?.medicalConditions }}</p>
     </p-dialog>
+</div>
+<div class="card flex justify-content-center">
+    <p-paginator 
+        (onPageChange)="onPageChange($event)" 
+        [first]="pageNumber" 
+        [rows]="pageSize" 
+        [totalRecords]="totalPatients" 
+        [rowsPerPageOptions]="[10, 20, 30]" />
 </div>
 
