@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -13,6 +13,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { PatientService } from '../../../../services/patient.service';
 import { CreatingPatientDto } from '../../../../domain/CreatingPatientDto';
+import { Patient } from '../../../../domain/Patient';
 
 @Component({
   selector: 'app-modal-create-patient',
@@ -24,6 +25,7 @@ import { CreatingPatientDto } from '../../../../domain/CreatingPatientDto';
 export class ModalCreatePatientComponent implements OnInit{
 
   patientForm: FormGroup;
+  @Output() patientCreated = new EventEmitter<Patient>();
 
   constructor(private patientService: PatientService, private fb: FormBuilder
   ) {

@@ -91,7 +91,6 @@ namespace DDDSample1.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients(string firstName = null, string lastName = null, string fullName = null, string email = null, string birthDate = null,
         string phoneNumber = null, string id = null, string gender = null, int pageNumber = 1, int pageSize = 10) {
             return await _service.GetPatientsAsync(firstName, lastName, fullName, email, birthDate, phoneNumber, id, gender, pageNumber, pageSize);

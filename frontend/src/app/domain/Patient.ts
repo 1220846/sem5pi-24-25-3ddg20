@@ -1,6 +1,6 @@
 export interface Patient{
-    medicalRecordNumber: string;
-    birthDate: string;
+    id: string;
+    dateOfBirth: string;
     emergencyContact: string;
     gender: string;
     email: string;
