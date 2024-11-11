@@ -17,7 +17,7 @@ export class StaffService {
   getAllAndFilter(firstName?: string, lastName?: string, fullName?: string, email?: string, specializationId?: string,
     phoneNumber?: string, id?: string, licenseNumber?:
     string, status?: string): Observable<Staff[]>
-  {
+  { 
     let params = new HttpParams();
     if (firstName)
       params = params.set('firstName', firstName);
@@ -40,10 +40,18 @@ export class StaffService {
 
     params = params.set('pageSize?', 0x7fffffff); //pagination done by primeng
     
-    return this.httpClient.get<Staff[]>(`${this.apiUrl}/filter`, {params});
-  }
+    return this.httpClient.get<Staff[]>(`${this.apiUrl}/filter`, {params, headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`})});
+}
 
   add(staff: CreatingStaffDto): Observable<Staff>{
-    return this.httpClient.post<Staff>(this.apiUrl, staff, {headers: this.header});
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.post<Staff>(this.apiUrl, staff, {headers: headers});
+  }
+
+  deactivate(staffId: string) {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    this.httpClient.delete<Staff>(`this.apiUrl/${staffId}`, {headers: headers});
   }
 }

@@ -4,6 +4,7 @@ import { ModalCreateOperationTypeComponent } from "./operation-types/modal-creat
 import { ListOperationTypesComponent } from "./operation-types/list-operation-types/list-operation-types.component";
 import { OperationTypesComponent } from './operation-types/operation-types.component';
 import { RouterOutlet } from '@angular/router';
+import { StaffsComponent } from './staffs/staffs.component';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class AdminComponent implements OnInit ,AfterViewInit {
 
   @ViewChild('sidebar') sidebar: SidebarComponent | undefined;
   @ViewChild('operation-types') operationTypes : OperationTypesComponent |  undefined;
+  @ViewChild('staffs') staffs : StaffsComponent | undefined;
 
   ngOnInit(): void {
   }
@@ -29,6 +31,7 @@ export class AdminComponent implements OnInit ,AfterViewInit {
     if (this.sidebar) {
       this.sidebar.items = [
         { label: 'Operation Types', icon: '', link: '/admin/operation-types' },
+        { label: 'Staffs', icon: '', link: '/admin/staffs' }
       ];
       this.sidebar.setUserTitle('Admin');
     }
