@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { SidebarComponent } from "../../components/sidebar/sidebar.component";
+import { SidebarComponent } from "../sidebar/sidebar.component";
 import { ModalCreateOperationTypeComponent } from "./operation-types/modal-create-operation-type/modal-create-operation-type.component";
 import { ListOperationTypesComponent } from "./operation-types/list-operation-types/list-operation-types.component";
 import { OperationTypesComponent } from './operation-types/operation-types.component';
