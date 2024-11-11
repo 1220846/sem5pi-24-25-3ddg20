@@ -9,6 +9,8 @@ import { LoginComponent } from './pages/authentication/login/login.component';
 import { roleGuard } from './guards/role.guard';
 import { HospitalComponent } from './components/hospital/hospital.component';
 import { ListStaffProfilesComponent } from './pages/admins/staffs/list-staff-profiles/list-staff-profiles.component';
+import { AccountComponent } from './components/patients/account/account.component';
+import { PatientsComponent } from './components/patients/patients.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -25,10 +27,17 @@ export const routes: Routes = [
     children: [{ path: 'operation-types', component: OperationTypesComponent },
               { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
   },
-  { path: 'create-user-patient', component: ModalCreateUserPatientComponent },
   { path: 'login', component: LoginComponent },
   { path: 'hospital', component: HospitalComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'ads', component: ListStaffProfilesComponent},
+  { 
+    path: 'patient', 
+    component: PatientsComponent,
+    //canActivate: [roleGuard],  
+    //data: { roles: ['Patient'] },
+    children: [{ path: 'account', component: AccountComponent },
+              { path: '', redirectTo: 'account', pathMatch: 'full' }]
+  }
 ];
 
