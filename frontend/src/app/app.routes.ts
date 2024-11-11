@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
-import { AdminComponent } from './pages/admins/admin.component';
+import { AdminComponent } from './components/admins/admin.component';
 import { DoctorsComponent } from './pages/doctors/doctors.component';
 import { ModalCreateUserPatientComponent } from './pages/authentication/modal-create-user-patient/modal-create-user-patient.component';
-import { OperationTypesComponent } from './pages/admins/operation-types/operation-types.component';
+import { OperationTypesComponent } from './components/admins/operation-types/operation-types.component';
 import { LoginComponent } from './pages/authentication/login/login.component';
 import { roleGuard } from './guards/role.guard';
 import { HospitalComponent } from './components/hospital/hospital.component';
-import { ListStaffProfilesComponent } from './pages/admins/staffs/list-staff-profiles/list-staff-profiles.component';
+import { ListStaffProfilesComponent } from './components/admins/staffs/list-staff-profiles/list-staff-profiles.component';
 import { AccountComponent } from './components/patients/account/account.component';
 import { PatientsComponent } from './components/patients/patients.component';
 
