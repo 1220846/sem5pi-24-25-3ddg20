@@ -9,6 +9,7 @@ import { Sidebar } from 'primeng/sidebar';
 import { Router, RouterModule } from '@angular/router';
 import { ImageModule } from 'primeng/image';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -38,10 +39,11 @@ export class SidebarComponent {
   username: string = 'Username';
   isSidenavOpen: boolean = true;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private userService: UserService) {}
 
   logout() {
-    this.router.navigate(['/login']);
+    this.userService.logout();
+    this.router.navigate(['/home']);
   }
 
   setUserTitle(user: string) {

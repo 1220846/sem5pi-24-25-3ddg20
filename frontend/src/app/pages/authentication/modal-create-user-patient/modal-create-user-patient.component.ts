@@ -8,11 +8,14 @@ import { PasswordModule } from 'primeng/password';
 import { AuthService } from '@auth0/auth0-angular';
 import { CreatingUserPatientDto } from '../../../domain/CreatingUserPatientDto';
 import { UserService } from '../../../services/user.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-create-user-patient',
   standalone: true,
-  imports: [CommonModule,DialogModule, ButtonModule, InputTextModule,PasswordModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule,DialogModule, ButtonModule, InputTextModule,PasswordModule,FormsModule,ReactiveFormsModule,ToastModule],
+  providers: [MessageService],
   templateUrl: './modal-create-user-patient.component.html',
   styleUrl: './modal-create-user-patient.component.scss'
 })
@@ -26,7 +29,7 @@ export class ModalCreateUserPatientComponent implements OnInit {
    
   }
 
-  constructor(private fb: FormBuilder,private authService: AuthService, private userService: UserService) {
+  constructor(private fb: FormBuilder, private userService: UserService,private messageService: MessageService) {
     this.userPatientForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
@@ -55,9 +58,11 @@ export class ModalCreateUserPatientComponent implements OnInit {
         (response) => {
           this.visible = false; 
           this.userPatientForm.reset();
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'Account registered successfully',life: 2000});
         },
         (error) => {
-          console.error("Error adding operation type:", error);
+          console.error("Error creating account:", error);
+          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to register account',life: 2000});
         }
       )
     } else {

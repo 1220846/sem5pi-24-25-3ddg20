@@ -1,7 +1,8 @@
-<div class="card flex justify-content-center">
+<div class="card flex justify-content-center mt-4">
+    <p-toast></p-toast>
+    <span class="need-account-text">Don't have an account?</span>
     <span (click)="showDialog()" class="signup-link">Sign Up</span>
     <p-dialog header="Create Account" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem', maxHeight: '35rem' }">
-        <span class="p-text-secondary block mb-5">Insert information.</span>
         <form [formGroup]="userPatientForm" class="dialog-form">
             <div class="flex flex-column gap-2 mb-2 input-large">
                 <label for="email">Email</label>

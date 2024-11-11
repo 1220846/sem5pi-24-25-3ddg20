@@ -10,5 +10,5 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'SARM';
 }
