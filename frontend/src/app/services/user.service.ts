@@ -80,4 +80,6 @@ export class UserService {
   
     return this.httpClient.post<string>(`${this.apiUrl}/patients/request-delete/${username}`, {}, { headers, responseType: 'text' as 'json' });
   }
+
+  
 }
