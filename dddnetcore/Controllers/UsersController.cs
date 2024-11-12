@@ -180,5 +180,20 @@ namespace DDDSample1.Controllers{
                 return StatusCode(500, new { Message = "An error occurred while processing your request. Please try again later." });
             }
         }
+
+        [HttpGet("loggedIn-user")]
+        [Authorize(Policy = "RequiredAnyRole")]
+        public async Task<ActionResult<UserDto>> GetLoggedInUser([FromHeader(Name = "Authorization")] string authorization)
+        {   
+            
+            var user = await _service.GetLoggedInUser(authorization);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
     }
 }

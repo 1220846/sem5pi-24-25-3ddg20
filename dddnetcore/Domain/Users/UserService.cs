@@ -396,6 +396,19 @@ namespace DDDSample1.Domain.Users
             return new UserDto { Username = user.Id.Name, Email=user.Email.Address,Role=user.Role.ToString()};
         }
 
+        public async Task<UserDto> GetLoggedInUser(string authorization){
+            
+            if (string.IsNullOrEmpty(authorization) || !authorization.StartsWith("Bearer "))
+            {
+                return null;
+            }
+            var token = authorization.Substring("Bearer ".Length).Trim();
+
+            var username = _authenticationService.GetLoggedInUsername(token);
+
+            return await this.GetByIdAsync(username);
+        }
+
         private string CalculateAgeRange(DateOfBirth dateOfBirth){
             var age = DateTime.Now.Year - dateOfBirth.Date.Year;
 

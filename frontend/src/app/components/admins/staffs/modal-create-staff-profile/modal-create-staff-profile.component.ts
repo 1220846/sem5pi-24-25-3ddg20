@@ -9,9 +9,11 @@ import { SpecializationService } from '../../../../services/specialization.servi
 import { Specialization } from '../../../../domain/specialization';
 import { DropdownModule } from 'primeng/dropdown';
 import { CreatingStaffDto } from '../../../../domain/CreatingStaffDto';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'modal-create-staff-profile',
+  selector: 'app-create-staff-profile',
   standalone: true,
   imports: [
     DialogModule,
@@ -20,16 +22,20 @@ import { CreatingStaffDto } from '../../../../domain/CreatingStaffDto';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    DropdownModule
+    DropdownModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './modal-create-staff-profile.component.html',
   styleUrl: './modal-create-staff-profile.component.scss'
 })
 export class CreateStaffProfileComponent {
   staffForm: FormGroup;
-  @Output() staffTypeCreated = new EventEmitter<CreatingStaffDto>();
+  @Output() staffProfileCreated = new EventEmitter<CreatingStaffDto>();
 
-  constructor(private staffService: StaffService, private specializationService: SpecializationService, private fb: FormBuilder) {
+  constructor(private staffService: StaffService, private specializationService: SpecializationService, private fb: FormBuilder,
+    private messageService: MessageService
+  ) {
     this.staffForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -37,10 +43,10 @@ export class CreateStaffProfileComponent {
       email: ['', Validators.required],
       phoneNumber: ['', Validators.required],
       licenseNumber: ['', Validators.required],
-      specialization: [ null, [Validators.required]],
+      specialization: [null, [Validators.required]],
       userEmail: ['', Validators.required]
     });
-  }  
+  }
 
   specializations: Specialization[] = [];
   availableSpecializations: Specialization[] = [];
@@ -80,10 +86,12 @@ export class CreateStaffProfileComponent {
         (response) => {
           this.visible = false;
           this.staffForm.reset();
-          this.staffTypeCreated.emit(staff);
+          this.staffProfileCreated.emit(staff);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Staff profile create successfully', life: 2000});
         },
         (error) => {
           console.error("Error creating staff profile:", error);
+          this.messageService.add({severity: 'error', summary: 'Error', detail:'Failed to create staff profile', life: 2000});
         }
       );
     } else {

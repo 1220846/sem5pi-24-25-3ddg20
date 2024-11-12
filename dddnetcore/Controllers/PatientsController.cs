@@ -7,6 +7,7 @@ using DDDSample1.Domain.Patients;
 using Microsoft.AspNetCore.Mvc;
 using dddnetcore.Domain.Patients;
 using Microsoft.AspNetCore.Authorization;
+using System.Numerics;
 
 namespace DDDSample1.Controllers
 {
@@ -34,7 +35,7 @@ namespace DDDSample1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RequiredAdminRole")]
+        //[Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> Create(CreatingPatientDto dto) {
             try {
                 PatientDto patient = await _service.AddAsync(dto);
@@ -52,7 +53,7 @@ namespace DDDSample1.Controllers
             }
         }
 
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> EditPatient(string id, EditingPatientDto dto) {
             try {
@@ -91,10 +92,25 @@ namespace DDDSample1.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "RequiredAdminRole")]
+        //[Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients(string firstName = null, string lastName = null, string fullName = null, string email = null, string birthDate = null,
         string phoneNumber = null, string id = null, string gender = null, int pageNumber = 1, int pageSize = 10) {
             return await _service.GetPatientsAsync(firstName, lastName, fullName, email, birthDate, phoneNumber, id, gender, pageNumber, pageSize);
+        }
+
+        [HttpGet("count")]
+        //[Authorize(Policy = "RequiredAdminRole")]
+        public async Task<ActionResult<int>> GetPatientCount()
+        {
+            try
+            {
+                var count = await _service.GetPatientsCountAsync();
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
         }
     }
 }

@@ -101,7 +101,14 @@ namespace DDDSample1
                 options.AddPolicy("RequiredNurseRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Nurse"));
                 options.AddPolicy("RequiredTechnicianRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Technician"));
                 options.AddPolicy("RequiredPatientRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Patient"));
-                });
+                options.AddPolicy("RequiredAnyRole", policy =>
+                policy.RequireAssertion(context =>
+                context.User.HasClaim(c => c.Type == $"{Namespace_Roles}/roles" &&
+                                        (c.Value == "Admin" ||
+                                         c.Value == "Doctor" ||
+                                         c.Value == "Nurse" ||
+                                         c.Value == "Technician" ||
+                                         c.Value == "Patient"))));});
                 
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             

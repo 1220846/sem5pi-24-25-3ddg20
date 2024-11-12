@@ -86,5 +86,10 @@ namespace DDDSample1.Infrastructure.Patients
                 throw new BusinessRuleValidationException("Filters badly formatted!");
             }
         }
+        
+        public async Task<int> GetPatientsCountAsync()
+        {
+            return await _context.Patients.CountAsync();
+        }
     }
 }
