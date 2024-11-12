@@ -4,25 +4,17 @@
 :- dynamic agenda_staff1/3.
 :-dynamic agenda_operation_room/3.
 :-dynamic agenda_operation_room1/3.
-
+:-dynamic better_sol/5.
 
 agenda_staff(d001,20241028,[(720,790,m01),(1080,1140,c01)]).
 agenda_staff(d002,20241028,[(850,900,m02),(901,960,m02),(1380,1440,c02)]).
 agenda_staff(d003,20241028,[(720,790,m01),(910,980,m02)]).
+%agenda_staff(d004,20241028,[(850,900,m02),(940,980,c04)]).
 
 timetable(d001,20241028,(480,1200)).
 timetable(d002,20241028,(500,1440)).
 timetable(d003,20241028,(520,1320)).
-
-% first example
-%agenda_staff(d001,20241028,[(720,840,m01),(1080,1200,c01)]).
-%agenda_staff(d002,20241028,[(780,900,m02),(901,960,m02),(1080,1440,c02)]).
-%agenda_staff(d003,20241028,[(720,840,m01),(900,960,m02)]).
-
-%timetable(d001,20241028,(480,1200)).
-%timetable(d002,20241028,(720,1440)).
-%timetable(d003,20241028,(600,1320)).
-
+%timetable(d004,20241028,(620,1020)).
 
 staff(d001,doctor,orthopaedist,[so2,so3,so4]).
 staff(d002,doctor,orthopaedist,[so2,so3,so4]).
@@ -34,22 +26,38 @@ surgery(so2,45,60,45).
 surgery(so3,45,90,45).
 surgery(so4,45,75,45).
 
+
 surgery_id(so100001,so2).
 surgery_id(so100002,so3).
 surgery_id(so100003,so4).
-surgery_id(so100004,so2).
-surgery_id(so100005,so4).
-
+%surgery_id(so100004,so2).
+%surgery_id(so100005,so4).
+%surgery_id(so100006,so2).
+%surgery_id(so100007,so3).
+%surgery_id(so100008,so2).
+%surgery_id(so100009,so2).
+%surgery_id(so100010,so2).
+%surgery_id(so100011,so4).
+%surgery_id(so100012,so2).
+%surgery_id(so100013,so2).
 
 assignment_surgery(so100001,d001).
 assignment_surgery(so100002,d002).
 assignment_surgery(so100003,d003).
-assignment_surgery(so100004,d001).
-assignment_surgery(so100004,d002).
-assignment_surgery(so100005,d002).
-assignment_surgery(so100005,d003).
-
-
+%assignment_surgery(so100004,d001).
+%assignment_surgery(so100004,d002).
+%assignment_surgery(so100005,d002).
+%assignment_surgery(so100005,d003).
+%assignment_surgery(so100006,d001).
+%assignment_surgery(so100007,d003).
+%assignment_surgery(so100008,d004).
+%assignment_surgery(so100008,d003).
+%assignment_surgery(so100009,d002).
+%assignment_surgery(so100009,d004).
+%assignment_surgery(so100010,d003).
+%assignment_surgery(so100011,d001).
+%assignment_surgery(so100012,d001).
+%assignment_surgery(so100013,d004).
 
 
 
@@ -128,6 +136,7 @@ schedule_all_surgeries(Room,Day):-
     agenda_operation_room(Or,Date,Agenda),assert(agenda_operation_room1(Or,Date,Agenda)),
     findall(_,(agenda_staff1(D,Date,L),free_agenda0(L,LFA),adapt_timetable(D,Date,LFA,LFA2),assertz(availability(D,Date,LFA2))),_),
     findall(OpCode,surgery_id(OpCode,_),LOpCode),
+
     availability_all_surgeries(LOpCode,Room,Day),!.
 
 availability_all_surgeries([],_,_).
@@ -172,32 +181,58 @@ insert_agenda_doctors((TinS,TfinS,OpCode),Day,[Doctor|LDoctors]):-
     assert(agenda_staff1(Doctor,Day,Agenda1)),
     insert_agenda_doctors((TinS,TfinS,OpCode),Day,LDoctors).
 
-% Obter todas as permutações
-permute([], []).
-permute([H|T], Perm) :- permute(T, PermT),select(H, Perm, PermT).
-
-% Calcular a duração total para uma sequência de cirurgias
-total_duration([], 0).
-total_duration([OpCode|Ops], TotalTime) :-
-                                surgery(OpCode, AnesthesiaTime, SurgeryTime, CleaningTime),
-                                total_duration(Ops, RemainingTime),
-                                TotalTime is AnesthesiaTime + SurgeryTime + CleaningTime + RemainingTime.
-
-% Encontrar a melhor sequência de cirurgias.
-best_schedule(BestSequence) :-
-    findall(OpCode, surgery(OpCode, _, _, _), Operations), 
-    findall(Perm, permute(Operations, Perm), AllSequences),
-    select_best_sequence(AllSequences, BestSequence).
-
-% Selecionar a sequência com menor duração.
-select_best_sequence([Seq], Seq).
-select_best_sequence([Seq1, Seq2|Seqs], BestSeq) :- total_duration(Seq1, Time1),
-                                                    total_duration(Seq2, Time2),
-                                                    (Time1 =< Time2 -> select_best_sequence([Seq1|Seqs], BestSeq);
-                                                    select_best_sequence([Seq2|Seqs], BestSeq)).
 
 
+obtain_better_sol(Room,Day,AgOpRoomBetter,LAgDoctorsBetter,TFinOp):-
+		get_time(Ti),
+		(obtain_better_sol1(Room,Day);true),
+		retract(better_sol(Day,Room,AgOpRoomBetter,LAgDoctorsBetter,TFinOp)),
+            write('Final Result: AgOpRoomBetter='),write(AgOpRoomBetter),nl,
+            write('LAgDoctorsBetter='),write(LAgDoctorsBetter),nl,
+            write('TFinOp='),write(TFinOp),nl,
+		get_time(Tf),
+		T is Tf-Ti,
+		write('Tempo de geracao da solucao:'),write(T),nl.
 
 
+obtain_better_sol1(Room,Day):-
+    asserta(better_sol(Day,Room,_,_,1441)),
+    findall(OpCode,surgery_id(OpCode,_),LOC),!,
+    permutation(LOC,LOpCode),
+    retractall(agenda_staff1(_,_,_)),
+    retractall(agenda_operation_room1(_,_,_)),
+    retractall(availability(_,_,_)),
+    findall(_,(agenda_staff(D,Day,Agenda),assertz(agenda_staff1(D,Day,Agenda))),_),
+    agenda_operation_room(Room,Day,Agenda),assert(agenda_operation_room1(Room,Day,Agenda)),
+    findall(_,(agenda_staff1(D,Day,L),free_agenda0(L,LFA),adapt_timetable(D,Day,LFA,LFA2),assertz(availability(D,Day,LFA2))),_),
+    availability_all_surgeries(LOpCode,Room,Day),
+    agenda_operation_room1(Room,Day,AgendaR),
+		update_better_sol(Day,Room,AgendaR,LOpCode),
+		fail.
+
+update_better_sol(Day,Room,Agenda,LOpCode):-
+                better_sol(Day,Room,_,_,FinTime),
+                reverse(Agenda,AgendaR),
+                evaluate_final_time(AgendaR,LOpCode,FinTime1),
+             write('Analysing for LOpCode='),write(LOpCode),nl,
+             write('now: FinTime1='),write(FinTime1),write(' Agenda='),write(Agenda),nl,
+		FinTime1<FinTime,
+             write('best solution updated'),nl,
+                retract(better_sol(_,_,_,_,_)),
+                findall(Doctor,assignment_surgery(_,Doctor),LDoctors1),
+                remove_equals(LDoctors1,LDoctors),
+                list_doctors_agenda(Day,LDoctors,LDAgendas),
+		asserta(better_sol(Day,Room,Agenda,LDAgendas,FinTime1)).
+
+evaluate_final_time([],_,1441).
+evaluate_final_time([(_,Tfin,OpCode)|_],LOpCode,Tfin):-member(OpCode,LOpCode),!.
+evaluate_final_time([_|AgR],LOpCode,Tfin):-evaluate_final_time(AgR,LOpCode,Tfin).
+
+list_doctors_agenda(_,[],[]).
+list_doctors_agenda(Day,[D|LD],[(D,AgD)|LAgD]):-agenda_staff1(D,Day,AgD),list_doctors_agenda(Day,LD,LAgD).
+
+remove_equals([],[]).
+remove_equals([X|L],L1):-member(X,L),!,remove_equals(L,L1).
+remove_equals([X|L],[X|L1]):-remove_equals(L,L1).
 
 
