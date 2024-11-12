@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Patient } from '../domain/Patient';
-import { first, Observable } from 'rxjs';
+import { BehaviorSubject, first, Observable } from 'rxjs';
 import { CreatingPatientDto } from '../domain/CreatingPatientDto';
 
 @Injectable({
@@ -10,6 +10,7 @@ import { CreatingPatientDto } from '../domain/CreatingPatientDto';
 export class PatientService {
   private apiUrl = 'https://localhost:5001/api/patients';
   private header: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private patientSubject = new BehaviorSubject<Patient | null>(null);
 
   constructor(private httpClient: HttpClient) { 
   }
@@ -47,5 +48,17 @@ export class PatientService {
 
   patientCount(): Observable<number> {
     return this.httpClient.get<number>(`${this.apiUrl}/count`, { headers: this.header });
+  }
+
+  getPatientByEmail(email:string): Observable<Patient> {
+    return this.httpClient.get<Patient>(`${this.apiUrl}/byemail/${email}`);
+  }
+
+  setPatient(patient: Patient | null): void {
+    this.patientSubject.next(patient);
+  }
+
+  getPatient(): Observable<Patient | null> {
+    return this.patientSubject.asObservable();
   }
 }

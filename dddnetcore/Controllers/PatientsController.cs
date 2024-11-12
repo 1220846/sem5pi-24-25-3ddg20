@@ -112,5 +112,18 @@ namespace DDDSample1.Controllers
                 return BadRequest(new { ex.Message });
             }
         }
+
+        [HttpGet("byemail/{email}")]
+        public async Task<ActionResult<PatientDto>> GetByEmail(string email)
+        {
+            var patient = await _service.GetByEmail(email);
+
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return patient;
+        }
     }
 }
