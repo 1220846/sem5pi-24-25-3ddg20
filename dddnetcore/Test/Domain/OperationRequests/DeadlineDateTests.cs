@@ -67,7 +67,7 @@ namespace DDDSample1.Tests.Domain.OperationRequests
         {
             var date = new DeadlineDate(DateTime.Parse("2040-10-14 15:30:00"));
             var dateString = date.ToString();
-            Assert.Equal("14/10/2040", dateString);
+            Assert.Equal("2040-10-14 15:30:00", dateString);
         }
     }
 }
