@@ -16,7 +16,9 @@ export class PatientService {
   }
 
   add(patient: CreatingPatientDto):Observable<Patient>{
-    return this.httpClient.post<Patient>(this.apiUrl, patient, { headers: this.header });
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.post<Patient>(this.apiUrl, patient, { headers: headers });
   }
 
   getPage(firstName?: string, lastName?: string, fullName?: string, email?: string, birthDate?: string, phoneNumber?: string,
@@ -43,11 +45,13 @@ export class PatientService {
     if (pageSize) 
       params = params.set('pageSize', pageSize);
     
-    return this.httpClient.get<Patient[]>(`${this.apiUrl}/`, { params }) 
+    return this.httpClient.get<Patient[]>(`${this.apiUrl}/`, { params, headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`}) }) 
   }
 
   patientCount(): Observable<number> {
-    return this.httpClient.get<number>(`${this.apiUrl}/count`, { headers: this.header });
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.get<number>(`${this.apiUrl}/count`, { headers: headers });
   }
 
   getPatientByEmail(email:string): Observable<Patient> {
