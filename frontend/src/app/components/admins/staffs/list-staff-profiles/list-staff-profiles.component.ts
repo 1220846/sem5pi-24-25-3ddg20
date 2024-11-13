@@ -14,11 +14,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { ModalDeactivateStaffProfileComponent } from '../modal-deactivate-staff-profile/modal-deactivate-staff-profile.component';
 
 @Component({
   selector: 'app-list-staff-profiles',
   standalone: true,
-  imports: [AccordionModule, AvatarModule, BadgeModule, TagModule, CommonModule, ScrollerModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule],
+  imports: [AccordionModule, AvatarModule, BadgeModule, TagModule, CommonModule, ScrollerModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule, ModalDeactivateStaffProfileComponent],
   templateUrl: './list-staff-profiles.component.html',
   styleUrl: './list-staff-profiles.component.scss'
 })
@@ -100,6 +101,10 @@ export class ListStaffProfilesComponent implements OnInit {
     });
   }
 
+  
+  onStaffProfileDeacivated() {
+    this.loadStaffs();
+  }
   /*getSpecializationName(specializationId: number): string {
     this.specializationService.getById(specializationId)
   }*/
