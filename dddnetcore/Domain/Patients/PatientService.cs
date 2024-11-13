@@ -50,6 +50,15 @@ namespace dddnetcore.Domain.Patients
             return new PatientDto(patient);
         }
 
+        public async Task<List<PatientDto>> GetAllAsync()
+        {
+            var list = await this._repo.GetAllAsync();
+
+            List<PatientDto> patientsDto = list.ConvertAll<PatientDto>(patient => new PatientDto(patient));
+
+            return patientsDto;
+        }
+
         public async Task<PatientDto> GetByEmail(string patientEmail)
         {
             var patient = await this._repo.GetByEmailAsync(patientEmail) ?? throw new NullReferenceException($"Not Found Patient with email: {patientEmail}");

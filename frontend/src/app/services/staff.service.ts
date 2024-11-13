@@ -49,9 +49,13 @@ export class StaffService {
     return this.httpClient.post<Staff>(this.apiUrl, staff, {headers: headers});
   }
 
-  deactivate(staffId: string) {
+  deactivate(staffId: string) : Observable<Staff> {
     const token = localStorage.getItem('accessToken'); 
     const headers = this.header.set('Authorization', `Bearer ${token}`);
-    this.httpClient.delete<Staff>(`this.apiUrl/${staffId}`, {headers: headers});
+    console.log(staffId);
+    //const algo = this.httpClient.delete<Staff>(`${this.apiUrl}/${staffId}`, {headers: headers});
+    const algo = this.httpClient.delete<Staff>(`https://localhost:5001/api/staffs/D202400003`, {headers: headers});
+    console.log(algo);
+    return algo;
   }
 }

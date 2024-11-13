@@ -25,7 +25,7 @@ import { Patient } from '../../../../domain/Patient';
 export class ModalCreatePatientComponent implements OnInit{
 
   patientForm: FormGroup;
-  @Output() patientCreated = new EventEmitter<Patient>();
+  @Output() patientCreated = new EventEmitter<CreatingPatientDto>();
 
   constructor(private patientService: PatientService, private fb: FormBuilder
   ) {
@@ -33,11 +33,11 @@ export class ModalCreatePatientComponent implements OnInit{
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       fullName: ['', Validators.required],
-      birthDate: [null, [Validators.required]],
+      dateOfBirth: ['', [Validators.required]],
       gender: ['', [Validators.required]],
-      emergencyContact: ['', [Validators.required]],
-      phoneNumber: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      emergencyContact: ['', [Validators.required, Validators.pattern('^9[1236]\\d{7}$')]],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^9[1236]\\d{7}$')]],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -66,7 +66,7 @@ export class ModalCreatePatientComponent implements OnInit{
         firstName: this.patientForm.value.firstName,
         lastName: this.patientForm.value.lastName,
         fullName: this.patientForm.value.fullName,
-        birthDate: this.patientForm.value.birthDate,
+        dateOfBirth: this.patientForm.value.dateOfBirth,
         gender: this.patientForm.value.gender,
         emergencyContact: this.patientForm.value.emergencyContact,
         phoneNumber: this.patientForm.value.phoneNumber,
@@ -76,6 +76,7 @@ export class ModalCreatePatientComponent implements OnInit{
       this.patientService.add(patient).subscribe(
         (response) => {
           console.log("Patient added successfully:", response);
+          this.patientCreated.emit(patient);
           this.visible = false;
           this.patientForm.reset();
         },

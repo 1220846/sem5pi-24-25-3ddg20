@@ -9,11 +9,9 @@ namespace DDDSample1.Domain.OperationRequests
 
         public DeadlineDate(DateTime date)
         {
-            if (date <= DateTime.Now)
-                throw new BusinessRuleValidationException("The deadline date must be in the future!");
-
             this.Date = date;
         }
+
 
         public static DeadlineDate FromString(string dateString)
         {
@@ -47,7 +45,7 @@ namespace DDDSample1.Domain.OperationRequests
 
         public override string ToString()
         {
-            return Date.ToString("yyyy-MM-dd HH:mm:ss");
+            return Date.ToString("dd/MM/yyyy");
         }
     }
 }

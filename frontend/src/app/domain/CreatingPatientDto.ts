@@ -1,5 +1,5 @@
 export interface CreatingPatientDto{
-    birthDate: string;
+    dateOfBirth: string;
     emergencyContact: string;
     gender: string;
     email: string;
