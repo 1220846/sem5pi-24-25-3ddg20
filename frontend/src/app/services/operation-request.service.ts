@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OperationRequest } from '../domain/OperationRequests';
+import { CreatingOperationRequestDto } from '../domain/CreatingOperationRequestDto';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class OperationRequestService {
 
-  private apiUrl = 'http://localhost:5000/api/operationRequests/filter';
+  private apiUrl = 'https://localhost:5001/api/operationRequests';
+  private header: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient) {}
 
@@ -39,7 +42,7 @@ export class OperationRequestService {
     return this.http.get<OperationRequest[]>(`${this.apiUrl}/filter`, { params });
   }
 
-  update(patientId:string, priority:string, Deadline:string){
-    
+  add(operationType: CreatingOperationRequestDto):Observable<OperationRequest>{
+    return this.http.post<OperationRequest>(this.apiUrl, operationType, { headers: this.header });
   }
 }

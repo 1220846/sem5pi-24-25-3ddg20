@@ -31,4 +31,15 @@ export class OperationTypeService {
     return this.httpClient.post<OperationType>(this.apiUrl, operationType, { headers: this.header });
   }
 
+  getAll(): Observable<OperationType[]> {
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+
+    return this.httpClient.get<OperationType[]>(this.apiUrl, {headers: headers});
+  }
+
+  getById(id: string): Observable<OperationType> {
+    return this.httpClient.get<OperationType>(`${this.apiUrl}/${id}`);
+  }
+
 }
