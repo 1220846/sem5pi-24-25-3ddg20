@@ -34,8 +34,16 @@ namespace DDDSample1.Controllers
             return patient;
         }
 
+        // GET: api/patients
+        [HttpGet]
+        [Authorize(Policy = "RequiredBackofficeRole")]
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll()
+        {
+            return await _service.GetAllAsync();
+        }
+
         [HttpPost]
-        //[Authorize(Policy = "RequiredAdminRole")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> Create(CreatingPatientDto dto) {
             try {
                 PatientDto patient = await _service.AddAsync(dto);
@@ -91,15 +99,15 @@ namespace DDDSample1.Controllers
             
         }
 
-        [HttpGet]
-        //[Authorize(Policy = "RequiredAdminRole")]
+        [HttpGet("filter")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients(string firstName = null, string lastName = null, string fullName = null, string email = null, string birthDate = null,
         string phoneNumber = null, string id = null, string gender = null, int pageNumber = 1, int pageSize = 10) {
             return await _service.GetPatientsAsync(firstName, lastName, fullName, email, birthDate, phoneNumber, id, gender, pageNumber, pageSize);
         }
 
         [HttpGet("count")]
-        //[Authorize(Policy = "RequiredAdminRole")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<int>> GetPatientCount()
         {
             try
@@ -111,6 +119,19 @@ namespace DDDSample1.Controllers
             {
                 return BadRequest(new { ex.Message });
             }
+        }
+
+        [HttpGet("byemail/{email}")]
+        public async Task<ActionResult<PatientDto>> GetByEmail(string email)
+        {
+            var patient = await _service.GetByEmail(email);
+
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return patient;
         }
     }
 }

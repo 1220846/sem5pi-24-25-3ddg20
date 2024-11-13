@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Patient } from '../domain/Patient';
-import { first, Observable } from 'rxjs';
+import { BehaviorSubject, first, Observable } from 'rxjs';
 import { CreatingPatientDto } from '../domain/CreatingPatientDto';
 
 @Injectable({
@@ -10,12 +10,15 @@ import { CreatingPatientDto } from '../domain/CreatingPatientDto';
 export class PatientService {
   private apiUrl = 'https://localhost:5001/api/patients';
   private header: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private patientSubject = new BehaviorSubject<Patient | null>(null);
 
   constructor(private httpClient: HttpClient) { 
   }
 
   add(patient: CreatingPatientDto):Observable<Patient>{
-    return this.httpClient.post<Patient>(this.apiUrl, patient, { headers: this.header });
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.post<Patient>(this.apiUrl, patient, { headers: headers });
   }
 
   getPage(firstName?: string, lastName?: string, fullName?: string, email?: string, birthDate?: string, phoneNumber?: string,
@@ -42,10 +45,32 @@ export class PatientService {
     if (pageSize) 
       params = params.set('pageSize', pageSize);
     
-    return this.httpClient.get<Patient[]>(`${this.apiUrl}/`, { params }) 
+    return this.httpClient.get<Patient[]>(`${this.apiUrl}/filter`, { params, headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`}) }) 
   }
 
   patientCount(): Observable<number> {
-    return this.httpClient.get<number>(`${this.apiUrl}/count`, { headers: this.header });
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.get<number>(`${this.apiUrl}/count`, { headers: headers });
   }
+
+  getPatientByEmail(email:string): Observable<Patient> {
+    return this.httpClient.get<Patient>(`${this.apiUrl}/byemail/${email}`);
+  }
+
+  setPatient(patient: Patient | null): void {
+    this.patientSubject.next(patient);
+  }
+
+  getPatient(): Observable<Patient | null> {
+    return this.patientSubject.asObservable();
+  }
+  
+  getAll(): Observable<Patient[]> {
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    
+    return this.httpClient.get<Patient[]>(this.apiUrl, {headers: headers});
+  }
+  
 }

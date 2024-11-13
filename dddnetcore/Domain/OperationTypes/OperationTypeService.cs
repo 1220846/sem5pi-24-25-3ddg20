@@ -32,6 +32,8 @@ namespace DDDSample1.Domain.OperationTypes
             this._systemLogRepository = systemLogRepository;
         }
 
+    
+
         public async Task<OperationTypeDto> GetByIdAsync(OperationTypeId id)
         {
             var operationType = await this._repo.GetByIdAsync(id);
@@ -80,6 +82,18 @@ namespace DDDSample1.Domain.OperationTypes
             SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()});
 
             return operationTypesDto;
+        }
+
+        public async Task<List<OperationTypeDto>> GetAllAsync()
+        {
+            var list = await this._repo.GetAllAsync();
+            
+            List<OperationTypeDto> listDto = list.ConvertAll<OperationTypeDto>(operationType => 
+                new OperationTypeDto {Id = operationType.Id.AsGuid(), Name = operationType.Name.Name, EstimatedDuration = operationType.EstimatedDuration.Minutes, AnesthesiaTime = operationType.AnesthesiaTime.Minutes,CleaningTime = operationType.CleaningTime.Minutes, SurgeryTime = operationType.SurgeryTime.Minutes,OperationTypeStatus = operationType.OperationTypeStatus.ToString(),
+            StaffSpecializationDtos = operationType.OperationTypeSpecializations.Select(ots => new StaffSpecializationDto {
+            SpecializationId = ots.Specialization.Id.AsGuid().ToString(),SpecializationName = ots.Specialization.Name.Name,NumberOfStaff = ots.NumberOfStaff.Number }).ToList()});
+
+            return listDto;
         }
 
         public async Task<OperationTypeDto> RemoveAsync(Guid id){
