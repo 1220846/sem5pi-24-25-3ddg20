@@ -59,7 +59,7 @@ namespace DDDSample1.Controllers{
 
         // GET: api/operationRequests/filter
         [HttpGet("filter")]
-        [Authorize(Policy = "RequiredDoctorRole")]
+        //[Authorize(Policy = "RequiredDoctorRole")]
         public async Task<ActionResult<IEnumerable<OperationRequestDto>>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority=null ,string status = null)
         {
             return await _service.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);

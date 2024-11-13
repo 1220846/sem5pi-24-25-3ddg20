@@ -92,12 +92,13 @@ namespace DDDSample1.Domain.OperationRequests
 
         public async Task<List<OperationRequestDto>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority=null ,string status = null){
             var operationRequests =await _repoOperationRequest.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);
+            Console.Write(operationRequests);
             List<OperationRequestDto> operationRequestsDto = operationRequests.ConvertAll<OperationRequestDto>(operationRequest => new OperationRequestDto{
                         Id = operationRequest.Id.AsGuid(),
                         DoctorId = operationRequest.StaffId.Id, 
                         OperationTypeId=operationRequest.OperationTypeId.Value, 
                         MedicalRecordNumber=operationRequest.MedicalRecordNumber.Id,
-                        Deadline=operationRequest.DeadlineDate.Date.ToString(), 
+                        Deadline=operationRequest.DeadlineDate.ToString(), 
                         Priority=operationRequest.Priority.ToString(), 
                         Status=operationRequest.Status.ToString()});
             return operationRequestsDto;

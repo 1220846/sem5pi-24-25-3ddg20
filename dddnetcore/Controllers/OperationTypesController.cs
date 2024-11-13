@@ -19,6 +19,14 @@ namespace DDDSample1.Controllers{
             _service = service;
         }
 
+        // GET: api/operationTypes
+        [HttpGet]
+        [Authorize(Policy = "RequiredBackofficeRole")]
+        public async Task<ActionResult<IEnumerable<OperationTypeDto>>> GetAll()
+        {
+            return await _service.GetAllAsync();
+        }
+
         // GET: api/operationtypes/
         [HttpGet("{id}")]
         public async Task<ActionResult<OperationTypeDto>> GetGetById(Guid id)

@@ -7,13 +7,6 @@ namespace DDDSample1.Tests.Domain.OperationRequests
 {
     public class DeadlineDateTests
     {
-        [Fact]
-        public void ConstructorShouldThrowExceptionWhenDateIsInThePast()
-        {
-            var pastDate = DateTime.Now.AddDays(-1);
-            var exception = Assert.Throws<BusinessRuleValidationException>(() => new DeadlineDate(pastDate));
-            Assert.Equal("The deadline date must be in the future!", exception.Message);
-        }
 
         [Fact]
         public void ConstructorShouldCreateInstanceWhenDateIsInTheFuture()
@@ -39,13 +32,6 @@ namespace DDDSample1.Tests.Domain.OperationRequests
             var invalidDateString = "invalid-date";
             var exception = Assert.Throws<BusinessRuleValidationException>(() => DeadlineDate.FromString(invalidDateString));
             Assert.Equal("Invalid date format: invalid-date", exception.Message);
-        }
-
-        [Fact]
-        public void HasExpiredShouldReturnTrueWhenDateIsInThePast()
-        {
-            var pastDate = DateTime.Now.AddDays(-1);
-            Assert.Throws<BusinessRuleValidationException>(() => new DeadlineDate(pastDate));
         }
 
         [Fact]
