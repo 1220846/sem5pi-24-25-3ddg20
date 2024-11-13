@@ -213,7 +213,7 @@ namespace DDDSample1.Tests
                 DoctorId=doctor.Id.Id,
                 OperationTypeId=operationType.Id.Value,
                 MedicalRecordNumber=patient.Id.Id,
-                Deadline=new DeadlineDate(DateTime.UtcNow.AddDays(1)).ToString(),
+                Deadline=DateTime.UtcNow.AddDays(1).ToString(),
                 Priority=Priority.ELECTIVE.ToString()};
 
             
@@ -243,7 +243,7 @@ namespace DDDSample1.Tests
                 DoctorId = doctor.Id.Id,
                 OperationTypeId = new OperationTypeId(Guid.NewGuid()).ToString(),
                 MedicalRecordNumber = patient.Id.Id,
-                Deadline = new DeadlineDate(DateTime.UtcNow.AddDays(1)).ToString(),
+                Deadline = DateTime.UtcNow.AddDays(1).ToString(),
                 Priority = Priority.ELECTIVE.ToString()
             };
 
@@ -273,7 +273,7 @@ namespace DDDSample1.Tests
                 DoctorId = new StaffId("D202400010").ToString(), 
                 OperationTypeId = operationType.Id.Value,
                 MedicalRecordNumber = patient.Id.Id,
-                Deadline = new DeadlineDate(DateTime.UtcNow.AddDays(1)).ToString(),
+                Deadline = DateTime.UtcNow.AddDays(1).ToString(),
                 Priority = Priority.ELECTIVE.ToString()
             };
 
@@ -300,7 +300,7 @@ namespace DDDSample1.Tests
                 DoctorId = doctor.Id.Id,
                 OperationTypeId = operationType.Id.Value,
                 MedicalRecordNumber = Guid.NewGuid().ToString(),
-                Deadline = new DeadlineDate(DateTime.UtcNow.AddDays(1)).ToString(),
+                Deadline = DateTime.UtcNow.AddDays(1).ToString(),
                 Priority = Priority.ELECTIVE.ToString()
             };
 
@@ -331,7 +331,7 @@ namespace DDDSample1.Tests
                 DoctorId=doctor.Id.Id,
                 OperationTypeId=operationType.Id.Value,
                 MedicalRecordNumber=patient.Id.Id,
-                Deadline=new DeadlineDate(DateTime.UtcNow.AddDays(1)).ToString(),
+                Deadline = DateTime.UtcNow.AddDays(1).ToString(),
                 Priority=Priority.ELECTIVE.ToString()};
 
             await Assert.ThrowsAsync<BusinessRuleValidationException>(async () => 
