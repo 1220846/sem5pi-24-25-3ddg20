@@ -73,7 +73,6 @@ export default class Maze {
                         const loadDoorPromise = new Promise((resolve, reject) => {
                             loader.load("/models/gltf/Doors/double_doors.glb", (glb) => {
                                 this.door = { object: glb.scene };
-                                this.loadedDoor = true;
                                 console.log("Door loaded successfully:", this.door);
                                 resolve();
                             }, undefined, (error) => {
@@ -93,7 +92,26 @@ export default class Maze {
                     }
                     // Tables
                     if (Math.floor(description.map[j][i] / 100) == 5) {
-                        // TODO
+                        const loader = new GLTFLoader();
+                        const loadTablePromise = new Promise((resolve, reject) => {
+                            loader.load("/models/gltf/Table/hospital_bed2.glb", (glb) => {
+                                this.table = { object: glb.scene };
+                                console.log("Table loaded successfully:", this.table);
+                                resolve();
+                            }, undefined, (error) => {
+                                console.error(`Error loading table model (${error}).`);
+                                reject(error);
+                            });
+                        });
+                        const tableId = description.map[j][i] % 100;
+                        loadTablePromise.then(() => {
+                            this.object.add(this.table.object);
+                            this.table.object.scale.set(0.7, 0.7, 0.7);
+                            this.table.object.position.set(i - description.size.width / 2.0 - 1.9, 0.0, j - description.size.height / 2.0 - 3.125);
+                            this.table.object.rotation.y = (Math.PI * (doorId % 2 == 0 ? 1 : 3)) / 2;
+                        }).catch((error) => {   
+                            console.error("Error loading table model:", error);
+                        });
                     }
                 }
             }
