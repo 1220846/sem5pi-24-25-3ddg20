@@ -19,7 +19,7 @@ import Maze from "./maze_template.js";
 import Player from "./player_template.js";
 import Lights from "./lights_template.js";
 import Fog from "./fog_template.js";
-import Camera from "./camera_template.js";
+import Camera from "./camera.js";
 import Animations from "./animations_template.js";
 import UserInterface from "./user_interface_template.js";
 
