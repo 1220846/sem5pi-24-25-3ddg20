@@ -10,6 +10,7 @@ import { CreatingUserPatientDto } from '../../../domain/CreatingUserPatientDto';
 import { UserService } from '../../../services/user.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { passwordStrengthValidator } from '../../../domain/PasswordStrengthValidator';
 
 @Component({
   selector: 'app-modal-create-user-patient',
@@ -31,8 +32,8 @@ export class ModalCreateUserPatientComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private userService: UserService,private messageService: MessageService) {
     this.userPatientForm = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, passwordStrengthValidator()]],
       repeatPassword: ['', Validators.required],
         }, { validator: this.passwordMatchValidator });
   }
@@ -43,8 +44,13 @@ export class ModalCreateUserPatientComponent implements OnInit {
   }
 
   passwordMatchValidator(form: FormGroup) {
-    return form.get('password')?.value === form.get('repeatPassword')?.value
-      ? null : { 'mismatch': true };
+    const password = form.get('password')?.value;
+    const repeatPassword = form.get('repeatPassword')?.value;
+        if (!password && !repeatPassword) {
+      return null;
+    }
+
+    return password === repeatPassword ? null : { 'mismatch': true };
   }
 
   createAccount(){
@@ -58,15 +64,14 @@ export class ModalCreateUserPatientComponent implements OnInit {
         (response) => {
           this.visible = false; 
           this.userPatientForm.reset();
-          this.messageService.add({severity:'success', summary: 'Success', detail: 'Account registered successfully',life: 2000});
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'Account registered successfully',life: 3000});
         },
         (error) => {
-          console.error("Error creating account:", error);
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to register account',life: 2000});
+          this.messageService.add({severity:'error', summary: 'Error', detail: error.message ,life: 3000});
         }
       )
     } else {
-      console.warn("Form is invalid!");
+      this.messageService.add({severity: 'warn',summary: 'Warning',detail: 'Invalid Data in forms!',life: 3000});
     }
   }
 }
