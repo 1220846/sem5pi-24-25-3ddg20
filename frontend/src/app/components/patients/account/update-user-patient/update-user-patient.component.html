@@ -1,119 +1,130 @@
-<div class="card flex justify-content-center mt-4 mb-3">
+<div class="card flex justify-content-center mt-4 mb-5">
+    <p-toast></p-toast>
     <p-card header="Your Information" [style]="{ width: '55rem' }">
         <div class="flex justify-content-end">
-            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="toggleEdit()" [disabled]="isEditing"></button>
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="toggleEdit()"
+                [disabled]="isEditing"></button>
         </div>
         <ng-template pTemplate="content">
             <form [formGroup]="patientForm" class="form">
                 <div class="p-fluid content">
                     <div class="flex flex-wrap gap-7">
-                        <div class="flex flex-column gap-2 mb-4 input-large">
+                        <div class="flex flex-column gap-2 mb-3 input-large">
                             <label for="username">Username</label>
-                            <input pInputText id="username" formControlName="username" aria-describedby="username-help"/>
+                            <input pInputText id="username" formControlName="username"
+                                aria-describedby="username-help" />
                         </div>
-                        <div class="flex flex-column gap-2 mb-4 input-large">
+                        <div class="flex flex-column gap-2 mb-3 input-large">
                             <label for="email">Email</label>
-                            <input pInputText id="email" formControlName="email" aria-describedby="email-help"/>
+                            <input pInputText id="email" formControlName="email" aria-describedby="email-help" />
                             <small
                                 *ngIf="patientForm.controls['email'].invalid && (patientForm.controls['email'].dirty || patientForm.controls['email'].touched)"
                                 class="p-error">
-                                Email is required.
+                                Valid email is required.
                             </small>
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-7">
-                        <div class="flex flex-column gap-2 mb-4 input-small">
+                        <div class="flex flex-column gap-2 mb-3 input-small">
                             <label for="firstName">First Name</label>
                             <input pInputText id="firstName" formControlName="firstName"
-                                aria-describedby="firstName-help"/>
+                                aria-describedby="firstName-help" />
                             <small
                                 *ngIf="patientForm.controls['firstName'].invalid && (patientForm.controls['firstName'].dirty || patientForm.controls['firstName'].touched)"
                                 class="p-error">
-                                FirstName is required.
+                                Valid firstName is required.
                             </small>
                         </div>
-                        <div class="flex flex-column gap-2 mb-4 input-small">
+                        <div class="flex flex-column gap-2 mb-3 input-small">
                             <label for="lastName">Last Name</label>
                             <input pInputText id="lastName" formControlName="lastName"
-                                aria-describedby="lastName-help"/>
+                                aria-describedby="lastName-help" />
                             <small
                                 *ngIf="patientForm.controls['lastName'].invalid && (patientForm.controls['lastName'].dirty || patientForm.controls['lastName'].touched)"
                                 class="p-error">
-                                LastName is required.
+                                Valid last name is required.
                             </small>
                         </div>
-                        <div class="flex flex-column gap-2 mb-4 input-large">
+                        <div class="flex flex-column gap-2 mb-3 input-large">
                             <label for="fullName">Full Name</label>
                             <input pInputText id="fullName" formControlName="fullName"
-                                aria-describedby="fullName-help"/>
+                                aria-describedby="fullName-help" />
                             <small
                                 *ngIf="patientForm.controls['fullName'].invalid && (patientForm.controls['fullName'].dirty || patientForm.controls['fullName'].touched)"
                                 class="p-error">
-                                LastName is required.
+                                Valid full name is required.
                             </small>
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-7">
-                        <div class="flex flex-column gap-2 mb-4 input-small">
+                        <div class="flex flex-column gap-2 mb-3 input-small">
                             <label for="birthDate">Birth Date</label>
-                            <input pInputText 
-                                   id="birthDate" 
-                                   formControlName="birthDate"/>
+                            <input pInputText id="birthDate" formControlName="birthDate" />
                         </div>
-                        <div class="flex flex-column gap-2 mb-4 input-small">
+                        <div class="flex flex-column gap-2 mb-3 input-small">
                             <label for="gender">Gender</label>
-                            <input pInputText 
-                                   id="gender" 
-                                   formControlName="gender"/>
-                          </div>  
-                          <div class="flex flex-column gap-2 mb-5 input-medium">
+                            <input pInputText id="gender" formControlName="gender" />
+                        </div>
+                        <div class="flex flex-column gap-2 mb-3 input-medium">
                             <label for="medicalRecordNumber">Medical Record Number</label>
-                            <input pInputText id="medicalRecordNumber" formControlName="medicalRecordNumber" aria-describedby="medicalRecordNumber-help" />
-                        </div>                       
-                    </div>   
+                            <input pInputText id="medicalRecordNumber" formControlName="medicalRecordNumber"
+                                aria-describedby="medicalRecordNumber-help" />
+                        </div>
+                    </div>
                     <div class="flex flex-wrap gap-7">
-                        <div class="flex flex-column gap-2 mb-4 input-small">
+                        <div class="flex flex-column gap-2 mb-3 input-small">
                             <label for="phoneNumber">Phone Number</label>
                             <input pInputText id="phoneNumber" formControlName="phoneNumber" />
                             <small
                                 *ngIf="patientForm.controls['phoneNumber'].invalid && (patientForm.controls['phoneNumber'].dirty || patientForm.controls['phoneNumber'].touched)"
                                 class="p-error">
-                                Insert Phone Number.
+                                Valid phone number is required.
                             </small>
                         </div>
-                        <div class="flex flex-column gap-2 mb-4 input-small">
+                        <div class="flex flex-column gap-2 mb-3 input-small">
                             <label for="emergencyContact">Emergency Contact</label>
-                            <input pInputText id="emergencyContact" formControlName="emergencyContact"/>
+                            <input pInputText id="emergencyContact" formControlName="emergencyContact" />
                         </div>
                         <div class="flex justify-content-center mt-4">
-                            <p-button label="Reset Password" icon="pi pi-refresh" (click)="openResetPasswordDialog()" [disabled]="!isEditing"></p-button>
+                            <p-button label="Reset Password" icon="pi pi-refresh" (click)="openResetPasswordDialog()"
+                                [disabled]="!isEditing"></p-button>
                         </div>
-                        <p-dialog [(visible)]="resetPasswordDialogVisible" header="Reset Password" [modal]="true" [closable]="false" [style]="{ width: '25rem' }">
+                        <p-dialog [(visible)]="resetPasswordDialogVisible" header="Reset Password" [modal]="true"
+                            [closable]="false" [style]="{ width: '25rem' }">
                             <div class="flex flex-column gap-2 mb-2 input-large">
                                 <label for="password">Password</label>
-                                <p-password class="password" formControlName="password" [toggleMask]="true"/>
-                                <small *ngIf="patientForm.controls['password'].invalid && (patientForm.controls['password'].dirty || patientForm.controls['password'].touched)" class="p-error">
-                                    Password is required.
+                                <p-password class="password" formControlName="password" [toggleMask]="true"
+                                    [feedback]="false" />
+                                <small *ngIf="patientForm.controls['password'].value && 
+                  patientForm.controls['password'].touched && 
+                  patientForm.controls['password'].errors?.['passwordStrength']" class="p-error">
+                                    Password must be at least 8 characters long, with an uppercase letter, a lowercase
+                                    letter, a number, and a special character.
                                 </small>
                             </div>
                             <div class="flex flex-column gap-2 mb-2 input-large">
                                 <label for="repeat-password">Repeat Password</label>
-                                <p-password [appendTo]="'body'" formControlName="repeatPassword" [toggleMask]="true" [feedback]="false"/>
-                                <small *ngIf="patientForm.hasError('mismatch') && (patientForm.controls['repeatPassword'].dirty || patientForm.controls['repeatPassword'].touched)" class="p-error">
+                                <p-password [appendTo]="'body'" formControlName="repeatPassword" [toggleMask]="true"
+                                    [feedback]="false" />
+                                <small
+                                    *ngIf="patientForm.controls['repeatPassword'].hasError('mismatch') && (patientForm.controls['repeatPassword'].dirty || patientForm.controls['repeatPassword'].touched)"
+                                    class="p-error">
                                     Passwords do not match.
                                 </small>
                             </div>
                             <p-footer>
-                                <div class="flex justify-content-center gap-2 dialog-footer">
-                                    <p-button label="Cancel" severity="secondary" (onClick)="closeResetPasswordDialog()" />
+                                <div class="flex justify-content-center gap-4 dialog-footer">
+                                    <p-button label="Cancel" severity="secondary"
+                                        (onClick)="closeResetPasswordDialog()" />
                                     <p-button label="Save" (onClick)="resetPassword()" />
                                 </div>
                             </p-footer>
                         </p-dialog>
                     </div>
                     <div *ngIf="isEditing" class="flex justify-content-center gap-2 mt-4">
-                        <p-button label="Save" (click)="saveChanges()" icon="pi pi-check"></p-button>
-                        <p-button label="Cancel" (click)="cancelChanges()" icon="pi pi-times" severity="secondary"></p-button>
+                        <p-button label="Save" (click)="saveData()" icon="pi pi-check"></p-button>
+                        <p-button label="Cancel" (click)="cancelChanges()" icon="pi pi-times"
+                            severity="secondary"></p-button>
                     </div>
                 </div>
             </form>

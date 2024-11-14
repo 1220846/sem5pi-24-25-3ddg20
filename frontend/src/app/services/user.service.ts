@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { CreatingUserPatientDto } from '../domain/CreatingUserPatientDto';
 import { LoginRequestDto } from '../domain/LoginRequestDto';
 import { Login } from '../domain/Login';
 import { User } from '../domain/User';
+import { UpdateUserPatientDto } from '../domain/UpdateUserPatientDto';
 
 @Injectable({
   providedIn: 'root'
@@ -81,5 +82,15 @@ export class UserService {
     return this.httpClient.post<string>(`${this.apiUrl}/patients/request-delete/${username}`, {}, { headers, responseType: 'text' as 'json' });
   }
 
-  
+  updateUserPatient(username: string, updateUserPatientDto: UpdateUserPatientDto): Observable<User> {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    
+    return this.httpClient.put<User>(`${this.apiUrl}/patients/${username}`, updateUserPatientDto, { headers })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
 }
