@@ -105,12 +105,11 @@ export class ModalCreateOperationTypeComponent implements OnInit{
           this.messageService.add({severity:'success', summary: 'Success', detail: 'Operation type added successfully',life: 2000});
         },
         (error) => {
-          console.error("Error adding operation type:", error);
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to add operation type',life: 2000});
+          this.messageService.add({severity: 'error', summary: 'Error', detail: error, life: 3000});
         }
       );
     } else {
-      console.warn("Form is invalid!");
+      this.messageService.add({severity: 'warn', summary: 'Warning', detail: 'Invalid form data!', life: 3000});
     }
   }
 }

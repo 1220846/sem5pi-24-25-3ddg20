@@ -43,7 +43,7 @@ namespace DDDSample1.Controllers{
 
         // POST: api/operationtypes
         [HttpPost]
-        //[Authorize(Policy = "RequiredAdminRole")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<OperationTypeDto>> Create(CreatingOperationTypeDto dto)
         {
             try{
