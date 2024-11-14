@@ -148,12 +148,13 @@ export default class Camera {
             - mini-map view: "mini-map"
             - perspective projection: "perspective"
             - orthographic projection: "orthographic"
-        if (this.view != ...) { */
+        */
+        if (this.view != "mini-map") {
             this.setActiveProjection("perspective");
-        /* }
+        }
         else {
-            ...;
-        } */
+            this.setActiveProjection("orthographic");
+        }
     }
 
     getViewport() { // Converted from % to pixels
