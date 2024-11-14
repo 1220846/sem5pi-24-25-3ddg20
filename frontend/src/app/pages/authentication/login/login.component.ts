@@ -9,50 +9,54 @@ import { CommonModule } from '@angular/common';
 import { LoginRequestDto } from '../../../domain/LoginRequestDto';
 import { Router } from '@angular/router';
 import { ModalCreateUserPatientComponent } from '../modal-create-user-patient/modal-create-user-patient.component';
-        
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, CardModule, ButtonModule, PasswordModule, InputTextModule, FormsModule, ReactiveFormsModule, ModalCreateUserPatientComponent],
+  imports: [CommonModule, CardModule, ButtonModule, PasswordModule, InputTextModule, FormsModule, ReactiveFormsModule, ToastModule, ModalCreateUserPatientComponent],
+  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit{
-loginWithGoogle() {
-throw new Error('Method not implemented.');
-}
+export class LoginComponent implements OnInit {
+
   @ViewChild('create-user-patient') modalCreateUserPatientComponent!: ModalCreateUserPatientComponent;
 
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private userService: UserService,private router: Router) {
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private messageService: MessageService) {
     this.loginForm = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]});
+      email: ['',Validators.required, Validators.email],
+      password: ['', Validators.required]
+    });
   }
   ngOnInit(): void {
   }
 
-  login(){
-    if(this.loginForm.valid){
+  login() {
+    if (this.loginForm.valid) {
       const loginRequestDto: LoginRequestDto = {
-        username : this.loginForm.value.email,
-        password : this.loginForm.value.password
-      }
-
-      this.userService.login(loginRequestDto).subscribe(
-        (response) => {
+        username: this.loginForm.value.email,
+        password: this.loginForm.value.password
+      };
+  
+      this.userService.login(loginRequestDto).subscribe({
+        next: (response) => {
           this.loginForm.reset();
           this.redirect(response.roles);
         },
-        (error) => {
-          console.error("Error login:", error);
+        error: (error) => {
+          this.messageService.add({severity: 'error',summary: 'Login Failed',detail: error.message,life: 3000});
         }
-      )
+      });
     } else {
-      console.warn("Form is invalid!");
+      this.messageService.add({severity: 'warn',summary: 'Warning',detail: 'Invalid Data in forms!',life: 3000});
     }
+  }
+
+  loginWithGoogle() {
   }
 
   private redirect(roles: string[]) {

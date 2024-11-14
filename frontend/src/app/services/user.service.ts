@@ -15,14 +15,14 @@ export class UserService {
   private apiUrl = 'https://localhost:5001/api/users';
   private header: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  private userSubject = new BehaviorSubject<User|null>(null);
+  private userSubject = new BehaviorSubject<User | null>(null);
   public readonly user$ = this.userSubject.asObservable();
-  
-  constructor(private httpClient: HttpClient) { 
+
+  constructor(private httpClient: HttpClient) {
     this.getLoggedInUser();
   }
 
-  createUserPatient(user: CreatingUserPatientDto):Observable<User>{
+  createUserPatient(user: CreatingUserPatientDto): Observable<User> {
     return this.httpClient.post<User>(`${this.apiUrl}/patients`, user, { headers: this.header });
   }
 
@@ -30,12 +30,12 @@ export class UserService {
     return this.httpClient.post<Login>(`${this.apiUrl}/login`, loginRequest, { headers: this.header })
       .pipe(
         tap((response: Login) => {
-            localStorage.setItem('accessToken', response.loginToken); 
-            localStorage.setItem('roles', JSON.stringify(response.roles));
-            this.getLoggedInUser();
-        }),catchError((error) => {
-          console.error('Login failed:', error);
-          return of(error); 
+          localStorage.setItem('accessToken', response.loginToken);
+          localStorage.setItem('roles', JSON.stringify(response.roles));
+          this.getLoggedInUser();
+        }),
+        catchError((error) => {
+          return throwError(() => new Error(error.error.message));
         })
       );
   }
@@ -49,11 +49,11 @@ export class UserService {
     localStorage.removeItem('roles');
     this.userSubject.next(null);
   }
-  
+
   getLoggedInUser(): void {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      this.userSubject.next(null); 
+      this.userSubject.next(null);
       return;
     }
 
@@ -68,7 +68,7 @@ export class UserService {
           this.userSubject.next(null);
           return of(null);
         })
-      ).subscribe(); 
+      ).subscribe();
   }
 
   loggedInUser(): Observable<User | null> {
@@ -76,16 +76,16 @@ export class UserService {
   }
 
   deleteUserPatientAccount(username: string): Observable<string> {
-    const token = localStorage.getItem('accessToken'); 
+    const token = localStorage.getItem('accessToken');
     const headers = this.header.set('Authorization', `Bearer ${token}`);
-  
+
     return this.httpClient.post<string>(`${this.apiUrl}/patients/request-delete/${username}`, {}, { headers, responseType: 'text' as 'json' });
   }
 
   updateUserPatient(username: string, updateUserPatientDto: UpdateUserPatientDto): Observable<User> {
-    const token = localStorage.getItem('accessToken'); 
+    const token = localStorage.getItem('accessToken');
     const headers = this.header.set('Authorization', `Bearer ${token}`);
-    
+
     return this.httpClient.put<User>(`${this.apiUrl}/patients/${username}`, updateUserPatientDto, { headers })
       .pipe(
         catchError((error) => {
