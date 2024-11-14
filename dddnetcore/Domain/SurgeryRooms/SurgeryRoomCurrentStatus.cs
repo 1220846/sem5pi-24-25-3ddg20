@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace dddnetcore.Domain.SurgeryRoom
+namespace dddnetcore.Domain.SurgeryRooms
 {
     public enum SurgeryRoomCurrentStatus
     {

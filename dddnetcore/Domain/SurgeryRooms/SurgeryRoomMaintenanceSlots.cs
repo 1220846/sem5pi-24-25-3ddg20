@@ -1,16 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
 
-namespace dddnetcore.Domain.SurgeryRoom
+namespace dddnetcore.Domain.SurgeryRooms
 {
     public class SurgeryRoomMaintenanceSlots : IValueObject {
     
         public String MaintenanceSlots {get; private set;}
 
         public SurgeryRoomMaintenanceSlots(String MaintenanceSlots) {
+            if (String.IsNullOrEmpty(MaintenanceSlots))
+                throw new BusinessRuleValidationException("Maintenance Slots cannot be null or empty");
+            this.MaintenanceSlots = MaintenanceSlots;
         }
 
         public override bool Equals(object obj){
