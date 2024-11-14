@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
 
-namespace dddnetcore.Domain.SurgeryRoom
+namespace dddnetcore.Domain.SurgeryRooms
 {
     public class SurgeryRoom : Entity<RoomNumber>, IAggregateRoot {
-        
-        public RoomNumber RoomNumber {get; private set;}
+    
         public RoomType RoomType {get; private set;}
         public SurgeryRoomCapacity RoomCapacity {get; private set;}
         public SurgeryRoomMaintenanceSlots MaintenanceSlots {get; private set;}
@@ -26,7 +21,7 @@ namespace dddnetcore.Domain.SurgeryRoom
             SurgeryRoomAssignedEquipment assignedEquipment,
             SurgeryRoomCurrentStatus currentStatus
         ) {
-            this.RoomNumber = roomNumber;
+            this.Id = roomNumber;
             this.RoomType = roomType;
             this.RoomCapacity = roomCapacity;
             this.MaintenanceSlots = maintenanceSlots;
@@ -40,7 +35,7 @@ namespace dddnetcore.Domain.SurgeryRoom
                 return false;
 
             var other = (SurgeryRoom)obj;
-            return Id.Equals(other.RoomNumber);
+            return Id.Equals(other.Id);
         }
 
         public override int GetHashCode()

@@ -2,17 +2,16 @@ using System;
 using System.Text.Json.Serialization;
 using DDDSample1.Domain.Shared;
 
-namespace dddnetcore.Domain.SurgeryRoom
+namespace dddnetcore.Domain.SurgeryRooms
 {
     public class RoomNumber : EntityId
     {
         public string Id {get; private set;}
 
         [JsonConstructor]
-        public RoomNumber(Guid value):base(value) {}
-
-        [JsonConstructor]
         public RoomNumber(String value):base(value) {
+            if (String.IsNullOrEmpty(value))
+                throw new BusinessRuleValidationException("Room number cannot be null or empty!");
             this.Id = value;
         }
 
@@ -27,9 +26,18 @@ namespace dddnetcore.Domain.SurgeryRoom
             Guid obj = (Guid) base.ObjValue;
             return obj.ToString();
         }
+        
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
 
-        public Guid AsGuid() {
-            return (Guid) base.ObjValue;
+            return Id.Equals(((RoomNumber)obj).Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }
