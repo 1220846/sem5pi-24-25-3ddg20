@@ -14,7 +14,8 @@ namespace dddnetcore.Infraestructure.Appointments
             builder.HasOne(b => b.OperationRequest).WithOne().HasForeignKey<Appointment>("OperationRequestId").IsRequired();
             builder.HasOne(b => b.SurgeryRoom).WithOne().HasForeignKey<Appointment>("RoomNumber").IsRequired();
             builder.Property(b => b.Status).HasConversion<string>().IsRequired();
-            builder.Property(b=>b.DateAndTime).HasConversion(b=>b.DateAndTime, b=>new AppoitmentDateAndTime(b)).IsRequired();
+            builder.Property(b => b.DateAndTime).HasConversion(b => b.DateAndTime, b => new AppoitmentDateAndTime(b)).IsRequired();
+            builder.Property(b => b.DateOfBirth).HasConversion(b => b.Date, b => new DateOfBirth(b));
         }
     }
 }
