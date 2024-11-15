@@ -6,6 +6,9 @@ namespace DDDSample1.Domain.Appointments
     public class AppoitmentDateAndTime : IValueObject
     {
         public DateTime DateAndTime{get; private set;}
+
+        private AppoitmentDateAndTime() { }
+
         public AppoitmentDateAndTime(DateTime date){
             this.DateAndTime = date;
         }

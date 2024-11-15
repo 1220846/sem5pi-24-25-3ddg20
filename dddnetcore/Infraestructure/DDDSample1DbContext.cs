@@ -24,6 +24,7 @@ using DDDSample1.Domain.SystemLogs;
 using DDDSample1.Domain.Appointments;
 using dddnetcore.Domain.SurgeryRooms;
 using dddnetcore.Infraestructure.SurgeryRooms;
+using dddnetcore.Infraestructure.Appointments;
 
 namespace DDDSample1.Infrastructure
 {
@@ -77,6 +78,7 @@ namespace DDDSample1.Infrastructure
             modelBuilder.ApplyConfiguration(new OperationRequestEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PatientEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SurgeryRoomEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentEntityTypeConfiguration());
         }
     }
 }
