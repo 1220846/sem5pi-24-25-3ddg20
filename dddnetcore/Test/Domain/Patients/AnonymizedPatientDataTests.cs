@@ -12,7 +12,6 @@ namespace DDDSample1.Tests.Domain.Patients
             var ageRange = "36-50";
             var gender = "Female";
             var medicalConditions = "Asthma";
-            var appointmentHistory = "2 appointments";
 
             var anonymizedData = new AnonymizedPatientData(ageRange, gender, medicalConditions);
 
