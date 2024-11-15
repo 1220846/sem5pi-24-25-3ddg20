@@ -78,7 +78,7 @@ namespace DDDSample1.Domain.Appointments
         public async Task<AppointmentDto> AddAsync(CreatingAppointmentDto dto)
         {
             
-            var surgeryRoom = await _surgeryRoomRepo.GetByIdAsync(dto.SurgeryRoomId) ?? throw new NullReferenceException("Not Found Surgery Room " + dto.SurgeryRoomId);      
+            /*var surgeryRoom = await _surgeryRoomRepo.GetByIdAsync(dto.SurgeryRoomId) ?? throw new NullReferenceException("Not Found Surgery Room " + dto.SurgeryRoomId);      
 
             var appointment = new Appointment(SurgeryRoom surgeryRoom,OperationRequest operationRequest, AppoitmentDateAndTime dateAndTime);
 
@@ -104,7 +104,8 @@ namespace DDDSample1.Domain.Appointments
                         Status = appointment.OperationRequest.Status.ToString()},
                 Status = EnumDescription.GetEnumDescription(appointment.Status),
                 DateAndTime = appointment.DateAndTime.DateAndTime
-            };
+            };*/
+            return null;
         }
     }
 }
