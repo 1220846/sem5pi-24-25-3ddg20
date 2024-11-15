@@ -22,6 +22,7 @@ using DDDSample1.Infrastructure.Patients;
 using DDDSample1.Domain.Patients;
 using DDDSample1.Domain.SystemLogs;
 using DDDSample1.Domain.Appointments;
+using dddnetcore.Infraestructure.Appointments;
 
 namespace DDDSample1.Infrastructure
 {
@@ -72,6 +73,7 @@ namespace DDDSample1.Infrastructure
             modelBuilder.ApplyConfiguration(new StaffEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OperationRequestEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PatientEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentEntityTypeConfiguration());
         }
     }
 }
