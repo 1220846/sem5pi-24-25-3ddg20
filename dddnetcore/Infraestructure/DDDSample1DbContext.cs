@@ -21,6 +21,7 @@ using DDDSample1.Infrastructure.OperationRequests;
 using DDDSample1.Infrastructure.Patients;
 using DDDSample1.Domain.Patients;
 using DDDSample1.Domain.SystemLogs;
+using DDDSample1.Domain.Appointments;
 
 namespace DDDSample1.Infrastructure
 {
@@ -48,6 +49,8 @@ namespace DDDSample1.Infrastructure
         public DbSet<OperationRequest> OperationRequest { get; set; }
 
         public DbSet<AnonymizedPatientData> AnonymizedPatientsData { get; set; }
+
+        public DbSet<Appointment> Appointments { get; set; }
 
         public DbSet<SystemLog> SystemLogs { get; set; }
 

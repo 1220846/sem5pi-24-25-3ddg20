@@ -1,0 +1,56 @@
+using System;
+using dddnetcore.Domain.SurgeryRooms;
+using DDDSample1.Domain.OperationRequests;
+using DDDSample1.Domain.Shared;
+
+namespace DDDSample1.Domain.Appointments{
+
+    public class Appointment : Entity<AppointmentId>, IAggregateRoot
+    {
+
+        public SurgeryRoom SurgeryRoom { get;  private set; }
+        public OperationRequest OperationRequest { get;  private set; }
+        public RoomNumber RoomNumber { get;  private set; }
+        public OperationRequestId OperationRequestId { get;  private set; }
+        public AppointmentStatus Status { get;  private set; }
+        public AppoitmentDateAndTime DateAndTime { get;  private set; }
+        private Appointment(){}
+
+        public Appointment(SurgeryRoom surgeryRoom,OperationRequest operationRequest, AppoitmentDateAndTime dateAndTime){
+            this.Id = new AppointmentId(Guid.NewGuid());
+            this.SurgeryRoom = surgeryRoom;
+            this.OperationRequest = operationRequest;
+            this.DateAndTime = dateAndTime;
+            this.Status = AppointmentStatus.SCHEDULED;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            var other = (Appointment)obj;
+            return Id.Equals(other.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public void Cancel(){
+            this.Status = AppointmentStatus.CANCELED;
+        }
+
+        public void Complete(){
+            this.Status = AppointmentStatus.COMPLETED;
+        }
+
+        public override string ToString() {
+            return $"Appointment: [ID={Id}, RoomNumber={SurgeryRoom?.Id?.Value ?? "N/A"}, " +
+                $"OperationRequestID={OperationRequest?.Id?.Value ?? "N/A"}, Status={Status}, " +
+                $"DateAndTime={DateAndTime.DateAndTime:yyyy-MM-dd HH:mm}]";
+        }
+
+    }
+}
