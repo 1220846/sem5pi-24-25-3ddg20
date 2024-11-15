@@ -1,0 +1,31 @@
+.input-large input{
+    width: 20rem;
+}
+
+::ng-deep .p-password input {
+    width: 20rem ;
+}
+
+.dialog-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.or {
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    color:grey;
+  }
+  
+  .or:after,
+  .or:before {
+      content: "";
+      display: block;
+      background: grey;
+      width: 40%;
+      height:1px;
+      margin: 2rem 1rem;
+  }
+  

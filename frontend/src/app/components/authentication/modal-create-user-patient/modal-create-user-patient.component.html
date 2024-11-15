@@ -1,0 +1,45 @@
+<div class="card flex justify-content-center mt-4">
+    <p-toast></p-toast>
+    <span class="need-account-text">Don't have an account?</span>
+    <span (click)="showDialog()" class="signup-link">Sign Up</span>
+    <p-dialog header="Create Account" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '25rem', maxHeight: '35rem' }">
+        <form [formGroup]="userPatientForm" class="dialog-form">
+            <div class="flex flex-column gap-2 mb-2 input-large">
+                <label for="email">Email</label>
+                <input pInputText id="email" aria-describedby="email-help" formControlName="email" />
+                <small
+                    *ngIf="userPatientForm.controls['email'].invalid && (userPatientForm.controls['email'].dirty || userPatientForm.controls['email'].touched)"
+                    class="p-error">
+                    Valid email is required.
+                </small>
+            </div>
+            <div class="flex flex-column gap-2 mb-2 input-large">
+                <label for="password">Password</label>
+                <p-password class="password" formControlName="password" [toggleMask]="true" [feedback]="false" />
+                <small *ngIf="userPatientForm.controls['password'].hasError('passwordStrength') && 
+           (userPatientForm.controls['password'].dirty || userPatientForm.controls['password'].touched)"
+                    class="p-error">
+                    Password must be at least 8 characters, include an uppercase letter, a number, and a special
+                    character.
+                </small>
+
+            </div>
+            <div class="flex flex-column gap-2 mb-2 input-large">
+                <label for="repeat-password">Repeat Password</label>
+                <p-password [appendTo]="'body'" formControlName="repeatPassword" [toggleMask]="true"
+                    [feedback]="false" />
+                <small
+                    *ngIf="userPatientForm.hasError('mismatch') && (userPatientForm.controls['repeatPassword'].dirty || userPatientForm.controls['repeatPassword'].touched)"
+                    class="p-error">
+                    Passwords do not match.
+                </small>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Create Account" (onClick)="createAccount()" />
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>

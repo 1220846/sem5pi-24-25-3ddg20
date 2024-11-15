@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Ground from "./ground.js";
 import Wall from "./wall.js";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { texture } from "three/webgpu";
 
 /*
@@ -14,6 +15,7 @@ import { texture } from "three/webgpu";
 export default class Maze {
     constructor(parameters) {
         this.onLoad = function (description) {
+
             // Store the maze's map and size
             this.map = description.map;
             this.size = description.size;
@@ -36,6 +38,8 @@ export default class Maze {
             this.wall = new Wall({ textureUrl: description.wallTextureUrl });
 
             // Build the maze
+
+
             let wallObject;
             for (let i = 0; i <= description.size.width; i++) { // In order to represent the eastmost walls, the map width is one column greater than the actual maze width
                 for (let j = 0; j <= description.size.height; j++) { // In order to represent the southmost walls, the map height is one row greater than the actual maze height
@@ -46,24 +50,17 @@ export default class Maze {
                      *          1          |     No     |    Yes
                      *          2          |    Yes     |     No
                      *          3          |    Yes     |    Yes
-                     *          4          |     No     |    Door
-                     *          5          |    Yes     |    Door
+                     *         400         |    Yes     |  Main Door
+                     *         4xx         |     No     |  Door #xx
+                     *         5xx         |    Operating Table #xx
                      */
-                    /* To-do #5 - Create the north walls
-                        - cell coordinates: i (column) and j (row)
-                        - map: description.map[][]
-                        - maze width: description.size.width
-                        - maze height: description.size.height */
-                    if (description.map[j][i] == 2 || description.map[j][i] == 3 || description.map[j][i] == 5) {
+                    // To-do #5 - Create the north walls
+                    if (description.map[j][i] == 2 || description.map[j][i] == 3 || description.map[j][i] == 400) {
                         wallObject = this.wall.object.clone();
                         wallObject.position.set(i - description.size.width / 2.0 + 0.5, 0.5, j - description.size.height / 2.0);
                         this.object.add(wallObject);
                     }
-                    /* To-do #6 - Create the west walls
-                        - cell coordinates: i (column), j (row)
-                        - map: description.map[][]
-                        - maze width: description.size.width
-                        - maze height: description.size.height */
+                    // To-do #6 - Create the west walls
                     if (description.map[j][i] == 1 || description.map[j][i] == 3) {
                         wallObject = this.wall.object.clone();
                         wallObject.rotateY(Math.PI / 2.0);
@@ -71,8 +68,50 @@ export default class Maze {
                         this.object.add(wallObject);
                     }
                     // Doors
-                    if (description.map[j][i] == 4 || description.map[j][i] == 5) {
-                        // TODO - doors
+                    if (Math.floor(description.map[j][i] / 100) == 4) {
+                        const loader = new GLTFLoader();
+                        const loadDoorPromise = new Promise((resolve, reject) => {
+                            loader.load("/models/gltf/Doors/double_doors.glb", (glb) => {
+                                this.door = { object: glb.scene };
+                                console.log("Door loaded successfully:", this.door);
+                                resolve();
+                            }, undefined, (error) => {
+                                console.error(`Error loading door model (${error}).`);
+                                reject(error);
+                            });
+                        });
+                        const doorId = description.map[j][i] % 100;
+                        loadDoorPromise.then(() => {
+                            this.object.add(this.door.object);
+                            this.door.object.scale.set(0.0032, 0.0029, 0.0032);
+                            this.door.object.position.set(i - description.size.width / 2.0, 0.0, j - description.size.height / 2.0 + 0.5);
+                            this.door.object.rotation.y = (Math.PI * (doorId % 2 == 0 ? 1 : 3)) / 2;
+                        }).catch((error) => {   
+                            console.error("Error loading door model:", error);
+                        });
+                    }
+                    // Tables
+                    if (Math.floor(description.map[j][i] / 100) == 5) {
+                        const loader = new GLTFLoader();
+                        const loadTablePromise = new Promise((resolve, reject) => {
+                            loader.load("/models/gltf/Table/hospital_bed2.glb", (glb) => {
+                                this.table = { object: glb.scene };
+                                console.log("Table loaded successfully:", this.table);
+                                resolve();
+                            }, undefined, (error) => {
+                                console.error(`Error loading table model (${error}).`);
+                                reject(error);
+                            });
+                        });
+                        const tableId = description.map[j][i] % 100;
+                        loadTablePromise.then(() => {
+                            this.object.add(this.table.object);
+                            this.table.object.scale.set(0.7, 0.7, 0.7);
+                            this.table.object.position.set(i - description.size.width / 2.0 - 1.9, 0.0, j - description.size.height / 2.0 - 3.125);
+                            this.table.object.rotation.y = (Math.PI * (doorId % 2 == 0 ? 1 : 3)) / 2;
+                        }).catch((error) => {   
+                            console.error("Error loading table model:", error);
+                        });
                     }
                 }
             }

@@ -509,7 +509,7 @@ export default class Hospital {
                     this.view.options.selectedIndex = cameraIndex;
                     this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
                     if (event.buttons == 1) { // Primary button down
-                        //ppp//
+                        this.changeCameraDistance = true;
                     }
                     else { // Secondary button down
                         this.changeCameraOrientation = true;

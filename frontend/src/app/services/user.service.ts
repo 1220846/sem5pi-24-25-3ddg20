@@ -23,7 +23,11 @@ export class UserService {
   }
 
   createUserPatient(user: CreatingUserPatientDto): Observable<User> {
-    return this.httpClient.post<User>(`${this.apiUrl}/patients`, user, { headers: this.header });
+    return this.httpClient.post<User>(`${this.apiUrl}/patients`, user, { headers: this.header }).pipe(
+      catchError((error) => {
+        return throwError(() => new Error(error.error.message));
+      })
+    );
   }
 
   login(loginRequest: LoginRequestDto): Observable<Login> {
