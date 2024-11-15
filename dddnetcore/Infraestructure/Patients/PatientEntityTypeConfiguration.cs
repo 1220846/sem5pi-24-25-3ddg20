@@ -20,7 +20,7 @@ namespace DDDSample1.Infrastructure.Patients
                 ci.Property(c => c.PhoneNumber).HasColumnName("PhoneNumber").HasConversion(b => b.PhoneNumber, b => new PatientPhone(b)).IsRequired();
                 ci.HasIndex(c => c.PhoneNumber).IsUnique();
             });
-            builder.Property(b => b.AppointmentHistory).HasConversion(b => b.History, b => new AppointmentHistory(b));
+            builder.Property(b => b.Address).HasConversion(b => b.Location, b => new Address(b));
             builder.Property(b => b.DateOfBirth).HasConversion(b => b.Date, b => new DateOfBirth(b));
             builder.Property(b => b.EmergencyContact).HasConversion(b => b.PhoneNumber, b => new EmergencyContact(b));
             builder.Property(b => b.Gender).HasConversion<string>().IsRequired();

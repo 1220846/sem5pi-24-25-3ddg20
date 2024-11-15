@@ -4,7 +4,7 @@ using DDDSample1.Domain.Users;
 
 namespace DDDSample1.Domain.Patients{
     public class Patient : Entity<MedicalRecordNumber>, IAggregateRoot{
-        public AppointmentHistory AppointmentHistory{get; private set;}
+        public Address Address{get; private set;}
         public DateOfBirth DateOfBirth{get; private set;}
         public EmergencyContact EmergencyContact{get; private set;}
         public Gender Gender{get; private set;}
@@ -17,11 +17,11 @@ namespace DDDSample1.Domain.Patients{
         public User User {get; private set;}
         public Username Username {get; private set;}
         
-        public Patient(MedicalRecordNumber id, AppointmentHistory appointmentHistory, DateOfBirth dateOfBirth, EmergencyContact emergencyContact,
+        public Patient(MedicalRecordNumber id, Address address, DateOfBirth dateOfBirth, EmergencyContact emergencyContact,
             Gender gender, MedicalConditions medicalConditions, PatientContactInformation contactInformation, 
             PatientFirstName firstName, PatientLastName lastName, PatientFullName fullName, User user){
             this.Id = id;
-            this.AppointmentHistory = appointmentHistory;
+            this.Address = address;
             this.DateOfBirth = dateOfBirth;
             this.EmergencyContact = emergencyContact;
             this.Gender = gender;
@@ -74,9 +74,9 @@ namespace DDDSample1.Domain.Patients{
             ArgumentNullException.ThrowIfNull(newPatientPhoneNumber);
             ContactInformation.ChangePhoneNumber(newPatientPhoneNumber);
         }
-        public void ChangeAppointmentHistory(AppointmentHistory newAppointmentHistory){
-            ArgumentNullException.ThrowIfNull(newAppointmentHistory);
-            this.AppointmentHistory = newAppointmentHistory;
+        public void ChangeAddress(Address newAddress){
+            ArgumentNullException.ThrowIfNull(newAddress);
+            this.Address = newAddress;
         }
         public void ChangeMedicalConditions(MedicalConditions newMedicalConditions){
             ArgumentNullException.ThrowIfNull(newMedicalConditions);

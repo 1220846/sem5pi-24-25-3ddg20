@@ -11,7 +11,7 @@ namespace DDDSample1.Tests.Domain.Appointments
         {
             var expectedDate = new DateTime(2024, 11, 15, 10, 30, 0);
 
-            var appoitment = new AppoitmentDateAndTime(expectedDate);
+            var appoitment = new AppointmentDateAndTime(expectedDate);
 
             Assert.Equal(expectedDate, appoitment.DateAndTime);
         }
@@ -20,8 +20,8 @@ namespace DDDSample1.Tests.Domain.Appointments
         public void EqualsSameDateAndTimeShouldReturnTrue()
         {
             var date = new DateTime(2024, 11, 15, 10, 30, 0);
-            var appoitment1 = new AppoitmentDateAndTime(date);
-            var appoitment2 = new AppoitmentDateAndTime(date);
+            var appoitment1 = new AppointmentDateAndTime(date);
+            var appoitment2 = new AppointmentDateAndTime(date);
 
             var areEqual = appoitment1.Equals(appoitment2);
 
@@ -31,8 +31,8 @@ namespace DDDSample1.Tests.Domain.Appointments
         [Fact]
         public void EqualsDifferentDateAndTimeShouldReturnFalse()
         {
-            var appoitment1 = new AppoitmentDateAndTime(new DateTime(2024, 11, 15, 10, 30, 0));
-            var appoitment2 = new AppoitmentDateAndTime(new DateTime(2024, 11, 15, 11, 30, 0));
+            var appoitment1 = new AppointmentDateAndTime(new DateTime(2024, 11, 15, 10, 30, 0));
+            var appoitment2 = new AppointmentDateAndTime(new DateTime(2024, 11, 15, 11, 30, 0));
 
             var areEqual = appoitment1.Equals(appoitment2);
 
@@ -43,8 +43,8 @@ namespace DDDSample1.Tests.Domain.Appointments
         public void GetHashCodeSameDateAndTimeShouldReturnSameHash()
         {
             var date = new DateTime(2024, 11, 15, 10, 30, 0);
-            var appoitment1 = new AppoitmentDateAndTime(date);
-            var appoitment2 = new AppoitmentDateAndTime(date);
+            var appoitment1 = new AppointmentDateAndTime(date);
+            var appoitment2 = new AppointmentDateAndTime(date);
 
             var hash1 = appoitment1.GetHashCode();
             var hash2 = appoitment2.GetHashCode();
@@ -55,8 +55,8 @@ namespace DDDSample1.Tests.Domain.Appointments
         [Fact]
         public void GetHashCodeDifferentDateAndTimeShouldReturnDifferentHash()
         {
-            var appoitment1 = new AppoitmentDateAndTime(new DateTime(2024, 11, 15, 10, 30, 0));
-            var appoitment2 = new AppoitmentDateAndTime(new DateTime(2024, 11, 15, 11, 30, 0));
+            var appoitment1 = new AppointmentDateAndTime(new DateTime(2024, 11, 15, 10, 30, 0));
+            var appoitment2 = new AppointmentDateAndTime(new DateTime(2024, 11, 15, 11, 30, 0));
 
             var hash1 = appoitment1.GetHashCode();
             var hash2 = appoitment2.GetHashCode();

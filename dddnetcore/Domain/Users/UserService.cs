@@ -362,8 +362,8 @@ namespace DDDSample1.Domain.Users
             var anonymizedPatientData = new AnonymizedPatientData(
                 CalculateAgeRange(patient.DateOfBirth), 
                 EnumDescription.GetEnumDescription(patient.Gender),
-                patient.MedicalConditions.Conditions,
-                patient.AppointmentHistory.History);
+                patient.MedicalConditions.Conditions
+                );
 
             await this._repoAnonymizedPatientData.AddAsync(anonymizedPatientData);
 

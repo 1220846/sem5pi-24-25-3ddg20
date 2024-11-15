@@ -85,7 +85,7 @@ namespace dddnetcore.Domain.Patients
                 var gender = Enum.Parse<Gender>(dto.Gender.ToUpper());
                 var patient = new Patient(
                     new MedicalRecordNumber(medicalRecordNumber),
-                    new AppointmentHistory(""),
+                    new Address(dto.Address+":"+dto.PostalCode),
                     new DateOfBirth(DateTime.Parse(dto.DateOfBirth)),
                     new EmergencyContact(dto.EmergencyContact),
                     gender,
@@ -110,9 +110,13 @@ namespace dddnetcore.Domain.Patients
             PatientEmail previousEmail = patient.ContactInformation.Email;
             var patientChanges=new List<string>();
             
-            if (dto.AppointmentHistory != null){
-                patientChanges.Add($"Appointment history was updated");
-                patient.ChangeAppointmentHistory(new AppointmentHistory(dto.AppointmentHistory));
+            if (dto.Address != null || dto.PostalCode != null){
+                string[] location = patient.Address.Location.Split(':');
+                dto.Address ??= location[0];
+                dto.PostalCode ??= location[1];
+                patientChanges.Add($"Address was updated from {patient.Address.Location} to {dto.Address}");
+                patient.ChangeAddress(new Address(dto.Address+":"+dto.PostalCode));
+                changedContactInfo = true;
             }
             if (dto.MedicalConditions != null){
                 patientChanges.Add($"Medical conditions / allergies was updated");
@@ -156,6 +160,7 @@ namespace dddnetcore.Domain.Patients
                 var body = $@"
                 <p>Dear {patient.FullName.Name},Your contact information has been changed:</p>
                 <p>Email Address: {patient.ContactInformation.Email.Email}.</p>
+                <p>Address: {patient.Address.Location}.</p>
                 <p>Phone Number: {patient.ContactInformation.PhoneNumber.PhoneNumber}.</p>";
                 
                 await _emailService.SendEmailAsync(to, subject, body);
@@ -175,8 +180,8 @@ namespace dddnetcore.Domain.Patients
             var anonymizedPatientData = new AnonymizedPatientData(
                 CalculateAgeRange(patient.DateOfBirth), 
                 EnumDescription.GetEnumDescription(patient.Gender),
-                patient.MedicalConditions.Conditions,
-                patient.AppointmentHistory.History);
+                patient.MedicalConditions.Conditions
+                );
 
             await this._repoAnonymizedPatientData.AddAsync(anonymizedPatientData);
 

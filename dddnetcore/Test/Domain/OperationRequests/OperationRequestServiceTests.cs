@@ -123,7 +123,7 @@ namespace DDDSample1.Tests
 
         private Patient ExamplePatient() {
             var medicalRecordNumber = new MedicalRecordNumber("MRN123456");
-            var appointmentHistory = new AppointmentHistory("");
+            var appointmentHistory = new Address("Address : 1200-100");
             var dateOfBirth = new DateOfBirth(new DateTime(1990, 1, 1));
             var emergencyContact = new EmergencyContact("917654321");
             var gender = Gender.MALE; 

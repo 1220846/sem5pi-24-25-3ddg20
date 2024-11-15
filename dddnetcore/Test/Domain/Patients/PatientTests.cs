@@ -9,7 +9,7 @@ namespace DDDSample1.Tests.Domain.Patients
     public class PatientTests
     {
         private readonly MedicalRecordNumber _testId = new MedicalRecordNumber("202410000004");
-        private readonly AppointmentHistory _testAppointmentHistory = new AppointmentHistory("Initial appointment");
+        private readonly Address _testAddress = new Address("Initial address : 1389-100");
         private readonly DateOfBirth _testDateOfBirth = new DateOfBirth(new DateTime(1990, 1, 1));
         private readonly EmergencyContact _testEmergencyContact = new EmergencyContact("912345678");
         private readonly Gender _testGender = Gender.MALE;
@@ -25,13 +25,13 @@ namespace DDDSample1.Tests.Domain.Patients
         public void Constructor_ShouldInitializePatient()
         {
             // Act
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
 
             // Assert
             Assert.Equal(_testId, patient.Id);
-            Assert.Equal(_testAppointmentHistory, patient.AppointmentHistory);
+            Assert.Equal(_testAddress, patient.Address);
             Assert.Equal(_testDateOfBirth, patient.DateOfBirth);
             Assert.Equal(_testEmergencyContact, patient.EmergencyContact);
             Assert.Equal(_testGender, patient.Gender);
@@ -47,7 +47,7 @@ namespace DDDSample1.Tests.Domain.Patients
         public void ChangeFirstName_ShouldUpdateFirstName()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
             var newFirstName = new PatientFirstName("Jane");
@@ -63,7 +63,7 @@ namespace DDDSample1.Tests.Domain.Patients
         public void ChangeLastName_ShouldUpdateLastName()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
             var newLastName = new PatientLastName("Smith");
@@ -79,7 +79,7 @@ namespace DDDSample1.Tests.Domain.Patients
         public void ChangeFullName_ShouldUpdateFullName()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
             var newFullName = new PatientFullName("Jane Smith");
@@ -95,7 +95,7 @@ namespace DDDSample1.Tests.Domain.Patients
         public void ChangeEmail_ShouldUpdateEmail()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
             var newEmail = new PatientEmail("newemail@example.com");
@@ -111,7 +111,7 @@ namespace DDDSample1.Tests.Domain.Patients
         public void ChangePhoneNumber_ShouldUpdatePhoneNumber()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
             var newPhoneNumber = new PatientPhone("911234567");
@@ -124,26 +124,26 @@ namespace DDDSample1.Tests.Domain.Patients
         }
 
         [Fact]
-        public void ChangeAppointmentHistory_ShouldUpdateAppointmentHistory()
+        public void ChangeAddress_ShouldUpdateAddress()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
-            var newAppointmentHistory = new AppointmentHistory("Follow-up appointment");
+            var newAppointmentHistory = new Address("Follow-up address : 3890-289");
 
             // Act
-            patient.ChangeAppointmentHistory(newAppointmentHistory);
+            patient.ChangeAddress(newAppointmentHistory);
 
             // Assert
-            Assert.Equal(newAppointmentHistory, patient.AppointmentHistory);
+            Assert.Equal(newAppointmentHistory, patient.Address);
         }
 
         [Fact]
         public void ChangeMedicalConditions_ShouldUpdateMedicalConditions()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
             var newMedicalConditions = new MedicalConditions("Allergy to peanuts");
@@ -159,7 +159,7 @@ namespace DDDSample1.Tests.Domain.Patients
         public void UpdateUser_ShouldUpdateUser()
         {
             // Arrange
-            var patient = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
             var email = new Email("user@example.com");
@@ -179,10 +179,10 @@ namespace DDDSample1.Tests.Domain.Patients
         public void Equals_ShouldReturnTrue_ForSameId()
         {
             // Arrange
-            var patient1 = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient1 = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
-            var patient2 = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient2 = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
 
@@ -197,10 +197,10 @@ namespace DDDSample1.Tests.Domain.Patients
         public void Equals_ShouldReturnFalse_ForDifferentId()
         {
             // Arrange
-            var patient1 = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient1 = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
-            var patient2 = new Patient(new MedicalRecordNumber("67890"), _testAppointmentHistory, _testDateOfBirth, 
+            var patient2 = new Patient(new MedicalRecordNumber("67890"), _testAddress, _testDateOfBirth, 
                                        _testEmergencyContact, _testGender, _testMedicalConditions, 
                                        _testContactInformation, _testFirstName, _testLastName, 
                                        _testFullName, _testUser);
@@ -216,10 +216,10 @@ namespace DDDSample1.Tests.Domain.Patients
         public void GetHashCode_ShouldReturnSameHash_ForSameId()
         {
             // Arrange
-            var patient1 = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient1 = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
-            var patient2 = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient2 = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
 
@@ -235,10 +235,10 @@ namespace DDDSample1.Tests.Domain.Patients
         public void GetHashCode_ShouldReturnDifferentHash_ForDifferentId()
         {
             // Arrange
-            var patient1 = new Patient(_testId, _testAppointmentHistory, _testDateOfBirth, _testEmergencyContact,
+            var patient1 = new Patient(_testId, _testAddress, _testDateOfBirth, _testEmergencyContact,
                                        _testGender, _testMedicalConditions, _testContactInformation,
                                        _testFirstName, _testLastName, _testFullName, _testUser);
-            var patient2 = new Patient(new MedicalRecordNumber("67890"), _testAppointmentHistory, _testDateOfBirth,
+            var patient2 = new Patient(new MedicalRecordNumber("67890"), _testAddress, _testDateOfBirth,
                                        _testEmergencyContact, _testGender, _testMedicalConditions,
                                        _testContactInformation, _testFirstName, _testLastName,
                                        _testFullName, _testUser);

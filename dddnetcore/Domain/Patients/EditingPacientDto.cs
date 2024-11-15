@@ -8,7 +8,8 @@ namespace dddnetcore.Domain.Patients
         public string FirstName {get;set;}
         public string LastName {get;set;}
         public string FullName {get;set;}
-        public string AppointmentHistory {get;set;}
+        public string Address {get;set;}
+        public string PostalCode {get;set;}
         public string MedicalConditions {get;set;}
     }
 }

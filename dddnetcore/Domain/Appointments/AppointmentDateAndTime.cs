@@ -3,13 +3,13 @@ using DDDSample1.Domain.Shared;
 
 namespace DDDSample1.Domain.Appointments
 {
-    public class AppoitmentDateAndTime : IValueObject
+    public class AppointmentDateAndTime : IValueObject
     {
         public DateTime DateAndTime{get; private set;}
 
-        private AppoitmentDateAndTime() { }
+        private AppointmentDateAndTime() { }
 
-        public AppoitmentDateAndTime(DateTime date){
+        public AppointmentDateAndTime(DateTime date){
             this.DateAndTime = date;
         }
         public override bool Equals(object obj)
@@ -17,7 +17,7 @@ namespace DDDSample1.Domain.Appointments
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            var other = (AppoitmentDateAndTime)obj;
+            var other = (AppointmentDateAndTime)obj;
             return DateAndTime == other.DateAndTime;
         }
 

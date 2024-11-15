@@ -16,8 +16,6 @@ namespace DDDSample1.Infrastructure.Patients
 
             builder.Property(b => b.MedicalConditions).IsRequired();
 
-            builder.Property(b => b.AppointmentHistory).IsRequired();
-
             builder.Property(b => b.AnonymizedDate).IsRequired();
         }
     }
