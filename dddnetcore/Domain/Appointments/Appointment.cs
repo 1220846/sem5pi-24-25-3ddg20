@@ -13,10 +13,10 @@ namespace DDDSample1.Domain.Appointments{
         public RoomNumber RoomNumber { get;  private set; }
         public OperationRequestId OperationRequestId { get;  private set; }
         public AppointmentStatus Status { get;  private set; }
-        public AppoitmentDateAndTime DateAndTime { get;  private set; }
+        public AppointmentDateAndTime DateAndTime { get;  private set; }
         private Appointment(){}
 
-        public Appointment(SurgeryRoom surgeryRoom,OperationRequest operationRequest, AppoitmentDateAndTime dateAndTime){
+        public Appointment(SurgeryRoom surgeryRoom,OperationRequest operationRequest, AppointmentDateAndTime dateAndTime){
             this.Id = new AppointmentId(Guid.NewGuid());
             this.SurgeryRoom = surgeryRoom;
             this.OperationRequest = operationRequest;

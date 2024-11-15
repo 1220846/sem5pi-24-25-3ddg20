@@ -9,7 +9,8 @@ namespace dddnetcore.Domain.Patients
     public class PatientDto
     {
         public string Id {get;set;}
-        public string AppointmentHistory{get; set;}
+        public string Address{get; set;}
+        public string PostalCode{get; set;}
         public string DateOfBirth{get; set;}
         public string EmergencyContact{get; set;}
         public string Gender{get; set;}
@@ -27,7 +28,9 @@ namespace dddnetcore.Domain.Patients
             this.FullName = patient.FullName.Name;
             this.Email = patient.ContactInformation.Email.Email;
             this.PhoneNumber = patient.ContactInformation.PhoneNumber.PhoneNumber;
-            this.AppointmentHistory = patient.AppointmentHistory.History;
+            string[] location = patient.Address.Location.Split(':');
+            this.Address = location[0];
+            this.PostalCode = location[1];
             this.EmergencyContact = patient.EmergencyContact.PhoneNumber;
             this.Gender = EnumDescription.GetEnumDescription(patient.Gender);
             this.MedicalConditions = patient.MedicalConditions.Conditions;
