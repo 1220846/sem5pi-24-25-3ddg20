@@ -22,6 +22,37 @@ namespace DDDNetCore.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("DDDSample1.Domain.Appointments.Appointment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("DateAndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("OperationRequestId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("RoomNumber")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationRequestId")
+                        .IsUnique();
+
+                    b.HasIndex("RoomNumber")
+                        .IsUnique();
+
+                    b.ToTable("Appointments");
+                });
+
             modelBuilder.Entity("DDDSample1.Domain.Categories.Category", b =>
                 {
                     b.Property<string>("Id")
@@ -360,6 +391,53 @@ namespace DDDNetCore.Migrations
                     b.HasIndex("StaffId");
 
                     b.ToTable("AvailabilitySlots");
+                });
+
+            modelBuilder.Entity("dddnetcore.Domain.SurgeryRooms.SurgeryRoom", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("AssignedEquipment")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("CurrentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MaintenanceSlots")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<short>("RoomCapacity")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("RoomType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurgeryRooms");
+                });
+
+            modelBuilder.Entity("DDDSample1.Domain.Appointments.Appointment", b =>
+                {
+                    b.HasOne("DDDSample1.Domain.OperationRequests.OperationRequest", "OperationRequest")
+                        .WithOne()
+                        .HasForeignKey("DDDSample1.Domain.Appointments.Appointment", "OperationRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("dddnetcore.Domain.SurgeryRooms.SurgeryRoom", "SurgeryRoom")
+                        .WithOne()
+                        .HasForeignKey("DDDSample1.Domain.Appointments.Appointment", "RoomNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OperationRequest");
+
+                    b.Navigation("SurgeryRoom");
                 });
 
             modelBuilder.Entity("DDDSample1.Domain.OperationTypesSpecializations.OperationTypeSpecialization", b =>
