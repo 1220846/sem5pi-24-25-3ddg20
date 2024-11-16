@@ -17,7 +17,7 @@ import { generalData, mazeData, playerData, lightsData, fogData, cameraData } fr
 import { merge } from "./merge.js";
 import Maze from "./maze_template.js";
 import Player from "./player_template.js";
-import Lights from "./lights_template.js";
+import Lights from "./lights.js";
 import Fog from "./fog_template.js";
 import Camera from "./camera.js";
 import Animations from "./animations_template.js";
