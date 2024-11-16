@@ -1,4 +1,4 @@
-<div class="card flex justify-content-center mt-4 mb-5">
+<div class="card flex justify-content-center mt-3 mb-3">
     <p-toast></p-toast>
     <p-card header="Your Information" [style]="{ width: '55rem' }">
         <div class="flex justify-content-end">
@@ -72,6 +72,23 @@
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-7">
+                        <div class="flex flex-column gap-2 mb-3 input-large">
+                          <label for="address">Address</label>
+                          <input pInputText id="address" formControlName="address" aria-describedby="address-help" />
+                          <small *ngIf="patientForm.controls['address'].invalid && (patientForm.controls['address'].dirty || patientForm.controls['address'].touched)" class="p-error">
+                            Address is required.
+                          </small>
+                        </div>
+                        <div class="flex flex-column gap-2 mb-3 input-small">
+                          <label for="postalCode">Postal Code</label>
+                          <input pInputText id="postalCode" formControlName="postalCode" aria-describedby="postalCode-help" />
+                          <small *ngIf="patientForm.controls['postalCode'].invalid && (patientForm.controls['postalCode'].dirty || patientForm.controls['postalCode'].touched)" class="p-error">
+                            Valid postal code is required (e.g., 1234-567).
+                          </small>
+                        </div>
+                      </div>
+                      
+                    <div class="flex flex-wrap gap-7">
                         <div class="flex flex-column gap-2 mb-3 input-small">
                             <label for="phoneNumber">Phone Number</label>
                             <input pInputText id="phoneNumber" formControlName="phoneNumber" />
@@ -121,7 +138,7 @@
                             </p-footer>
                         </p-dialog>
                     </div>
-                    <div *ngIf="isEditing" class="flex justify-content-center gap-2 mt-4">
+                    <div *ngIf="isEditing" class="flex justify-content-center gap-3 mt-4">
                         <p-button label="Save" (click)="saveData()" icon="pi pi-check"></p-button>
                         <p-button label="Cancel" (click)="cancelChanges()" icon="pi pi-times"
                             severity="secondary"></p-button>

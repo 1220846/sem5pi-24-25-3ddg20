@@ -268,7 +268,7 @@ namespace DDDSample1.Domain.Users
 
             if(updateUserPatientDto.Email != null){
                 userChanges.Add($"Email changed from {user.Email.Address} to {updateUserPatientDto.Email}");
-                patientChanges.Add($"Email changed from {patient.ContactInformation.Email} to {updateUserPatientDto.Email}");
+                patientChanges.Add($"Email changed from {patient.ContactInformation.Email.Email} to {updateUserPatientDto.Email}");
                 user.ChangeEmail(new Email(updateUserPatientDto.Email));
                 patient.ChangeEmail(new PatientEmail(updateUserPatientDto.Email));
             }
@@ -277,6 +277,15 @@ namespace DDDSample1.Domain.Users
                 patientChanges.Add($"PhoneNumber changed from {patient.ContactInformation.PhoneNumber.PhoneNumber} to {updateUserPatientDto.PhoneNumber}");
                 patient.ChangePhoneNumber(new PatientPhone(updateUserPatientDto.PhoneNumber));
             }
+
+            if (updateUserPatientDto.Address != null || updateUserPatientDto.PostalCode != null){
+                string[] location = patient.Address.Location.Split(':');
+                updateUserPatientDto.Address ??= location[0];
+                updateUserPatientDto.PostalCode ??= location[1];
+                patientChanges.Add($"Address was updated from {patient.Address.Location} to {updateUserPatientDto.Address}");
+                patient.ChangeAddress(new Address(updateUserPatientDto.Address+":"+updateUserPatientDto.PostalCode));
+            }
+
             await this._repo.UpdateAsync(user);
 
             await this._repoPatient.UpdateAsync(patient);
@@ -291,12 +300,12 @@ namespace DDDSample1.Domain.Users
                 await _managementApiClient.Users.UpdateAsync($"auth0|{username}",userUpdateRequest,cancellationToken);
                 
                 if (!string.IsNullOrEmpty(updateUserPatientDto.Password)){
+                    Console.WriteLine($"Updating password for user: {username}");
                     var passwordUpdateRequest = new UserUpdateRequest
                     {
                         Password = updateUserPatientDto.Password,
                         Connection = _connection
                     };
-
                     await _managementApiClient.Users.UpdateAsync($"auth0|{username}", passwordUpdateRequest, CancellationToken.None);
 
                     var verifyEmailJobRequest = new VerifyEmailJobRequest{

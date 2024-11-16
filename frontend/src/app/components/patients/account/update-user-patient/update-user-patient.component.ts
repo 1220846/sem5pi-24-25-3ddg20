@@ -49,6 +49,8 @@ export class UpdateUserPatientComponent implements OnInit,OnChanges {
       medicalConditions: [{ value: this.patient?.medicalConditions, disabled: true }],
       birthDate: [{ value: this.patient?.dateOfBirth, disabled: true }],
       medicalRecordNumber: [{ value: this.patient?.id, disabled: true }],
+      address: [{ value: this.patient?.address, disabled: true }, [Validators.required]], 
+      postalCode: [{ value: this.patient?.postalCode, disabled: true }, [Validators.required, Validators.pattern('^[0-9]{4}-[0-9]{3}$')]],
       password: [''],
   repeatPassword: [''],
     }, { validator: this.passwordMatchValidator });
@@ -73,6 +75,8 @@ export class UpdateUserPatientComponent implements OnInit,OnChanges {
             gender: this.patient.gender,
             medicalConditions: this.patient.medicalConditions,
             birthDate: this.patient.dateOfBirth,
+            address : this.patient.address,
+            postalCode: this.patient.postalCode,
             medicalRecordNumber: this.patient.id
           });
         }
@@ -89,6 +93,8 @@ export class UpdateUserPatientComponent implements OnInit,OnChanges {
       this.patientForm.controls['fullName'].enable();
       this.patientForm.controls['email'].enable();
       this.patientForm.controls['phoneNumber'].enable();
+      this.patientForm.controls['address'].enable();
+      this.patientForm.controls['postalCode'].enable();
       this.patientForm.controls['password'].enable();
       this.patientForm.controls['repeatPassword'].enable();
     } else {
@@ -97,6 +103,8 @@ export class UpdateUserPatientComponent implements OnInit,OnChanges {
       this.patientForm.controls['fullName'].disable();
       this.patientForm.controls['email'].disable();
       this.patientForm.controls['phoneNumber'].disable();
+      this.patientForm.controls['address'].disable();
+      this.patientForm.controls['postalCode'].disable();
       this.patientForm.controls['password'].disable();
       this.patientForm.controls['repeatPassword'].disable();
     }
@@ -145,21 +153,26 @@ export class UpdateUserPatientComponent implements OnInit,OnChanges {
       repeatPasswordControl?.setErrors({ mismatch: true });
     } else {
       this.temporaryPassword = passwordControl?.value;
+      console.log(this.temporaryPassword);
       this.closeResetPasswordDialog();
     }
   }
 
   saveData() {
     if (this.patientForm.valid && this.patient && this.user) {
-      const passwordValue = this.patientForm.get('password')?.value;
-      const password = passwordValue && passwordValue !== '' ? passwordValue : null;
-  
+
+      const passwordValue = this.temporaryPassword;
+
+      const password = passwordValue ? passwordValue : null;
+
       const formData: UpdateUserPatientDto = {
         email: this.patientForm.get('email')?.value === this.originalValues?.email ? null : this.patientForm.get('email')?.value,
         firstName: this.patientForm.get('firstName')?.value === this.originalValues?.firstName ? null : this.patientForm.get('firstName')?.value,
         lastName: this.patientForm.get('lastName')?.value === this.originalValues?.lastName ? null : this.patientForm.get('lastName')?.value,
         fullName: this.patientForm.get('fullName')?.value === this.originalValues?.fullName ? null : this.patientForm.get('fullName')?.value,
         phoneNumber: this.patientForm.get('phoneNumber')?.value === this.originalValues?.phoneNumber ? null : this.patientForm.get('phoneNumber')?.value,
+        address: this.patientForm.get('address')?.value === this.originalValues?.address ? null : this.patientForm.get('address')?.value,
+        postalCode: this.patientForm.get('postalCode')?.value === this.originalValues?.postalCode ? null : this.patientForm.get('postalCode')?.value, 
         password: password,
       };
   
