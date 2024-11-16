@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using dddnetcore.Domain.SurgeryRooms;
 using DDDSample1.Infrastructure;
 using DDDSample1.Infrastructure.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace dddnetcore.Infraestructure.SurgeryRooms
 {
@@ -14,6 +15,6 @@ namespace dddnetcore.Infraestructure.SurgeryRooms
 
         public SurgeryRoomRepository(DDDSample1DbContext context):base(context.SurgeryRooms) {
             _context = context;
-        }        
+        }       
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DDDSample1.Domain.Appointments;
+using DDDSample1.Domain.Patients;
 using DDDSample1.Infrastructure;
 using DDDSample1.Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,25 @@ namespace dddnetcore.Infraestructure.AvailabilitySlots
             _context = context;
         }
 
-        public async Task<List<Appointment>> GetAppointmentsByMedicalRecordNumberAsync(string medicalRecordNumber)
+        public async Task<List<Appointment>> GetByPatientIdAsync(MedicalRecordNumber medicalRecordNumber)
         {
-            return await _context.Set<Appointment>()
+            return await _context.Appointments
                 .Include(a => a.OperationRequest)
-                .Where(a => a.OperationRequest.MedicalRecordNumber.Value == medicalRecordNumber)
+                .Include(a => a.SurgeryRoom)
+                .Where(a => a.OperationRequest.MedicalRecordNumber == medicalRecordNumber)
                 .ToListAsync();
+        }
+
+        public new async Task<Appointment> GetByIdAsync(AppointmentId id){
+            return await _context.Appointments.Include(a => a.SurgeryRoom)
+            .Include(a => a.OperationRequest)
+            .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public new async Task<List<Appointment>> GetAllAsync(){
+            return await _context.Appointments.Include(a => a.SurgeryRoom)
+            .Include(a => a.OperationRequest)
+            .ToListAsync();
         }
     }
 }

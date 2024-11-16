@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using dddnetcore.Domain.SurgeryRooms;
+using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.SurgeryRooms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,28 @@ namespace dddnetcore.Controllers
                 return NotFound();
 
                 return surgeryRoom;
+        }
+
+        // POST: api/appointments
+        [HttpPost]
+        [Authorize(Policy = "RequiredBackofficeRole")]
+        public async Task<ActionResult<SurgeryRoomDto>> Create(CreatingSurgeryRoomDto dto)
+        {
+            try{
+                var surgeryRoom = await _service.AddAsync(dto);
+
+                return CreatedAtAction(nameof(GetById), new { id = surgeryRoom.Number }, surgeryRoom);
+
+            }catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }catch(Exception){
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
         }
     }
 }

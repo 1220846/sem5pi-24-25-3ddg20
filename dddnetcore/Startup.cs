@@ -43,6 +43,9 @@ using DDDSample1.Domain.Emails;
 using DDDSample1.Infrastructure.Emails;
 using DDDSample1.Domain.SystemLogs;
 using DDDSample1.Infrastructure.SystemLogs;
+using dddnetcore.Domain.SurgeryRooms;
+using dddnetcore.Infraestructure.SurgeryRooms;
+using DDDSample1.Domain.Appointments;
 
 namespace DDDSample1
 {
@@ -198,6 +201,12 @@ namespace DDDSample1
             services.AddTransient<IEmailService, EmailService>();
 
             services.AddTransient<ISystemLogRepository,SystemLogRepository>();
+
+            services.AddTransient<ISurgeryRoomRepository,SurgeryRoomRepository>();
+            services.AddTransient<SurgeryRoomService>();
+
+            services.AddTransient<IAppointmentRepository,AppointmentRepository>();
+            services.AddTransient<AppointmentService>();
         }
     }
 }

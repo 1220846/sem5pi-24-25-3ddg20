@@ -27,5 +27,20 @@ namespace dddnetcore.Domain.SurgeryRooms
             var list = await this._repo.GetAllAsync();
             return list.ConvertAll<SurgeryRoomDto>(SurgeryRoom => new SurgeryRoomDto(SurgeryRoom));
         }
+
+        public async Task<SurgeryRoomDto> AddAsync(CreatingSurgeryRoomDto dto)
+        {
+            var roomType = Enum.Parse<RoomType>(dto.Type.ToUpper());
+            var currentStatus = Enum.Parse<SurgeryRoomCurrentStatus>(dto.CurrentStatus.ToUpper());
+
+            var surgerRoom = new SurgeryRoom(new RoomNumber(dto.Number),roomType, new SurgeryRoomCapacity(dto.Capacity),
+                                new SurgeryRoomMaintenanceSlots(dto.MaintenanceSlots),new SurgeryRoomAssignedEquipment(dto.AssignedEquipment),currentStatus);
+
+            await this._repo.AddAsync(surgerRoom);
+
+            await this._unitOfWork.CommitAsync();
+
+           return new SurgeryRoomDto(surgerRoom);
+        }
     }
 }
