@@ -45,8 +45,8 @@ export class ModalDeactivateStaffProfileComponent {
         message: 'This cannot be undone!',
         acceptIcon: 'pi pi-trash mr-2',
         rejectIcon: 'pi pi-times mr-2',
-        acceptButtonStyleClass: 'p-button-sm p-button-danger', // Botão de aceitação em vermelho
-        rejectButtonStyleClass: 'p-button-sm p-button-outlined', // Botão de rejeição em cinza
+        acceptButtonStyleClass: 'p-button-sm p-button-danger', 
+        rejectButtonStyleClass: 'p-button-sm p-button-outlined',
         accept: () => {
             console.log(this.staff?.id!);
             this.staffService.deactivate(this.staff?.id!).subscribe(
