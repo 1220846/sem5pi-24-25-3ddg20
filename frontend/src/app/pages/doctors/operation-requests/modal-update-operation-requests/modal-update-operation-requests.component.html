@@ -1,40 +1,41 @@
-<div class="btn">
-    <p-button class="cardbtn" (onClick)="showDialog()" label="Update Operation Request" />
-</div>
-<div class="card">
-    <p-dialog header="Update Operation Request" [(visible)]="visible" [style]="{ width: '25rem' }">
-
-        <div class="btns flex justify-content-left">
-            <p-floatLabel>
-                <input pInputText id="MedicalRecordNumber" [(ngModel)]="MedicalRecordNumber" />
-                <label for="MedicalRecordNumber">Patient Medical Record Number:</label>
-            </p-floatLabel>
-        </div>
-
-        <div class="btns flex justify-content-left">
-            <p-floatLabel>
-                <p-dropdown
-                    [options]="options"
-                    [(ngModel)]="selectedPriority"
-                    optionLabel="label"
-                    inputId="priority" />
-                <label for="priority">Select a Priority</label>
-            </p-floatLabel>
-        </div>
-
-        <div class="btns flex justify-content-left">
-            <p-floatLabel>
-                <input pInputText id="Deadline" [(ngModel)]="Deadline" />
-                <label for="Deadline">Date:</label>
-            </p-floatLabel>
-        </div>
-        <div class="btns flex justify-content-center">
-            <button 
-                pButton 
-                pRipple 
-                label="Update Operation Request" 
-                class="p-button-success">
-            </button>
-        </div>
+<div class="card flex justify-content-end">
+    <p-toast></p-toast>
+    <p-button class="mr-5" (onClick)="showDialog()" label="Add Operation Request" />
+    <p-dialog header="Add Operation Request" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <span class="p-text-secondary block mb-2">Insert information.</span>
+        <form [formGroup]="operationRequestForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-wrap gap-7">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="deadline">Date</label>
+                        <p-calendar [appendTo]="'body'" id="deadline" formControlName="deadline"
+                            dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" [showIcon]="true" appendTo="body"
+                            [iconDisplay]="'input'" [showOnFocus]="false" />
+                        <small
+                            *ngIf="operationRequestForm.controls['deadline'].invalid && (operationRequestForm.controls['deadline'].dirty || operationRequestForm.controls['deadline'].touched)"
+                            class="p-error">
+                            Select a Date.
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="selectedPriority">Priority</label>
+                        <p-dropdown placeholder="Select a Patient" id="selectedPriority" [appendTo]="'body'"
+                            formControlName="selectedPriority" [options]="optionsPriority" />
+                        <small
+                            *ngIf="operationRequestForm.controls['selectedPriority'].invalid && (operationRequestForm.controls['selectedPriority'].dirty || operationRequestForm.controls['selectedPriority'].touched)"
+                            class="p-error">
+                            Please Select a Priority.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center gap-2 dialog-footer">
+                <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                <p-button label="Save" (onClick)="saveData()" />
+            </div>
+        </ng-template>
     </p-dialog>
 </div>
