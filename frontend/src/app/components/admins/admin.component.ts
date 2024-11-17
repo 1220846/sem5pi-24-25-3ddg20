@@ -1,17 +1,15 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from "../sidebar/sidebar.component";
-import { ModalCreateOperationTypeComponent } from "./operation-types/modal-create-operation-type/modal-create-operation-type.component";
-import { ListOperationTypesComponent } from "./operation-types/list-operation-types/list-operation-types.component";
-import { OperationTypesComponent } from './operation-types/operation-types.component';
-import { RouterOutlet } from '@angular/router';
-import { StaffsComponent } from './staffs/staffs.component';
-import { AdminPatientsComponent } from './patients/admin-patients.component';
+import { Router, RouterOutlet } from '@angular/router';
+import { User } from '../../domain/User';
+import { Observable } from 'rxjs';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [RouterOutlet,ModalCreateOperationTypeComponent, SidebarComponent, ListOperationTypesComponent, OperationTypesComponent, AdminPatientsComponent],
+  imports: [RouterOutlet, SidebarComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
@@ -19,17 +17,37 @@ import { AdminPatientsComponent } from './patients/admin-patients.component';
 export class AdminComponent implements OnInit ,AfterViewInit {
 
   @ViewChild('sidebar') sidebar: SidebarComponent | undefined;
-  @ViewChild('operation-types') operationTypes : OperationTypesComponent |  undefined;
-  @ViewChild('staffs') staffs : StaffsComponent | undefined;
-  @ViewChild('patients') patients : AdminPatientsComponent | undefined;
+  user$!: Observable<User | null>;
+  user: User | null = null;
+  isLoading = true;
+  private timeout: any;
+  private timeoutDuration = 10000;
+
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
+    this.userService.getLoggedInUser();
+    this.user$ = this.userService.loggedInUser();
+
+    this.timeout = setTimeout(() => {
+      if (this.isLoading) {
+        this.router.navigate(['../']);
+      }
+    }, this.timeoutDuration);
   }
 
   ngAfterViewInit(): void {
-    this.updateSidebarItems();
+    this.user$.subscribe(user => {
+      if (user) {
+        this.user = user;
+        this.isLoading = false; 
+        clearTimeout(this.timeout);
+        this.updateSidebarItems(user);
+      }
+    });
   }
-  updateSidebarItems() {
+
+  updateSidebarItems(user: User) {
     if (this.sidebar) {
       this.sidebar.items = [
         { label: 'Operation Types', icon: '', link: '/admin/operation-types' },
@@ -37,6 +55,7 @@ export class AdminComponent implements OnInit ,AfterViewInit {
         { label: 'Patients', icon: '', link: '/admin/patients' }
       ];
       this.sidebar.setUserTitle('Admin');
+      this.sidebar.setUsername(user.username);
     }
   }
 }

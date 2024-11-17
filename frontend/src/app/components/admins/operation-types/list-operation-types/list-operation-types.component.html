@@ -1,6 +1,6 @@
 <div class="flex justify-content-end mt-2 mr-5">
     <p-button icon="pi pi-filter"(click)="filterPanel.toggle($event)"class="p-button-rounded p-button-outlined" styleClass="p-button-text"></p-button>
-    <p-overlayPanel #filterPanel [dismissable]="true" [showCloseIcon]="true">
+    <p-overlayPanel #filterPanel [dismissable]="true">
         <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col-12 mt-2">
                 <label for="filterName">Name</label>
