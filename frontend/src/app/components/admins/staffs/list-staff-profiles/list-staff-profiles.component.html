@@ -79,7 +79,8 @@
                                 </p-tag>
                             </div>
                         </span>
-                    <app-deactivate-staff-profile [staff]=staff (staffProfileDeacivated)="onStaffProfileDeacivated()"></app-deactivate-staff-profile>
+                        <app-edit-staff-profile [staff]=staff></app-edit-staff-profile>
+                        <app-deactivate-staff-profile [staff]=staff (staffProfileDeacivated)="onStaffProfileDeacivated()"></app-deactivate-staff-profile>
                     </ng-template>
                     <div class="flex ml-3 gap-6">
                         <p><strong>First Name:</strong> {{ staff.firstName }}</p>
@@ -91,15 +92,6 @@
                         <p><strong>Specialization:</strong> {{ staff.specialization.name }}</p>
                         <p><strong>Username:</strong> {{ staff.user.username }}</p>
                     </div>
-                    <!--<div class="ml-3"> pode ser util guardar isto
-                        <p><strong>Staff Specializations: </strong></p>
-                        <ul>
-                            <li class="mt-1" *ngFor="let specialization of operationType.staffSpecializationDtos">
-                                <i class="pi pi-users mr-1" style="font-size: 1rem;"></i>
-                                {{ specialization.specializationName }}: {{ specialization.numberOfStaff }}
-                            </li>
-                        </ul>
-                    </div>-->
                 </p-accordionTab>
             </p-accordion>
         </ng-template>
