@@ -69,5 +69,9 @@ namespace dddnetcore.Infraestructure.Staffs
 
             return staff;
         }
+
+        public new async Task<List<Staff>> GetAllAsync(){
+            return await _context.Staffs.Include(a => a.User).Include(a => a.Specialization).ToListAsync();
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DDDSample1.Domain.Appointments;
 using DDDSample1.Domain.Patients;
+using DDDSample1.Domain.Staffs;
 using DDDSample1.Infrastructure;
 using DDDSample1.Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,15 @@ namespace dddnetcore.Infraestructure.AvailabilitySlots
                 .Include(a => a.OperationRequest)
                 .Include(a => a.SurgeryRoom)
                 .Where(a => a.OperationRequest.MedicalRecordNumber == medicalRecordNumber)
+                .ToListAsync();
+        }
+
+        public async Task<List<Appointment>> GetByStaffIdAsync(StaffId staffId)
+        {
+            return await _context.Appointments
+                .Include(a => a.OperationRequest)
+                .Include(a => a.SurgeryRoom)
+                .Where(a => a.OperationRequest.StaffId == staffId)
                 .ToListAsync();
         }
 

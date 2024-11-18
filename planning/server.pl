@@ -46,7 +46,6 @@ convert_operation_type_to_surgery_id(OperationTypeDict, surgery_id(Id, Name)) :-
 % Convert surgery_id to JSON
 convert_surgery_id_to_json(surgery_id(Id, Name), json([id = Id, name = Name])).
 
-% Alias for surgery_id
 surgery_id(Id, Name) :- convert_operation_type_to_surgery_id(_, surgery_id(Id, Name)).
 
 %-------------------------OperationRequest - AssigmentSurgery--------------------------%
@@ -77,7 +76,7 @@ convert_operation_request_to_surgery_id(OperationRequestDict, assignment_surgery
 % Convert assignment_surgery to JSON
 convert_assignment_surgery_to_json(assignment_surgery(Id, DoctorId), json([id = Id, doctorId = DoctorId])).
 
-assignment_surgery(Id, DoctorId) :- cconvert_operation_request_to_surgery_id(_, assignment_surgery(Id, DoctorId)).
+assignment_surgery(Id, DoctorId) :- convert_operation_request_to_surgery_id(_, assignment_surgery(Id, DoctorId)).
 
 %-------------------------OperationTypes - Surgeries--------------------------%
 :- http_handler(api(surgeries), get_surgeries, []).
@@ -101,16 +100,54 @@ convert_surgery_to_json(surgery(Name, TAnesthesia, TSurgery, TCleaning), json([n
 
 surgery(Name, TAnesthesia,TSurgery,TCleaning) :- convert_operation_type_to_surgery(_, surgery(Name, TAnesthesia,TSurgery,TCleaning)).
 
-%-------------------------------Staffs---------------------------------%
+%------------------------------- Staffs --------------------------------%
 :- http_handler(api(staffs), get_staffs, []).
 
 % GET Staffs
 get_staffs(_Request) :-
-    get_operation_types_backend(OperationTypes),
-    get_staffs_backend(Staffs),
-    maplist(convert_staff_operation_to_staff(OperationTypes), Staffs, StaffWithOperations),
-    maplist(convert_staff_to_json, StaffWithOperations, StaffJsons),
+    get_staffs_operation_types_backend(StaffsOperationTypes),
+    maplist(convert_staff_to_json, StaffsOperationTypes, StaffJsons),
     reply_json(json([staffs = StaffJsons]), [json_object(dict)]).
+
+% GET Staffs Operation Types Backend
+get_staffs_operation_types_backend(StaffsOperationTypes) :-
+    backend_url(URL),
+    atom_concat(URL, 'staffs/operationtypes', URL_StaffsOperationTypes),
+    setup_call_cleanup(
+        http_open(URL_StaffsOperationTypes, In, [cert_verify_hook(cert_accept_any)]),
+        (read_string(In, _, Response),
+         atom_json_dict(Response, StaffsOperationTypes, [])),
+        close(In)
+    ).
+
+% Convert staff to JSON
+convert_staff_to_json(StaffDict, 
+    json([staffID = StaffID, 
+          role = Role, 
+          specialization = Specialization, 
+          operationTypesName = OperationTypesName])) :-
+    StaffID = StaffDict.get(staffID),
+    Role = StaffDict.get(role),
+    Specialization = StaffDict.get(specialization),
+    OperationTypesName = StaffDict.get(operationTypesName).
+
+% Convert staff to JSON
+convert_staff_to_json(staff(StaffId, StaffRole, SpecializationName, MatchingOperations), 
+                      json([staffID = StaffId, role = StaffRole, specialization = SpecializationName, operationTypesName = MatchingOperations])).
+
+staff(StaffId, StaffRole, SpecializationName, MatchingOperations) :-
+    staff_syntax(_, staff(StaffId, StaffRole, SpecializationName, MatchingOperations)).
+
+% ------------------------- TimeTable Staff ---------------------------------
+:- http_handler(api(timetables), get_timetables, []).
+
+get_timetables(_Request) :-
+    get_staffs_backend(Staffs),
+    findall(Timetable,(member(Staff, Staffs),convert_staff_to_timetable(Staff, Timetable)),
+        StaffTimetables),
+    flatten(StaffTimetables, AllTimeTables),
+    maplist(convert_timetable_to_json, AllTimeTables, JsonTimeTables),
+    reply_json(json([timetables = JsonTimeTables]), [json_object(dict)]).
 
 % GET Staffs Backend
 get_staffs_backend(Staffs) :-
@@ -121,28 +158,153 @@ get_staffs_backend(Staffs) :-
     atom_json_dict(Response, Staffs, []),
     close(In).
 
-% Convert Staff with operation to staff
+% Convert time string to minutes
+time_string_to_minutes(Time, TimeInMinutes) :-
+    split_string(Time, ":", "", [HourPart, MinutePart | _]),
+    atom_number(HourPart, HourNumber),
+    atom_number(MinutePart, MinuteNumber),
+    TimeInMinutes is HourNumber * 60 + MinuteNumber.
 
-convert_staff_operation_to_staff(OperationTypes, StaffDict, staff(StaffId, StaffRole, SpecializationName, MatchingOperations)) :-
+% Convert Staff to Timetable
+convert_staff_to_timetable(StaffDict, TimeTables) :-
+    AvailabilitySlots = StaffDict.get(availabilitySlots),
     StaffId = StaffDict.get(id),
-    StaffUser = StaffDict.get(user),
-    StaffRole = StaffUser.get(role),
-    Specialization = StaffDict.get(specialization),
-    SpecializationName = Specialization.get(name),  
+    
+    (AvailabilitySlots \= []
+        ->  findall(
+            timetable(StaffId, FormattedDate, (StartMinutes, EndMinutes)),
+            (member(AvailabilitySlot, AvailabilitySlots),
 
-    findall(OperationId, 
-            (member(OperationType, OperationTypes),         
-            StaffSpecializations = OperationType.get(staffSpecializationDtos),  
-            
-            member(StaffSpecialization, StaffSpecializations),
-            SpecializationName = StaffSpecialization.get(specializationName),  
-            OperationId = OperationType.get(id)
-        ),
-        MatchingOperations  
+             StartSlotTime = AvailabilitySlot.get(startTime),
+             EndSlotTime = AvailabilitySlot.get(endTime),
+             
+             split_string(StartSlotTime, "T", "", [DatePortion | StartTimeComponents]),
+             split_string(EndSlotTime, "T", "", [_ | EndTimeComponents]),
+
+             split_string(DatePortion, "-", "", [Year, Month, Day]),
+             atom_number(Day, DayNumber),
+             atom_number(Month, MonthNumber),
+             atom_number(Year, YearNumber),
+
+             % YYYYMMDD
+             FormattedDate is YearNumber * 10000 + MonthNumber * 100 + DayNumber,
+
+             atomic_list_concat(StartTimeComponents, " ", StartTime),
+             atomic_list_concat(EndTimeComponents, " ", EndTime),
+
+             time_string_to_minutes(StartTime, StartMinutes),
+             time_string_to_minutes(EndTime, EndMinutes)
+            ),
+            TimeTables
+        );
+        TimeTables = []
     ).
 
-% Convert staff to JSON
-convert_staff_to_json(staff(StaffId, StaffRole, SpecializationName, MatchingOperations), 
-                      json([id = StaffId, role = StaffRole, specialization = SpecializationName, operations = MatchingOperations])).
+% Convert timetable to JSON
+convert_timetable_to_json(timetable(StaffId, Day, (StartTime, EndTime)),
+                          json([staffId = StaffId, day = Day, startTime = StartTime, endTime = EndTime])).
+
+timetable(StaffId, Day, (StartTime, EndTime)) :-
+    convert_staff_to_timetable(_, timetable(StaffId, Day, (StartTime, EndTime))).
+
+% ---------------------- Agenda Operation Rooms - Appointments ----------------------
+:- http_handler(api(agendaoperationrooms), get_agenda_operation_rooms, []).
+
+get_agenda_operation_rooms(_Request) :-
+    get_appointments_backend(Appointments),
+    findall(AgendaOperationRoom, 
+        (member(Appointment, Appointments), 
+         convert_appointment_to_agenda_operation_room(Appointment, AgendaOperationRoom)),
+        AgendasOperationRooms),
+    maplist(agenda_operation_rooms_to_json, AgendasOperationRooms, JsonAgendaOperationRooms),
+    reply_json(json([agenda_operation_rooms = JsonAgendaOperationRooms]), [json_object(dict)]).
+
+% GET Appointments Backend
+get_appointments_backend(Appointments) :-
+    backend_url(URL),
+    atom_concat(URL, 'appointments', URL_Appointments),
+    setup_call_cleanup(
+        http_open(URL_Appointments, In, [cert_verify_hook(cert_accept_any)]),
+        (read_string(In, _, Response),
+         atom_json_dict(Response, Appointments, [])),
+        close(In)).
+
+% Convert Appointment dictionary to surgery_id
+convert_appointment_to_agenda_operation_room(AppointmentDict, agenda_operation_room(Room, FormattedDate, Agenda)) :-
+    Room = AppointmentDict.get(surgeryRoomDto).get(number),
+    DateAndTime = AppointmentDict.get(dateAndTime),
+
+    %2024-11-15T14:30:00 Example
+    split_string(DateAndTime, "T", "", [DatePortion, TimePortion]),
+    split_string(DatePortion, "-", "", [Year, Month, Day]),
+    atom_number(Year, YearNumber),
+    atom_number(Month, MonthNumber),
+    atom_number(Day, DayNumber),
+    
+    FormattedDate is YearNumber * 10000 + MonthNumber * 100 + DayNumber,
+
+    OperationRequest = AppointmentDict.get(operationRequestDto),
+    OperationRequestType = OperationRequest.get(operationType),
+    OperationTypeId = OperationRequestType.get(id),
+    EstimatedDuration = OperationRequestType.get(estimatedDuration),
+
+    split_string(TimePortion, ":", "", [HourStr, MinuteStr, _]),
+    atom_number(HourStr, Hour),
+    atom_number(MinuteStr, Minute),
+    
+    StartMinutes is Hour * 60 + Minute,
+    EndMinutes is StartMinutes + EstimatedDuration,
+
+    Agenda = [[StartMinutes, EndMinutes, OperationTypeId]].
+
+% Convert Operation Rooms to JSON
+agenda_operation_rooms_to_json(agenda_operation_room(Room, Day, Agenda), json([room = Room, day = Day, agenda = Agenda])).
+
+agenda_operation_room(Room, Day, Agenda) :-
+    convert_appointment_to_agenda_operation_room(_, agenda_operation_room(Room, Day, Agenda)).
+
+
+% ----------------------- Agenda Staff - Appointments -------------------------
+:- http_handler(api(agendastaff), get_agenda_staffs, []).
+
+% GET AgendaStaffs
+get_agenda_staffs(_Request) :-
+    get_appointments_staffs_backend(Appointments),
+    findall(AgendaStaff, (member(Appointment, Appointments), convert_appointment_to_agenda_staff(Appointment, AgendaStaff)),AgendasStaff),
+    maplist(convert_agenda_staff_to_json, AgendasStaff, JsonAgendaStaffs),
+    reply_json(json([agenda_staffs = JsonAgendaStaffs]), [json_object(dict)]).
+
+% GET Appointments Staffs Backend
+get_appointments_staffs_backend(Appointments) :-
+    backend_url(URL),
+    atom_concat(URL, 'staffs/appointments', URL_Appointments),
+    setup_call_cleanup(
+        http_open(URL_Appointments, In, [cert_verify_hook(cert_accept_any)]),
+        (read_string(In, _, Response),
+         atom_json_dict(Response, Appointments, [])),
+        close(In)).
+
+% Convert Appointment Staff to Agenda Staff
+convert_appointment_to_agenda_staff(Appointment, agenda_staff(StaffID, Day, AppointmentsStaff)) :-
+    Appointment.staffID = StaffID,
+    Appointment.day = Day,
+    findall(appointment_detail(AppointmentId, StartTime, EndTime), 
+        (member(AppointmentDetail, Appointment.appointmentsStaff),
+         AppointmentDetail.appointmentId = AppointmentId,
+         AppointmentDetail.startTime = StartTime,
+         AppointmentDetail.endTime = EndTime), 
+        AppointmentsStaff).
+
+% Convert AgendaStaff to JSON Format
+convert_agenda_staff_to_json(agenda_staff(StaffID, Day, AppointmentsStaff), 
+    json([staffID = StaffID, day = Day, appointments = AppointmentsStaffJson])) :-
+    maplist(convert_appointment_detail_to_json, AppointmentsStaff, AppointmentsStaffJson).
+
+% Convert AppointmentDetail to JSON Format
+convert_appointment_detail_to_json(appointment_detail(AppointmentId, StartTime, EndTime),
+    json([appointmentId = AppointmentId, startTime = StartTime, endTime = EndTime])).
+
+agenda_staff(StaffId, Day, Appointments) :-
+    convert_agenda_staff_to_json(_, agenda_staff(StaffId, Day, Appointments)).
 
 :- server(4000).
