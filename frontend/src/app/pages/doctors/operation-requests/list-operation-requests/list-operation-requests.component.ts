@@ -18,6 +18,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { OperationTypeService } from '../../../../services/operation-type.service';
 import { OperationType } from '../../../../domain/OperationType';
+import { ModalUpdateOperationRequestsComponent } from '../modal-update-operation-requests/modal-update-operation-requests.component';
 
 
 @Component({
@@ -26,7 +27,7 @@ import { OperationType } from '../../../../domain/OperationType';
   imports: [
     InputTextModule, FormsModule, OverlayPanelModule, FloatLabelModule, AvatarModule,
     TagModule, BadgeModule, ScrollerModule, CalendarModule, DropdownModule,
-    DataViewModule, AccordionModule, CommonModule, DialogModule
+    DataViewModule, AccordionModule, CommonModule, ModalUpdateOperationRequestsComponent ,DialogModule
   ],
   templateUrl: './list-operation-requests.component.html',
   styleUrls: ['./list-operation-requests.component.scss'],
@@ -69,7 +70,7 @@ export class ListOperationRequestsComponent implements OnInit {
     this.filterPanel.hide();
   }
 
-  applyFilters(): void {
+  applyFilters(operationTypeId: string, selectedStatus: any, selectedPriority: any, medicalRecordNumber: string): void {
     this.loadOperationRequests();
     this.filterPanel.hide();
   }

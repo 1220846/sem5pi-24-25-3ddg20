@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { OperationRequest } from '../domain/OperationRequests';
 import { CreatingOperationRequestDto } from '../domain/CreatingOperationRequestDto';
 
@@ -42,7 +42,15 @@ export class OperationRequestService {
     return this.http.get<OperationRequest[]>(`${this.apiUrl}/filter`, { params });
   }
 
-  add(operationType: CreatingOperationRequestDto):Observable<OperationRequest>{
-    return this.http.post<OperationRequest>(this.apiUrl, operationType, { headers: this.header });
+  add(operationRequest: CreatingOperationRequestDto):Observable<OperationRequest>{
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<OperationRequest>(this.apiUrl, operationRequest, { headers: headers })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error.error.message);
+        })
+      );
   }
 }

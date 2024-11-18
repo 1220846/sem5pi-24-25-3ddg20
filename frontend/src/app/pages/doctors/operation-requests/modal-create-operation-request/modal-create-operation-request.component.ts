@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
@@ -15,6 +15,10 @@ import { OperationType } from '../../../../domain/OperationType';
 import { OperationTypeService } from '../../../../services/operation-type.service';
 import { Patient } from '../../../../domain/Patient';
 import { PatientService } from '../../../../services/patient.service';
+import { User } from '../../../../domain/User';
+import { Observable } from 'rxjs';
+import { UserService } from '../../../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-create-operation-request',
@@ -32,6 +36,8 @@ export class ModalCreateOperationRequestComponent implements OnInit {
   operationRequestForm: FormGroup;
   @Output() operationRequestCreated = new EventEmitter<CreatingOperationRequestDto>();
 
+  @Input()user: User | null = null;
+
   operationTypes: OperationType[] = [];
   availableOperationTypes: OperationType[] = [];
 
@@ -45,10 +51,9 @@ export class ModalCreateOperationRequestComponent implements OnInit {
     private messageService: MessageService,
     private operationRequestService: OperationRequestService,
     private operationTypesService: OperationTypeService,
-    private patientsService: PatientService
+    private patientsService: PatientService,
   ) {
     this.operationRequestForm = this.fb.group({
-      doctorId: ['',Validators.required],
       operationType: ['', Validators.required],
       patient: ['', Validators.required],
       selectedPriority: [null, Validators.required],
@@ -63,6 +68,8 @@ export class ModalCreateOperationRequestComponent implements OnInit {
   ];
   
   visible: boolean = false;
+
+
 
   ngOnInit(): void {
     this.loadOperationTypes();
@@ -96,10 +103,15 @@ export class ModalCreateOperationRequestComponent implements OnInit {
 
   saveData() {
     if (this.operationRequestForm.valid) {
+
+      const doctorId = this.user?.username.split("@")[0];
+      if (!doctorId) {
+          throw new Error('Doctor ID is missing');
+      }
       const operationRequest: CreatingOperationRequestDto = {
-        doctorId: this.operationRequestForm.value.doctorId,
-        operationTypeId: this.operationRequestForm.value.operationType,
-        medicalRecordNumber: this.operationRequestForm.value.medicalRecordNumber,
+        doctorId,
+        operationTypeId: this.operationRequestForm.value.operationType.id,
+        medicalRecordNumber: this.operationRequestForm.value.patient.id,
         priority: this.operationRequestForm.value.selectedPriority,
         deadline: this.operationRequestForm.value.deadline
       };
