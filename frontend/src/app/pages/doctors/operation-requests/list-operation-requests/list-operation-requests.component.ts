@@ -69,7 +69,7 @@ export class ListOperationRequestsComponent implements OnInit {
     this.filterPanel.hide();
   }
 
-  applyFilters(): void {
+  applyFilters(operationTypeId: string, selectedStatus: any, selectedPriority: any, medicalRecordNumber: string): void {
     this.loadOperationRequests();
     this.filterPanel.hide();
   }

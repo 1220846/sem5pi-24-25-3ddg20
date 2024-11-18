@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormBuilder, FormGroup, FormsModule , Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { CalendarModule } from 'primeng/calendar';
 import { ToastModule } from 'primeng/toast';
@@ -14,7 +14,7 @@ interface Options {
 @Component({
   selector: 'modal-update-operation-requests',
   standalone: true,
-  imports: [InputTextModule, FormsModule, FormGroup,ToastModule ,FloatLabelModule,CalendarModule,DropdownModule,DialogModule],
+  imports: [InputTextModule, FormsModule, ReactiveFormsModule,ToastModule ,FloatLabelModule,CalendarModule,DropdownModule,DialogModule],
   templateUrl: './modal-update-operation-requests.component.html',
   styleUrls: ['./modal-update-operation-requests.component.scss']
 })
@@ -35,12 +35,14 @@ export class ModalUpdateOperationRequestsComponent implements OnInit{
     });
   }
 
+  optionsPriority = [
+    { label: 'Elective', value: 'ELECTIVE' },
+    { label: 'Urgent', value: 'URGENT' },
+    { label: 'Emergency', value: 'EMERGENCY' }
+  ];
+
   ngOnInit() {
-    this.options = [
-        {label:'Elective'},
-        {label:'Urgent'},
-        {label:'Emergency'}
-    ];
+    
   }
 
   visible: boolean = false;
@@ -49,4 +51,7 @@ export class ModalUpdateOperationRequestsComponent implements OnInit{
         this.visible = true;
     }
 
+  saveData(){
+
+  }
 }
