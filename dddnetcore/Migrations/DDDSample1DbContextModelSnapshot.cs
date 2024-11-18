@@ -47,8 +47,7 @@ namespace DDDNetCore.Migrations
                     b.HasIndex("OperationRequestId")
                         .IsUnique();
 
-                    b.HasIndex("RoomNumber")
-                        .IsUnique();
+                    b.HasIndex("RoomNumber");
 
                     b.ToTable("Appointments");
                 });
@@ -427,8 +426,8 @@ namespace DDDNetCore.Migrations
                         .IsRequired();
 
                     b.HasOne("dddnetcore.Domain.SurgeryRooms.SurgeryRoom", "SurgeryRoom")
-                        .WithOne()
-                        .HasForeignKey("DDDSample1.Domain.Appointments.Appointment", "RoomNumber")
+                        .WithMany()
+                        .HasForeignKey("RoomNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
