@@ -1,6 +1,7 @@
 <div class="card flex justify-content-end mr-2">
     <p-button (onClick)="showDialog()" [outlined]="true" severity="primary" icon="pi pi-pencil" [disabled]="staff?.status != 'ACTIVE'"/>
-    <p-dialog header="Edit Staff Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem', maxHeight: '40rem' }" [appendTo]="'body'">
+    <p-dialog header="Edit Staff Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '45rem', maxHeight: '40rem' }" [appendTo]="'body'">
+        <p-toast></p-toast>
         <div class="p-fluid dialog-content">
             <div class="flex flex-column gap-2 mb-2 input-large">
                 <form [formGroup]="staffForm" class="dialog-form">
@@ -12,7 +13,7 @@
                             <small
                                 *ngIf="staffForm.controls['email'].invalid && (staffForm.controls['email'].dirty || staffForm.controls['email'].touched)"
                                 class="p-error">
-                                Is required.
+                                Invalid email.
                             </small>
                         </div>
                         <div class="flex flex-column gap-2 mb-2 input-small">
@@ -21,7 +22,7 @@
                             <small
                                 *ngIf="staffForm.controls['phoneNumber'].invalid && (staffForm.controls['phoneNumber'].dirty || staffForm.controls['phoneNumber'].touched)"
                                 class="p-error">
-                                Is required.
+                                Invalid phone
                             </small>
                         </div>
                     </div>  
@@ -42,8 +43,8 @@
                                 Please select a specialization.
                             </small>
                         </div>
-                        <div class="flex flex-column gap-2 mb-2 button-margin input-small">
-                            <p-button label="Save Above" severity="primary" (onClick)="changeInfo()"/>
+                        <div class="flex flex-column gap-2 mb-2input-small button-margin">
+                            <p-button icon="pi pi-save" severity="primary" (onClick)="changeInfo()"/>
                         </div>
                     </div>
                 </form>
@@ -59,7 +60,7 @@
                             <p-calendar id="endTime" formControlName="endTime" dateFormat="dd/mm/yy" placeholder="End Time" [showTime]="true" [showIcon]="true" appendTo="body" [iconDisplay]="'input'" [showOnFocus]="false" />
                         </div>
                         <div class="flex flex-column gap-2 mb-2 button-margin input-small">
-                            <p-button label="Add Availability Slot" severity="primary" (onClick)="addAvailabilitySlot()"/>
+                            <p-button icon="pi pi-plus" severity="primary" (onClick)="addAvailabilitySlot()"/>
                         </div>
                     </div>
                 </form>
@@ -67,7 +68,7 @@
                     <span class="p-text-secondary block mt-5 mb-3">Remove Availability Slot.</span>
                     <div class="flex flex-wrap gap-7">
                         <div class="flex flex-column gap-2 mb-2 input-large">
-                            <label for="availabilitySlotId">Availabilty Slot to Remove</label>
+                            <label for="availabilitySlotId">Please select an availability slot</label>
                             <p-dropdown [options]="staff?.availabilitySlots" 
                             [appendTo]="'body'"
                             formControlName="availabilitySlotId" [filter]="true"
@@ -83,12 +84,12 @@
                             </small>
                         </div>
                         <div class="flex flex-column gap-2 mb-2 button-margin input-small">
-                            <p-button label="Remove Availability Slot" severity="danger" (onClick)="removeAvailabilitySlot()"/>
+                            <p-button icon="pi pi-trash" severity="danger" (onClick)="removeAvailabilitySlot()"/>
                         </div>
                     </div>
                 </form>
                 <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
-                    <p-button label="Close" severity="secondary" (onClick)="visible = false" />
+                    <p-button label="Close" severity="secondary" (onClick)="closeDialog()" />
                 </div>
             </div>
         </div>

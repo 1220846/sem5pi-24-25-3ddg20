@@ -106,7 +106,8 @@ export class ListStaffProfilesComponent implements OnInit {
   onStaffProfileDeacivated() {
     this.loadStaffs();
   }
-  /*getSpecializationName(specializationId: number): string {
-    this.specializationService.getById(specializationId)
-  }*/
+
+  onStaffProfileEdited() {
+    this.loadStaffs();
+  }
 }
