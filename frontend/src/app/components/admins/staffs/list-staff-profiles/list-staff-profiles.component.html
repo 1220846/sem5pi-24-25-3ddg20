@@ -79,7 +79,7 @@
                                 </p-tag>
                             </div>
                         </span>
-                        <app-edit-staff-profile [staff]=staff></app-edit-staff-profile>
+                        <app-edit-staff-profile [staff]=staff (staffProfileEdited)="onStaffProfileEdited()" (availabilitySlotsChanged)="onAvailabilitySlotChange(staff)"></app-edit-staff-profile>
                         <app-deactivate-staff-profile [staff]=staff (staffProfileDeacivated)="onStaffProfileDeacivated()"></app-deactivate-staff-profile>
                     </ng-template>
                     <div class="flex ml-3 gap-6">

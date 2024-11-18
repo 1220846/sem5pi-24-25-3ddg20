@@ -2,7 +2,7 @@ export interface EditingStaffDto {
     email: string | null;
     phoneNumber: string | null;
     specializationId: string | null;
-    newAvailabilitySlotStartTime: Date | null;
-    newAvailabilitySlotEndTime: Date | null;
+    newAvailabilitySlotStartTime: number | null;
+    newAvailabilitySlotEndTime: number | null;
     toRemoveAvailabilitySlotId: string | null;
 }

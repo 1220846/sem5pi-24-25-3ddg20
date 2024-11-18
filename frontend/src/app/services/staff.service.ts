@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { last, Observable } from 'rxjs';
 import { Staff } from '../domain/Staff';
 import { CreatingStaffDto } from '../domain/CreatingStaffDto';
+import { EditingStaffDto } from '../domain/EditingStaffDto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,10 @@ export class StaffService {
 
 
   constructor(private httpClient: HttpClient) { }
+
+  get(id: string) {
+    return this.httpClient.get<Staff>(`${this.apiUrl}/${id}`, { headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`})});
+  }
 
   getAllAndFilter(firstName?: string, lastName?: string, fullName?: string, email?: string, specializationId?: string,
     phoneNumber?: string, id?: string, licenseNumber?:
@@ -53,9 +58,12 @@ export class StaffService {
     const token = localStorage.getItem('accessToken'); 
     const headers = this.header.set('Authorization', `Bearer ${token}`);
     console.log(staffId);
-    //const algo = this.httpClient.delete<Staff>(`${this.apiUrl}/${staffId}`, {headers: headers});
-    const algo = this.httpClient.delete<Staff>(`https://localhost:5001/api/staffs/D202400003`, {headers: headers});
-    console.log(algo);
-    return algo;
+    return this.httpClient.delete<Staff>(`${this.apiUrl}/${staffId}`, {headers: headers});
+  }
+
+  edit(staffId: string, editDto: EditingStaffDto) {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.patch<Staff>(`${this.apiUrl}/${staffId}`, editDto, {headers: headers});
   }
 }

@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ModalDeactivateStaffProfileComponent } from '../modal-deactivate-staff-profile/modal-deactivate-staff-profile.component';
 import { ModalEditStaffProfileComponent } from '../modal-edit-staff-profile/modal-edit-staff-profile.component';
+import { AvailabilitySlot } from '../../../../domain/AvailabilitySlot';
 
 @Component({
   selector: 'app-list-staff-profiles',
@@ -106,7 +107,19 @@ export class ListStaffProfilesComponent implements OnInit {
   onStaffProfileDeacivated() {
     this.loadStaffs();
   }
-  /*getSpecializationName(specializationId: number): string {
-    this.specializationService.getById(specializationId)
-  }*/
+
+  onStaffProfileEdited() {
+    this.loadStaffs();
+  }
+
+  onAvailabilitySlotChange(staff: Staff) {
+    var availabilitySlots: AvailabilitySlot[];
+    
+    this.staffService.get(staff.id).subscribe({
+      next: (data) => {
+        staff.availabilitySlots = data.availabilitySlots;
+      },
+      error: (error) => console.error('Error fetching specializations:', error)
+    })
+  }
 }
