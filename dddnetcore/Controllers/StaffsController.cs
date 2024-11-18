@@ -60,7 +60,7 @@ namespace DDDSample1.Controllers
         }
 
         
-        [HttpPost("{id}")]
+        [HttpPatch("{id}")]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<StaffDto>> EditStaff(string id, EditingStaffDto dto) {
             try {

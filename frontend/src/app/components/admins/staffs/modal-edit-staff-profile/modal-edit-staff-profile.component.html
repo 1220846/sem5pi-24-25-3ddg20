@@ -68,30 +68,28 @@
                     <span class="p-text-secondary block mt-5 mb-3">Remove Availability Slot.</span>
                     <div class="flex flex-wrap gap-7">
                         <div class="flex flex-column gap-2 mb-2 input-large">
-                            <label for="availabilitySlotId">Please select an availability slot</label>
+                            <label for="availabilitySlot">Please select an availability slot</label>
                             <p-dropdown [options]="staff?.availabilitySlots" 
                             [appendTo]="'body'"
-                            formControlName="availabilitySlotId" [filter]="true"
+                            formControlName="availabilitySlot" [filter]="true"
                             filterBy="name" [virtualScroll]="true"
                             [virtualScrollItemSize]="40"
                             scrollHeight="120px"
-                                placeholder="Select an Availability Slot" optionLabel="name">
+                                placeholder="Select an Availability Slot" optionLabel="name"
+                                (onShow)="nameAvailabilitySlots()">
                             </p-dropdown>
-                            <small
-                                *ngIf="removeAvailabilitySlotForm.controls['availabilitySlotId'].invalid && (removeAvailabilitySlotForm.controls['availabilitySlotId'].dirty || removeAvailabilitySlotForm.controls['availabilitySlotId'].touched)"
-                                class="p-error">
-                                Please select an availability slot
-                            </small>
                         </div>
                         <div class="flex flex-column gap-2 mb-2 button-margin input-small">
                             <p-button icon="pi pi-trash" severity="danger" (onClick)="removeAvailabilitySlot()"/>
                         </div>
                     </div>
                 </form>
-                <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
-                    <p-button label="Close" severity="secondary" (onClick)="closeDialog()" />
-                </div>
             </div>
         </div>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Close" severity="secondary" (onClick)="closeDialog()" />
+            </div>
+        </ng-template>
     </p-dialog>
 </div>

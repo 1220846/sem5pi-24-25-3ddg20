@@ -38,6 +38,7 @@ export class ModalEditStaffProfileComponent {
   removeAvailabilitySlotForm: FormGroup;
 
   @Output() staffProfileEdited = new EventEmitter();
+  @Output() availabilitySlotsChanged = new EventEmitter();
   @Input() staff: Staff | null = null;
 
   constructor(
@@ -53,7 +54,7 @@ export class ModalEditStaffProfileComponent {
       })
     this.addAvailabilitySlotForm = this.fb.group({
       startTime: [null, [Validators.required]],
-      endTIme: [null, [Validators.required]]
+      endTime: [null, [Validators.required]]
     },
     {
       validators: (formGroup) => {
@@ -67,7 +68,7 @@ export class ModalEditStaffProfileComponent {
       }
     })
     this.removeAvailabilitySlotForm = this.fb.group({
-      availabilitySlotId: [null, [Validators.required]]
+      availabilitySlot: [null, [Validators.required]]
     })
   }
 
@@ -79,6 +80,9 @@ export class ModalEditStaffProfileComponent {
 
   ngOnInit(): void {
     this.loadSpecializations();
+  }
+
+  nameAvailabilitySlots() {
     if (this.staff?.availabilitySlots) {
       this.staff.availabilitySlots = this.staff.availabilitySlots.map((availabilitySlot) => ({
         ...availabilitySlot,
@@ -136,10 +140,56 @@ export class ModalEditStaffProfileComponent {
   }
 
   addAvailabilitySlot() {
-    //TODO
+    if (this.addAvailabilitySlotForm.valid) {
+      const staff: EditingStaffDto = {
+        email: null,
+        phoneNumber: null,
+        specializationId: null,
+        newAvailabilitySlotStartTime: this.addAvailabilitySlotForm.value.startTime.getTime() / 1000,
+        newAvailabilitySlotEndTime: this.addAvailabilitySlotForm.value.endTime.getTime() / 1000,
+        toRemoveAvailabilitySlotId: null
+      }
+      this.staffService.edit(this.staff?.id!, staff).subscribe(
+        (response) => {
+          this.changes = true;
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Availability slot added!', life: 2000});
+          this.availabilitySlotsChanged.emit();
+        },
+        (error) => {
+          console.error("Error adding availability slot", error);
+          this.messageService.add({severity: 'error', summary: 'Error', detail:'Failed to add availability slot', life: 2000});
+        }
+      );
+    } else {
+      this.messageService.add({severity: 'warn', summary: 'Error', detail:'Some inputted data is invalid', life: 2000});
+    }
   }
 
   removeAvailabilitySlot() {
-    //TODO
+    if (this.removeAvailabilitySlotForm.valid) {
+      const staff: EditingStaffDto = {
+        email: null,
+        phoneNumber: null,
+        specializationId: null,
+        newAvailabilitySlotStartTime: null,
+        newAvailabilitySlotEndTime: null,
+        toRemoveAvailabilitySlotId: this.removeAvailabilitySlotForm.value.availabilitySlot.id
+      }
+      console.log(staff.toRemoveAvailabilitySlotId);
+      this.staffService.edit(this.staff?.id!, staff).subscribe(
+        (response) => {
+          this.changes = true;
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Availability slot removed!', life: 2000});
+          this.staff?.availabilitySlots.filter(availabilitySlot => availabilitySlot.id !== this.removeAvailabilitySlotForm.value.availabilitySlotId);
+          this.removeAvailabilitySlotForm.controls['availabilitySlot'].setValue(null);
+        },
+        (error) => {
+          console.error("Error removing availability slot", error);
+          this.messageService.add({severity: 'error', summary: 'Error', detail:'Failed to remove availability slot', life: 2000});
+        }
+      )
+    } else {
+      this.messageService.add({severity: 'warn', summary: 'Error', detail:'Some inputted data is invalid', life: 2000});
+    }
   }
 }

@@ -15,6 +15,10 @@ export class StaffService {
 
   constructor(private httpClient: HttpClient) { }
 
+  get(id: string) {
+    return this.httpClient.get<Staff>(`${this.apiUrl}/${id}`, { headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`})});
+  }
+
   getAllAndFilter(firstName?: string, lastName?: string, fullName?: string, email?: string, specializationId?: string,
     phoneNumber?: string, id?: string, licenseNumber?:
     string, status?: string): Observable<Staff[]>
