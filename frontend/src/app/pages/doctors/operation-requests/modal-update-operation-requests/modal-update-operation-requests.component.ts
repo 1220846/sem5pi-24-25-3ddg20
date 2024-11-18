@@ -3,6 +3,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { CalendarModule } from 'primeng/calendar';
+import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
@@ -14,7 +15,7 @@ interface Options {
 @Component({
   selector: 'modal-update-operation-requests',
   standalone: true,
-  imports: [InputTextModule, FormsModule, ReactiveFormsModule,ToastModule ,FloatLabelModule,CalendarModule,DropdownModule,DialogModule],
+  imports: [CommonModule, InputTextModule, FormsModule, ReactiveFormsModule,ToastModule ,FloatLabelModule,CalendarModule,DropdownModule,DialogModule],
   templateUrl: './modal-update-operation-requests.component.html',
   styleUrls: ['./modal-update-operation-requests.component.scss']
 })
