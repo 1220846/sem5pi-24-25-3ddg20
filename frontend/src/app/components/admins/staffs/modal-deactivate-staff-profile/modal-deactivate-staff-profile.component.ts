@@ -48,7 +48,6 @@ export class ModalDeactivateStaffProfileComponent {
         acceptButtonStyleClass: 'p-button-sm p-button-danger', 
         rejectButtonStyleClass: 'p-button-sm p-button-outlined',
         accept: () => {
-            console.log(this.staff?.id!);
             this.staffService.deactivate(this.staff?.id!).subscribe(
               (response) => {
                 this.messageService.add({severity: 'success', summary: 'Success', detail: 'Staff profile deactivated successfully', life: 2000});
