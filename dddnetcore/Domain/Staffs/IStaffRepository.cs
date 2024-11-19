@@ -12,5 +12,7 @@ namespace DDDSample1.DataAnnotations.Staffs{
         string status = null, int pageNumber = 1, int pageSize = 10);
     
     public Task<Staff> UpdateAsync(Staff staff);
+
+    Task<int> GetStaffsCountAsync();
     }
 }

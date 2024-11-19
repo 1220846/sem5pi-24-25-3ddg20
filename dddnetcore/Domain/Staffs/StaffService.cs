@@ -89,6 +89,14 @@ namespace dddnetcore.Domain.Staffs
                 return new List<StaffDto>();
             }
         }
+
+        public async Task<int> GetStaffsCountAsync() {
+            try {
+                return await _repo.GetStaffsCountAsync();
+            } catch (Exception e) {
+                throw new Exception("Error counting staffs", e);
+            }
+        }
         
         public async Task<StaffDto> EditStaffAsync(string id, EditingStaffDto dto) {
             bool changedContactInfo = false;

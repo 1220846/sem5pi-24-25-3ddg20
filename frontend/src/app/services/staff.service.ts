@@ -19,7 +19,7 @@ export class StaffService {
     return this.httpClient.get<Staff>(`${this.apiUrl}/${id}`, { headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`})});
   }
 
-  getAllAndFilter(firstName?: string, lastName?: string, fullName?: string, email?: string, specializationId?: string,
+  getAllAndFilter(pageNumber: number, pageSize: number, firstName?: string, lastName?: string, fullName?: string, email?: string, specializationId?: string,
     phoneNumber?: string, id?: string, licenseNumber?:
     string, status?: string): Observable<Staff[]>
   { 
@@ -43,10 +43,16 @@ export class StaffService {
     if (status)
       params = params.set('status', status);
 
-    params = params.set('pageSize?', 0x7fffffff); //pagination done by primeng
+    params = params.set('pageNumber', pageNumber);
+    params = params.set('pageSize', pageSize);
     
     return this.httpClient.get<Staff[]>(`${this.apiUrl}/filter`, {params, headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`})});
-}
+  }
+  staffCount(): Observable<number> {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.get<number>(`${this.apiUrl}/count`, { headers: headers });
+  }
 
   add(staff: CreatingStaffDto): Observable<Staff>{
     const token = localStorage.getItem('accessToken'); 

@@ -97,3 +97,9 @@
         </ng-template>
     </p-scroller>
 </div>
+<p-paginator 
+(onPageChange)="onPageChange($event)" 
+[first]="pageNumber" 
+[rows]="pageSize" 
+[totalRecords]="totalStaffs" 
+[rowsPerPageOptions]="[10, 20, 30]" />

@@ -69,5 +69,9 @@ namespace dddnetcore.Infraestructure.Staffs
 
             return staff;
         }
+
+        public async Task<int> GetStaffsCountAsync() {
+            return await _context.Staffs.CountAsync();
+        }
     }
 }

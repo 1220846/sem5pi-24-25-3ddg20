@@ -59,6 +59,16 @@ namespace DDDSample1.Controllers
             return await _service.GetStaffsAsync(firstName, lastName, fullName, email, specializationId, phoneNumber, id, licenseNumber, status, pageNumber, pageSize);
         }
 
+        [HttpGet("count")]
+        [Authorize(Policy = "RequiredAdminRole")]
+        public async Task<ActionResult<int>> GetStaffCount() {
+            try {
+                var count = await _service.GetStaffsCountAsync();
+                return Ok(count);
+            } catch (Exception e) {
+                return BadRequest(new { e.Message});
+            }
+        }
         
         [HttpPatch("{id}")]
         [Authorize(Policy = "RequiredAdminRole")]
