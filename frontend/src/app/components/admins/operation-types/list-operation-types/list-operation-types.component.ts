@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { OperationTypeService } from '../../../../services/operation-type.service';
@@ -14,11 +14,12 @@ import { SpecializationService } from '../../../../services/specialization.servi
 import { Specialization } from '../../../../domain/Specialization';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
+import { ModalDeleteOperationTypeComponent } from '../modal-delete-operation-type/modal-delete-operation-type.component';
 
 @Component({
   selector: 'app-list-operation-types',
   standalone: true,
-  imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,InputTextModule,FormsModule,OverlayPanelModule,ButtonModule],
+  imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,InputTextModule,FormsModule,OverlayPanelModule,ButtonModule,ModalDeleteOperationTypeComponent],
   templateUrl: './list-operation-types.component.html',
   styleUrl: './list-operation-types.component.scss'
 })
@@ -67,6 +68,10 @@ export class ListOperationTypesComponent implements OnInit {
         this.operationTypes = data;},
       error: (error) => console.error('Error fetching operation types:', error)
     });
+  }
+
+  deactivateOperationType(){
+    this.loadOperationTypes();
   }
 
   loadSpecializations(): void {

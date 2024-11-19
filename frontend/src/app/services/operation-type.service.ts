@@ -50,4 +50,11 @@ export class OperationTypeService {
     return this.httpClient.get<OperationType>(`${this.apiUrl}/${id}`);
   }
 
+  deactivateOperationType(operationTypeId: string):Observable<OperationType>{
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    console.log(operationTypeId);
+    return this.httpClient.delete<OperationType>(`${this.apiUrl}/${operationTypeId}`, {headers: headers})
+  }
+
 }

@@ -49,6 +49,7 @@
                                 </p-tag>
                             </div>
                         </span>
+                        <app-modal-delete-operation-type [operationType]=operationType (operationTypeProfileDeacivated)="deactivateOperationType()"></app-modal-delete-operation-type>
                     </ng-template>
                     <div class="flex ml-3 gap-6">
                         <p><strong>Surgery Time:</strong> {{ operationType.surgeryTime }} min</p>
