@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { SidebarComponent } from "../../components/sidebar/sidebar.component";
-import { OperationRequestsComponent } from '../../pages/doctors/operation-requests/operation-requests.component';
+import { SidebarComponent } from "../sidebar/sidebar.component";
+import { OperationRequestsComponent } from './operation-requests/operation-requests.component';
 import { ModalCreateOperationRequestComponent } from './operation-requests/modal-create-operation-request/modal-create-operation-request.component';
 import { ListOperationRequestsComponent } from './operation-requests/list-operation-requests/list-operation-requests.component';
 import { ModalUpdateOperationRequestsComponent } from './operation-requests/modal-update-operation-requests/modal-update-operation-requests.component';

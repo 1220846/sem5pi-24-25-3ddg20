@@ -100,7 +100,7 @@ namespace DDDSample1
                     policy.Requirements.Add(new HasScopeRequirement("read:messages", $"https://{Domain}/")));
                 options.AddPolicy("RequiredBackofficeRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Admin","Doctor","Nurse","Technician"));
                 options.AddPolicy("RequiredAdminRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Admin"));
-                options.AddPolicy("RequiredDoctorRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Doctor"));
+                options.AddPolicy("RequiredDoctorRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Doctor", "Admin"));
                 options.AddPolicy("RequiredNurseRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Nurse"));
                 options.AddPolicy("RequiredTechnicianRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Technician"));
                 options.AddPolicy("RequiredPatientRole",policy => policy.RequireClaim($"{Namespace_Roles}/roles","Patient"));

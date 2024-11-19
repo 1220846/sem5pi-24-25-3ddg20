@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AdminComponent } from './components/admins/admin.component';
-import { DoctorsComponent } from './pages/doctors/doctors.component';
+import { DoctorsComponent } from './components/doctors/doctors.component';
 import { ModalCreateUserPatientComponent } from './components/authentication/modal-create-user-patient/modal-create-user-patient.component';
 import { OperationTypesComponent } from './components/admins/operation-types/operation-types.component';
 import { LoginComponent } from './components/authentication/login/login.component';
@@ -13,7 +13,7 @@ import { AccountComponent } from './components/patients/account/account.componen
 import { PatientsComponent } from './components/patients/patients.component';
 import { StaffsComponent } from './components/admins/staffs/staffs.component';
 import { AdminPatientsComponent } from './components/admins/patients/admin-patients.component';
-import { OperationRequestsComponent } from './pages/doctors/operation-requests/operation-requests.component';
+import { OperationRequestsComponent } from './components/doctors/operation-requests/operation-requests.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
