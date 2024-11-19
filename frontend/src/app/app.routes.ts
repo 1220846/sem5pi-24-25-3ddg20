@@ -13,6 +13,7 @@ import { AccountComponent } from './components/patients/account/account.componen
 import { PatientsComponent } from './components/patients/patients.component';
 import { StaffsComponent } from './components/admins/staffs/staffs.component';
 import { AdminPatientsComponent } from './components/admins/patients/admin-patients.component';
+import { OperationRequestsComponent } from './pages/doctors/operation-requests/operation-requests.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -29,6 +30,7 @@ export const routes: Routes = [
     children: [{ path: 'operation-types', component: OperationTypesComponent },
               { path: 'staffs', component: StaffsComponent},
               { path: 'patients', component: AdminPatientsComponent},
+              { path: 'operation-requests', component:OperationRequestsComponent},
               { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
   },
   { path: 'login', component: LoginComponent },

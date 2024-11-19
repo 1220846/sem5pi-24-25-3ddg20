@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
+import { EditingOperationRequestDto } from '../../../../domain/EditingOperationRequestDto';
+import { OperationRequest } from '../../../../domain/OperationRequests';
 
 interface Options {
   label: string;
@@ -27,8 +29,11 @@ export class ModalUpdateOperationRequestsComponent implements OnInit{
   operationRequestForm: FormGroup;
   selectedPriority: Options | undefined;
 
+  @Output() operationRequestProfileEdited = new EventEmitter<EditingOperationRequestDto>();
+  @Input() operationRequest: OperationRequest | null = null;
+
+
   constructor(private fb: FormBuilder
-    
   ){
     this.operationRequestForm = this.fb.group({
       selectedPriority: [null, Validators.required],
@@ -52,7 +57,7 @@ export class ModalUpdateOperationRequestsComponent implements OnInit{
         this.visible = true;
     }
 
-  saveData(){
-
+  changeInfo(){
+      this.visible=false;
   }
 }

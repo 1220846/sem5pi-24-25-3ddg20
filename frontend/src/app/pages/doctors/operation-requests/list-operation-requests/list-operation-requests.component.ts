@@ -19,6 +19,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { OperationTypeService } from '../../../../services/operation-type.service';
 import { OperationType } from '../../../../domain/OperationType';
 import { ModalUpdateOperationRequestsComponent } from '../modal-update-operation-requests/modal-update-operation-requests.component';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -102,12 +103,13 @@ loadOperationRequests(): void {
     }
   });
 }
-
-
   loadOperationType(operationTypeId: string): void {
     this.OperationTypeService.getById(operationTypeId).subscribe({
       next: (operationType) => {
-        console.log('Operation Type carregado:', operationType);
+        return operationType
+        if(this.operationTypes.includes(operationType)){
+          
+        }
       },
       error: (error) => {
         console.error('Erro ao buscar o tipo de operação:', error);
