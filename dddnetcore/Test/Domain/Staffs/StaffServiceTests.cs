@@ -13,6 +13,7 @@ using DDDSample1.Domain.Emails;
 using DDDSample1.Domain.Staffs;
 using DDDSample1.Domain.Specializations;
 using System;
+using DDDSample1.Domain.Appointments;
 
 public class StaffServiceTests
 {
@@ -25,6 +26,8 @@ public class StaffServiceTests
     private readonly Mock<ISystemLogRepository> _mockSystemLogRepo;
     private Mock<ISystemLogRepository> _mockRepoSystemLog;
     private readonly Mock<IEmailService> _mockEmailService;
+    private Mock<IOperationTypeRepository> _mockOperationTypeRepo;
+    private Mock<IAppointmentRepository> _mockAppointmentRepo;
 
     public StaffServiceTests()
     {
@@ -36,6 +39,8 @@ public class StaffServiceTests
         _mockSystemLogRepo = new Mock<ISystemLogRepository>();
         _mockEmailService = new Mock<IEmailService>();
         _mockRepoSystemLog = new Mock<ISystemLogRepository>();
+        _mockOperationTypeRepo = new Mock<IOperationTypeRepository>();
+        _mockAppointmentRepo = new Mock<IAppointmentRepository>();
 
         _staffService = new StaffService(
             _mockUnitOfWork.Object,
@@ -44,7 +49,8 @@ public class StaffServiceTests
             _mockSpecializationRepo.Object,
             _mockUserRepo.Object,
             _mockSystemLogRepo.Object,
-            _mockEmailService.Object);
+            _mockEmailService.Object,_mockOperationTypeRepo.Object,
+            _mockAppointmentRepo.Object);
     }
 
     private Staff ExampleStaff() {

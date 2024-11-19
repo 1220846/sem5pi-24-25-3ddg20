@@ -73,5 +73,9 @@ namespace dddnetcore.Infraestructure.Staffs
         public async Task<int> GetStaffsCountAsync() {
             return await _context.Staffs.CountAsync();
         }
+        
+        public new async Task<List<Staff>> GetAllAsync(){
+            return await _context.Staffs.Include(a => a.User).Include(a => a.Specialization).ToListAsync();
+        }
     }
 }

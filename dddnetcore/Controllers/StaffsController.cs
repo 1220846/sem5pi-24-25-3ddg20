@@ -98,5 +98,28 @@ namespace DDDSample1.Controllers
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
+
+        [HttpGet("operationtypes")]
+        //[Authorize(Policy = "RequiredBackOfficeRole")]
+        public async Task<ActionResult<IEnumerable<StaffOperationTypesDto>>> GetStaffsOperationTypes() {
+            try {
+                return await _service.GetStaffsOperationTypesAsync();
+            } catch(Exception)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet("appointments")]
+        //[Authorize(Policy = "RequiredBackOfficeRole")]
+        public async Task<ActionResult<IEnumerable<StaffAppointmentsDto>>> GetStaffAppointments() {
+            try {
+
+                return await _service.GetStaffAppointmentsAsync();
+            } catch(Exception)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
     }
 }
