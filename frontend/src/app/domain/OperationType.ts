@@ -1,4 +1,4 @@
-import { StaffSpecialization } from "./staffSpecialization";
+import { StaffSpecialization } from "./StaffSpecialization";
 
 export interface OperationType{
     id: string;

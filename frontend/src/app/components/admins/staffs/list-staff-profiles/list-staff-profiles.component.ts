@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { StaffService } from '../../../../services/staff.service';
 import { SpecializationService } from '../../../../services/specialization.service';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-import { Specialization } from '../../../../domain/specialization';
+import { Specialization } from '../../../../domain/Specialization';
 import { Staff } from '../../../../domain/Staff';
 import { AccordionModule } from 'primeng/accordion';
 import { AvatarModule } from 'primeng/avatar';

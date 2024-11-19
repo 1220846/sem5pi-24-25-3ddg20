@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OperationType } from '../domain/OperationType';
 import { catchError, Observable, throwError } from 'rxjs';
-import { CreatingOperationTypeDto } from '../domain/creatingOperationTypeDto';
+import { CreatingOperationTypeDto } from '../domain/CreatingOperationTypeDto';
 
 @Injectable({
   providedIn: 'root'

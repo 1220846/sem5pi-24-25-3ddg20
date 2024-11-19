@@ -11,7 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { SpecializationService } from '../../../../services/specialization.service';
-import { Specialization } from '../../../../domain/specialization';
+import { Specialization } from '../../../../domain/Specialization';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 
