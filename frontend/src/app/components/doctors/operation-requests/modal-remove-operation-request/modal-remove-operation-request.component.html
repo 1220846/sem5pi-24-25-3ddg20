@@ -7,5 +7,5 @@
             </div>
         </ng-template>
     </p-confirmDialog>
-    <p-button (onClick)="deactivateStaff()" [outlined]="true" severity="danger" icon="pi pi-trash" [disabled]="staff?.status != 'ACTIVE'"/>
+    <p-button (onClick)="removeOperationRequest()" [outlined]="true" severity="danger" icon="pi pi-trash" [disabled]="operationRequest?.Status != 'WAITING'"/>
 </div>

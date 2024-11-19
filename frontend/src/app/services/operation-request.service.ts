@@ -53,4 +53,11 @@ export class OperationRequestService {
         })
       );
   }
+
+  remove(operationRequestId: string) : Observable<OperationRequest> {
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+
+    return this.http.delete<OperationRequest>(`${this.apiUrl}/${operationRequestId}`, {headers: headers});
+  }
 }

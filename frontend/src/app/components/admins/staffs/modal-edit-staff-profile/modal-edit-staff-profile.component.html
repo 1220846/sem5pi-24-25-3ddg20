@@ -8,7 +8,7 @@
                     <span class="p-text-secondary block mt-5 mb-3">Edit staff data.</span>
                     <div class="flex flex-wrap gap-7">
                         <div class="flex flex-column gap-2 mb-2 input-large">
-                            <label for="email">Email</label>
+                            <label for="email">New Email</label>
                             <input pInputText id="email" formControlName="email"/>
                             <small
                                 *ngIf="staffForm.controls['email'].invalid && (staffForm.controls['email'].dirty || staffForm.controls['email'].touched)"
@@ -17,7 +17,7 @@
                             </small>
                         </div>
                         <div class="flex flex-column gap-2 mb-2 input-small">
-                            <label for="phoneNumber">Phone Number</label>
+                            <label for="phoneNumber">New Phone Number</label>
                             <input pInputText id="phoneNumber" formControlName="phoneNumber" />
                             <small
                                 *ngIf="staffForm.controls['phoneNumber'].invalid && (staffForm.controls['phoneNumber'].dirty || staffForm.controls['phoneNumber'].touched)"
@@ -28,7 +28,7 @@
                     </div>  
                     <div class="flex flex-wrap gap-7">
                         <div class="flex flex-column gap-2 mb-2 input-large">
-                            <label for="specialization">Specialization</label>
+                            <label for="specialization">New Specialization</label>
                             <p-dropdown [options]="availableSpecializations" 
                             [appendTo]="'body'"
                             formControlName="specialization" [filter]="true"

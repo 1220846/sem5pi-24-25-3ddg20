@@ -20,6 +20,7 @@ import { OperationTypeService } from '../../../../services/operation-type.servic
 import { OperationType } from '../../../../domain/OperationType';
 import { ModalUpdateOperationRequestsComponent } from '../modal-update-operation-requests/modal-update-operation-requests.component';
 import { Observable } from 'rxjs';
+import { ModalRemoveOperationRequestComponent } from '../modal-remove-operation-request/modal-remove-operation-request.component';
 
 
 @Component({
@@ -28,7 +29,8 @@ import { Observable } from 'rxjs';
   imports: [
     InputTextModule, FormsModule, OverlayPanelModule, FloatLabelModule, AvatarModule,
     TagModule, BadgeModule, ScrollerModule, CalendarModule, DropdownModule,
-    DataViewModule, AccordionModule, CommonModule, ModalUpdateOperationRequestsComponent ,DialogModule
+    DataViewModule, AccordionModule, CommonModule, ModalUpdateOperationRequestsComponent, DialogModule,
+    ModalRemoveOperationRequestComponent
   ],
   templateUrl: './list-operation-requests.component.html',
   styleUrls: ['./list-operation-requests.component.scss'],
@@ -60,7 +62,7 @@ export class ListOperationRequestsComponent implements OnInit {
 
   visible: boolean = false;
 
-  constructor(private operationRequestService: OperationRequestService, private OperationTypeService: OperationTypeService) {}
+  constructor(private operationRequestService: OperationRequestService, private OperationTypeService: OperationTypeService) { }
 
   clearFilters(): void {
     this.OperationTypeId = '';
@@ -76,46 +78,45 @@ export class ListOperationRequestsComponent implements OnInit {
     this.filterPanel.hide();
   }
 
-  operationTypes: OperationType[] = [];
-
-loadOperationRequests(): void {
-  this.operationRequestService.getFilteredOperationRequests(
-    this.DoctorId,
-    this.OperationTypeId,
-    this.selectedPriority,
-    this.selectedStatus
-  ).subscribe({
-    next: (data) => {
-      this.operationRequests = data;
-      this.operationRequests.forEach((request) => {
-        this.OperationTypeService.getById(request.OperationTypeId).subscribe({
-          next: (operationType) => {
-            this.operationTypes.push(operationType);
-          },
-          error: (error) => {
-            console.error('Erro ao buscar o tipo de operação:', error);
-          }
+  loadOperationRequests(): void {
+    this.operationRequestService.getFilteredOperationRequests(
+      this.DoctorId,
+      this.OperationTypeId,
+      this.selectedPriority,
+      this.selectedStatus
+    ).subscribe({
+      next: (data) => {
+        this.operationRequests = data;
+        this.operationRequests.forEach((request) => {
+          this.OperationTypeService.getById(request.OperationTypeId).subscribe({
+            next: (operationType) => {
+              request.OperationTypeName = operationType.name;
+            },
+            error: (error) => {
+              console.error('Erro ao buscar o tipo de operação:', error);
+            }
+          });
         });
-      });
-    },
-    error: (error) => {
-      console.error('Erro ao buscar as requisições de operação:', error);
-    }
-  });
-}
-  loadOperationType(operationTypeId: string): void {
-    this.OperationTypeService.getById(operationTypeId).subscribe({
-      next: (operationType) => {
-        return operationType
-        if(this.operationTypes.includes(operationType)){
-          
-        }
       },
       error: (error) => {
-        console.error('Erro ao buscar o tipo de operação:', error);
+        console.error('Erro ao buscar as requisições de operação:', error);
       }
     });
   }
+  /*
+    loadOperationType(operationTypeId: string): void {
+      this.OperationTypeService.getById(operationTypeId).subscribe({
+        next: (operationType) => {
+          return operationType
+          if(this.operationTypes.includes(operationType)){
+            
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao buscar o tipo de operação:', error);
+        }
+      });
+    }*/
 
   ngOnInit() {
     this.loadOperationRequests();
@@ -140,5 +141,9 @@ loadOperationRequests(): void {
       default:
         return 'info';
     }
+  }
+
+  onOperationRequestRemoved() {
+    this.loadOperationRequests();
   }
 }
