@@ -21,7 +21,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: ./frontend/*
         target: ~/sarm
-
     - name: Deploy Frontend
       uses: appleboy/ssh-action@v0.1.5
       with:
