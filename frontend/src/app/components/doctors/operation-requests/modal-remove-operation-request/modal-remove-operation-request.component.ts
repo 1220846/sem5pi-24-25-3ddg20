@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
@@ -18,6 +18,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     ToastModule,
     ConfirmDialogModule 
   ],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './modal-remove-operation-request.component.html',
   styleUrl: './modal-remove-operation-request.component.scss'
 })
@@ -30,14 +31,21 @@ export class ModalRemoveOperationRequestComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {
-
+    console.log(this.operationRequest);
   }
   
   visible: boolean = false;
+  disabled: boolean = true;
 
   showDialog() {
     this.visible = true;
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.operationRequest);
+    console.log(this.operationRequest?.Status);
+  }
+
 
   removeOperationRequest() {
     this.confirmationService.confirm({
@@ -48,6 +56,7 @@ export class ModalRemoveOperationRequestComponent {
       acceptButtonStyleClass: 'p-button-sm p-button-danger', 
       rejectButtonStyleClass: 'p-button-sm p-button-outlined',
       accept: () => {
+        console.log(this.operationRequest?.id);
         this.operationRequestService.remove(this.operationRequest?.id!).subscribe(
           (response) => {
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Operation request successfully removed', life: 2000});

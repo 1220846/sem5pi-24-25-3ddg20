@@ -68,14 +68,12 @@
                                 </p-tag>
                             </div>
                         </span>
-                        <span>
-                            <modal-update-operation-requests [operationRequest]=operationRequest></modal-update-operation-requests>
-                            <!--<app-modal-remove-operation-request [operationRequest]=operationRequest (operationRequestRemoved)="onOperationRequestRemoved()"></app-modal-remove-operation-request>-->
-                        </span>
+                        <modal-update-operation-requests [operationRequest]=operationRequest></modal-update-operation-requests>
+                        <app-modal-remove-operation-request [operationRequest]=operationRequest (operationRequestRemoved)="onOperationRequestRemoved()"></app-modal-remove-operation-request>
                     </ng-template>
                     <div class="flex ml-3 gap-6">
                         <p><strong>Doctor Id:</strong> {{ operationRequest.doctorId }} </p>
-                        <p><strong>Operation Type Id:</strong> {{ operationRequest.OperationTypeName }} </p>
+                        <p><strong>Operation Type Id:</strong> {{ operationRequest?.OperationTypeName }} </p>
                     </div>
                 </p-accordionTab>
             </p-accordion>

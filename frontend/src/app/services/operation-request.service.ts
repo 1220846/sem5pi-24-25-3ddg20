@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { OperationRequest } from '../domain/OperationRequests';
 import { CreatingOperationRequestDto } from '../domain/CreatingOperationRequestDto';
+import { RemoveOperationRequestDto } from '../domain/RemoveOperationRequestDto';
 
 
 @Injectable({
@@ -57,7 +58,8 @@ export class OperationRequestService {
   remove(operationRequestId: string) : Observable<OperationRequest> {
     const token = localStorage.getItem('accessToken');
     const headers = this.header.set('Authorization', `Bearer ${token}`);
-
-    return this.http.delete<OperationRequest>(`${this.apiUrl}/${operationRequestId}`, {headers: headers});
+    let params = new HttpParams().set('token', token!);
+    const dto: RemoveOperationRequestDto = {token: token!};
+    return this.http.delete<OperationRequest>(`${this.apiUrl}/${operationRequestId}`, {body: dto, headers: headers });
   }
 }
