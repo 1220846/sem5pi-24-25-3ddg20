@@ -11,7 +11,7 @@ import { EditingStaffDto } from '../../../../domain/EditingStaffDto';
 import { StaffService } from '../../../../services/staff.service';
 import { MessageService } from 'primeng/api';
 import { SpecializationService } from '../../../../services/specialization.service';
-import { Specialization } from '../../../../domain/specialization';
+import { Specialization } from '../../../../domain/Specialization';
 import { Staff } from '../../../../domain/Staff';
 import { startWith } from 'rxjs';
 

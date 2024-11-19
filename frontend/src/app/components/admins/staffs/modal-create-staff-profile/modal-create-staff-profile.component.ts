@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { StaffService } from '../../../../services/staff.service';
 import { CommonModule } from '@angular/common';
 import { SpecializationService } from '../../../../services/specialization.service';
-import { Specialization } from '../../../../domain/specialization';
+import { Specialization } from '../../../../domain/Specialization';
 import { DropdownModule } from 'primeng/dropdown';
 import { CreatingStaffDto } from '../../../../domain/CreatingStaffDto';
 import { ToastModule } from 'primeng/toast';

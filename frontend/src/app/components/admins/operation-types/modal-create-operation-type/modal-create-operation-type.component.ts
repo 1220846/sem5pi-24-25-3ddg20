@@ -11,9 +11,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { SpecializationService } from '../../../../services/specialization.service';
-import { Specialization } from '../../../../domain/specialization';
+import { Specialization } from '../../../../domain/Specialization';
 import { OperationTypeService } from '../../../../services/operation-type.service';
-import { CreatingOperationTypeDto } from '../../../../domain/creatingOperationTypeDto';
+import { CreatingOperationTypeDto } from '../../../../domain/CreatingOperationTypeDto';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 

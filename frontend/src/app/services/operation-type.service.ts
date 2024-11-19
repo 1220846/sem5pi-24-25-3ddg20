@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OperationType } from '../domain/OperationType';
 import { catchError, Observable, throwError } from 'rxjs';
-import { CreatingOperationTypeDto } from '../domain/creatingOperationTypeDto';
+import { CreatingOperationTypeDto } from '../domain/CreatingOperationTypeDto';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +48,13 @@ export class OperationTypeService {
 
   getById(id: string): Observable<OperationType> {
     return this.httpClient.get<OperationType>(`${this.apiUrl}/${id}`);
+  }
+
+  deactivateOperationType(operationTypeId: string):Observable<OperationType>{
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    console.log(operationTypeId);
+    return this.httpClient.delete<OperationType>(`${this.apiUrl}/${operationTypeId}`, {headers: headers})
   }
 
 }

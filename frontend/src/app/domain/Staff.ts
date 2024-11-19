@@ -1,6 +1,6 @@
 import { User } from "@auth0/auth0-angular";
 import { AvailabilitySlot } from "./AvailabilitySlot";
-import { Specialization } from "./specialization";
+import { Specialization } from "./Specialization";
 
 export interface Staff {
     id: string;
