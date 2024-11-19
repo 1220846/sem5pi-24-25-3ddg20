@@ -21,7 +21,10 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: ./frontend/*
         target: ~/sarm/
-
+    
+    - name: Set executable permission for deploy script
+      run: |
+        ssh -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "chmod +x ~/sarm/deploy_frontend.sh"
 
     - name: Deploy Frontend
       uses: appleboy/ssh-action@v0.1.4
