@@ -1,0 +1,62 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Patient as "Patient"
+box "<<system (C4)>>\nUI"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nServer"
+  participant Server as "Server" <<component (C4)>>
+end box
+
+activate Patient
+
+    Patient -> ComponentUI : asks to update my user profile
+    activate ComponentUI
+
+        ComponentUI --> Patient : asks to update data
+    
+    deactivate ComponentUI
+
+    Patient -> ComponentUI : update data
+
+    activate ComponentUI
+
+        ComponentUI -> Component : update user profile
+        activate Component
+
+            Component -> Model** : create
+
+            Component -> SRV : update user profile
+            activate SRV
+
+                SRV -> HTTP : patch('/patients/{username}')
+
+                activate HTTP
+                    HTTP -> Server : PATCH /patients/{username}
+
+                    activate Server
+                        Server --> HTTP : 200 (user)
+                    deactivate Server
+                    
+                    HTTP --> SRV : user
+
+                deactivate HTTP
+
+                SRV --> Component : user
+            deactivate SRV
+
+            Component --> ComponentUI : user
+        deactivate Component
+
+    Patient <-- ComponentUI : shows updated data
+    deactivate ComponentUI
+
+deactivate Patient
+
+@enduml
