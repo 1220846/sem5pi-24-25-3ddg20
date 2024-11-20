@@ -91,7 +91,7 @@ export class CreateStaffProfileComponent {
         },
         (error) => {
           console.error("Error creating staff profile:", error);
-          this.messageService.add({severity: 'error', summary: 'Error', detail:'Failed to create staff profile', life: 2000});
+          this.messageService.add({severity: 'error', summary: 'Error', detail: error, life: 2000});
         }
       );
     } else {

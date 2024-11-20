@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { last, Observable } from 'rxjs';
+import { catchError, last, Observable, throwError } from 'rxjs';
 import { Staff } from '../domain/Staff';
 import { CreatingStaffDto } from '../domain/CreatingStaffDto';
 import { EditingStaffDto } from '../domain/EditingStaffDto';
@@ -57,7 +57,12 @@ export class StaffService {
   add(staff: CreatingStaffDto): Observable<Staff>{
     const token = localStorage.getItem('accessToken'); 
     const headers = this.header.set('Authorization', `Bearer ${token}`);
-    return this.httpClient.post<Staff>(this.apiUrl, staff, {headers: headers});
+    return this.httpClient.post<Staff>(this.apiUrl, staff, {headers: headers})
+    .pipe(
+      catchError((error) => {
+        return throwError(() => error.error.message);
+      })
+    );;
   }
 
   deactivate(staffId: string) : Observable<Staff> {
@@ -70,6 +75,11 @@ export class StaffService {
   edit(staffId: string, editDto: EditingStaffDto) {
     const token = localStorage.getItem('accessToken'); 
     const headers = this.header.set('Authorization', `Bearer ${token}`);
-    return this.httpClient.patch<Staff>(`${this.apiUrl}/${staffId}`, editDto, {headers: headers});
+    return this.httpClient.patch<Staff>(`${this.apiUrl}/${staffId}`, editDto, {headers: headers})
+    .pipe(
+      catchError((error) => {
+        return throwError(() => error.error.message);
+      })
+    );;;
   }
 }

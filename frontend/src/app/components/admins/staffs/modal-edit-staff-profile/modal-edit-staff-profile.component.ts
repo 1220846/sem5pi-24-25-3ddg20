@@ -131,7 +131,7 @@ export class ModalEditStaffProfileComponent {
         },
         (error) => {
           console.error("Error editing staff profile:", error);
-          this.messageService.add({severity: 'error', summary: 'Error', detail:'Failed to edit staff profile', life: 2000});
+          this.messageService.add({severity: 'error', summary: 'Error', detail: error, life: 2000});
         }
       );
     } else {
