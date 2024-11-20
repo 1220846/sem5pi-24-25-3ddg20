@@ -2,7 +2,7 @@
 
 ## 1. Context
 
-*In this task it was proposed that a Admin can add new types of operations.*
+*In this task it was proposed that a Admin can list/search types of operations.*
 
 ## 2. Requirements
 

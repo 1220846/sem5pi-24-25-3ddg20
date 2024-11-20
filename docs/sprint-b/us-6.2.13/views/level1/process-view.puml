@@ -1,0 +1,14 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant SARM as "SARM" <<system (C4)>>
+
+activate Admin
+    Admin -> SARM : asks to list staff profiles
+    activate SARM
+        SARM --> Admin: shows staff profiles
+    deactivate SARM
+deactivate Admin
+
+@enduml

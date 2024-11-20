@@ -1,0 +1,39 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+box "<<C4 System>>\nUI"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nServer"
+  participant Server as "Server" <<component (C4)>>
+end box
+
+activate Admin
+    Admin -> ComponentUI : asks to list staff profiles
+    activate ComponentUI
+        ComponentUI -> Component : list staff profiles
+        activate Component
+            Component -> SRV : list staff profiles
+            activate SRV
+                SRV -> HTTP : get('/staffs/filter')
+                activate HTTP
+                    HTTP -> Server : GET /staffs/filter
+                    activate Server
+                        Server --> HTTP : 200 (staffs)
+                    deactivate Server
+                    HTTP --> SRV : staffss
+                deactivate HTTP
+                SRV --> Component : staffss
+            deactivate SRV
+            Component --> ComponentUI : staffs
+        deactivate Component
+    Admin <-- ComponentUI : shows staffs
+    deactivate ComponentUI
+deactivate Admin
+
+@enduml
