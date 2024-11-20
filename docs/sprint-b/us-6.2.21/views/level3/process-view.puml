@@ -1,0 +1,53 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+box "<<C4 System>>\nUI"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nServer"
+  participant Server as "Server" <<component (C4)>>
+end box
+
+activate Admin
+
+    Admin -> ComponentUI : asks to list operation types
+    
+    activate ComponentUI
+
+        ComponentUI -> Component : list operation types
+
+        activate Component
+
+            Component -> SRV : list operation types
+            activate SRV
+
+                SRV -> HTTP : get('/operationtypes/filter')
+
+                activate HTTP
+                    HTTP -> Server : GET /operationtypes/filter
+
+                    activate Server
+                        Server --> HTTP : 200 (operationTypes)
+                    deactivate Server
+                    
+                    HTTP --> SRV : operationTypes
+
+                deactivate HTTP
+
+                SRV --> Component : operationTypes
+            deactivate SRV
+
+            Component --> ComponentUI : operationTypes
+        deactivate Component
+
+    Admin <-- ComponentUI : shows operationTypes
+    deactivate ComponentUI
+
+deactivate Admin
+
+@enduml
