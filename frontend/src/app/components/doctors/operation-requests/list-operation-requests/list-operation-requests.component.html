@@ -68,7 +68,7 @@
                                 </p-tag>
                             </div>
                         </span>
-                        <modal-update-operation-requests [operationRequest]=operationRequest></modal-update-operation-requests>
+                        <modal-update-operation-requests [operationRequest]=operationRequest (operationRequestUpdate)="operationRequestUpdate()"></modal-update-operation-requests>
                         <app-modal-remove-operation-request [operationRequest]=operationRequest (operationRequestRemoved)="onOperationRequestRemoved()"></app-modal-remove-operation-request>
                     </ng-template>
                     <div class="flex ml-3 gap-6">
