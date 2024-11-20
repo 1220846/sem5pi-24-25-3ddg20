@@ -1,0 +1,25 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant Frontend as "Frontend" <<system (C4)>>
+participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
+
+activate Admin
+
+    Admin -> Frontend : asks to list operation types
+
+    activate Frontend
+        Frontend-> BackendDataManagement : GET /operationtypes/filter
+        activate BackendDataManagement
+
+            Frontend <-- BackendDataManagement : 200 OK
+
+        deactivate BackendDataManagement
+
+    Frontend --> Admin : shows operation types
+    
+    deactivate Frontend
+deactivate Admin
+
+@enduml
