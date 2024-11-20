@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Patient } from '../domain/Patient';
-import { BehaviorSubject, first, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, first, Observable, throwError } from 'rxjs';
 import { CreatingPatientDto } from '../domain/CreatingPatientDto';
+import { UpdatePatientDto } from '../domain/UpdatePatientDto';
 
 @Injectable({
   providedIn: 'root'
@@ -72,5 +73,22 @@ export class PatientService {
     
     return this.httpClient.get<Patient[]>(this.apiUrl, {headers: headers});
   }
+
+  delete(patientId: string): Observable<Patient>{
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.delete<Patient>(`${this.apiUrl}/${patientId}`, {headers: headers});
+  }
   
+  updatePatient(id: string, updatePatientDto: UpdatePatientDto): Observable<Patient> {
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+
+    return this.httpClient.put<Patient>(`${this.apiUrl}/${id}`, updatePatientDto, { headers })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
 }

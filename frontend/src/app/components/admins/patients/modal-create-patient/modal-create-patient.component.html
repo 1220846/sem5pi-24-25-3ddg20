@@ -82,6 +82,24 @@
                         Insert Email.
                     </small>
                 </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="address">Address</label>
+                    <input pInputText id="address" formControlName="address" />
+                    <small
+                        *ngIf="patientForm.controls['address'].invalid && (patientForm.controls['address'].dirty || patientForm.controls['address'].touched)"
+                        class="p-error">
+                        Insert Address.
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="postalCode">Postal Code</label>
+                    <input pInputText id="postalCode" formControlName="postalCode" />
+                    <small
+                        *ngIf="patientForm.controls['postalCode'].invalid && (patientForm.controls['postalCode'].dirty || patientForm.controls['postalCode'].touched)"
+                        class="p-error">
+                        Insert Postal Code.
+                    </small>
+                </div>
             </div>
         </form>
         <ng-template pTemplate="footer">

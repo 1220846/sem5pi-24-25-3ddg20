@@ -9,6 +9,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { EditingOperationRequestDto } from '../../../../domain/EditingOperationRequestDto';
 import { OperationRequest } from '../../../../domain/OperationRequests';
+import { OperationRequestService } from '../../../../services/operation-request.service';
+import { MessageService } from 'primeng/api';
 
 interface Options {
   label: string;
@@ -17,6 +19,7 @@ interface Options {
 @Component({
   selector: 'modal-update-operation-requests',
   standalone: true,
+  providers:[MessageService],
   imports: [CommonModule, InputTextModule, FormsModule, ReactiveFormsModule,ToastModule ,FloatLabelModule,CalendarModule,DropdownModule,DialogModule],
   templateUrl: './modal-update-operation-requests.component.html',
   styleUrls: ['./modal-update-operation-requests.component.scss']
@@ -28,12 +31,16 @@ export class ModalUpdateOperationRequestsComponent implements OnInit{
   options: Options[] | undefined;
   operationRequestForm: FormGroup;
   selectedPriority: Options | undefined;
+  visible: boolean = false;
+  changes: boolean = false;
 
-  @Output() operationRequestProfileEdited = new EventEmitter<EditingOperationRequestDto>();
+  @Output() operationRequestEdited = new EventEmitter<EditingOperationRequestDto>();
   @Input() operationRequest: OperationRequest | null = null;
 
 
-  constructor(private fb: FormBuilder
+  constructor(private fb: FormBuilder, 
+    private opRequestService: OperationRequestService,
+    private messageService: MessageService
   ){
     this.operationRequestForm = this.fb.group({
       selectedPriority: [null, Validators.required],
@@ -51,13 +58,34 @@ export class ModalUpdateOperationRequestsComponent implements OnInit{
     
   }
 
-  visible: boolean = false;
-
     showDialog() {
         this.visible = true;
     }
 
   changeInfo(){
-      this.visible=false;
+    if(this.operationRequestForm.valid){
+      const operationRequest:EditingOperationRequestDto={
+        deadline:this.operationRequestForm.value.deadline ? this.operationRequestForm.value.deadline : null,
+        priority:this.operationRequestForm.value.selectedPriority ? this.operationRequestForm.value.selectedPriority : null
+      }
+      this.opRequestService.edit(this.operationRequest?.id!,operationRequest).subscribe(
+        (response) => {
+          this.changes = true;
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Operation Request edited successfully', life: 2000});
+          this.operationRequestEdited.emit();
+        },
+        (error) => {
+          console.error("Error editing Operation request:", error);
+          this.messageService.add({severity: 'error', summary: 'Error', detail:'Failed to edit Operation Request', life: 2000});
+        }
+      );
+    }else {
+      this.messageService.add({severity: 'warn', summary: 'Error', detail:'Some inputted data is invalid', life: 2000});
+    }
+    this.visible=false;
+  }
+
+  closeDialog(){
+    this.visible=false;
   }
 }

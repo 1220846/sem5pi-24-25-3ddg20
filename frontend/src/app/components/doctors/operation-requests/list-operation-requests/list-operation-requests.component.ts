@@ -21,6 +21,7 @@ import { OperationType } from '../../../../domain/OperationType';
 import { ModalUpdateOperationRequestsComponent } from '../modal-update-operation-requests/modal-update-operation-requests.component';
 import { Observable } from 'rxjs';
 import { ModalRemoveOperationRequestComponent } from '../modal-remove-operation-request/modal-remove-operation-request.component';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -144,6 +145,10 @@ export class ListOperationRequestsComponent implements OnInit {
   }
 
   onOperationRequestRemoved() {
+    this.loadOperationRequests();
+  }
+
+  operationRequestUpdate(){
     this.loadOperationRequests();
   }
 }

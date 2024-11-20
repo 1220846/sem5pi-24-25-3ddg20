@@ -7,4 +7,6 @@ export interface CreatingPatientDto{
     firstName: string;
     lastName: string;
     fullName: string;
+    address: string;
+    postalCode: string;
 }

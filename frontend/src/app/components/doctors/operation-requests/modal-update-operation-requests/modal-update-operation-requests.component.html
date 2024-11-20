@@ -19,7 +19,7 @@
                         </div>
                         <div class="flex flex-column gap-2 mb-2 input-small">
                             <label for="selectedPriority">Priority</label>
-                            <p-dropdown placeholder="Select a Patient" id="selectedPriority" [appendTo]="'body'"
+                            <p-dropdown placeholder="Select a Priority" id="selectedPriority" [appendTo]="'body'"
                                 formControlName="selectedPriority" [options]="optionsPriority" />
                             <small
                                 *ngIf="operationRequestForm.controls['selectedPriority'].invalid && (operationRequestForm.controls['selectedPriority'].dirty || operationRequestForm.controls['selectedPriority'].touched)"
@@ -30,7 +30,7 @@
                     </div>
                 </form>
                 <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
-                    <p-button label="Close" severity="secondary" (onClick)="visible = false" />
+                    <p-button label="Close" severity="secondary" (onClick)="closeDialog()" />
                     <p-button label="Save" severity="primary" (onClick)="changeInfo()"/>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { OperationRequest } from '../domain/OperationRequests';
 import { CreatingOperationRequestDto } from '../domain/CreatingOperationRequestDto';
 import { RemoveOperationRequestDto } from '../domain/RemoveOperationRequestDto';
+import { EditingOperationRequestDto } from '../domain/EditingOperationRequestDto';
 
 
 @Injectable({
@@ -53,6 +54,12 @@ export class OperationRequestService {
           return throwError(() => error.error.message);
         })
       );
+  }
+
+  edit(operationRequestId: string, editDto:EditingOperationRequestDto ){
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.http.patch<OperationRequest>(`${this.apiUrl}/${operationRequestId}`, editDto, {headers: headers});
   }
 
   remove(operationRequestId: string) : Observable<OperationRequest> {

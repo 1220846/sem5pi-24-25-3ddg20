@@ -53,7 +53,6 @@
 </div>
 <div class="card flex justify-content-center ml-5 mr-5 mt-2">
     <p-scroller [items]="patients"
-                [itemSize]="10" 
                 [style]="{ height: '410px', width: '100%' }"
                 scrollHeight="410px"
                 styleClass="border-1 surface-border">
@@ -72,18 +71,22 @@
                                 <p-tag class="mt-1" [rounded]="true" severity="info" >{{ patient.id }}</p-tag>
                             </div>
                         </span>
+                        <app-modal-update-patient [patient]="patient" (patientUpdated)="onPatientUpdated()"></app-modal-update-patient>
+                        <app-delete-patient [patient]="patient" (patientDeleted)="onPatientDeleted()"></app-delete-patient>
                     </ng-template>
                     <div class="flex ml-3 gap-1" style="flex-direction: column;">
                         <div class="flex justify-content-left gap-6">
                             <p><strong>Fullname:</strong> {{ patient.fullName }}</p>
                             <p><strong>Birth Date:</strong> {{ patient.dateOfBirth }}</p>
                             <p><strong>Gender:</strong> {{ patient.gender }}</p>
-                            <p-button (onClick)="showDialog(patient)" label="Medical Conditions" [rounded]="true" severity="secondary" ></p-button>
+                            <p><strong>Address:</strong> {{ patient.address }}</p>
+                            <p><strong>Postal Code:</strong> {{ patient.postalCode }}</p>
                         </div>
                         <div class="flex justify-content-left gap-6">
                             <p><strong>Email:</strong> {{ patient.email }}</p>
                             <p><strong>Phone Number:</strong> {{ patient.phoneNumber }}</p>
                             <p><strong>Emergency Contact:</strong> {{ patient.emergencyContact }}</p>
+                            <p-button (onClick)="showDialog(patient)" label="Medical Conditions" [rounded]="true" severity="secondary" ></p-button>
                         </div>
                     </div>
                 </p-accordionTab>
@@ -91,7 +94,7 @@
         </ng-template>
     </p-scroller>
     <p-dialog header="Medical Conditions" [(visible)]="visible" [style]="{ width: '60rem', 'max-height': '40rem' }">
-        <p>{{ selectedPatient?.medicalConditions }}</p>
+        <pre>{{ selectedPatient?.medicalConditions }}</pre>
     </p-dialog>
 </div>
 <div class="card flex justify-content-center">
