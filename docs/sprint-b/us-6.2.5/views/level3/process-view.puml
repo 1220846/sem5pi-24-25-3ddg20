@@ -1,0 +1,54 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Patient as "Patient"
+box "<<system (C4)>>\nUI"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nServer"
+  participant Server as "Server" <<component (C4)>>
+end box
+
+activate Patient
+
+    Patient -> ComponentUI : asks to log in to the healthcare system
+    activate ComponentUI
+
+        ComponentUI -> Component : asks to insert email and password
+        activate Component
+
+            Component -> Model** : create
+            
+            Component -> SRV : inserts email and password
+            activate SRV
+
+                SRV -> HTTP : post('/users/login')
+
+                activate HTTP
+                    HTTP -> Server : POST /users/login
+
+                    activate Server
+                        Server --> HTTP : 200 (credential)
+                    deactivate Server
+                    
+                    HTTP --> SRV : credentials
+
+                deactivate HTTP
+
+                SRV --> Component : credentials
+            deactivate SRV
+
+            Component --> ComponentUI : credentials
+        deactivate Component
+
+    Patient <-- ComponentUI : session
+    deactivate ComponentUI
+
+deactivate Patient
+
+@enduml

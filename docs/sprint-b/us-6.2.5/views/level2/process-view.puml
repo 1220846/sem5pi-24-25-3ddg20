@@ -1,0 +1,33 @@
+@startuml process-view
+autonumber
+
+actor "Patient" as Patient
+participant Frontend as "Frontend" <<system (C4)>>
+participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
+
+activate Patient
+
+    Patient -> Frontend : asks to log in to the healthcare system
+
+    activate Frontend
+        Frontend --> Patient : asks to insert email and password
+    
+    deactivate Frontend
+
+    Patient -> Frontend : inserts email and password
+
+    activate Frontend
+    
+        Frontend-> BackendDataManagement : POST /users/login
+        activate BackendDataManagement
+
+            Frontend <-- BackendDataManagement : 200 OK
+
+        deactivate BackendDataManagement
+
+    Frontend --> Patient : session
+    
+    deactivate Frontend
+deactivate Patient
+
+@enduml
