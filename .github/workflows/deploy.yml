@@ -26,7 +26,7 @@ jobs:
         echo "Auth0_Namespace_Roles=https://sarm.com" >> .env
         
         echo "Database_Name=sem5pi" >> .env
-        echo "Database_Hostname=vsgate-s1.dei.isep.ipp.pt" >> .env
+        echo "Database_HostName=vsgate-s1.dei.isep.ipp.pt" >> .env
         echo "Database_Port=11372" >> .env
         echo "Database_User=root" >> .env
         echo "Database_Password=${{ secrets.DATABASE_PASSWORD }}" >> .env
