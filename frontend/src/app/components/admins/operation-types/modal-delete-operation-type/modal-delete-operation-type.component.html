@@ -1,1 +1,11 @@
-<p>modal-delete-operation-type works!</p>
+<div class="card flex justify-content-end">
+    <p-confirmDialog>
+        <ng-template pTemplate="message" let-message>
+            <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+                <i class="pi pi-exclamation-triangle text-6xl text-red-500"></i>
+                <p>{{ message.message }}</p>
+            </div>
+        </ng-template>
+    </p-confirmDialog>
+    <p-button (onClick)="deactivateOperationType()" [outlined]="true" severity="danger" icon="pi pi-trash" [disabled]="operationType?.operationTypeStatus != 'ACTIVE'"/>
+</div>
