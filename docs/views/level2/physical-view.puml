@@ -1,0 +1,23 @@
+@startuml physical-view
+
+node "localhost: " as LOCALHOST {
+  component "Backend Data Management" as BackendDataManagement <<component>> {
+  }
+  component "Planning" as P <<component>>  { 
+  }
+}
+
+node "Server 2: vs1422" as Server {
+  component "Frontend" as Frontend {
+  }
+}
+
+node "Server 1: vs1372" as Server2 {
+    database "Mysql" as Database <<database>> {
+  }
+}
+
+LOCALHOST -u- Server : http/s
+LOCALHOST -- Server2 : TCP/IP
+
+@enduml

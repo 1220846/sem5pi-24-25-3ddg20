@@ -2,28 +2,71 @@
 top to bottom direction
 
 interface "API" as API
+interface "UI" as UI
 interface "Auth0 API" as A0API
 interface "SMTP Office 365" as SMTP_Office_365
 
 component "SARM" <<component>> <<C4 System>> {
     portin " " as SARMPI
+    portin " " as SARMPIUI
     portout " " as SARMPO1
     portout " " as SARMPO2
+
+    interface "Backend Data Management API" as BACKENDAPI
 
     component "Backend Data Management" <<component>> {
         portin " " as BackendPI
         portout " " as BackendPO1
         portout " " as BackendPO2
+        portout " " as BackendPO3
+        portout " " as BackendPO4
+        portin " " as BackendPI2
+    }
+
+    component "Frontend" <<component>> {
+        portin " " as FrontendINUI
+        portout " " as FrontendOutUI2
+    }
+
+    interface "Planning API" as PLANNINGAPI
+
+    component "Planning" <<component>> {
+        portin " " as PLANNINGINUI
+        portout " " as PLANNINGOutUI
+    }
+
+    interface "GDPR API" as GDPR_API
+
+    component "GDPR" <<component>> {
+        portin " " as GDPRINUI
+    }
+    
+    component "BCP" <<component>> {
+        portout " " as BCPOutUI
     }
 
 }
 
+UI -- SARMPIUI
+SARMPIUI --- FrontendINUI
+FrontendOutUI2 --( BACKENDAPI
+BackendPI2 -U- BACKENDAPI
+
+GDPRINUI -U- GDPR_API
+BackendPO3 --( GDPR_API
+
+PLANNINGINUI -U- PLANNINGAPI
+BackendPO4 --( PLANNINGAPI
+PLANNINGOutUI --( BACKENDAPI
+
+BCPOutUI --( BACKENDAPI
+
 API -- SARMPI
-SARMPO1 --( A0API
+SARMPO1 -u-( A0API
 SARMPI -- BackendPI
 SARMPO1 -- BackendPO1
 
 SARMPO2 -- BackendPO2
-SARMPO2 -u-( SMTP_Office_365
+SARMPO2 --( SMTP_Office_365
 
 @enduml

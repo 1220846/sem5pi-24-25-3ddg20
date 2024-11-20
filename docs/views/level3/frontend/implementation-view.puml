@@ -1,0 +1,38 @@
+@startuml implementation-view
+top to bottom direction
+
+package " " <<SARM>>{
+    folder "Angular Component" as AngularComponent {
+        folder "UI Component" as ComponentUI{
+
+        }
+
+        folder "Component" as Component{
+
+        }
+    }
+
+    folder "Service" as Service{
+
+    }
+
+    folder "HTTP Driver" as HTTP{
+
+    }
+
+    folder "Model" as Model{
+
+    }
+}
+
+ComponentUI <.. Component
+Component <.. Model
+ComponentUI <.. Model
+Model <.. ComponentUI
+Service <.. Model
+Component <.. Service
+Service <.. HTTP
+
+
+
+@enduml

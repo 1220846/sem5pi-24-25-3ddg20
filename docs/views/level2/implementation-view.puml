@@ -2,9 +2,31 @@
 top to bottom direction
 
 package " " <<SARM>>{
-    package " " <<Backend Data Management>>{
+    folder "Backend Data Management" as Backend {
+
+    }
+
+    folder "Frontend" as Frontend{
+
+    }
+
+    folder "BCP" as BCP{
+
+    }
+
+    folder "GDPR" as GDPR{
+
+    }
+
+    folder  "Planning" as Planning {
 
     }
 }
+
+Frontend <.. Backend
+Backend <.. Planning
+Planning <.. Backend
+BCP <.. Backend
+Backend <.. GDPR
 
 @enduml

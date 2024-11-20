@@ -1,0 +1,61 @@
+@startuml logical-view
+
+top to bottom direction
+
+interface "Server API" as API
+interface "UI" as UI_API
+
+component "UI" as UI <<component>> <<container (C4)>> {
+    portin " " as PI1
+    portin " " as PI
+
+    Interface "Observer API" AS OBSERVER_API
+    folder "Angular Component" {
+
+        component "Component" as Component <<component>> {
+        }
+        Interface "Component API" as COMPONENT_API
+        component "UI Component" as ComponentUI <<component>> {
+        }
+    }
+
+    Interface "Model API" AS MODEL_API
+
+    component "Model" as Model <<component>> {
+    }
+
+    Interface "Service API" AS SERVICE_API
+
+    component "Service" as Service <<component>> {
+    }
+    
+    Interface "HTTP Driver API" AS HTTP_SERVICE_API
+
+    component "HTTP Driver" as HTTP <<component>> {
+        portin " " as PIHTTP
+    }
+}
+
+UI_API -- PI1 
+ComponentUI -- PI1
+Component -u-- COMPONENT_API
+ComponentUI -d-( COMPONENT_API
+
+ComponentUI -r- OBSERVER_API
+Model -u-( OBSERVER_API
+
+Service -u- SERVICE_API
+Component --( SERVICE_API
+
+Model -- MODEL_API
+Component -r-( MODEL_API
+Service -u-( MODEL_API
+ComponentUI --( MODEL_API
+
+PI -U-( API
+PIHTTP -u- PI
+
+HTTP -- HTTP_SERVICE_API
+Service -r-( HTTP_SERVICE_API
+
+@enduml
