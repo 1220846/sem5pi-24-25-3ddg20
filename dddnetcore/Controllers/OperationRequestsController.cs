@@ -65,8 +65,8 @@ namespace DDDSample1.Controllers{
             return await _service.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);
         }
 
-        // PUT: api/operationRequests/{id}
-        [HttpPut("{id}")]
+        // PATCH: api/operationRequests/{id}
+        [HttpPatch("{id}")]
         [Authorize(Policy = "RequiredDoctorRole")]
         public async Task<ActionResult<OperationRequestDto>> UpdateOperationRequest(Guid id,UpdateOperationRequestDto dto)
         {
