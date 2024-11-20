@@ -1,0 +1,51 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Patient as "Patient"
+box "<<system (C4)>>\nUI"#LightBlue
+  participant ComponentUI as "UI Component" <<component (C4)>>
+  participant Component as "Component" <<component (C4)>>
+  participant SRV as "Service" <<component (C4)>>
+  participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nServer"
+  participant Server as "Server" <<component (C4)>>
+end box
+
+activate Patient
+
+    Patient -> ComponentUI : asks to request to delete my account
+    activate ComponentUI
+
+        ComponentUI -> Component : request to delete my account
+        activate Component
+
+            Component -> SRV : request to delete my account
+            activate SRV
+
+                SRV -> HTTP : post('/patients/request-delete/{username}')
+
+                activate HTTP
+                    HTTP -> Server : POST /patients/request-delete/{username}
+
+                    activate Server
+                        Server --> HTTP : 200 (message)
+                    deactivate Server
+                    
+                    HTTP --> SRV : message
+
+                deactivate HTTP
+
+                SRV --> Component : message
+            deactivate SRV
+
+            Component --> ComponentUI : message
+        deactivate Component
+
+    Patient <-- ComponentUI : shows success message
+    deactivate ComponentUI
+
+deactivate Patient
+
+@enduml
