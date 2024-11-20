@@ -38,6 +38,8 @@ export class ModalCreatePatientComponent implements OnInit{
       emergencyContact: ['', [Validators.required, Validators.pattern('^9[1236]\\d{7}$')]],
       phoneNumber: ['', [Validators.required, Validators.pattern('^9[1236]\\d{7}$')]],
       email: ['', [Validators.required, Validators.email]],
+      address: ['', [Validators.required]],
+      postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{4}-[0-9]{3}$')]],
     });
   }
 
@@ -70,7 +72,9 @@ export class ModalCreatePatientComponent implements OnInit{
         gender: this.patientForm.value.gender,
         emergencyContact: this.patientForm.value.emergencyContact,
         phoneNumber: this.patientForm.value.phoneNumber,
-        email: this.patientForm.value.email
+        email: this.patientForm.value.email,
+        address: this.patientForm.value.address,
+        postalCode: this.patientForm.value.postalCode
       };
 
       this.patientService.add(patient).subscribe(

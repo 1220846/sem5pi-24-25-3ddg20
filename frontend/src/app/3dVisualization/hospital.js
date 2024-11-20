@@ -210,9 +210,9 @@ export default class Hospital {
             this.renderer.setPixelRatio(window.devicePixelRatio);
         }
         this.renderer.autoClear = false;
-        /* To-do #30 - Turn on shadows in the renderer and filter shadow maps using the Percentage-Closer Filtering (PCF) algorithm
-        this.renderer.shadowMap.enabled = ...;
-        this.renderer.shadowMap.type = ...; */
+        /* To-do #30 - Turn on shadows in the renderer and filter shadow maps using the Percentage-Closer Filtering (PCF) algorithm*/
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 

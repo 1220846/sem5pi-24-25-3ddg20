@@ -14,11 +14,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ScrollerModule } from 'primeng/scroller';
 import { DialogModule } from 'primeng/dialog';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { DeletePatientComponent } from '../delete-patient/delete-patient.component';
+import { ModalUpdatePatientComponent } from '../modal-update-patient/modal-update-patient.component';
 
 @Component({
   selector: 'app-list-patients',
   standalone: true,
-  imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,InputTextModule,FormsModule,OverlayPanelModule,ButtonModule, DialogModule, PaginatorModule],
+  imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,
+    InputTextModule,FormsModule,OverlayPanelModule,ButtonModule, DialogModule, PaginatorModule, DeletePatientComponent, ModalUpdatePatientComponent],
   templateUrl: './list-patients.component.html',
   styleUrl: './list-patients.component.scss'
 })
@@ -57,15 +60,13 @@ export class ListPatientsComponent implements OnInit{
 
   ngOnInit(): void {
     this.countTotalPatients();
-    console.log(this.totalPatients);
     this.loadPatients();
   }
 
   countTotalPatients(){
     this.patientService.patientCount().subscribe({
       next: (data) => {
-        this.totalPatients = data;
-        console.log(this.totalPatients);},
+        this.totalPatients = data;},
         error: (error) => console.error('Error fetching patient count:', error)
       });
   }
@@ -124,4 +125,14 @@ export class ListPatientsComponent implements OnInit{
     this.pageSize = event.rows ?? 10;
     this.loadPatients();
   }
+
+  onPatientDeleted(){
+    this.countTotalPatients();
+    this.loadPatients();
+  }
+
+  onPatientUpdated(){
+    this.loadPatients();
+  }
+  
 }
