@@ -1,0 +1,20 @@
+.input-large input {
+    width: 24rem;
+}
+
+.input-small input {
+    width: 9rem;
+}
+
+.dialog-footer {
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+    background-color: white;
+    z-index: 1;
+    position: sticky;
+    bottom: 0;
+}
+
+.label-small label {
+    margin-left: 15rem;
+}

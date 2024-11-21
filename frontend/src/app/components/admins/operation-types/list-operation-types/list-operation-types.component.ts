@@ -15,11 +15,12 @@ import { Specialization } from '../../../../domain/Specialization';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import { ModalDeleteOperationTypeComponent } from '../modal-delete-operation-type/modal-delete-operation-type.component';
+import { ModalEditOperationTypeComponent } from '../modal-edit-operation-type/modal-edit-operation-type.component';
 
 @Component({
   selector: 'app-list-operation-types',
   standalone: true,
-  imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,InputTextModule,FormsModule,OverlayPanelModule,ButtonModule,ModalDeleteOperationTypeComponent],
+  imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,InputTextModule,FormsModule,OverlayPanelModule,ButtonModule,ModalDeleteOperationTypeComponent, ModalEditOperationTypeComponent],
   templateUrl: './list-operation-types.component.html',
   styleUrl: './list-operation-types.component.scss'
 })
@@ -71,6 +72,10 @@ export class ListOperationTypesComponent implements OnInit {
   }
 
   deactivateOperationType(){
+    this.loadOperationTypes();
+  }
+
+  editedOperationType(){
     this.loadOperationTypes();
   }
 
