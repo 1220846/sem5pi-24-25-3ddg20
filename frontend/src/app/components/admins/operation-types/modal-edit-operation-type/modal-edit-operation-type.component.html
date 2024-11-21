@@ -1,0 +1,60 @@
+<div class="card flex justify-content-end mr-2">
+    <p-button (onClick)="showDialog()" [outlined]="true" severity="primary" icon="pi pi-pencil"/>
+    <p-dialog header="Update Operation Type" [modal]="true" [(visible)]="visible" [style]="{ width: '44rem', maxHeight: '40rem' }" [appendTo]="'body'">
+        <p-toast></p-toast>
+        <div class="p-fluid dialog-content">
+            <div class="flex flex-column gap-2 mb-2 input-large">
+                <form [formGroup]="operationTypeForm" class="dialog-form">
+                    <div class="p-fluid content">
+                        <div class="flex flex-wrap mb-3 gap-7">
+                            <div class="flex flex-column gap-2 mb-3 input-large">
+                                <label for="name">Name</label>
+                                <input pInputText id="name" formControlName="name"
+                                    aria-describedby="name-help" />
+                                <small
+                                    *ngIf="operationTypeForm.controls['name'].invalid && (operationTypeForm.controls['name'].dirty || operationTypeForm.controls['name'].touched)"
+                                    class="p-error">
+                                    Valid Name is required.
+                                </small>
+                            </div>
+                            <div class="flex flex-column gap-2 mb-3 input-small">
+                              <label for="estimatedDuration">Estimated Duration</label>
+                              <input pInputText id="estimatedDuration" formControlName="estimatedDuration" aria-describedby="estimatedDuration-help" />
+                              <small *ngIf="operationTypeForm.controls['estimatedDuration'].invalid && (operationTypeForm.controls['estimatedDuration'].dirty || operationTypeForm.controls['estimatedDuration'].touched)" class="p-error">
+                                Estimated Duration is required.
+                              </small>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-7">
+                          <div class="flex flex-column gap-2 mb-3 label-large">
+                              <label>Specialization Name</label>
+                          </div>
+                          <div class="flex flex-column gap-2 mb-3 label-small">
+                            <label>Number of Staff</label>
+                          </div>
+                      </div>
+                        <div formArrayName="specializations">
+                            <div *ngFor="let specialization of specializations.controls; let i = index" [formGroupName]="i">
+                              <div class="flex flex-wrap gap-7">
+                                <div class="flex flex-column gap-2 mb-3 input-large">
+                                  <input pInputText id="specializationName-{{ i }}" formControlName="specializationName" [readonly]="true"/>
+                                </div>
+                                <div class="flex flex-column gap-2 mb-3 input-small">
+                                  <input pInputText id="numberOfStaff-{{ i }}" formControlName="numberOfStaff" [min]="1" />
+                                </div>
+                              </div>
+                              <hr *ngIf="i < specializations.controls.length - 1" style="border: 1px solid #ccc; margin: 4px;" />
+                            </div>
+                        </div>
+                    </div>  
+                </form>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Save" (click)="saveData()" icon="pi pi-check"></p-button>
+                <p-button label="Cancel" (click)="closeDialog()" icon="pi pi-times" severity="secondary"></p-button>
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>

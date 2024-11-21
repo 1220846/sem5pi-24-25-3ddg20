@@ -1,56 +1,53 @@
 name: Deploy Backend Module in VM DEI
 
 on:
-  push:
-    branches:
-      - main
-
-      
+  schedule:
+    - cron: '43 17 * * *'
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: 'Configuring a .env file for the backend'
-      run: |
-        cd dddnetcore
-        touch .env
-        echo "Auth0_Domain=dev-5hgod7guea48z3kl.us.auth0.com" >> .env
-        echo "Auth0_Domain_URI=https://dev-5hgod7guea48z3kl.us.auth0.com" >> .env
-        echo "Auth0_Audience=https://api.sarm" >> .env
-        echo "Auth0_ClientId=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
-        echo "Auth0_ClientSecret=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
-        echo "Auth0_Connection=Username-Password-Authentication" >> .env
-        echo "Auth0_Namespace_Roles=https://sarm.com" >> .env
-        
-        echo "Database_Name=sem5pi" >> .env
-        echo "Database_HostName=vsgate-s1.dei.isep.ipp.pt" >> .env
-        echo "Database_Port=11372" >> .env
-        echo "Database_User=root" >> .env
-        echo "Database_Password=${{ secrets.DATABASE_PASSWORD }}" >> .env
-        
-        echo "Smtp_Server=smtp.office365.com" >> .env
-        echo "Smtp_Port=587" >> .env
-        echo "Smtp_From_Email=${{ secrets.SMTP_FROM_EMAIL }}" >> .env
-        echo "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" >> .env
+      - name: 'Configuring a .env file for the backend'
+        run: |
+          cd dddnetcore
+          touch .env
+          echo "Auth0_Domain=dev-5hgod7guea48z3kl.us.auth0.com" >> .env
+          echo "Auth0_Domain_URI=https://dev-5hgod7guea48z3kl.us.auth0.com" >> .env
+          echo "Auth0_Audience=https://api.sarm" >> .env
+          echo "Auth0_ClientId=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
+          echo "Auth0_ClientSecret=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
+          echo "Auth0_Connection=Username-Password-Authentication" >> .env
+          echo "Auth0_Namespace_Roles=https://sarm.com" >> .env
+          
+          echo "Database_Name=sem5pi" >> .env
+          echo "Database_HostName=vsgate-s1.dei.isep.ipp.pt" >> .env
+          echo "Database_Port=11372" >> .env
+          echo "Database_User=root" >> .env
+          echo "Database_Password=${{ secrets.DATABASE_PASSWORD }}" >> .env
+          
+          echo "Smtp_Server=smtp.office365.com" >> .env
+          echo "Smtp_Port=587" >> .env
+          echo "Smtp_From_Email=${{ secrets.SMTP_FROM_EMAIL }}" >> .env
+          echo "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" >> .env
 
-    - name: Upload Backend to VM DEI
-      uses: appleboy/scp-action@v0.1.5
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: ./dddnetcore/*
-        target: ~/sarm
+      - name: Upload Backend to VM DEI
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: ./dddnetcore/*
+          target: ~/sarm
 
-    - name: Deploy Backend in VM DEI
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          ~/sarm/deployment_backend.sh
+      - name: Deploy Backend in VM DEI
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            ~/sarm/deployment_backend.sh

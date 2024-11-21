@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { OperationType } from '../domain/OperationType';
 import { catchError, Observable, throwError } from 'rxjs';
 import { CreatingOperationTypeDto } from '../domain/CreatingOperationTypeDto';
+import { EditingOperationTypeDto } from '../domain/EditingOperationTypeDto';
 
 @Injectable({
   providedIn: 'root'
@@ -57,4 +58,15 @@ export class OperationTypeService {
     return this.httpClient.delete<OperationType>(`${this.apiUrl}/${operationTypeId}`, {headers: headers})
   }
 
+  editOperationType(operationTypeId: string, editOperationType: EditingOperationTypeDto){
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+
+    return this.httpClient.put<OperationType>(`${this.apiUrl}/${operationTypeId}`, editOperationType, { headers })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
 }
