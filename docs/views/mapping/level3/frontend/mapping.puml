@@ -1,0 +1,99 @@
+@startuml mapping
+top to bottom direction
+
+package " " <<SARM>>{
+    folder "Angular Component" as AngularComponent {
+        folder "UI Component" as ComponentUI{
+
+        }
+
+        folder "Component" as Component{
+
+        }
+    }
+
+    folder "Service" as Service{
+
+    }
+
+    folder "HTTP Driver" as HTTP{
+
+    }
+
+    folder "Model" as Model{
+
+    }
+}
+
+ComponentUI <.. Component
+Component <.. Model
+ComponentUI <.. Model
+Model <.. ComponentUI
+Service <.. Model
+Component <.. Service
+Service <.. HTTP
+
+
+interface "Server API" as API
+interface "UI" as UI_API
+
+component "UI" as UI <<component>> <<container (C4)>> {
+    portin " " as PI1
+    portin " " as PI
+
+    Interface "Observer API" AS OBSERVER_API
+    folder "Angular Component" {
+
+        component "Component" as Component_ <<component>> {
+        }
+        Interface "Component API" as COMPONENT_API
+        component "UI Component" as ComponentUI_ <<component>> {
+        }
+    }
+
+    Interface "Model API" AS MODEL_API
+
+    component "Model" as Model_ <<component>> {
+    }
+
+    Interface "Service API" AS SERVICE_API
+
+    component "Service" as Service_ <<component>> {
+    }
+    
+    Interface "HTTP Driver API" AS HTTP_SERVICE_API
+
+    component "HTTP Driver" as HTTP_ <<component>> {
+        portin " " as PIHTTP
+    }
+}
+
+UI_API -- PI1 
+ComponentUI_ -- PI1
+Component_ -u-- COMPONENT_API
+ComponentUI_ -d-( COMPONENT_API
+
+ComponentUI_ -r- OBSERVER_API
+Model_ -u-( OBSERVER_API
+
+Service_ -u- SERVICE_API
+Component_ --( SERVICE_API
+
+Model_ -- MODEL_API
+Component_ -r-( MODEL_API
+Service_ -u-( MODEL_API
+ComponentUI_ --( MODEL_API
+
+PI -U-( API
+PIHTTP -u- PI
+
+HTTP_ -- HTTP_SERVICE_API
+Service_ -r-( HTTP_SERVICE_API
+
+Component ....> Component_ : <<manifest>>
+ComponentUI ....> ComponentUI_ : <<manifest>>
+Model ....> Model_ : <<manifest>>
+Service ....> Service_ : <<manifest>>
+HTTP ....> HTTP_ : <<manifest>>
+
+@enduml
