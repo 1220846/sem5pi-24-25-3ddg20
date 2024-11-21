@@ -36,6 +36,7 @@ jobs:
         echo "Smtp_From_Email=${{ secrets.SMTP_FROM_EMAIL }}" >> .env
         echo "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" >> .env
 
+
     - name: Upload Backend to VM DEI
       uses: appleboy/scp-action@v0.1.5
       with:
