@@ -1,14 +1,17 @@
 @startuml physical-view
 
 node "localhost: " as LOCALHOST {
-  component "Backend Data Management" as BackendDataManagement <<component>> {
+
+  component "Frontend" as Frontend <<component>>{
   }
-  component "Planning" as P <<component>>  { 
+
+  component "Planning" as Planning <<component>>  { 
   }
 }
 
 node "Server 2: vs1422" as Server {
-  component "Frontend" as Frontend {
+  
+  component "Backend Data Management" as BackendDataManagement <<component>> {
   }
 }
 

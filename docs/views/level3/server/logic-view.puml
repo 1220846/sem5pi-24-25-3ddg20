@@ -3,34 +3,89 @@ top to bottom direction
 
 interface "API" as API
 interface "Auth0 API" as A0API
-interface "SMTP Office 365" as SMTP_Office_365
+interface "Database API" as DB_API
 
-component "Backend Data Management" <<component>>{
-    () "DB API" as DBAPI
-    portin " " as PI
-    portout " " as SARMPO1
-    portout " " as SARMPO2
+component "Server" as Server <<component>> <<C4 Container>> {
+  portin " " as P1
+  portin " " as P2
+  portout " " as P3
 
-    component "Server" <<component>> <<C4 Container>>{
-        portin " " as SVPI
-        portout " " as SVPO
-        portout " " as SVPO1
-        portout " " as SVPO2
+  Interface "Controller API" as Controller_API
+  Interface "Data Model API" as DataModel_API
+
+  folder "Frameworks and Drivers Layer" {
+    component "Database Driver" as DatabaseDriver <<component>> {
     }
-
-    component "Database" <<component>> <<C4 Container>>{
-        portin " " as DBPI
+    component "Routing" as Routing <<component>> {
     }
-     
+  }
+
+  component "DTO" as DTO <<component>> {
+  }
+
+  component "Data Model" as DataModel <<component>> {
+  }
+
+  Interface "App Services API" AS ApplicationServiceAPI
+  Interface "Database Driver API" AS DatabaseDriverAPI
+  Interface "Repo API" AS RepoAPI
+  Interface "DTO API" AS DTOAPI
+  Interface "Model API" AS ModelAPI
+  Interface "VO API" AS VOAPI
+
+  folder "Interface Adapters Layer" {
+    component "Controller" as Controller <<component>> {
+    }
+    component "Repository" as Repository <<component>> {
+    }
+  }
+
+  folder "Application Business Rules" {
+    component "Application Service" as ApplicationService <<component>> {
+    }
+  }
+
+  folder "Enterprise Business Rules" {
+    component "Domain Model DDD" as DomainModelDDD <<component>> {
+    }
+  }
 }
 
-API -- PI
-PI -- SVPI 
-SVPO --( DBAPI
-DBPI -U- DBAPI
-SVPO1 -- SARMPO1
-SARMPO1 -u-( A0API
+API -- P1
+P2 -u-( DB_API
+P3 --r-( A0API
 
-SARMPO2 --( SMTP_Office_365
-SVPO2 -- SARMPO2
+Routing --- P1
+Routing --( Controller_API
+Routing --( DTOAPI
+
+DatabaseDriver -- DatabaseDriverAPI
+DatabaseDriver -- P2
+DatabaseDriver --( DataModel_API 
+
+Repository -- RepoAPI
+Repository -u-( DatabaseDriverAPI 
+Repository -u-( DataModel_API 
+Repository --( VOAPI
+Repository ---( ModelAPI 
+
+DataModel -- DataModel_API 
+
+Controller --( ApplicationServiceAPI
+Controller -u- Controller_API
+Controller --( DTOAPI
+Controller --( VOAPI
+
+ApplicationService -u- ApplicationServiceAPI
+ApplicationService -- P3
+ApplicationService --( VOAPI
+ApplicationService -u-( RepoAPI 
+ApplicationService --( ModelAPI 
+
+DTO -- DTOAPI
+
+DomainModelDDD -u- ModelAPI 
+DomainModelDDD -u- VOAPI
+
+
 @enduml
