@@ -2,7 +2,7 @@ name: Deploy Backend Module in VM DEI
 
 on:
   schedule:
-    - cron: '49 15 * * *'
+    - cron: '56 15 * * *'
 
 jobs:
   deploy:
@@ -20,7 +20,7 @@ jobs:
           echo "Auth0_Domain_URI=https://dev-5hgod7guea48z3kl.us.auth0.com" >> .env
           echo "Auth0_Audience=https://api.sarm" >> .env
           echo "Auth0_ClientId=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
-          echo "Auth0_ClientSecret=${{g secrets.AUTH0_CLIENT_SECRET }}" >> .env
+          echo "Auth0_ClientSecret=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
           echo "Auth0_Connection=Username-Password-Authentication" >> .env
           echo "Auth0_Namespace_Roles=https://sarm.com" >> .env
           
