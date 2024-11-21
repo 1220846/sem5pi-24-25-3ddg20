@@ -5,6 +5,7 @@ actor Admin as "Admin"
 box "<<system (C4)>>\nFrontend"#LightBlue
     participant ComponentUI as "UI Component" <<component (C4)>>
     participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
     participant SRV as "Service" <<component (C4)>>
     participant HTTP as "HTTP" <<component (C4)>>
 end box
@@ -14,25 +15,30 @@ box "<<system (C4)>>\nServer"
 end box
 
 activate Admin
-    Admin -> ComponentUI : asks to list staff profiles
+    Admin -> ComponentUI : asks to edit a staff profile
     activate ComponentUI
-        ComponentUI -> Component : list staff profiles
+        ComponentUI --> Admin : asks to input data
+    deactivate ComponentUI
+    Admin -> ComponentUI : inputs data
+    activate ComponentUI
+        ComponentUI -> Component : edit staff profile
         activate Component
-            Component -> SRV : list staff profiles
+            Component -> Model** : create            
+            Component -> SRV : edit staff profile
             activate SRV
-                SRV -> HTTP : get('/staffs/filter')
+                SRV -> HTTP : patch('/staffs')
                 activate HTTP
-                    HTTP -> Server : GET /staffs/filter
+                    HTTP -> Server : PATCH /staffs
                     activate Server
-                        Server --> HTTP : 200 (staffs)
+                        Server --> HTTP : 200 (staff)
                     deactivate Server
-                    HTTP --> SRV : staffss
+                    HTTP --> SRV : staff
                 deactivate HTTP
-                SRV --> Component : staffss
+                SRV --> Component : staff
             deactivate SRV
-            Component --> ComponentUI : staffs
+            Component --> ComponentUI : staff
         deactivate Component
-    Admin <-- ComponentUI : shows staffs
+    Admin <-- ComponentUI : shows success message
     deactivate ComponentUI
 deactivate Admin
 

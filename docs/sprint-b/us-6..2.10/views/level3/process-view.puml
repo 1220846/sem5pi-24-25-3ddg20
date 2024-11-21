@@ -2,7 +2,7 @@
 autonumber
 skinparam DefaultTextAlignment center
 actor Admin as "Admin"
-box "<<C4 System>>\nUI"#LightBlue
+box "<<system (C4)>>\nFrontend"#LightBlue
     participant ComponentUI as "UI Component" <<component (C4)>>
     participant Component as "Component" <<component (C4)>>
     participant Model as "Model" <<component (C4)>>
@@ -16,6 +16,10 @@ end box
 
 activate Admin
     Admin -> ComponentUI : asks to create new staff profile
+    activate ComponentUI
+        ComponentUI --> Admin : asks to input data
+    deactivate ComponentUI
+    Admin -> ComponentUI : inputs data
     activate ComponentUI
         ComponentUI -> Component : create new staff profile
         activate Component

@@ -6,7 +6,7 @@ participant "Server" as srv
 participant "Database" as db
 
 activate adm
-    adm -> srv : PUT /api/staffs/{id}
+    adm -> srv : ~PATCH /api/staffs/{id}
     activate srv
         srv -> db : get staff
         activate db

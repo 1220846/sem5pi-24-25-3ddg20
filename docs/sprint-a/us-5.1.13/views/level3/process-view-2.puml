@@ -13,7 +13,7 @@ database "ISpecializationRepository" as SpecializationRepository <<Domain>>
 database "IAvailabilitySlotRepository" as AvailabilitySlotRepository <<Domain>>
 
 activate Admin
-    Admin -> Controller : PUT /api/staffs/{id}
+    Admin -> Controller : PATCH /api/staffs/{id}
     activate Controller
         Controller -> Service : EditStaffAsync(id, editingStaffDto)
         activate Service
