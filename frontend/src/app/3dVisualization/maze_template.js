@@ -15,19 +15,17 @@ import { parameter, texture } from "three/webgpu";
 export default class Maze {
     constructor(parameters) {
         this.onLoad = function (description) {
-            console.log(description);
+            
 
             // Store the maze's map and size
             this.map = description.map;
             this.size = description.size;
 
-            console.log("2");
-            console.log(description.initialPosition);
+            
             // Store the player's initial position and direction
             //this.initialPosition = this.cellToCartesian(description.initialPosition);
             //this.initialDirection = description.initialDirection;
 
-            console.log("3");
 
             // Store the maze's exit location
             this.exitLocation = this.cellToCartesian(description.exitLocation);
@@ -43,8 +41,6 @@ export default class Maze {
             // Create a wall
             this.wall = new Wall({ textureUrl: description.wallTextureUrl });
 
-
-            console.log("4");
 
             // Read whih rooms are busy
             const busyRooms = new Set(description.busyRooms);
@@ -132,7 +128,7 @@ export default class Maze {
                                     console.log("Patient loaded successfully:", this.patient);
                                     resolve();
                                 }, undefined, (error) => {
-                                    console.error(`Error loading table model (${error}).`);
+                                    console.error(`Error loading patient model (${error}).`);
                                     reject(error);
                                 });
                             });
@@ -141,7 +137,26 @@ export default class Maze {
                                 this.patient.object.scale.set(0.007, 0.01, 0.007);
                                 this.patient.object.position.set(i - description.size.width / 2.0 + 0.5 + 0.1 * (tableId % 2 == 0 ? 1 : -1), 0.6, j - description.size.height / 2.0 + 0.5);
                                 this.patient.object.rotation.y = (Math.PI * (tableId % 2 == 0 ? 3 : 1)) / 2;
-                            })
+                            });
+
+
+                            const loader2 = new GLTFLoader();
+                            const loadDoctorPromise = new Promise((resolve, reject) => {
+                                loader2.load("/models/gltf/Doctor/doctor_pinch.glb", (glb) => {
+                                    this.doctor = { object: glb.scene };
+                                    console.log("Doctor loaded successfully:", this.doctor);
+                                    resolve();
+                                }, undefined, (error) => {
+                                    console.error(`Error loading doctor model (${error}).`);
+                                    reject(error);
+                                })
+                            });
+                            loadDoctorPromise.then(() => {
+                                this.object.add(this.doctor.object);
+                                this.doctor.object.scale.set(0.005, 0.009, 0.005);
+                                this.doctor.object.position.set(i - description.size.width / 2.0 + 0.5 + 0.1 * (tableId % 2 == 0 ? 1 : -1), 0.0, j - description.size.height / 2.0 + 0.5 + 0.6);
+                                this.doctor.object.rotation.y = (Math.PI * (tableId % 2 == 0 ? 3 : 1));
+                            });
                         }
                     }
                 }
