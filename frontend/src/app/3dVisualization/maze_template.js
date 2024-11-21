@@ -37,9 +37,11 @@ export default class Maze {
             // Create a wall
             this.wall = new Wall({ textureUrl: description.wallTextureUrl });
 
+            // Read whih rooms are busy
+            const busyRooms = new Set(description.busyRooms);
+            
+
             // Build the maze
-
-
             let wallObject;
             for (let i = 0; i <= description.size.width; i++) { // In order to represent the eastmost walls, the map width is one column greater than the actual maze width
                 for (let j = 0; j <= description.size.height; j++) { // In order to represent the southmost walls, the map height is one row greater than the actual maze height
@@ -108,10 +110,30 @@ export default class Maze {
                             this.object.add(this.table.object);
                             this.table.object.scale.set(0.7, 0.7, 0.7);
                             this.table.object.position.set(i - description.size.width / 2.0 - 1.9, 0.0, j - description.size.height / 2.0 - 3.125);
-                            this.table.object.rotation.y = (Math.PI * (doorId % 2 == 0 ? 1 : 3)) / 2;
                         }).catch((error) => {   
                             console.error("Error loading table model:", error);
                         });
+
+                        // Patients
+                        if (busyRooms.has(tableId)) { 
+                            const loader = new GLTFLoader();
+                            const loadPatientPromise = new Promise((resolve, reject) => {
+                                loader.load("/models/gltf/Patient/patient.glb", (glb) => {
+                                    this.patient = { object: glb.scene };
+                                    console.log("Patient loaded successfully:", this.patient);
+                                    resolve();
+                                }, undefined, (error) => {
+                                    console.error(`Error loading table model (${error}).`);
+                                    reject(error);
+                                });
+                            });
+                            loadPatientPromise.then(() => {
+                                this.object.add(this.patient.object);
+                                this.patient.object.scale.set(0.007, 0.01, 0.007);
+                                this.patient.object.position.set(i - description.size.width / 2.0 + 0.5 + 0.1 * (tableId % 2 == 0 ? 1 : -1), 0.6, j - description.size.height / 2.0 + 0.5);
+                                this.patient.object.rotation.y = (Math.PI * (tableId % 2 == 0 ? 3 : 1)) / 2;
+                            })
+                        }
                     }
                 }
             }
@@ -156,6 +178,17 @@ export default class Maze {
             // onError callback
             error => this.onError(this.url, error)
         );
+    }
+
+    readFileIntoSet(filePath) { 
+        try {
+            const data = fetch(filePath);
+            const lines = data.split('\n').map(line => line.trim());
+            return new Set(lines)
+        } catch (error) {
+            console.error(`Error reading file: ${error.message}`);
+            return new Set();
+        }
     }
 
     // Convert cell [row, column] coordinates to cartesian (x, y, z) coordinates

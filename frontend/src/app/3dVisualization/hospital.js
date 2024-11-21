@@ -216,6 +216,8 @@ export default class Hospital {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
+        this.renderer.setClearColor(0x99c0d4);
+
         // Set the mouse move action (none)
         this.dragMiniMap = false;
         this.changeCameraDistance = false;
