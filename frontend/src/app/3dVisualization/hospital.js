@@ -688,7 +688,7 @@ export default class Hospital {
                 this.animations = new Animations(this.player.object, this.player.animations);
 
                 // Set the player's position and direction
-                this.player.position = this.maze.initialPosition.clone();
+                //*this.player.position = this.maze.initialPosition.clone();
                 this.player.direction = this.maze.initialDirection;
 
                 /* To-do #40 - Create the user interface
@@ -846,10 +846,11 @@ this.animations.fadeToAction(this.player.keyStates.run ? /* action : action, dur
             this.firstPersonViewCamera.playerDirection = this.player.direction;
             this.thirdPersonViewCamera.playerDirection = this.player.direction;
             this.topViewCamera.playerDirection = this.player.direction;
-            const target = new THREE.Vector3(this.player.position.x, this.player.position.y + this.player.eyeHeight, this.player.position.z);
-            this.firstPersonViewCamera.setTarget(target);
-            this.thirdPersonViewCamera.setTarget(target);
-            this.topViewCamera.setTarget(target);
+            //! DO NOT UNCOMMENT
+            //*const target = new THREE.Vector3(this.player.position.x, this.player.position.y + this.player.eyeHeight, this.player.position.z);
+            //*this.firstPersonViewCamera.setTarget(target);
+            //*this.thirdPersonViewCamera.setTarget(target);
+            //*this.topViewCamera.setTarget(target);
 
             // Update statistics
             this.statistics.update();

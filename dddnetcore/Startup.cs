@@ -46,6 +46,7 @@ using DDDSample1.Infrastructure.SystemLogs;
 using dddnetcore.Domain.SurgeryRooms;
 using dddnetcore.Infraestructure.SurgeryRooms;
 using DDDSample1.Domain.Appointments;
+using dddnetcore.Domain.Hospital;
 
 namespace DDDSample1
 {
@@ -207,6 +208,8 @@ namespace DDDSample1
 
             services.AddTransient<IAppointmentRepository,AppointmentRepository>();
             services.AddTransient<AppointmentService>();
+
+            services.AddTransient<HospitalService>();
         }
     }
 }

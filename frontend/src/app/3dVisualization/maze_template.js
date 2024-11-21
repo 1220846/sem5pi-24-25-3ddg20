@@ -2,7 +2,7 @@ import * as THREE from "three";
 import Ground from "./ground.js";
 import Wall from "./wall.js";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { texture } from "three/webgpu";
+import { parameter, texture } from "three/webgpu";
 
 /*
  * parameters = {
@@ -15,18 +15,24 @@ import { texture } from "three/webgpu";
 export default class Maze {
     constructor(parameters) {
         this.onLoad = function (description) {
+            console.log(description);
 
             // Store the maze's map and size
             this.map = description.map;
             this.size = description.size;
 
+            console.log("2");
+            console.log(description.initialPosition);
             // Store the player's initial position and direction
-            this.initialPosition = this.cellToCartesian(description.initialPosition);
-            this.initialDirection = description.initialDirection;
+            //this.initialPosition = this.cellToCartesian(description.initialPosition);
+            //this.initialDirection = description.initialDirection;
+
+            console.log("3");
 
             // Store the maze's exit location
             this.exitLocation = this.cellToCartesian(description.exitLocation);
 
+            
             // Create a group of objects
             this.object = new THREE.Group();
 
@@ -36,6 +42,9 @@ export default class Maze {
 
             // Create a wall
             this.wall = new Wall({ textureUrl: description.wallTextureUrl });
+
+
+            console.log("4");
 
             // Read whih rooms are busy
             const busyRooms = new Set(description.busyRooms);
@@ -178,17 +187,6 @@ export default class Maze {
             // onError callback
             error => this.onError(this.url, error)
         );
-    }
-
-    readFileIntoSet(filePath) { 
-        try {
-            const data = fetch(filePath);
-            const lines = data.split('\n').map(line => line.trim());
-            return new Set(lines)
-        } catch (error) {
-            console.error(`Error reading file: ${error.message}`);
-            return new Set();
-        }
     }
 
     // Convert cell [row, column] coordinates to cartesian (x, y, z) coordinates

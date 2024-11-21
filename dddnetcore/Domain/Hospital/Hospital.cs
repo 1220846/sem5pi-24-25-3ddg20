@@ -7,10 +7,15 @@ namespace dddnetcore.Domain.Hospital
 {
     public class Hospital
     {
-        public int[] busyRooms {get; set;}
+        public List<int> busyRooms {get; set;}
         public string GroundTextureUrl { get; set; }
         public string WallTextureUrl { get; set; }
         public Size Size { get; set; }
         public int[][] Map { get; set; }
+
+        //! Does nothing, but breaks if doesnt exist
+        public int[] initialPosition {get; set;}
+        public double initialDirection {get; set;}
+        public double[] exitLocation {get; set;}
     }
 }
