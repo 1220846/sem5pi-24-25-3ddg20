@@ -62,7 +62,7 @@ export class StaffService {
       catchError((error) => {
         return throwError(() => error.error.message);
       })
-    );;
+    );
   }
 
   deactivate(staffId: string) : Observable<Staff> {
@@ -80,6 +80,6 @@ export class StaffService {
       catchError((error) => {
         return throwError(() => error.error.message);
       })
-    );;;
+    );
   }
 }

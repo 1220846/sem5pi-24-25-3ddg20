@@ -1,6 +1,6 @@
 # US 6.2.11 - Edit a staff profile
 
-## Context
+## 1. Context
 
 *In this task it was aksed that an Admin can edit a staff profile.*
 

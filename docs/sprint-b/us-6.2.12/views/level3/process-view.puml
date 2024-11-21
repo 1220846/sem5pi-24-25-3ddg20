@@ -1,0 +1,43 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nServer"
+  participant Server as "Server" <<component (C4)>>
+end box
+
+activate Admin
+    Admin -> ComponentUI : asks to deactivate a staff profile
+    activate ComponentUI
+        ComponentUI --> Admin : asks to confirm
+    deactivate ComponentUI
+    Admin -> ComponentUI : confirms
+    activate ComponentUI
+        ComponentUI -> Component : deactivate staff profile
+        activate Component     
+            Component -> SRV : deactivate staff profile
+            activate SRV
+                SRV -> HTTP : delete('/staffs')
+                activate HTTP
+                    HTTP -> Server : DELETE /staffs
+                    activate Server
+                        Server --> HTTP : 200 (staff)
+                    deactivate Server
+                    HTTP --> SRV : staff
+                deactivate HTTP
+                SRV --> Component : staff
+            deactivate SRV
+            Component --> ComponentUI : staff
+        deactivate Component
+    Admin <-- ComponentUI : shows success message
+    deactivate ComponentUI
+deactivate Admin
+
+@enduml
