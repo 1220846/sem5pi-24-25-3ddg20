@@ -1,9 +1,9 @@
-name: Deploy Backend
+name: Deploy Backend Module in VM DEI
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deploy:
@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: 'Create env file'
+    - name: 'Configuring a .env file for the backend'
       run: |
         cd dddnetcore
         touch .env
@@ -36,7 +36,7 @@ jobs:
         echo "Smtp_From_Email=${{ secrets.SMTP_FROM_EMAIL }}" >> .env
         echo "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" >> .env
 
-    - name: Transfer Backend to VM
+    - name: Upload Backend to VM DEI
       uses: appleboy/scp-action@v0.1.5
       with:
         host: ${{ secrets.SERVER_IP }}
@@ -45,11 +45,11 @@ jobs:
         source: ./dddnetcore/*
         target: ~/sarm
 
-    - name: Deploy Backend
+    - name: Deploy Backend in VM DEI
       uses: appleboy/ssh-action@v0.1.5
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          ~/sarm/deploy_backend.sh
+          ~/sarm/deployment_backend.sh
