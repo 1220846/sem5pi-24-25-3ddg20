@@ -2,7 +2,7 @@ name: Deploy Backend Module in VM DEI
 
 on:
   schedule:
-    - cron: '56 15 * * *'
+    - cron: '10 16 * * *'
 
 jobs:
   deploy:
