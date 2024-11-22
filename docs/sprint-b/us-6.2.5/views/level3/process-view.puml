@@ -10,8 +10,8 @@ box "<<system (C4)>>\nFrontend"#LightBlue
     participant HTTP as "HTTP" <<component (C4)>>
 end box
 
-box "<<system (C4)>>\nBackendDataManagement"
-  participant BackendDataManagement as "BackendDataManagement" <<component (C4)>>
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
 end box
 
 activate Patient
