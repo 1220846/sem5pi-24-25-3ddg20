@@ -2,7 +2,7 @@
 autonumber
 skinparam DefaultTextAlignment center
 actor Admin as "Admin"
-box "<<C4 System>>\nFrontend"#LightBlue
+box "<<system (C4)>>\nFrontend"#LightBlue
     participant ComponentUI as "UI Component" <<component (C4)>>
     participant Component as "Component" <<component (C4)>>
     participant SRV as "Service" <<component (C4)>>
