@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalCreateOperationRequestComponent } from './modal-create-operation-request/modal-create-operation-request.component';
-import { ListOperationRequestsComponent } from './list-operation-requests/list-operation-requests.component';
 import { ModalUpdateOperationRequestsComponent } from './modal-update-operation-requests/modal-update-operation-requests.component';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../domain/User';
+import { ListOperationRequestComponent } from './list-operation-request/list-operation-request.component';
 
 @Component({
   selector: 'app-operation-requests',
   standalone: true,
-  imports: [ModalCreateOperationRequestComponent, ListOperationRequestsComponent, ModalUpdateOperationRequestsComponent],
+  imports: [ModalCreateOperationRequestComponent,ListOperationRequestComponent ,ModalUpdateOperationRequestsComponent, ModalUpdateOperationRequestsComponent],
   templateUrl: './operation-requests.component.html',
   styleUrl: './operation-requests.component.scss'
 })

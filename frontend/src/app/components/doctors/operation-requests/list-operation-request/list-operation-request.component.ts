@@ -22,22 +22,21 @@ import { ModalUpdateOperationRequestsComponent } from '../modal-update-operation
 import { Observable } from 'rxjs';
 import { ModalRemoveOperationRequestComponent } from '../modal-remove-operation-request/modal-remove-operation-request.component';
 import { MessageService } from 'primeng/api';
-
+import { Patient } from '../../../../domain/Patient';
+import { PatientService } from '../../../../services/patient.service';
 
 @Component({
-  selector: 'list-operation-request',
+  selector: 'app-list-operation-request',
   standalone: true,
-  imports: [
-    InputTextModule, FormsModule, OverlayPanelModule, FloatLabelModule, AvatarModule,
+  imports: [InputTextModule, FormsModule, OverlayPanelModule, FloatLabelModule, AvatarModule,
     TagModule, BadgeModule, ScrollerModule, CalendarModule, DropdownModule,
     DataViewModule, AccordionModule, CommonModule, ModalUpdateOperationRequestsComponent, DialogModule,
-    ModalRemoveOperationRequestComponent
-  ],
-  templateUrl: './list-operation-requests.component.html',
-  styleUrls: ['./list-operation-requests.component.scss'],
+    ModalRemoveOperationRequestComponent],
+  templateUrl: './list-operation-request.component.html',
+  styleUrl: './list-operation-request.component.scss',
   providers: [OperationRequestService]
 })
-export class ListOperationRequestsComponent implements OnInit {
+export class ListOperationRequestComponent implements OnInit{
   @ViewChild('filterPanel') filterPanel!: OverlayPanel;
   DoctorId: string | undefined;
   OperationTypeId: string | undefined;
@@ -45,12 +44,19 @@ export class ListOperationRequestsComponent implements OnInit {
   Deadline: Date | undefined;
   Priority: string | undefined;
 
+  filterStatus=undefined;
+  filterPriority=undefined;
+  filterOperationType='';
+  filterMedicalRecordNumber='';
+
   optionsPriority = [
+    { label: 'None', value: '' },
     { label: 'Elective', value: 'ELECTIVE' },
     { label: 'Urgent', value: 'URGENT' },
     { label: 'Emergency', value: 'EMERGENCY' }
   ];
   optionsStatus = [
+    { label: 'None', value: '' },
     { label: 'Waiting', value: 'WAITING' },
     { label: 'Scheduled', value: 'SCHEDULED' }
   ];
@@ -61,42 +67,59 @@ export class ListOperationRequestsComponent implements OnInit {
   expandedPanels: string[] = [];
   operationRequests: OperationRequest[] = [];
 
+  operationTypes: OperationType[] = [];
+  availableOperationTypes: OperationType[] = [];
+
+  patients: Patient[] = [];
+  availablePatients: Patient[] = [];
+
+  dataOpTypes: [string, string][] = [];
+  dataOpTypesRev: [string, string][] = [];
+  dataPatients: [string, string][] = [];
+
   visible: boolean = false;
 
-  constructor(private operationRequestService: OperationRequestService, private OperationTypeService: OperationTypeService) { }
+  constructor(private operationRequestService: OperationRequestService, private patientService: PatientService ,private OperationTypeService: OperationTypeService) { }
 
   clearFilters(): void {
-    this.OperationTypeId = '';
-    this.selectedStatus = undefined;
-    this.selectedPriority = undefined;
-    this.MedicalRecordNumber = '';
+    this.filterOperationType = '';
+    this.filterStatus = undefined;
+    this.filterPriority = undefined;
+    this.filterMedicalRecordNumber = '';
     this.loadOperationRequests();
     this.filterPanel.hide();
   }
 
-  applyFilters(operationTypeId: string, selectedStatus: any, selectedPriority: any, medicalRecordNumber: string): void {
+  applyFilters(): void {
+    console.log(this.filterOperationType)
+    const OperationType=this.dataOpTypesRev.find((item)=>item[0]==this.filterOperationType);
+    if(OperationType){
+      this.filterOperationType=OperationType[1];
+    }
+    console.log(this.filterOperationType)
     this.loadOperationRequests();
     this.filterPanel.hide();
   }
 
   loadOperationRequests(): void {
     this.operationRequestService.getFilteredOperationRequests(
-      this.DoctorId,
-      this.OperationTypeId,
-      this.selectedPriority,
-      this.selectedStatus
+      this.filterMedicalRecordNumber,
+      this.filterOperationType,
+      this.filterPriority,
+      this.filterStatus
     ).subscribe({
       next: (data) => {
         this.operationRequests = data;
         this.operationRequests.forEach((request) => {
-          this.OperationTypeService.getById(request.OperationTypeId).subscribe({
+          this.OperationTypeService.getById(request.operationTypeId).subscribe({
             next: (operationType) => {
-              request.OperationTypeName = operationType.name;
+              request.operationTypeName = operationType.name;
             },
             error: (error) => {
               console.error('Erro ao buscar o tipo de operação:', error);
             }
           });
+          console.log(request)
         });
       },
       error: (error) => {
@@ -104,22 +127,10 @@ export class ListOperationRequestsComponent implements OnInit {
       }
     });
   }
-  /*
-    loadOperationType(operationTypeId: string): void {
-      this.OperationTypeService.getById(operationTypeId).subscribe({
-        next: (operationType) => {
-          return operationType
-          if(this.operationTypes.includes(operationType)){
-            
-          }
-        },
-        error: (error) => {
-          console.error('Erro ao buscar o tipo de operação:', error);
-        }
-      });
-    }*/
 
-  ngOnInit() {
+  ngOnInit(): void{
+    this.loadOperationTypes();
+    this.loadPatients();
     this.loadOperationRequests();
   }
 
@@ -144,6 +155,22 @@ export class ListOperationRequestsComponent implements OnInit {
     }
   }
 
+  loadOperationTypes(){
+    this.OperationTypeService.getAll().subscribe((data)=>{
+      this.dataOpTypes = data.map((item: { id: string; name: string }) => [item.id, item.name]);
+      this.dataOpTypesRev = data.map((item: { name: string; id: string }) => [item.name, item.id]);
+      this.operationTypes=data;
+      this.availableOperationTypes=[...this.operationTypes]
+    });
+  }
+
+  loadPatients(){
+    this.patientService.getAll().subscribe((data) => {
+      this.patients = data;
+      this.availablePatients = [...this.patients];
+    });
+  }
+
   onOperationRequestRemoved() {
     this.loadOperationRequests();
   }
@@ -152,3 +179,11 @@ export class ListOperationRequestsComponent implements OnInit {
     this.loadOperationRequests();
   }
 }
+
+
+
+
+
+
+
+

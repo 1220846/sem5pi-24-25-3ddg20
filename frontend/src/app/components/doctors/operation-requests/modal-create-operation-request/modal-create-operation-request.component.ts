@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     TagModule, InputTextModule, DropdownModule, CommonModule, CalendarModule,
-    ButtonModule, DialogModule, FormsModule, ReactiveFormsModule, ToastModule
+    ButtonModule, DialogModule, FormsModule, ReactiveFormsModule, ToastModule, ModalCreateOperationRequestComponent
   ],
   providers: [MessageService],
   templateUrl: './modal-create-operation-request.component.html',

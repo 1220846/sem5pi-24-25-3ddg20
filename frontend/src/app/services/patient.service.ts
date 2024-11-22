@@ -66,6 +66,10 @@ export class PatientService {
   getPatient(): Observable<Patient | null> {
     return this.patientSubject.asObservable();
   }
+
+  getById(id: string):Observable<Patient>{
+    return this.httpClient.get<Patient>(`${this.apiUrl}/${id}`);
+  }
   
   getAll(): Observable<Patient[]> {
     const token = localStorage.getItem('accessToken');

@@ -2,18 +2,18 @@ import { Component, ViewChild } from '@angular/core';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { OperationRequestsComponent } from './operation-requests/operation-requests.component';
 import { ModalCreateOperationRequestComponent } from './operation-requests/modal-create-operation-request/modal-create-operation-request.component';
-import { ListOperationRequestsComponent } from './operation-requests/list-operation-requests/list-operation-requests.component';
 import { ModalUpdateOperationRequestsComponent } from './operation-requests/modal-update-operation-requests/modal-update-operation-requests.component';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../../domain/User';
+import { ListOperationRequestComponent } from './operation-requests/list-operation-request/list-operation-request.component';
 
 
 @Component({
   selector: 'app-doctors',
   standalone: true,
-  imports: [SidebarComponent, OperationRequestsComponent, ModalCreateOperationRequestComponent, ListOperationRequestsComponent,ModalUpdateOperationRequestsComponent],
+  imports: [SidebarComponent, OperationRequestsComponent, ModalCreateOperationRequestComponent, ListOperationRequestComponent,ModalUpdateOperationRequestsComponent],
   templateUrl: './doctors.component.html',
   styleUrl: './doctors.component.scss'
 })

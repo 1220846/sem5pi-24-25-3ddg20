@@ -1,6 +1,6 @@
 <div class="card flex justify-content-end">
     <p-toast></p-toast>
-    <p-button class="mr-5" (onClick)="showDialog()" label="Add Operation Request" />
+    <p-button class="mt-5 mr-5" (onClick)="showDialog()" label="Add Operation Request" />
     <p-dialog header="Add Operation Request" [modal]="true" [(visible)]="visible"
         [style]="{ width: '32rem', maxHeight: '40rem' }">
         <span class="p-text-secondary block mb-2">Insert information.</span>
@@ -59,7 +59,7 @@
         <ng-template pTemplate="footer">
             <div class="flex justify-content-center gap-2 dialog-footer">
                 <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
-                <p-button label="Save" (onClick)="saveData()" />
+                <p-button label="Save" (onClick)="saveData()"/>
             </div>
         </ng-template>
     </p-dialog>
