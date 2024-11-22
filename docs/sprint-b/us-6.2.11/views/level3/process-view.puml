@@ -10,8 +10,8 @@ box "<<system (C4)>>\nFrontend"#LightBlue
     participant HTTP as "HTTP" <<component (C4)>>
 end box
 
-box "<<system (C4)>>\nServer"
-  participant Server as "Server" <<component (C4)>>
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
 end box
 
 activate Admin
@@ -28,10 +28,10 @@ activate Admin
             activate SRV
                 SRV -> HTTP : patch('/staffs')
                 activate HTTP
-                    HTTP -> Server : PATCH /staffs
-                    activate Server
-                        Server --> HTTP : 200 (staff)
-                    deactivate Server
+                    HTTP -> BackendDataManagement : PATCH /staffs
+                    activate BackendDataManagement
+                        BackendDataManagement --> HTTP : 200 (staff)
+                    deactivate BackendDataManagement
                     HTTP --> SRV : staff
                 deactivate HTTP
                 SRV --> Component : staff

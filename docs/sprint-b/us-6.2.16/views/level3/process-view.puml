@@ -9,8 +9,8 @@ box "<<system (C4)>>\nFrontend"#LightBlue
     participant HTTP as "HTTP" <<component (C4)>>
 end box
 
-box "<<system (C4)>>\nServer"
-  participant Server as "Server" <<component (C4)>>
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
 end box
 
 activate Doctor
@@ -26,10 +26,10 @@ activate Doctor
             activate SRV
                 SRV -> HTTP : delete('/operationRequests')
                 activate HTTP
-                    HTTP -> Server : DELETE /operationRequests
-                    activate Server
-                        Server --> HTTP : 200 (operationRequest)
-                    deactivate Server
+                    HTTP -> BackendDataManagement : DELETE /operationRequests
+                    activate BackendDataManagement
+                        BackendDataManagement --> HTTP : 200 (operationRequest)
+                    deactivate BackendDataManagement
                     HTTP --> SRV : operationRequest
                 deactivate HTTP
                 SRV --> Component : operationRequest
