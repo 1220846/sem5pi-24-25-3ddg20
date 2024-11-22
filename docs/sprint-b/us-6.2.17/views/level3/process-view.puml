@@ -1,0 +1,53 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Doctor as "Doctor"
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
+end box
+
+activate Doctor
+
+    Doctor -> ComponentUI : asks to list operation Requests
+    
+    activate ComponentUI
+
+        ComponentUI -> Component : list operation Requests
+
+        activate Component
+
+            Component -> SRV : list operation Requests
+            activate SRV
+
+                SRV -> HTTP : get('/operationRequests/filter')
+
+                activate HTTP
+                    HTTP -> BackendDataManagement : GET /operationRequests/filter
+
+                    activate BackendDataManagement
+                        BackendDataManagement --> HTTP : 200 (operationRequests)
+                    deactivate BackendDataManagement
+                    
+                    HTTP --> SRV : operationRequests
+
+                deactivate HTTP
+
+                SRV --> Component : operationRequests
+            deactivate SRV
+
+            Component --> ComponentUI : operationRequests
+        deactivate Component
+
+    Doctor <-- ComponentUI : shows operationRequests
+    deactivate ComponentUI
+
+deactivate Doctor
+
+@enduml
