@@ -1,0 +1,33 @@
+@startuml process-view
+autonumber
+
+actor "BackofficeUser" as BackofficeUser
+participant Frontend as "Frontend" <<system (C4)>>
+participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
+
+activate BackofficeUser
+
+    BackofficeUser -> Frontend : asks to log in to the system
+
+    activate Frontend
+        Frontend --> BackofficeUser : asks to insert email and password
+    
+    deactivate Frontend
+
+    BackofficeUser -> Frontend : inserts email and password
+
+    activate Frontend
+    
+        Frontend-> BackendDataManagement : POST /users/login
+        activate BackendDataManagement
+
+            Frontend <-- BackendDataManagement : 200 OK
+
+        deactivate BackendDataManagement
+
+    Frontend --> BackofficeUser : session
+    
+    deactivate Frontend
+deactivate BackofficeUser
+
+@enduml

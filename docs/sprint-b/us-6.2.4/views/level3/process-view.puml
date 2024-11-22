@@ -1,0 +1,63 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor BackofficeUser as "BackofficeUser"
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
+end box
+
+activate BackofficeUser
+
+    BackofficeUser -> ComponentUI : asks to log in to the system
+    activate ComponentUI
+
+        ComponentUI -> BackofficeUser : asks to insert email and password
+    
+    deactivate ComponentUI
+
+    BackofficeUser -> ComponentUI : inserts email and password
+
+    activate ComponentUI
+
+        ComponentUI -> Component : email and password
+    
+        activate Component
+
+            Component -> Model** : create
+            
+            Component -> Service : log in
+            activate Service
+
+                Service -> HTTP : post('/users/login')
+
+                activate HTTP
+                    HTTP -> BackendDataManagement : POST /users/login
+
+                    activate BackendDataManagement
+                        BackendDataManagement --> HTTP : 200 (credentials)
+                    deactivate BackendDataManagement
+                    
+                    HTTP --> Service : credentials
+
+                deactivate HTTP
+
+                Service --> Component : credentials
+            deactivate Service
+
+            Component --> ComponentUI : credentials
+        deactivate Component
+
+    BackofficeUser <-- ComponentUI : session
+    deactivate ComponentUI
+
+deactivate BackofficeUser
+
+@enduml
