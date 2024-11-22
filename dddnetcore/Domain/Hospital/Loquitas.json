@@ -1,7 +1,5 @@
 {
-  "busyRooms": [
-    2
-  ],
+  "busyRooms": [],
   "GroundTextureUrl": "./textures/ground.jpg",
   "WallTextureUrl": "./textures/wall.jpg",
   "Size": {
