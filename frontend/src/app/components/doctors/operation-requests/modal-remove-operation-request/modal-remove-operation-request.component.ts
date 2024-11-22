@@ -43,7 +43,7 @@ export class ModalRemoveOperationRequestComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(this.operationRequest);
-    console.log(this.operationRequest?.Status);
+    console.log(this.operationRequest?.status);
   }
 
 

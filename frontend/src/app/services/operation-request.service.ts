@@ -29,7 +29,7 @@ export class OperationRequestService {
     let params = new HttpParams();
     
     if (patientId) {
-      params = params.set('patientId', patientId);
+      params = params.set('medicalRecordNumber', patientId);
     }
     if (operationTypeId) {
       params = params.set('operationTypeId', operationTypeId);
@@ -40,7 +40,7 @@ export class OperationRequestService {
     if (status) {
       params = params.set('status', status);
     }
-  
+    console.log(`${this.apiUrl}/filter`, { params })
     return this.http.get<OperationRequest[]>(`${this.apiUrl}/filter`, { params });
   }
 
