@@ -1,0 +1,26 @@
+@startuml process-view
+autonumber
+
+actor "Patient" as Patient
+participant SARM as "SARM" <<system (C4)>>
+
+activate Patient
+
+    Patient -> SARM : asks to register for the healthcare application
+    
+    activate SARM
+
+        SARM --> Patient : asks to input data
+
+    deactivate SARM
+
+    Patient -> SARM : input data
+
+    activate SARM 
+        SARM --> Patient: shows success message
+        
+    deactivate SARM
+
+deactivate Patient
+
+@enduml
