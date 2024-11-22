@@ -2,16 +2,16 @@
 autonumber
 skinparam DefaultTextAlignment center
 actor Admin as "Admin"
-box "<<C4 System>>\nUI"#LightBlue
+box "<<system (C4)>>\nFrontend"#LightBlue
     participant ComponentUI as "UI Component" <<component (C4)>>
     participant Component as "Component" <<component (C4)>>
     participant Model as "Model" <<component (C4)>>
-    participant SRV as "Service" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
     participant HTTP as "HTTP" <<component (C4)>>
 end box
 
-box "<<system (C4)>>\nServer"
-  participant Server as "Server" <<component (C4)>>
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
 end box
 
 activate Admin
@@ -19,31 +19,39 @@ activate Admin
     Admin -> ComponentUI : asks to add new type of operation
     activate ComponentUI
 
+        ComponentUI -> Admin : asks to input data
+
+    deactivate ComponentUI
+
+    Admin -> ComponentUI : input data
+    
+    activate ComponentUI
+    
         ComponentUI -> Component : add new type of operation
         activate Component
 
             Component -> Model** : create
             
-            Component -> SRV : add new type of operation
-            activate SRV
+            Component -> Service : add new type of operation
+            activate Service
 
-                SRV -> HTTP : post('/operationtypes')
+                Service -> HTTP : post('/operationtypes')
 
                 activate HTTP
-                    HTTP -> Server : POST /operationtypes
+                    HTTP -> BackendDataManagement : POST /operationtypes
 
-                    activate Server
+                    activate BackendDataManagement
 
-                        Server --> HTTP : 201 (operationType)
+                        BackendDataManagement --> HTTP : 201 (operationType)
 
-                    deactivate Server
+                    deactivate BackendDataManagement
 
-                    HTTP --> SRV : operationType
+                    HTTP --> Service : operationType
 
                 deactivate HTTP
 
-                SRV --> Component : operationType
-            deactivate SRV
+                Service --> Component : operationType
+            deactivate Service
 
             Component --> ComponentUI : operationType
         deactivate Component

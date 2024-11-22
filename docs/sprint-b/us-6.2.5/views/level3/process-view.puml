@@ -2,16 +2,16 @@
 autonumber
 skinparam DefaultTextAlignment center
 actor Patient as "Patient"
-box "<<system (C4)>>\nUI"#LightBlue
+box "<<system (C4)>>\nFrontend"#LightBlue
     participant ComponentUI as "UI Component" <<component (C4)>>
     participant Component as "Component" <<component (C4)>>
     participant Model as "Model" <<component (C4)>>
-    participant SRV as "Service" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
     participant HTTP as "HTTP" <<component (C4)>>
 end box
 
-box "<<system (C4)>>\nServer"
-  participant Server as "Server" <<component (C4)>>
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
 end box
 
 activate Patient
@@ -19,29 +19,38 @@ activate Patient
     Patient -> ComponentUI : asks to log in to the healthcare system
     activate ComponentUI
 
-        ComponentUI -> Component : asks to insert email and password
+        ComponentUI -> Patient : asks to insert email and password
+    
+    deactivate ComponentUI
+
+    Patient -> ComponentUI : inserts email and password
+
+    activate ComponentUI
+
+        ComponentUI -> Component : email and password
+    
         activate Component
 
             Component -> Model** : create
             
-            Component -> SRV : inserts email and password
-            activate SRV
+            Component -> Service : log in
+            activate Service
 
-                SRV -> HTTP : post('/users/login')
+                Service -> HTTP : post('/users/login')
 
                 activate HTTP
-                    HTTP -> Server : POST /users/login
+                    HTTP -> BackendDataManagement : POST /users/login
 
-                    activate Server
-                        Server --> HTTP : 200 (credential)
-                    deactivate Server
+                    activate BackendDataManagement
+                        BackendDataManagement --> HTTP : 200 (credentials)
+                    deactivate BackendDataManagement
                     
-                    HTTP --> SRV : credentials
+                    HTTP --> Service : credentials
 
                 deactivate HTTP
 
-                SRV --> Component : credentials
-            deactivate SRV
+                Service --> Component : credentials
+            deactivate Service
 
             Component --> ComponentUI : credentials
         deactivate Component
