@@ -19,7 +19,7 @@ activate Patient
 
     activate Frontend
 
-        Frontend-> BackendDataManagement : PATCH /patients/{username}
+        Frontend-> BackendDataManagement : PATCH /users/patients/{username}
         activate BackendDataManagement
 
             Frontend <-- BackendDataManagement : 200 OK
