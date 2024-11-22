@@ -7,7 +7,7 @@ participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
 
 activate Patient
 
-    Patient -> Frontend : asks to request to delete my account
+    Patient -> Frontend : asks to request to delete your account
 
     activate Frontend
         Frontend --> Patient : asks to confirm request to delete account
@@ -18,7 +18,7 @@ activate Patient
 
     activate Frontend
     
-        Frontend-> BackendDataManagement : POST /patients/request-delete/{username}
+        Frontend-> BackendDataManagement : POST /users/patients/request-delete/{username}
         activate BackendDataManagement
 
             Frontend <-- BackendDataManagement : 200 OK

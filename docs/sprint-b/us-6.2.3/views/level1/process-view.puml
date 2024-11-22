@@ -6,7 +6,7 @@ participant SARM as "SARM" <<system (C4)>>
 
 activate Patient
 
-    Patient -> SARM : asks to request to delete my account
+    Patient -> SARM : asks to request to delete your account
     
     activate SARM
 
