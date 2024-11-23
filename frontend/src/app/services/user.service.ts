@@ -90,7 +90,7 @@ export class UserService {
     const token = localStorage.getItem('accessToken');
     const headers = this.header.set('Authorization', `Bearer ${token}`);
 
-    return this.httpClient.put<User>(`${this.apiUrl}/patients/${username}`, updateUserPatientDto, { headers })
+    return this.httpClient.patch<User>(`${this.apiUrl}/patients/${username}`, updateUserPatientDto, { headers })
       .pipe(
         catchError((error) => {
           return throwError(() => error);

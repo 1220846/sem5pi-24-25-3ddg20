@@ -7,7 +7,7 @@ participant "Database" as Database
 
 activate Patient
 
-    Patient-> Server : PUT /api/users/patients/{username}
+    Patient-> Server : PATCH /api/users/patients/{username}
 
     activate Server
 

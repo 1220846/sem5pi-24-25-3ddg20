@@ -74,7 +74,7 @@ namespace DDDSample1.Controllers{
         }
 
         // PUT: api/users/patients/{username}
-        [HttpPut("patients/{username}")]
+        [HttpPatch("patients/{username}")]
         [Authorize(Policy = "RequiredPatientRole")]
         public async Task<ActionResult<UserDto>> UpdateUserPatient(string username,UpdateUserPatientDto dto)
         {

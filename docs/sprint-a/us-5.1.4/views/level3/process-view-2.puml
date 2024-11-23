@@ -12,7 +12,7 @@ database "IPatientRepository" as PatientRepository <<Domain>>
 
 activate PatientActor
 
-    PatientActor-> Controller : PUT /api/users/patients/{username}
+    PatientActor-> Controller : PATCH /api/users/patients/{username}
 
     activate Controller
 
@@ -69,6 +69,10 @@ activate PatientActor
 
                 alt  updatePatientDto.PhoneNumber != null
                     Service -> Patient : ChangePhoneNumber(updateUserPatientDto.PhoneNumber)
+                end
+
+                alt  updatePatientDto.Address != null || updatePatientDto.PostalCode
+                    Service -> Patient : ChangeAddress(new Address(updateUserPatientDto.Address+\n":"+updateUserPatientDto.PostalCode))
                 end
 
                 Service  -> UserRepository : UpdateAsync(user)
