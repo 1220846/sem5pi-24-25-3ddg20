@@ -1,6 +1,13 @@
 describe('Create Staff Profile Modal', () => {
     beforeEach(() => {
-      // Navega até a página onde o componente está presente
+      const fakeLoginResponse = {
+        loginToken: 'fake-jwt-token',
+        roles: ['Admin'], 
+      };
+  
+      window.localStorage.setItem('accessToken', fakeLoginResponse.loginToken);
+      window.localStorage.setItem('roles', JSON.stringify(fakeLoginResponse.roles));
+
       cy.visit('http://localhost:4200/admin/staffs');
     });
   
@@ -33,16 +40,13 @@ describe('Create Staff Profile Modal', () => {
     });
   
     it('should successfully fill form', () => {
-      // Intercepta a chamada para a API
       cy.intercept('POST', '/api/staffs', {
         statusCode: 201,
         body: { success: true },
       }).as('createStaff');
   
-      // Abre o modal
       cy.contains('Create Staff Profile').click();
   
-      // Preenche o formulário
       cy.get<HTMLInputElement>('#firstName').type('John');
       cy.get<HTMLInputElement>('#lastName').type('Doe');
       cy.get<HTMLInputElement>('#fullName').type('John Doe');
@@ -51,24 +55,19 @@ describe('Create Staff Profile Modal', () => {
       cy.get<HTMLInputElement>('#licenseNumber').type('D123456');
       cy.get<HTMLInputElement>('#userEmail').type('johndoe@example.com');
   
-      // Seleciona uma especialização no dropdown
       cy.contains('label', 'Specialization')
         .parent()
         .find('p-dropdown')
-        .click(); // Abre o dropdown
+        .click();
 
-      // Seleciona a opção "Admin" na lista de opções visível
       cy.get('.p-dropdown-item')
         .contains('Admin')
-        .click(); // Seleciona a opção
+        .click();
   
-      // Salva o formulário
       cy.contains('Save').click();
   
-      // Aguarda a chamada à API ser concluída
       cy.wait('@createStaff');
   
-      // Verifica se o modal foi fechado e a mensagem de sucesso exibida
       cy.get('p-dialog').should('not.be.visible');
       cy.get('.p-toast').should('contain', 'Staff profile create successfully');
     });
@@ -80,24 +79,19 @@ describe('Create Staff Profile Modal', () => {
       cy.get('button').contains('Cancel').click();
       cy.get('.p-dialog').should('not.exist');
       
-      // Reopen dialog and check if form was reset
       cy.get('button').contains('Create Staff Profile').click();
       cy.get('#firstName').should('have.value', '');
       cy.get('#lastName').should('have.value', '');
   
-      // Verify we're still on the staffs page
       cy.url().should('eq', 'http://localhost:4200/admin/staffs');
     });
 
     it('should maintain URL after dialog interactions', () => {
-      // Check initial URL
       cy.url().should('eq', 'http://localhost:4200/admin/staffs');
       
-      // Open dialog
       cy.get('button').contains('Create Staff Profile').click();
       cy.url().should('eq', 'http://localhost:4200/admin/staffs');
       
-      // Close dialog
       cy.get('button').contains('Cancel').click();
       cy.url().should('eq', 'http://localhost:4200/admin/staffs');
     });
