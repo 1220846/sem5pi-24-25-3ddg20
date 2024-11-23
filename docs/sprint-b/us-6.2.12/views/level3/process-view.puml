@@ -26,7 +26,7 @@ activate Admin
             activate SRV
                 SRV -> HTTP : delete('/staffs')
                 activate HTTP
-                    HTTP -> BackendDataManagement : DELETE /staffs
+                    HTTP -> BackendDataManagement : DELETE /staffs/{id}
                     activate BackendDataManagement
                         BackendDataManagement --> HTTP : 200 (staff)
                     deactivate BackendDataManagement

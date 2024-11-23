@@ -28,7 +28,7 @@ activate Admin
             activate SRV
                 SRV -> HTTP : patch('/staffs')
                 activate HTTP
-                    HTTP -> BackendDataManagement : PATCH /staffs
+                    HTTP -> BackendDataManagement : PATCH /staffs/{id}
                     activate BackendDataManagement
                         BackendDataManagement --> HTTP : 200 (staff)
                     deactivate BackendDataManagement

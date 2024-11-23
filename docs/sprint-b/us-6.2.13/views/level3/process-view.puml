@@ -26,9 +26,9 @@ activate Admin
                     activate BackendDataManagement
                         BackendDataManagement --> HTTP : 200 (staffs)
                     deactivate BackendDataManagement
-                    HTTP --> SRV : staffss
+                    HTTP --> SRV : staffs
                 deactivate HTTP
-                SRV --> Component : staffss
+                SRV --> Component : staffs
             deactivate SRV
             Component --> ComponentUI : staffs
         deactivate Component
