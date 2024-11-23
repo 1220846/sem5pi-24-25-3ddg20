@@ -1,6 +1,6 @@
 @startuml implementation-view
 
-component "Server" as Server <<component>> <<container (C4)>> {
+component "Backend Data Management" as BackendDataManagement <<component>> <<container (C4)>> {
   folder Infrastructure as Infrastructure {
     folder Persistence as Persistence
     folder Routes as Routes

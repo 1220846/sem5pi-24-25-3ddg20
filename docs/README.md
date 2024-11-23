@@ -26,15 +26,42 @@
 
 ![Implementation View Level 2](views/level2/implementation-view.svg "Implementation View Level 2")
 
+#### Physical View
+
+![Physical View Level 2](views/level2/physical-view.svg "Physical View Level 2")
+
 ### Level 3
+
+#### Backend Data Management
 
 #### Logic View
 
-![Logic View Level 3](views/level3/logic-view.svg "Logic View Level 3")
+![Logic View Level 3](views/level3/BEDM/logic-view.svg "Logic View Level 3")
 
 #### Implementation View
 
-![Implementation View Level 3](views/level3/implemention-view.svg "Implementation View Level 3")
+![Implementation View Level 3](views/level3/BEDM/implementation-view.svg "Implementation View Level 3")
+
+#### Frontend
+
+#### Logic View
+
+![Logic View Level 3](views/level3/frontend/logical-view.svg "Logic View Level 3")
+
+#### Implementation View
+
+![Implementation View Level 3](views/level3/frontend/implementation-view.svg "Implementation View Level 3")
+
+### Mapping
+
+#### Level 3
+
+#### Backend Data Management
+
+![Mapping Level 3 BEDM](views/mapping/level3/BEDM/mapping.svg "Mapping Level 3 BEDM")
+
+#### Level 2
+![Mapping Level 3 Frontend](views/mapping/level3/frontend/mapping.svg "Mapping Level 3 Frontend")
 
 ## Group Members
 
