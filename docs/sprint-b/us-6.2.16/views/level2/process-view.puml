@@ -12,7 +12,7 @@ activate Doctor
     deactivate Frontend
     Doctor -> Frontend : confirms
     activate Frontend
-        Frontend-> BackendDataManagement : DELETE /operationRequests
+        Frontend-> BackendDataManagement : DELETE /operationRequests/{id}
         activate BackendDataManagement
             Frontend <-- BackendDataManagement : 200 OK
         deactivate BackendDataManagement

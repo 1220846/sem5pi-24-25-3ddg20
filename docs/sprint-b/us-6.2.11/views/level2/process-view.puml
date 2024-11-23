@@ -12,7 +12,7 @@ activate Admin
     deactivate Frontend
     Admin -> Frontend : inputs data    
     activate Frontend
-        Frontend-> BackendDataManagement : PATCH /staffs
+        Frontend-> BackendDataManagement : PATCH /staffs/{id}
         activate BackendDataManagement
             Frontend <-- BackendDataManagement : 200 OK
         deactivate BackendDataManagement

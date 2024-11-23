@@ -12,7 +12,7 @@ activate Admin
     deactivate Frontend
     Admin -> Frontend : confirms
     activate Frontend
-        Frontend-> BackendDataManagement : DELETE /staffs
+        Frontend-> BackendDataManagement : DELETE /staffs/{id}
         activate BackendDataManagement
             Frontend <-- BackendDataManagement : 200 OK
         deactivate BackendDataManagement

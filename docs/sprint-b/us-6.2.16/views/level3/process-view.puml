@@ -26,7 +26,7 @@ activate Doctor
             activate SRV
                 SRV -> HTTP : delete('/operationRequests')
                 activate HTTP
-                    HTTP -> BackendDataManagement : DELETE /operationRequests
+                    HTTP -> BackendDataManagement : DELETE /operationRequests/{id}
                     activate BackendDataManagement
                         BackendDataManagement --> HTTP : 200 (operationRequest)
                     deactivate BackendDataManagement
