@@ -9,17 +9,17 @@
 agenda_staff(d001,20241028,[(720,790,m01),(1080,1140,c01)]).
 agenda_staff(d002,20241028,[(850,900,m02),(901,960,m02),(1380,1440,c02)]).
 agenda_staff(d003,20241028,[(720,790,m01),(910,980,m02)]).
-agenda_staff(d004,20241028,[(850,900,m02),(940,980,c04)]).
+%agenda_staff(d004,20241028,[(850,900,m02),(940,980,c04)]).
 
 timetable(d001,20241028,(480,1200)).
 timetable(d002,20241028,(500,1440)).
 timetable(d003,20241028,(520,1320)).
-timetable(d004,20241028,(620,1020)).
+%timetable(d004,20241028,(620,1020)).
 
 staff(d001,doctor,orthopaedist,[so2,so3,so4]).
 staff(d002,doctor,orthopaedist,[so2,so3,so4]).
 staff(d003,doctor,orthopaedist,[so2,so3,so4]).
-staff(d004,doctor,orthopaedist,[so2,so3,so4]).
+%staff(d004,doctor,orthopaedist,[so2,so3,so4]).
 
 %surgery(SurgeryType,TAnesthesia,TSurgery,TCleaning).
 
@@ -31,11 +31,11 @@ surgery(so4,45,75,45).
 surgery_id(so100001,so2).
 surgery_id(so100002,so3).
 surgery_id(so100003,so4).
-surgery_id(so100004,so2).
-surgery_id(so100005,so4).
-surgery_id(so100006,so2).
-surgery_id(so100007,so3).
-surgery_id(so100008,so2).
+%surgery_id(so100004,so2).
+%surgery_id(so100005,so4).
+%surgery_id(so100006,so2).
+%surgery_id(so100007,so3).
+%surgery_id(so100008,so2).
 %surgery_id(so100009,so2).
 %surgery_id(so100010,so2).
 %surgery_id(so100011,so4).
@@ -45,14 +45,14 @@ surgery_id(so100008,so2).
 assignment_surgery(so100001,d001).
 assignment_surgery(so100002,d002).
 assignment_surgery(so100003,d003).
-assignment_surgery(so100004,d001).
-assignment_surgery(so100004,d002).
-assignment_surgery(so100005,d002).
-assignment_surgery(so100005,d003).
-assignment_surgery(so100006,d001).
-assignment_surgery(so100007,d003).
-assignment_surgery(so100008,d004).
-assignment_surgery(so100008,d003).
+%assignment_surgery(so100004,d001).
+%assignment_surgery(so100004,d002).
+%assignment_surgery(so100005,d002).
+%assignment_surgery(so100005,d003).
+%assignment_surgery(so100006,d001).
+%assignment_surgery(so100007,d003).
+%assignment_surgery(so100008,d004).
+%assignment_surgery(so100008,d003).
 %assignment_surgery(so100009,d002).
 %assignment_surgery(so100009,d004).
 %assignment_surgery(so100010,d003).
@@ -146,8 +146,6 @@ availability_all_surgeries([OpCode|LOpCode],Room,Day):-
     insert_agenda_doctors((TinS,TfinS,OpCode),Day,LDoctors),
     availability_all_surgeries(LOpCode,Room,Day).
 
-
-
 availability_operation(OpCode,Room,Day,LPossibilities,LDoctors):-surgery_id(OpCode,OpType),surgery(OpType,_,TSurgery,_),
     findall(Doctor,assignment_surgery(OpCode,Doctor),LDoctors),
     intersect_all_agendas(LDoctors,Day,LA),
@@ -189,20 +187,17 @@ remove_equals([],[]).
 remove_equals([X|L],L1):-member(X,L),!,remove_equals(L,L1).
 remove_equals([X|L],[X|L1]):-remove_equals(L,L1).
 
-heuristic_solution(Room,Day,AgOpRoomBetter,LAgDoctorsBetter,TFinOp):-
-    write('Starting heuristic solution...'),nl,
+heuristic_2(Room,Day,AgOpRoomBetter,LAgDoctorsBetter,TFinOp):-
     get_time(Ti),
-    % Initialize structures
     retractall(agenda_staff1(_,_,_)),
     retractall(agenda_operation_room1(_,_,_)),
     retractall(availability(_,_,_)),
     
-    % Get all surgeries and sort them by duration (longest first)
-    findall(OpCode-Duration,(
-        surgery_id(OpCode,Type),
-        surgery(Type,_,Duration,_)
-    ),Pairs),
+    % Get all surgeries
+    findall(OpCode-Duration,(surgery_id(OpCode,Type),surgery(Type,_,Duration,_)),Pairs),
+    % Sort by duration 
     keysort(Pairs,Sorted),
+    % Longest First
     reverse(Sorted,LongestFirst),
     pairs_keys(LongestFirst,SortedOpCodes),
     
@@ -214,7 +209,7 @@ heuristic_solution(Room,Day,AgOpRoomBetter,LAgDoctorsBetter,TFinOp):-
         adapt_timetable(D,Day,LFA,LFA2),
         assertz(availability(D,Day,LFA2))),_),
     
-    % Schedule surgeries using the sorted list
+    % Schedule surgeries
     availability_all_surgeries(SortedOpCodes,Room,Day),
     
     % Get final schedules
@@ -230,12 +225,10 @@ heuristic_solution(Room,Day,AgOpRoomBetter,LAgDoctorsBetter,TFinOp):-
     % Calculate execution time
     get_time(Tf),
     T is Tf-Ti,
-    
-    % Only essential output
-    write('Final Time for the last Surgery Using Heuristic (minutes): '),write(TFinOp),nl,
-    write('Solution with the Heuristic: '),write(AgOpRoomBetter),nl,
-    write('Time to Solution with the heuristic: '),write(T),write(' seconds'),nl.
+    write('TFinOp com a heurística: '),write(TFinOp),nl,
+    write('Solucao com a heuristica: '),write(AgOpRoomBetter),nl,
+    write('Tempo de geracao da solucao com a heurística: '),write(T),write(' seconds'),nl.
 
-% Helper predicate to extract keys from key-value pairs
+% Extract keys from key-value pairs
 pairs_keys([], []).
 pairs_keys([K-_|Pairs], [K|Keys]) :- pairs_keys(Pairs, Keys).
