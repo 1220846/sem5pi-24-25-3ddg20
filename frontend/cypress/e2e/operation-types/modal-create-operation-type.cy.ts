@@ -1,7 +1,14 @@
-describe('Modal Create Operation Type', () => {
+describe('Modal Create Operation Type - Simulating Auth via LocalStorage', () => {
   beforeEach(() => {
+    const fakeLoginResponse = {
+      loginToken: 'fake-jwt-token',
+      roles: ['Admin'], 
+    };
     
-    // Stub the specialization service
+    window.localStorage.setItem('accessToken', fakeLoginResponse.loginToken);
+    window.localStorage.setItem('roles', JSON.stringify(fakeLoginResponse.roles));
+
+    // Interceptar APIs usadas pela página
     cy.intercept('GET', '**/api/specializations', {
       statusCode: 200,
       body: [
@@ -11,11 +18,16 @@ describe('Modal Create Operation Type', () => {
       ]
     }).as('getSpecializations');
 
-    // Stub the operation type service
-    cy.intercept('GET', '**/api/operationtypes/filter', { statusCode: 200, body: [] }).as('getOperationTypes');
+    cy.intercept('GET', '**/api/operationtypes/filter', {
+      statusCode: 200,
+      body: []
+    }).as('getOperationTypes');
 
+    // Visitar a página diretamente
     cy.visit('/admin/operation-types');
 
+    // Verificar se a rota foi carregada corretamente
+    cy.url().should('include', '/admin/operation-types');
     cy.get('p-button').should('be.visible');
   });
 
