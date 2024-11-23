@@ -16,6 +16,11 @@ export class HospitalComponent implements OnInit {
   ngOnInit() {
       this.initialize();
       this.animate();
+      this.setupPopStateListener();
+  }
+
+  ngOnDestroy() {
+      window.removeEventListener('popstate', this.reloadPage);
   }
 
   initialize() {
@@ -37,5 +42,12 @@ export class HospitalComponent implements OnInit {
       requestAnimationFrame(() => this.animate());
       this.hospital.update();
   }
+  setupPopStateListener() {
+    window.addEventListener('popstate', this.reloadPage);
+  }
+
+  reloadPage = () => {
+      window.location.reload();
+  };
 }
 
