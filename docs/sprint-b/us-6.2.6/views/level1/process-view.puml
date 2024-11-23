@@ -1,0 +1,26 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant SARM as "SARM" <<system (C4)>>
+
+activate Admin
+
+    Admin -> SARM : asks to create Patient
+    
+    activate SARM
+
+        SARM --> Admin : asks to insert Patient data
+
+    deactivate SARM
+
+    Admin -> SARM : inserts data
+
+    activate SARM 
+        SARM --> Admin: patient
+        
+    deactivate SARM
+
+deactivate Admin
+
+@enduml

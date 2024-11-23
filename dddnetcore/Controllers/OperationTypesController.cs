@@ -87,8 +87,8 @@ namespace DDDSample1.Controllers{
             }
         }
 
-        // PUT: api/operationtypes/{id}
-        [HttpPut("{id}")]
+        // PATCH: api/operationtypes/{id}
+        [HttpPatch("{id}")]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<OperationTypeDto>> EditOperationType(Guid id, EditingOperationTypeDto dto)
         {

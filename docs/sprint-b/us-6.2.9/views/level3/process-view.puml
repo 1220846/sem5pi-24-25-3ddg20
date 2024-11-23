@@ -1,0 +1,39 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
+end box
+
+activate Admin
+    Admin -> ComponentUI : asks to list patient profiles
+    activate ComponentUI
+        ComponentUI -> Component : list patient profiles
+        activate Component
+            Component -> SRV : list patient profiles
+            activate SRV
+                SRV -> HTTP : get('/patients/filter')
+                activate HTTP
+                    HTTP -> BackendDataManagement : GET /patients/filter
+                    activate BackendDataManagement
+                        BackendDataManagement --> HTTP : 200 (patients)
+                    deactivate BackendDataManagement
+                    HTTP --> SRV : patients
+                deactivate HTTP
+                SRV --> Component : patients
+            deactivate SRV
+            Component --> ComponentUI : patients
+        deactivate Component
+    Admin <-- ComponentUI : shows patients
+    deactivate ComponentUI
+deactivate Admin
+
+@enduml

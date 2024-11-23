@@ -62,7 +62,7 @@ export class OperationTypeService {
     const token = localStorage.getItem('accessToken');
     const headers = this.header.set('Authorization', `Bearer ${token}`);
 
-    return this.httpClient.put<OperationType>(`${this.apiUrl}/${operationTypeId}`, editOperationType, { headers })
+    return this.httpClient.patch<OperationType>(`${this.apiUrl}/${operationTypeId}`, editOperationType, { headers })
       .pipe(
         catchError((error) => {
           return throwError(() => error);

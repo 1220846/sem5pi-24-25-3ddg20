@@ -1,0 +1,33 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant Frontend as "Frontend" <<system (C4)>>
+participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
+
+activate Admin
+
+    Admin -> Frontend : asks to create patient
+
+    activate Frontend
+        Frontend --> Admin : asks to insert data
+    
+    deactivate Frontend
+
+    Admin -> Frontend : inserts data
+
+    activate Frontend
+    
+        Frontend-> BackendDataManagement : POST /patients
+        activate BackendDataManagement
+
+            Frontend <-- BackendDataManagement : 201 OK
+
+        deactivate BackendDataManagement
+
+    Frontend --> Admin : session
+    
+    deactivate Frontend
+deactivate Admin
+
+@enduml

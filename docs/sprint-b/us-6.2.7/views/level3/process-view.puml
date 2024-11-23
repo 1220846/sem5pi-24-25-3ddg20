@@ -1,0 +1,45 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant SRV as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Data Management"
+  participant BackendDataManagement as "Backend Data Management" <<component (C4)>>
+end box
+
+activate Admin
+    Admin -> ComponentUI : asks to edit a patient profile
+    activate ComponentUI
+        ComponentUI --> Admin : asks to input data
+    deactivate ComponentUI
+    Admin -> ComponentUI : inputs data
+    activate ComponentUI
+        ComponentUI -> Component : edit patient profile
+        activate Component
+            Component -> Model** : create            
+            Component -> SRV : edit patient profile
+            activate SRV
+                SRV -> HTTP : patch('/patients/{id}')
+                activate HTTP
+                    HTTP -> BackendDataManagement : PATCH /patients/{id}
+                    activate BackendDataManagement
+                        BackendDataManagement --> HTTP : 200 (patient)
+                    deactivate BackendDataManagement
+                    HTTP --> SRV : patient
+                deactivate HTTP
+                SRV --> Component : patient
+            deactivate SRV
+            Component --> ComponentUI : patient
+        deactivate Component
+    Admin <-- ComponentUI : shows success message
+    deactivate ComponentUI
+deactivate Admin
+
+@enduml

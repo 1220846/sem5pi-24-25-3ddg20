@@ -61,7 +61,7 @@ namespace DDDSample1.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<PatientDto>> EditPatient(string id, EditingPatientDto dto) {
             try {
