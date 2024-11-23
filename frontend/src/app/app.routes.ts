@@ -14,36 +14,36 @@ import { PatientsComponent } from './components/patients/patients.component';
 import { StaffsComponent } from './components/admins/staffs/staffs.component';
 import { AdminPatientsComponent } from './components/admins/patients/admin-patients.component';
 import { OperationRequestsComponent } from './components/doctors/operation-requests/operation-requests.component';
+import { AppointmentsComponent } from './components/patients/appointments/appointments.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'doctor', component: DoctorsComponent
-    //,canActivate: [roleGuard],  
-    //data: { roles: ['Doctor']} 
+    ,canActivate: [roleGuard],  
+    data: { roles: ['Doctor']} 
   },
   { path: 'sidebar', component: SidebarComponent },
   { 
     path: 'admin', 
     component: AdminComponent,
-    //canActivate: [roleGuard],  
-    //data: { roles: ['Admin'] },
+    canActivate: [roleGuard],  
+    data: { roles: ['Admin'] },
     children: [{ path: 'operation-types', component: OperationTypesComponent },
               { path: 'staffs', component: StaffsComponent},
               { path: 'patients', component: AdminPatientsComponent},
               { path: 'operation-requests', component:OperationRequestsComponent},
               { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
   },
-  { path: 'login', component: LoginComponent },
   { path: 'hospital', component: HospitalComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'ads', component: ListStaffProfilesComponent},
   { 
     path: 'patient', 
     component: PatientsComponent,
-    //canActivate: [roleGuard],  
-    //data: { roles: ['Patient'] },
+    canActivate: [roleGuard],  
+    data: { roles: ['Patient'] },
     children: [{ path: 'account', component: AccountComponent },
-              { path: '', redirectTo: 'account', pathMatch: 'full' }]
+              { path: 'appointments', component: AppointmentsComponent },
+              { path: '', redirectTo: 'appointments', pathMatch: 'full' }]
   }
   
 ];

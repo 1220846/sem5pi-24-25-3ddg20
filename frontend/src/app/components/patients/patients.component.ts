@@ -56,6 +56,7 @@ export class PatientsComponent implements OnInit, AfterViewInit {
   updateSidebar(user: User): void {
     if (this.sidebar) {
       this.sidebar.items = [
+        { label: 'Appointments', icon: '', link: '/patient/appointments' },
         { label: 'Account', icon: '', link: '/patient/account' }
       ];
       this.sidebar.setUserTitle('patient');
