@@ -88,7 +88,7 @@ export class PatientService {
     const token = localStorage.getItem('accessToken');
     const headers = this.header.set('Authorization', `Bearer ${token}`);
 
-    return this.httpClient.put<Patient>(`${this.apiUrl}/${id}`, updatePatientDto, { headers })
+    return this.httpClient.patch<Patient>(`${this.apiUrl}/${id}`, updatePatientDto, { headers })
       .pipe(
         catchError((error) => {
           return throwError(() => error);
