@@ -8,7 +8,7 @@ import { ListOperationRequestComponent } from './list-operation-request/list-ope
 @Component({
   selector: 'app-operation-requests',
   standalone: true,
-  imports: [ModalCreateOperationRequestComponent,ListOperationRequestComponent ,ModalUpdateOperationRequestsComponent, ModalUpdateOperationRequestsComponent],
+  imports: [ModalCreateOperationRequestComponent,ListOperationRequestComponent],
   templateUrl: './operation-requests.component.html',
   styleUrl: './operation-requests.component.scss'
 })

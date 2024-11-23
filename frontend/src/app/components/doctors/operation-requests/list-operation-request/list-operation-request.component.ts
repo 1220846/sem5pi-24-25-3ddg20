@@ -95,6 +95,7 @@ export class ListOperationRequestComponent implements OnInit{
     const OperationType=this.dataOpTypesRev.find((item)=>item[0]==this.filterOperationType);
     if(OperationType){
       this.filterOperationType=OperationType[1];
+      console.log(this.filterOperationType)
     }
     console.log(this.filterOperationType)
     this.loadOperationRequests();
@@ -119,7 +120,6 @@ export class ListOperationRequestComponent implements OnInit{
               console.error('Erro ao buscar o tipo de operação:', error);
             }
           });
-          console.log(request)
         });
       },
       error: (error) => {
@@ -129,8 +129,8 @@ export class ListOperationRequestComponent implements OnInit{
   }
 
   ngOnInit(): void{
-    this.loadOperationTypes();
     this.loadPatients();
+    this.loadOperationTypes();
     this.loadOperationRequests();
   }
 
@@ -168,6 +168,7 @@ export class ListOperationRequestComponent implements OnInit{
     this.patientService.getAll().subscribe((data) => {
       this.patients = data;
       this.availablePatients = [...this.patients];
+      console.log(this.availablePatients)
     });
   }
 

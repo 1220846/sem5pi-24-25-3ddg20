@@ -29,7 +29,7 @@
                 <label for="MedicalRecordNumber">Patient Medical Record Number:</label>
                 <p-dropdown [options]="availablePatients" [(ngModel)]="filterMedicalRecordNumber" [appendTo]="'body'"
                     [filter]="true" filterBy="name" [virtualScroll]="true" [virtualScrollItemSize]="40"
-                    scrollHeight="120px" placeholder="Enter Medical Record Number" optionLabel="name">
+                    scrollHeight="120px" placeholder="Enter Medical Record Number" optionLabel="id">
                 </p-dropdown>
             </div>
 
