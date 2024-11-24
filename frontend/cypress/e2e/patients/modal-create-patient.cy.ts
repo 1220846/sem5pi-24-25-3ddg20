@@ -1,14 +1,12 @@
 describe('Modal Create Patient', () => {
-
-  const fakeLoginResponse = {
-    loginToken: 'fake-jwt-token',
-    roles: ['Admin'], 
-  };
-
-  window.localStorage.setItem('accessToken', fakeLoginResponse.loginToken);
-  window.localStorage.setItem('roles', JSON.stringify(fakeLoginResponse.roles));
-
     beforeEach(() => {
+      const fakeLoginResponse = {
+        loginToken: 'fake-jwt-token',
+        roles: ['Admin'], 
+      };
+    
+      window.localStorage.setItem('accessToken', fakeLoginResponse.loginToken);
+      window.localStorage.setItem('roles', JSON.stringify(fakeLoginResponse.roles));
       // Stub o serviço de pacientes
       cy.intercept('GET', '**/api/patients', {
         statusCode: 200,
