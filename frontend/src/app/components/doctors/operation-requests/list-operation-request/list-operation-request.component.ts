@@ -74,7 +74,6 @@ export class ListOperationRequestComponent implements OnInit{
   availablePatients: Patient[] = [];
 
   dataOpTypes: [string, string][] = [];
-  dataOpTypesRev: [string, string][] = [];
   dataPatients: [string, string][] = [];
 
   visible: boolean = false;
@@ -91,12 +90,6 @@ export class ListOperationRequestComponent implements OnInit{
   }
 
   applyFilters(): void {
-    console.log(this.filterOperationType)
-    const OperationType=this.dataOpTypesRev.find((item)=>item[0]==this.filterOperationType);
-    if(OperationType){
-      this.filterOperationType=OperationType[1];
-      console.log(this.filterOperationType)
-    }
     console.log(this.filterOperationType)
     this.loadOperationRequests();
     this.filterPanel.hide();
@@ -158,7 +151,6 @@ export class ListOperationRequestComponent implements OnInit{
   loadOperationTypes(){
     this.OperationTypeService.getAll().subscribe((data)=>{
       this.dataOpTypes = data.map((item: { id: string; name: string }) => [item.id, item.name]);
-      this.dataOpTypesRev = data.map((item: { name: string; id: string }) => [item.name, item.id]);
       this.operationTypes=data;
       this.availableOperationTypes=[...this.operationTypes]
     });
