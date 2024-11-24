@@ -25,7 +25,7 @@ export class OperationTypeService {
     if (status)
       params = params.set('status', status);
 
-    return this.httpClient.get<OperationType[]>(`${this.apiUrl}/filter`, { params });
+    return this.httpClient.get<OperationType[]>(`${this.apiUrl}/filter`, { params, headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`}) });
   }
 
   add(operationType: CreatingOperationTypeDto): Observable<OperationType> {

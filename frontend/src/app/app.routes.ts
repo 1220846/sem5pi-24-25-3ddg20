@@ -20,7 +20,10 @@ export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'doctor', component: DoctorsComponent
     ,canActivate: [roleGuard],  
-    data: { roles: ['Doctor']} 
+    data: { roles: ['Doctor']},
+    children:[{ path: 'operation-requests', component:OperationRequestsComponent},
+      { path: '', redirectTo: 'operation-requests', pathMatch: 'full' }
+    ]
   },
   { path: 'sidebar', component: SidebarComponent },
   { 

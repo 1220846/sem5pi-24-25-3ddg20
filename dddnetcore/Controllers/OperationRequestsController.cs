@@ -40,12 +40,12 @@ namespace DDDSample1.Controllers{
         [Authorize(Policy = "RequiredDoctorRole")]
         public async Task<ActionResult<OperationRequestDto>> Create(CreatingOperationRequestDto dto)
         {
-            //try{
+            try{
                 var operationRequest = await _service.AddOperationRequestAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = operationRequest.Id }, operationRequest);
 
-            /*}catch(BusinessRuleValidationException exception){
+            }catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
             }catch(NullReferenceException exception){
@@ -54,12 +54,12 @@ namespace DDDSample1.Controllers{
             }catch(Exception){
                 
                 return StatusCode(500, new { message = "An unexpected error occurred." });
-            }*/
+            }
         }
 
         // GET: api/operationRequests/filter
         [HttpGet("filter")]
-        //[Authorize(Policy = "RequiredDoctorRole")]
+        [Authorize(Policy = "RequiredDoctorRole")]
         public async Task<ActionResult<IEnumerable<OperationRequestDto>>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority=null ,string status = null)
         {
             return await _service.GetOperationRequestsAsync(patientId,operationTypeId,priority,status);

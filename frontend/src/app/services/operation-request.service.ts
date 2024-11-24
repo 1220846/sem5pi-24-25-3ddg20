@@ -40,8 +40,8 @@ export class OperationRequestService {
     if (status) {
       params = params.set('status', status);
     }
-    console.log(`${this.apiUrl}/filter`, { params })
-    return this.http.get<OperationRequest[]>(`${this.apiUrl}/filter`, { params });
+    return this.http.get<OperationRequest[]>(`${this.apiUrl}/filter`, { params, headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`}) });
+
   }
 
   add(operationRequest: CreatingOperationRequestDto):Observable<OperationRequest>{
