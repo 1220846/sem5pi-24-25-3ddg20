@@ -32,7 +32,7 @@ namespace DDDSample1.Infrastructure.OperationRequests{
 
                 if (!string.IsNullOrEmpty(patientId))
                 {
-                    query = query.Where(or => or.MedicalRecordNumber.Equals(new MedicalRecordNumber(patientId)));
+                    query = query.Where(or => or.MedicalRecordNumber == new MedicalRecordNumber(patientId));
                 }
 
                 if (operationTypeId.HasValue && operationTypeId.Value != Guid.Empty)
