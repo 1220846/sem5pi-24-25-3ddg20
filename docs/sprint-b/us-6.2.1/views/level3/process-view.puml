@@ -20,6 +20,13 @@ activate Patient
     Patient -> ComponentUI : asks to register for the healthcare application
     activate ComponentUI
 
+        ComponentUI --> Patient: asks to input data
+
+    deactivate ComponentUI
+
+    Patient -> ComponentUI: input data
+    activate ComponentUI
+
         ComponentUI -> Component : register for the healthcare application
         activate Component
 
