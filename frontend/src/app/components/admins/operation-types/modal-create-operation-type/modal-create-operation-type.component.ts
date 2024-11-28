@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { SpecializationService } from '../../../../services/specialization.service';
 import { Specialization } from '../../../../domain/Specialization';
 import { OperationTypeService } from '../../../../services/operation-type.service';
@@ -39,6 +39,7 @@ export class ModalCreateOperationTypeComponent implements OnInit{
       anesthesiaTime: [null, [Validators.required]],
       cleaningTime: [null, [Validators.required]],
       selectedSpecialization: [null, Validators.required],
+      staffSpecializations: this.fb.array([])
     });
   }
 
@@ -63,22 +64,43 @@ export class ModalCreateOperationTypeComponent implements OnInit{
     this.visible = true;
     this.selectedSpecializations = [];
     this.availableSpecializations = [...this.specializations];
+    this.staffSpecializations.clear();
     this.operationTypeForm.reset();
+  }
+
+  get staffSpecializations(): FormArray {
+    return this.operationTypeForm.get('staffSpecializations') as FormArray;
   }
 
   addSpecialization() {
     const selectedSpec = this.operationTypeForm.get('selectedSpecialization')?.value;
-    if (selectedSpec && !this.selectedSpecializations.some(item => item.specialization.id === selectedSpec.id)) {
-      this.selectedSpecializations.push({ specialization: selectedSpec, numberOfStaff: 1 });
-      this.availableSpecializations = this.availableSpecializations.filter(sp => sp.id !== selectedSpec.id);
+    if (selectedSpec && !this.staffSpecializations.controls.some((ctrl) => ctrl.value.specializationId === selectedSpec.id)) {
+      const specializationGroup = this.fb.group({
+        specializationId: [selectedSpec.id, Validators.required],
+        numberOfStaff: [null, [Validators.required, Validators.min(1)]],
+      });
+      this.staffSpecializations.push(specializationGroup);
+    
+      this.availableSpecializations = this.availableSpecializations.filter(
+        (spec) => spec.id !== selectedSpec.id
+      );
     }
   }
-
-  removeSpecialization(item: { specialization: Specialization; numberOfStaff: number }) {
-    this.selectedSpecializations = this.selectedSpecializations.filter(i => i !== item);
-    this.availableSpecializations.push(item.specialization);
+  
+  removeSpecialization(index: number) {
+    const removedSpec = this.staffSpecializations.at(index).value.specializationId;
+    this.staffSpecializations.removeAt(index);
+      const removed = this.specializations.find((spec) => spec.id === removedSpec);
+    if (removed) {
+      this.availableSpecializations.push(removed);
+    }
   }
-    
+  
+  getSpecializationName(specializationId: string): string | undefined {
+    const specialization = this.specializations.find(spec => spec.id === specializationId);
+    return specialization?.name;
+  }
+  
   saveData() {
     if (this.operationTypeForm.valid) {
       const operationType: CreatingOperationTypeDto = {
@@ -89,16 +111,14 @@ export class ModalCreateOperationTypeComponent implements OnInit{
         surgeryTime: this.operationTypeForm.value.surgeryTime,
         anesthesiaTime: this.operationTypeForm.value.anesthesiaTime,
         cleaningTime: this.operationTypeForm.value.cleaningTime,
-        staffSpecializations: this.selectedSpecializations.map(item => ({
-          specializationId: item.specialization.id,
-          numberOfStaff: item.numberOfStaff
-        }))
+        staffSpecializations: this.staffSpecializations.value
       };
-
+      console.log(operationType.staffSpecializations);
       this.operationTypeService.add(operationType).subscribe(
         (response) => {
           this.visible = false; 
           this.selectedSpecializations = [];
+          this.staffSpecializations.clear();
           this.operationTypeForm.reset();
           this.loadSpecializations();
           this.operationTypeCreated.emit(operationType);

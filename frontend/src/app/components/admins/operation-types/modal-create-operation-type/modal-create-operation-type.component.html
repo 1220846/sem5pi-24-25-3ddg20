@@ -60,28 +60,35 @@
                         Please select a specialization.
                     </small>
                 </div>
-                <div *ngIf="selectedSpecializations.length > 0" class="table-container">
+                <div *ngIf="staffSpecializations.length > 0" class="table-container">
                     <table class="p-table p-component">
-                        <thead>
-                            <tr>
-                                <th class="pl-2 pr-2">Specialization</th>
-                                <th class="pl-2 pr-2">Number Of Staff</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of selectedSpecializations">
-                                <td class="pl-2 pr-2">{{ item.specialization.name }}</td>
-                                <td class="input-small pl-2 pr-2">
-                                    <p-inputNumber [(ngModel)]="item.numberOfStaff" [min]="1" />
-                                </td>
-                                <td class="pl-2 pr-2">
-                                    <p-button icon="pi pi-times" [rounded]="true" severity="danger" [outlined]="true"
-                                        (onClick)="removeSpecialization(item)" />
-                                </td>
-                            </tr>
-                        </tbody>
+                      <thead>
+                        <tr>
+                          <th class="pl-2 pr-2">Specialization</th>
+                          <th class="pl-2 pr-2">Number Of Staff</th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="staffSpecializations">
+                        <tr *ngFor="let item of staffSpecializations.controls; let i = index" [formGroupName]="i">
+                          <td class="pl-2 pr-2">
+                            {{ getSpecializationName(item.value.specializationId) }}
+                          </td>
+                          <td class="input-small pl-2 pr-2">
+                            <p-inputNumber formControlName="numberOfStaff" [min]="1"></p-inputNumber>
+                          </td>
+                          <td class="pl-2 pr-2">
+                            <p-button 
+                              icon="pi pi-times" 
+                              [rounded]="true" 
+                              severity="danger" 
+                              [outlined]="true"
+                              (onClick)="removeSpecialization(i)">
+                            </p-button>
+                          </td>
+                        </tr>
+                      </tbody>
                     </table>
-                </div>
+                  </div>                  
             </div>
         </form>
         <ng-template pTemplate="footer">
