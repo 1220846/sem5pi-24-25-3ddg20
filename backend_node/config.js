@@ -44,6 +44,10 @@ export default {
     role: {
       name: "RoleController",
       path: "../controllers/roleController"
+    },
+    roomType: {
+      name: "RoomTypeController",
+      path: "../controllers/roomTypeController"
     }
   },
 
@@ -55,6 +59,10 @@ export default {
     user: {
       name: "UserRepo",
       path: "../repos/userRepo"
+    },
+    roomType: {
+      name: "RoomTypeRepo",
+      path: "../repos/roomTypeRepo"
     }
   },
 
@@ -62,6 +70,10 @@ export default {
     role: {
       name: "RoleService",
       path: "../services/roleService"
+    },
+    roomType: {
+      name: "RoomTypeService",
+      path: "../services/roomTypeService"
     }
   },
 };

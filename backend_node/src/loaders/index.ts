@@ -21,6 +21,12 @@ export default async ({ expressApp }) => {
     schema: '../persistence/schemas/roleSchema',
   };
 
+  const roomTypeSchema = {
+    // compare with the approach followed in repos and services
+    name: 'roomTypeSchema',
+    schema: '../persistence/schemas/roomTypeSchema',
+  };
+
   const roleController = {
     name: config.controllers.role.name,
     path: config.controllers.role.path
@@ -41,21 +47,41 @@ export default async ({ expressApp }) => {
     path: config.services.role.path
   }
 
+  // RoomType
+  const roomTypeController = {
+    name: config.controllers.roomType.name,
+    path: config.controllers.roomType.path
+  }
+
+  const roomTypeRepo = {
+    name: config.repos.roomType.name,
+    path: config.repos.roomType.path
+  }
+
+  const roomTypeService = {
+    name: config.services.roomType.name,
+    path: config.services.roomType.path
+  }
+
   await dependencyInjectorLoader({
     mongoConnection,
     schemas: [
       userSchema,
-      roleSchema
+      roleSchema,
+      roomTypeSchema
     ],
     controllers: [
-      roleController
+      roleController,
+      roomTypeController
     ],
     repos: [
       roleRepo,
-      userRepo
+      userRepo,
+      roomTypeRepo
     ],
     services: [
-      roleService
+      roleService,
+      roomTypeService
     ]
   });
   Logger.info('✌️ Schemas, Controllers, Repositories, Services, etc. loaded');
