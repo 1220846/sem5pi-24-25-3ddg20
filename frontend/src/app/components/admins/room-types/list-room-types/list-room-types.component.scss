@@ -1,0 +1,11 @@
+@import '../../../../../assets/styles/variables.scss';
+
+:host ::ng-deep .p-card {
+  background-color: rgb(253, 253, 252);
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}

@@ -1,0 +1,26 @@
+<div class="card flex justify-content-end">
+    <p-toast></p-toast>
+    <p-button class="mr-5" (onClick)="showDialog()" label="Add Room Type" />
+    <p-dialog header="Add Room Type" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <form [formGroup]="roomTypeForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="name">Name</label>
+                    <input pInputText id="name" aria-describedby="name-help" formControlName="name" />
+                    <small
+                        *ngIf="roomTypeForm.controls['name'].invalid && (roomTypeForm.controls['name'].dirty || roomTypeForm.controls['name'].touched)"
+                        class="p-error">
+                        Name is required.
+                    </small>
+                </div>       
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center gap-2 dialog-footer">
+                <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                <p-button label="Save" (onClick)="saveData()" />
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>

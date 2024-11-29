@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@auth0/auth0-angular": "^2.2.3",
+    "@fortawesome/fontawesome-free": "^6.7.1",
     "@types/three": "^0.169.0",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
