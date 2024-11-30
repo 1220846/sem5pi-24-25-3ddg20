@@ -1,5 +1,5 @@
-using System;
 using dddnetcore.Domain.SurgeryRooms;
+using DDDSample1.Domain.RoomTypes;
 using DDDSample1.Domain.Shared;
 using Xunit;
 
@@ -12,7 +12,7 @@ namespace dddnetcore.Tests.Domain.SurgeryRooms
         {
             // Arrange
             var roomNumber = new RoomNumber("A123");
-            var roomType = RoomType.OPERATING_ROOM;
+            var roomType = new RoomType(new RoomTypeName("ICU"));
             var roomCapacity = new SurgeryRoomCapacity(10);
             var maintenanceSlots = new SurgeryRoomMaintenanceSlots("Mon-Fri: 9am-5pm");
             var assignedEquipment = new SurgeryRoomAssignedEquipment("Scalpel, Monitor");
@@ -38,7 +38,7 @@ namespace dddnetcore.Tests.Domain.SurgeryRooms
         {
             // Arrange
             var roomNumber = new RoomNumber("A123");
-            var roomType = RoomType.OPERATING_ROOM;
+            var roomType = new RoomType(new RoomTypeName("ICU"));
             var maintenanceSlots = new SurgeryRoomMaintenanceSlots("Mon-Fri: 9am-5pm");
             var assignedEquipment = new SurgeryRoomAssignedEquipment("Scalpel, Monitor");
             var currentStatus = SurgeryRoomCurrentStatus.AVAILABLE;
@@ -54,7 +54,7 @@ namespace dddnetcore.Tests.Domain.SurgeryRooms
         {
             // Arrange
             var roomNumber = new RoomNumber("A123");
-            var roomType = RoomType.CONSULTATION_ROOM;
+            var roomType = new RoomType(new RoomTypeName("ICU"));
             var roomCapacity = new SurgeryRoomCapacity(5);
             var maintenanceSlots = new SurgeryRoomMaintenanceSlots("Mon-Fri: 9am-5pm");
             var currentStatus = SurgeryRoomCurrentStatus.UNDER_MAINTENANCE;

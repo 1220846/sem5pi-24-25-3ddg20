@@ -5,6 +5,7 @@ using dddnetcore.Domain.SurgeryRooms;
 using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.Patients;
+using DDDSample1.Domain.RoomTypes;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.SurgeryRooms;
 using DDDSample1.Domain.Users;
@@ -46,7 +47,7 @@ namespace DDDSample1.Domain.Appointments
                     SurgeryRoomDto = new SurgeryRoomDto
                     {
                         Number = appointment.SurgeryRoom.Id.Value,
-                        Type = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.RoomType),
+                        RoomType = new RoomTypeDto {Id = appointment.SurgeryRoom.RoomType.Id.AsGuid(),Name = appointment.SurgeryRoom.RoomType.Name.Name},
                         Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                         CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                         MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -96,7 +97,7 @@ namespace DDDSample1.Domain.Appointments
                 SurgeryRoomDto = new SurgeryRoomDto
                 {
                     Number = appointment.SurgeryRoom.Id.Value,
-                    Type = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.RoomType),
+                    RoomType = new RoomTypeDto {Id = appointment.SurgeryRoom.RoomType.Id.AsGuid(),Name = appointment.SurgeryRoom.RoomType.Name.Name},
                     Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                     CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                     MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -143,7 +144,7 @@ namespace DDDSample1.Domain.Appointments
                 SurgeryRoomDto = new SurgeryRoomDto
                 {
                     Number = appointment.SurgeryRoom.Id.Value,
-                    Type = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.RoomType),
+                    RoomType = new RoomTypeDto {Id = appointment.SurgeryRoom.RoomType.Id.AsGuid(),Name = appointment.SurgeryRoom.RoomType.Name.Name},
                     Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                     CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                     MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -186,7 +187,7 @@ namespace DDDSample1.Domain.Appointments
                     SurgeryRoomDto = new SurgeryRoomDto
                     {
                         Number = appointment.SurgeryRoom.Id.Value,
-                        Type = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.RoomType),
+                        RoomType = new RoomTypeDto {Id = appointment.SurgeryRoom.RoomType.Id.AsGuid(),Name = appointment.SurgeryRoom.RoomType.Name.Name},
                         Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                         CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                         MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
