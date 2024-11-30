@@ -17,44 +17,12 @@ export class ListRoomTypesComponent implements OnInit{
   roomTypes: RoomType[] = [];
   responsiveOptions: any[] | undefined;
 
-  rooms = [
-    { name: 'Room 1' },
-    { name: 'Room 2' },
-    { name: 'Room 3' },
-    { name: 'Room 4' },
-    { name: 'Room 5' },
-    { name: 'Room 6' },
-    { name: 'Room 7' },
-    { name: 'Room 8' },
-    { name: 'Room 9' },
-    { name: 'Room 10' }
-  ];
-  
-
   constructor(
     private roomTypeService: RoomTypeService
   ) {}
 
   ngOnInit(): void {
     this.loadRoomTypes();
-
-    this.responsiveOptions = [
-      {
-          breakpoint: '1199px',
-          numVisible: 1,
-          numScroll: 1
-      },
-      {
-          breakpoint: '991px',
-          numVisible: 2,
-          numScroll: 1
-      },
-      {
-          breakpoint: '767px',
-          numVisible: 1,
-          numScroll: 1
-      }
-  ];
   }
 
   loadRoomTypes(): void {
