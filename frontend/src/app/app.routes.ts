@@ -16,6 +16,7 @@ import { AdminPatientsComponent } from './components/admins/patients/admin-patie
 import { OperationRequestsComponent } from './components/doctors/operation-requests/operation-requests.component';
 import { AppointmentsComponent } from './components/patients/appointments/appointments.component';
 import { RoomTypesComponent } from './components/admins/room-types/room-types.component';
+import { SpecializationsComponent } from './components/admins/specializations/specializations.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -37,6 +38,7 @@ export const routes: Routes = [
               { path: 'patients', component: AdminPatientsComponent},
               { path: 'operation-requests', component:OperationRequestsComponent},
               { path: 'room-types', component:RoomTypesComponent},
+              { path: 'specializatons', component:SpecializationsComponent},
               { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
   },
   { path: 'hospital', component: HospitalComponent },
