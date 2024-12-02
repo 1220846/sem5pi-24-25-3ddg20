@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DDDSample1.DataAnnotations.Staffs;
+using DDDSample1.Domain.RoomTypes;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.SurgeryRooms;
 
@@ -13,9 +14,12 @@ namespace dddnetcore.Domain.SurgeryRooms
         IUnitOfWork _unitOfWork;
         private readonly ISurgeryRoomRepository _repo;
 
-        public SurgeryRoomService(IUnitOfWork unitOfWork, ISurgeryRoomRepository repo) {
+        private readonly IRoomTypeRepository _roomTypeRepo;
+
+        public SurgeryRoomService(IUnitOfWork unitOfWork, ISurgeryRoomRepository repo, IRoomTypeRepository roomTypeRepository) {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
+            this._roomTypeRepo = roomTypeRepository;
         }
 
         public async Task<SurgeryRoomDto> GetByIdAsync(RoomNumber id) {
@@ -30,7 +34,9 @@ namespace dddnetcore.Domain.SurgeryRooms
 
         public async Task<SurgeryRoomDto> AddAsync(CreatingSurgeryRoomDto dto)
         {
-            var roomType = Enum.Parse<RoomType>(dto.Type.ToUpper());
+            
+            var roomType = await this._roomTypeRepo.GetByIdAsync(new RoomTypeId(dto.RoomTypeId)) ?? throw new NullReferenceException($"Not Found Room Type with Id: {dto.RoomTypeId}");
+
             var currentStatus = Enum.Parse<SurgeryRoomCurrentStatus>(dto.CurrentStatus.ToUpper());
 
             var surgerRoom = new SurgeryRoom(new RoomNumber(dto.Number),roomType, new SurgeryRoomCapacity(dto.Capacity),

@@ -4,6 +4,7 @@ using DDDSample1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDSample1DbContext))]
-    partial class DDDSample1DbContextModelSnapshot : ModelSnapshot
+    [Migration("20241129105811_roomTypeConfiguration")]
+    partial class roomTypeConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -426,13 +429,11 @@ namespace DDDNetCore.Migrations
                     b.Property<short>("RoomCapacity")
                         .HasColumnType("smallint");
 
-                    b.Property<string>("RoomTypeId")
+                    b.Property<string>("RoomType")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoomTypeId");
 
                     b.ToTable("SurgeryRooms");
                 });
@@ -563,17 +564,6 @@ namespace DDDNetCore.Migrations
                         .WithMany("AvailabilitySlots")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("dddnetcore.Domain.SurgeryRooms.SurgeryRoom", b =>
-                {
-                    b.HasOne("DDDSample1.Domain.RoomTypes.RoomType", "RoomType")
-                        .WithMany()
-                        .HasForeignKey("RoomTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoomType");
                 });
 
             modelBuilder.Entity("DDDSample1.Domain.OperationTypes.OperationType", b =>

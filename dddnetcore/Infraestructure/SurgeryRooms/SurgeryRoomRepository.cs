@@ -15,6 +15,16 @@ namespace dddnetcore.Infraestructure.SurgeryRooms
 
         public SurgeryRoomRepository(DDDSample1DbContext context):base(context.SurgeryRooms) {
             _context = context;
+        }
+
+        public new async Task<SurgeryRoom> GetByIdAsync(RoomNumber id){
+            return await _context.SurgeryRooms.Include(a => a.RoomType)
+            .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public new async Task<List<SurgeryRoom>> GetAllAsync(){
+            return await _context.SurgeryRooms.Include(a => a.RoomType)
+            .ToListAsync();
         }       
     }
 }

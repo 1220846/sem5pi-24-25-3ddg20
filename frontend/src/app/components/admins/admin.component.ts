@@ -54,6 +54,7 @@ export class AdminComponent implements OnInit ,AfterViewInit {
         { label: 'Staffs', icon: '', link: '/admin/staffs' },
         { label: 'Patients', icon: '', link: '/admin/patients' },
         { label: 'Operation Requests', icon: '', link: '/admin/operation-requests' },
+        { label: 'Room Types', icon: '', link: '/admin/room-types' },
         { label: '3D Hospital', icon: '', link: '/hospital'}
       ];
       this.sidebar.setUserTitle('Admin');
