@@ -2,7 +2,7 @@
 
 ## 1. Context
 
-*In this task it was proposed that a Admin can add new Types of rooms.*
+*In this task it was proposed that an Admin can add new Types of rooms.*
 
 ## 2. Requirements
 

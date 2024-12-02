@@ -15,7 +15,7 @@ box "<<system (C4)>>\nBackend Data Management"
     participant Controller as "RoomTypeController"<<Controller>>
     participant Service_ as "RoomTypeService"<<Service>>
     participant RoomType as "RoomType"<<Domain>>
-    participant RoomTypeDto as "RoomTypeDto"<<Mapper>>
+    participant RoomTypeDto as "RoomTypeDto"<<Domain>>
     database RoomTypeRepo as "RoomTypeRepo"<<Domain>>
 end box
 
@@ -46,17 +46,17 @@ activate Admin
                     HTTP -> Controller : POST /roomtypes
 
                         activate Controller
-                            Controller -> Service_ : addRoomType(creatingRoomType)
+                            Controller -> Service_ : addAsync(creatingRoomTypeDto)
                             
                             activate Service_
 
-                                Service_ -> RoomType**: create(creatingRoomType.Name)
+                                Service_ -> RoomType**: create(creatingRoomTypeDto.Name)
 
                                 activate RoomType
                                     RoomType --> Service_ : roomType
                                 deactivate RoomType
 
-                                Service_ -> RoomTypeRepo : save(roomType)
+                                Service_ -> RoomTypeRepo : addAsync(roomType)
 
                                 Service_ -> RoomTypeDto** : create(roomType.Id,roomType.Name)
 
