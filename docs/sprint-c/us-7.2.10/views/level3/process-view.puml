@@ -16,7 +16,7 @@ box "<<system (C4)>>\nBackend Data Management"
     participant Service_ as "RoomTypeService"<<Service>>
     participant RoomType as "RoomType"<<Domain>>
     participant RoomTypeDto as "RoomTypeDto"<<Domain>>
-    database RoomTypeRepo as "RoomTypeRepo"<<Domain>>
+    database RoomTypeRepo as "RoomTypeRepository"<<Domain>>
 end box
 
 activate Admin
