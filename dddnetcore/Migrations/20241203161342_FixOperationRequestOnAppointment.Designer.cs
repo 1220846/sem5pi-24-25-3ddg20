@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDSample1DbContext))]
-    [Migration("20241203093720_init")]
-    partial class init
+    [Migration("20241203161342_FixOperationRequestOnAppointment")]
+    partial class FixOperationRequestOnAppointment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,26 @@ namespace DDDNetCore.Migrations
                     b.HasIndex("RoomNumber");
 
                     b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("DDDSample1.Domain.AppointmentsStaffs.AppointmentStaff", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("AppointmentId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("StaffId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("AppointmentsStaffs");
                 });
 
             modelBuilder.Entity("DDDSample1.Domain.Categories.Category", b =>
@@ -466,6 +486,23 @@ namespace DDDNetCore.Migrations
                     b.Navigation("SurgeryRoom");
                 });
 
+            modelBuilder.Entity("DDDSample1.Domain.AppointmentsStaffs.AppointmentStaff", b =>
+                {
+                    b.HasOne("DDDSample1.Domain.Appointments.Appointment", "Appointment")
+                        .WithMany("AppointmentStaffs")
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DDDSample1.Domain.Staffs.Staff", "Staff")
+                        .WithMany("AppointmentStaffs")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Staff");
+                });
+
             modelBuilder.Entity("DDDSample1.Domain.OperationTypesSpecializations.OperationTypeSpecialization", b =>
                 {
                     b.HasOne("DDDSample1.Domain.OperationTypes.OperationType", "OperationType")
@@ -586,6 +623,11 @@ namespace DDDNetCore.Migrations
                     b.Navigation("RoomType");
                 });
 
+            modelBuilder.Entity("DDDSample1.Domain.Appointments.Appointment", b =>
+                {
+                    b.Navigation("AppointmentStaffs");
+                });
+
             modelBuilder.Entity("DDDSample1.Domain.OperationTypes.OperationType", b =>
                 {
                     b.Navigation("OperationTypeSpecializations");
@@ -598,6 +640,8 @@ namespace DDDNetCore.Migrations
 
             modelBuilder.Entity("DDDSample1.Domain.Staffs.Staff", b =>
                 {
+                    b.Navigation("AppointmentStaffs");
+
                     b.Navigation("AvailabilitySlots");
                 });
 

@@ -27,6 +27,7 @@ using dddnetcore.Infraestructure.SurgeryRooms;
 using dddnetcore.Infraestructure.Appointments;
 using DDDSample1.Infrastructure.RoomTypes;
 using DDDSample1.Domain.RoomTypes;
+using DDDSample1.Domain.AppointmentsStaffs;
 
 namespace DDDSample1.Infrastructure
 {
@@ -61,6 +62,9 @@ namespace DDDSample1.Infrastructure
 
         public DbSet<SurgeryRoom> SurgeryRooms {get; set;}
         public DbSet<Domain.RoomTypes.RoomType> RoomTypes {get; set;}
+
+        public DbSet<AppointmentStaff> AppointmentsStaffs {get; set;}
+
 
         public DDDSample1DbContext(DbContextOptions options) : base(options)
         {

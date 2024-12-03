@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DDDNetCore.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -394,6 +394,35 @@ namespace DDDNetCore.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "AppointmentsStaffs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AppointmentId = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    StaffId = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppointmentsStaffs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppointmentsStaffs_Appointments_AppointmentId",
+                        column: x => x.AppointmentId,
+                        principalTable: "Appointments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppointmentsStaffs_Staffs_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staffs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_OperationRequestId",
                 table: "Appointments",
@@ -404,6 +433,16 @@ namespace DDDNetCore.Migrations
                 name: "IX_Appointments_RoomNumber",
                 table: "Appointments",
                 column: "RoomNumber");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentsStaffs_AppointmentId",
+                table: "AppointmentsStaffs",
+                column: "AppointmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentsStaffs_StaffId",
+                table: "AppointmentsStaffs",
+                column: "StaffId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AvailabilitySlots_StaffId",
@@ -492,7 +531,7 @@ namespace DDDNetCore.Migrations
                 name: "AnonymizedPatientsData");
 
             migrationBuilder.DropTable(
-                name: "Appointments");
+                name: "AppointmentsStaffs");
 
             migrationBuilder.DropTable(
                 name: "AvailabilitySlots");
@@ -516,10 +555,7 @@ namespace DDDNetCore.Migrations
                 name: "SystemLogs");
 
             migrationBuilder.DropTable(
-                name: "OperationRequest");
-
-            migrationBuilder.DropTable(
-                name: "SurgeryRooms");
+                name: "Appointments");
 
             migrationBuilder.DropTable(
                 name: "Staffs");
@@ -528,13 +564,19 @@ namespace DDDNetCore.Migrations
                 name: "OperationTypes");
 
             migrationBuilder.DropTable(
-                name: "RoomTypes");
+                name: "OperationRequest");
+
+            migrationBuilder.DropTable(
+                name: "SurgeryRooms");
 
             migrationBuilder.DropTable(
                 name: "Specializations");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "RoomTypes");
         }
     }
 }

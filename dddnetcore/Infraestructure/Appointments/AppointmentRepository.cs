@@ -22,7 +22,8 @@ namespace dddnetcore.Infraestructure.AvailabilitySlots
         {
             return await _context.Appointments
                 .Include(a => a.OperationRequest)
-                .Include(a => a.SurgeryRoom)
+                .Include(a => a.SurgeryRoom).ThenInclude(s => s.RoomType)
+                .Include(a => a.AppointmentStaffs).ThenInclude(a => a.Staff)
                 .Where(a => a.OperationRequest.MedicalRecordNumber == medicalRecordNumber)
                 .ToListAsync();
         }
@@ -31,20 +32,23 @@ namespace dddnetcore.Infraestructure.AvailabilitySlots
         {
             return await _context.Appointments
                 .Include(a => a.OperationRequest)
-                .Include(a => a.SurgeryRoom)
+                .Include(a => a.SurgeryRoom).ThenInclude(s => s.RoomType)
+                .Include(a => a.AppointmentStaffs).ThenInclude(a => a.Staff)
                 .Where(a => a.OperationRequest.StaffId == staffId)
                 .ToListAsync();
         }
 
         public new async Task<Appointment> GetByIdAsync(AppointmentId id){
-            return await _context.Appointments.Include(a => a.SurgeryRoom)
+            return await _context.Appointments.Include(a => a.SurgeryRoom).ThenInclude(s => s.RoomType)
             .Include(a => a.OperationRequest)
+            .Include(a => a.AppointmentStaffs).ThenInclude(a => a.Staff)
             .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public new async Task<List<Appointment>> GetAllAsync(){
-            return await _context.Appointments.Include(a => a.SurgeryRoom)
+            return await _context.Appointments.Include(a => a.SurgeryRoom).ThenInclude(s => s.RoomType)
             .Include(a => a.OperationRequest)
+            .Include(a => a.AppointmentStaffs).ThenInclude(a => a.Staff)
             .ToListAsync();
         }
     }
