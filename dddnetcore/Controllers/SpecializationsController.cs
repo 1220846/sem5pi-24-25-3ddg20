@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.Specializations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DDDSample1.Controllers{
 
@@ -21,6 +21,7 @@ namespace DDDSample1.Controllers{
 
         // GET: api/specializations
         [HttpGet]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<IEnumerable<SpecializationDto>>> GetAll()
         {
             return await _service.GetAllAsync();
@@ -28,6 +29,7 @@ namespace DDDSample1.Controllers{
 
         // GET: api/specializations/
         [HttpGet("{id}")]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<SpecializationDto>> GetById(Guid id)
         {
             var operationType = await _service.GetByIdAsync(new SpecializationId(id));
@@ -42,6 +44,7 @@ namespace DDDSample1.Controllers{
 
         // POST: api/specializations
         [HttpPost]
+        [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<SpecializationDto>> Create(CreatingSpecializationDto dto)
         {
             try{

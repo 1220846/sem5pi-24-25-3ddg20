@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using dddnetcore.Domain.Specializations;
 using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
@@ -25,7 +26,7 @@ namespace DDDSample1.Tests.Domain.Specializations
         public async Task GetByIdAsyncExistingIdShouldReturnSpecializationDto()
         {
             var specializationId = new SpecializationId(Guid.NewGuid());
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             SpecializationId capturedSpecializationId = null;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DDDSample1.Domain.Shared;
 using System.Reflection.Emit;
 using DDDSample1.Domain.OperationTypes;
+using dddnetcore.Domain.Specializations;
 
 namespace DDDSample1.Domain.Specializations
 {
@@ -40,7 +41,7 @@ namespace DDDSample1.Domain.Specializations
 
         public async Task<SpecializationDto> AddAsync(CreatingSpecializationDto dto)
         {
-            var specialization = new Specialization(new SpecializationName(dto.Name));
+            var specialization = new Specialization(new SpecializationName(dto.Name), new SpecializationCode(dto.Code), new SpecializationDescription(dto.Description));
 
             await this._repo.AddAsync(specialization);
 

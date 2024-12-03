@@ -5,6 +5,7 @@ using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.Specializations;
 using Xunit;
 using DDDSample1.Domain.OperationTypesSpecializations;
+using dddnetcore.Domain.Specializations;
 
 namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
 {
@@ -14,7 +15,7 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         public void ConstructorValidParametersShouldCreateOperationTypeSpecialization()
         {
             var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("789012"), new SpecializationDescription("asdf"));
             var numberOfStaff = new NumberOfStaff(5);
 
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
@@ -29,7 +30,7 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         public void ConstructorInvalidNumberOfStaffShouldThrowBusinessRuleValidationException()
         {
             var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             var exception = Assert.Throws<BusinessRuleValidationException>(() => {new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(-1));});
 
@@ -40,7 +41,7 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         public void EqualsSameIdShouldReturnTrue()
         {
             var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
             var numberOfStaff = new NumberOfStaff(5);
 
             var operationTypeSpecialization1 = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
@@ -56,7 +57,7 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         {
             var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
             var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"), new EstimatedDuration(120), new AnesthesiaTime(30), new CleaningTime(20), new SurgeryTime(50));
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
             var numberOfStaff = new NumberOfStaff(5);
 
             var operationTypeSpecialization1 = new OperationTypeSpecialization(operationType1, specialization, numberOfStaff);
@@ -72,7 +73,7 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         {
             // Arrange
             var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
             var numberOfStaff = new NumberOfStaff(5);
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
 
@@ -90,7 +91,7 @@ namespace DDDSample1.Tests.Domain.OperationTypesSpecializations
         {
             // Arrange
             var operationType = new OperationType(new OperationTypeName("Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
             var numberOfStaff = new NumberOfStaff(5);
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, numberOfStaff);
 

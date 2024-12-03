@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using dddnetcore.Domain.Specializations;
 using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.OperationTypeSpecializations;
 using DDDSample1.Domain.OperationTypesSpecializations;
@@ -40,7 +41,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             var operationTypeId = new OperationTypeId(Guid.NewGuid());
             var operationType = new OperationType( new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
 
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(2));
             operationType.OperationTypeSpecializations.Add(operationTypeSpecialization);
             OperationTypeId capturedOperationTypeId = null;
@@ -92,7 +93,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
         [Fact]
         public async Task AddAsyncWithValidDataShouldAddOperationTypeAndSpecializations()
         {
-            var specialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var specialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             var creatingOperationTypeDto = new CreatingOperationTypeDto {Name = "ACL Reconstruction Surgery",EstimatedDuration = 60,AnesthesiaTime = 30,CleaningTime = 15, SurgeryTime = 45,
             StaffSpecializations = new List<CreatingStaffSpecializationDto>{
@@ -180,7 +181,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
                 new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
             
-            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(2));
             
@@ -284,7 +285,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             var operationTypeId = new OperationTypeId(Guid.NewGuid());
             var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45),new CleaningTime(30),new SurgeryTime(60));
             
-            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType, specialization, new NumberOfStaff(2));
             
@@ -347,7 +348,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"),
                 new EstimatedDuration(120), new AnesthesiaTime(40), new CleaningTime(25), new SurgeryTime(55));
 
-            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType1, specialization, new NumberOfStaff(2));
             
@@ -381,7 +382,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             var operationType1 = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"),
                 new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
 
-            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType1, specialization, new NumberOfStaff(2));
             
@@ -417,7 +418,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
 
             var operationType2 = new OperationType(new OperationTypeName("Knee Reconstruction Surgery"),new EstimatedDuration(120), new AnesthesiaTime(40), new CleaningTime(25), new SurgeryTime(55));
 
-            var specialization = new Specialization(new SpecializationName("Knee Surgery"));
+            var specialization = new Specialization(new SpecializationName("Knee Surgery"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
             var operationTypeSpecialization = new OperationTypeSpecialization(operationType1, specialization, new NumberOfStaff(2));
             
@@ -504,7 +505,7 @@ namespace DDDSample1.Tests.Domain.OperationTypes
             var operationTypeId = Guid.NewGuid();
             var specializationId = Guid.NewGuid();
             
-            var existingSpecialization = new Specialization(new SpecializationName("Anaesthetist"));
+            var existingSpecialization = new Specialization(new SpecializationName("Anaesthetist"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
             var existingOperationType = new OperationType(
                         new OperationTypeName("ACL Reconstruction Surgery"),
                         new EstimatedDuration(135),

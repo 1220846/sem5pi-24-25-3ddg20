@@ -163,6 +163,14 @@ package "<<aggregate>> Specialization "{
     class SpecializationName <<Value Object>>{
         
     }
+
+    class SpecializationCode <<Value Object>> {
+
+    }
+
+    class SpecializationDescricription <<Value Object>> {
+
+    }
 }
 
 package "<<aggregate>> OperationType"{
@@ -308,8 +316,10 @@ Staff "1" ---> "1" User: includes
 Staff "1" ---> "1" Specialization : has
 
 'Specialization'
-Specialization --> SpecializationId
+Specialization -> SpecializationId
 Specialization --> SpecializationName
+Specialization --> SpecializationCode
+Specialization --> SpecializationDescricription
 
 'OperationRequest'
 OperationRequestId <- OperationRequest

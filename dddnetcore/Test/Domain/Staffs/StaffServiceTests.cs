@@ -14,6 +14,7 @@ using DDDSample1.Domain.Staffs;
 using DDDSample1.Domain.Specializations;
 using System;
 using DDDSample1.Domain.Appointments;
+using dddnetcore.Domain.Specializations;
 
 public class StaffServiceTests
 {
@@ -61,7 +62,7 @@ public class StaffServiceTests
         var contactInformation = new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678"));
         var licenseNumber = new LicenseNumber("ABC123");
         var availabilitySlots = new List<AvailabilitySlot>();
-        var specialization = new Specialization(new SpecializationName("Unspecified"));
+        var specialization = new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
         var user = ExampleUser();
         var staffStatus = StaffStatus.ACTIVE;
 
@@ -136,7 +137,7 @@ public class StaffServiceTests
             PhoneNumber = "912345678"
         };
 
-        var specialization = new Specialization(new SpecializationName("Unspecified"));
+        var specialization = new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
 
         var user = ExampleUser();
         _mockUserRepo.Setup(repo => repo.GetByIdAsync(It.IsAny<Username>()))
@@ -191,7 +192,7 @@ public class StaffServiceTests
             new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678")),
             new LicenseNumber("ABC123"),
             new List<AvailabilitySlot>(),
-            new Specialization(new SpecializationName("Unspecified")),
+            new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty")),
             new User(new Username("O202499999@sarm.com"), new Email("john@doe.com"), Role.TECHNICIAN),
             StaffStatus.ACTIVE
         );
@@ -254,7 +255,7 @@ public class StaffServiceTests
             new StaffContactInformation(new StaffEmail("jane@doe.com"), new StaffPhone("912345679")),
             new LicenseNumber("XYZ456"),
             new List<AvailabilitySlot>(),
-            new Specialization(new SpecializationName("Specified")),
+            new Specialization(new SpecializationName("Specified"), new SpecializationCode("789012"), new SpecializationDescription("asdf")),
             new User(new Username("O202499998@sarm.com"), new Email("jane@doe.com"), Role.TECHNICIAN),
             StaffStatus.ACTIVE
         );
@@ -286,7 +287,7 @@ public class StaffServiceTests
             new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678")),
             new LicenseNumber("ABC123"),
             new List<AvailabilitySlot>(),
-            new Specialization(new SpecializationName("Unspecified")),
+            new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty")),
             new User(new Username("O202499999@sarm.com"), new Email("john@doe.com"), Role.TECHNICIAN),
             StaffStatus.ACTIVE
         );
@@ -294,7 +295,7 @@ public class StaffServiceTests
         _mockRepo.Setup(repo => repo.GetStaffsAsync(null, null, null, null, null, null, staffId, null, null, 1, 10))
                 .ReturnsAsync(new List<Staff> { existingStaff });
 
-        var newSpecialization = new Specialization(new SpecializationName("New Spec"));
+        var newSpecialization = new Specialization(new SpecializationName("New Spec"), new SpecializationCode("345678"), new SpecializationDescription("zxcvb"));
         _mockSpecializationRepo.Setup(repo => repo.GetByIdAsync(It.IsAny<SpecializationId>()))
                             .ReturnsAsync(newSpecialization);
 
@@ -352,7 +353,7 @@ public class StaffServiceTests
             new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678")),
             new LicenseNumber("ABC123"),
             new List<AvailabilitySlot>(),
-            new Specialization(new SpecializationName("Unspecified")),
+            new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty")),
             new User(new Username("O202499999@sarm.com"), new Email("john@doe.com"), Role.TECHNICIAN),
             StaffStatus.ACTIVE
         );
@@ -384,7 +385,7 @@ public class StaffServiceTests
             new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678")),
             new LicenseNumber("ABC123"),
             new List<AvailabilitySlot>(),
-            new Specialization(new SpecializationName("Unspecified")),
+            new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty")),
             new User(new Username("O202499999@sarm.com"), new Email("john@doe.com"), Role.TECHNICIAN),
             StaffStatus.ACTIVE
         );

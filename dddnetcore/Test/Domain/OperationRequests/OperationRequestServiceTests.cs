@@ -19,6 +19,7 @@ using DDDSample1.Domain.Users;
 using dddnetcore.Domain.Staffs;
 using dddnetcore.Domain.OperationRequests.UpdateOperationRequestDto;
 using dddnetcore.Domain.OperationRequests;
+using dddnetcore.Domain.Specializations;
 
 namespace DDDSample1.Tests
 {
@@ -75,7 +76,7 @@ namespace DDDSample1.Tests
         var contactInformation = new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678"));
         var licenseNumber = new LicenseNumber("ABC123");
         var availabilitySlots = new List<AvailabilitySlot>();
-        var specialization = new Specialization(new SpecializationName("Unspecified"));
+        var specialization = new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
         var user = ExampleUser1();
         var staffStatus = StaffStatus.ACTIVE;
 
@@ -102,7 +103,7 @@ namespace DDDSample1.Tests
         var contactInformation = new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678"));
         var licenseNumber = new LicenseNumber("ABC123");
         var availabilitySlots = new List<AvailabilitySlot>();
-        var specialization = new Specialization(new SpecializationName("ACL Reconstruction Surgery"));
+        var specialization = new Specialization(new SpecializationName("ACL Reconstruction Surgery"), new SpecializationCode("789012"), new SpecializationDescription("asdf"));
         var user = ExampleUser2();
         var staffStatus = StaffStatus.ACTIVE;
 
