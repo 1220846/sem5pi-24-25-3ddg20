@@ -69,7 +69,7 @@ namespace DDDSample1.Tests.Domain.Specializations
         [Fact]
         public async Task AddAsyncValidDataShouldAddSpecialization()
         {
-            var creatingSpecializationDto = new CreatingSpecializationDto { Name = "Anaesthetist" };
+            var creatingSpecializationDto = new CreatingSpecializationDto { Name = "Anaesthetist", Code = "123456" };
 
             Specialization capturedSpecialization = null;
 
