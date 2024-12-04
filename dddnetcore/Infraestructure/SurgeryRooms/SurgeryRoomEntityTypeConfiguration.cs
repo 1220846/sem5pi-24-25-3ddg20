@@ -16,7 +16,7 @@ namespace dddnetcore.Infraestructure.SurgeryRooms
             builder.Property(b => b.RoomCapacity).HasConversion(b => b.Capacity, b => new SurgeryRoomCapacity(b)).IsRequired();
             builder.Property(b => b.MaintenanceSlots).HasConversion(b => b.MaintenanceSlots, b => new SurgeryRoomMaintenanceSlots(b)).IsRequired();
             builder.Property(b => b.AssignedEquipment).HasConversion(b => b.AssignedEquipment, b => new SurgeryRoomAssignedEquipment(b)).IsRequired();
-            builder.HasOne(b => b.RoomType).WithMany().HasForeignKey("RoomTypeId").IsRequired();        
+            builder.HasOne(b => b.RoomType).WithMany().HasForeignKey("RoomTypeCode").IsRequired();        
         }
     }
 }

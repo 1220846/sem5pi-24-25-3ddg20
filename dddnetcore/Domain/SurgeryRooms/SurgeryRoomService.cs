@@ -35,7 +35,7 @@ namespace dddnetcore.Domain.SurgeryRooms
         public async Task<SurgeryRoomDto> AddAsync(CreatingSurgeryRoomDto dto)
         {
             
-            var roomType = await this._roomTypeRepo.GetByIdAsync(new RoomTypeId(dto.RoomTypeId)) ?? throw new NullReferenceException($"Not Found Room Type with Id: {dto.RoomTypeId}");
+            var roomType = await this._roomTypeRepo.GetByIdAsync(new RoomTypeCode(dto.RoomTypeCode)) ?? throw new NullReferenceException($"Not Found Room Type with Code: {dto.RoomTypeCode}");
 
             var currentStatus = Enum.Parse<SurgeryRoomCurrentStatus>(dto.CurrentStatus.ToUpper());
 

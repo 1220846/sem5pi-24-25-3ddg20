@@ -8,6 +8,10 @@
 
 **US 7.2.10** As an Admin, I want to add new Types of rooms, so that I can reflect on the available medical procedures in the system.
 
+- A room type is characterized by an internal code, a designation and an optional longer description, it also indicates if it the room type is suitable for surgeries or not
+- Code is a text entered by the Admin. it must be 8 characters long, no spaces, only letters, numbers, and dashes ("-") are allowed. It must be unique.
+- The designation is free text, alphanumeric, 100 characters max.
+
 ## 3. Views
 
 ### Level 1

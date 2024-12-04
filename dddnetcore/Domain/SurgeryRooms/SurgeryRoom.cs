@@ -6,7 +6,7 @@ namespace dddnetcore.Domain.SurgeryRooms
     public class SurgeryRoom : Entity<RoomNumber>, IAggregateRoot {
     
         public RoomType RoomType {get; private set;}
-        public RoomTypeId RoomTypeId {get; private set;}
+        public RoomTypeCode RoomTypeCode {get; private set;}
         public SurgeryRoomCapacity RoomCapacity {get; private set;}
         public SurgeryRoomMaintenanceSlots MaintenanceSlots {get; private set;}
         public SurgeryRoomAssignedEquipment AssignedEquipment {get; private set;}

@@ -17,7 +17,7 @@ namespace DDDSample1.Domain.SurgeryRooms{
 
         public SurgeryRoomDto(SurgeryRoom surgeryRoom) {
             this.Number = surgeryRoom.Id.Id;
-            this.RoomType = new RoomTypeDto{Id = surgeryRoom.RoomType.Id.AsGuid(),Name = surgeryRoom.RoomType.Name.Name};
+            this.RoomType = new RoomTypeDto{Code = surgeryRoom.RoomType.Id.Code, Designation = surgeryRoom.RoomType.Designation.Designation, Description = surgeryRoom.RoomType.Description?.Description, IsSurgical = surgeryRoom.RoomType.IsSurgical.IsSurgical };
             this.Capacity = surgeryRoom.RoomCapacity.Capacity;
             this.CurrentStatus = EnumDescription.GetEnumDescription(surgeryRoom.CurrentStatus);
             this.MaintenanceSlots = surgeryRoom.MaintenanceSlots.MaintenanceSlots;

@@ -12,7 +12,7 @@ namespace dddnetcore.Tests.Domain.SurgeryRooms
         {
             // Arrange
             var roomNumber = new RoomNumber("A123");
-            var roomType = new RoomType(new RoomTypeName("ICU"));
+            var roomType = new RoomType(new RoomTypeCode("ABC12345"),new RoomTypeDesignation("ICU"), new RoomTypeDescription("ICU Description"),new RoomTypeIsSurgical(true));
             var roomCapacity = new SurgeryRoomCapacity(10);
             var maintenanceSlots = new SurgeryRoomMaintenanceSlots("Mon-Fri: 9am-5pm");
             var assignedEquipment = new SurgeryRoomAssignedEquipment("Scalpel, Monitor");
@@ -38,7 +38,7 @@ namespace dddnetcore.Tests.Domain.SurgeryRooms
         {
             // Arrange
             var roomNumber = new RoomNumber("A123");
-            var roomType = new RoomType(new RoomTypeName("ICU"));
+            var roomType = new RoomType(new RoomTypeCode("ABC12345"),new RoomTypeDesignation("ICU"), new RoomTypeDescription("ICU Description"),new RoomTypeIsSurgical(true));
             var maintenanceSlots = new SurgeryRoomMaintenanceSlots("Mon-Fri: 9am-5pm");
             var assignedEquipment = new SurgeryRoomAssignedEquipment("Scalpel, Monitor");
             var currentStatus = SurgeryRoomCurrentStatus.AVAILABLE;
@@ -54,7 +54,7 @@ namespace dddnetcore.Tests.Domain.SurgeryRooms
         {
             // Arrange
             var roomNumber = new RoomNumber("A123");
-            var roomType = new RoomType(new RoomTypeName("ICU"));
+            var roomType = new RoomType(new RoomTypeCode("ABC12345"),new RoomTypeDesignation("ICU"), new RoomTypeDescription("ICU Description"),new RoomTypeIsSurgical(true));
             var roomCapacity = new SurgeryRoomCapacity(5);
             var maintenanceSlots = new SurgeryRoomMaintenanceSlots("Mon-Fri: 9am-5pm");
             var currentStatus = SurgeryRoomCurrentStatus.UNDER_MAINTENANCE;

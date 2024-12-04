@@ -42,12 +42,12 @@ namespace dddnetcore.Controllers
         [Authorize(Policy = "RequiredBackofficeRole")]
         public async Task<ActionResult<SurgeryRoomDto>> Create(CreatingSurgeryRoomDto dto)
         {
-            try{
+            //try{
                 var surgeryRoom = await _service.AddAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = surgeryRoom.Number }, surgeryRoom);
 
-            }catch(BusinessRuleValidationException exception){
+            /*}catch(BusinessRuleValidationException exception){
                 
                 return BadRequest(new {exception.Message});
             }catch(NullReferenceException exception){
@@ -56,7 +56,7 @@ namespace dddnetcore.Controllers
             }catch(Exception){
                 
                 return StatusCode(500, new { message = "An unexpected error occurred." });
-            }
+            }*/
         }
     }
 }

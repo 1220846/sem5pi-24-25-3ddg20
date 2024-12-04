@@ -27,21 +27,21 @@ namespace DDDSample1.Controllers{
             return await _service.GetAllAsync();
         }
 
-        // GET: api/operationtypes/
-        [HttpGet("{id}")]
-        public async Task<ActionResult<RoomTypeDto>> GetById(Guid id)
+        // GET: api/roomtypes/{code}
+        [HttpGet("{code}")]
+        public async Task<ActionResult<RoomTypeDto>> GetById(String code)
         {
-            var roomType = await _service.GetByIdAsync(new RoomTypeId(id));
+            var roomType = await _service.GetByIdAsync(new RoomTypeCode(code));
 
             if (roomType == null)
             {
-                return NotFound($"Not Found Room Type with Id: {id}");
+                return NotFound($"Not Found Room Type with code: {code}");
             }
 
             return roomType;
         }
 
-        // POST: api/operationtypes
+        // POST: api/roomtypes
         [HttpPost]
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<RoomTypeDto>> Create(CreatingRoomTypeDto dto)
@@ -49,7 +49,7 @@ namespace DDDSample1.Controllers{
             try{
                 var roomType = await _service.AddAsync(dto);
 
-                return CreatedAtAction(nameof(GetById), new { id = roomType.Id }, roomType);
+                return CreatedAtAction(nameof(GetById), new { code = roomType.Code }, roomType);
 
             }catch(BusinessRuleValidationException exception){
                 

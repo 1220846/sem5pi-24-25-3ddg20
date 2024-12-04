@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.RoomTypes;
+using DDDSample1.Domain.Shared;
 using Moq;
 using Xunit;
-using System.Collections.Generic;
 
 namespace DDDSample1.Tests.Domain.RoomTypes
 {
@@ -12,89 +12,136 @@ namespace DDDSample1.Tests.Domain.RoomTypes
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IRoomTypeRepository> _roomTypeRepoMock;
-
         private readonly RoomTypeService _roomTypeService;
 
-        public RoomTypeServiceTests(){
+        public RoomTypeServiceTests()
+        {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _roomTypeRepoMock = new Mock<IRoomTypeRepository>();
-            _roomTypeService = new RoomTypeService(_unitOfWorkMock.Object,_roomTypeRepoMock.Object);
+            _roomTypeService = new RoomTypeService(_unitOfWorkMock.Object, _roomTypeRepoMock.Object);
         }
 
         [Fact]
-        public async Task GetByIdAsyncExistingIdShouldReturnRoomTypeDto()
+        public async Task GetByIdAsyncShouldReturnRoomTypeDtoIfExists()
         {
-            var roomTypeId = new RoomTypeId(Guid.NewGuid());
-            var roomType = new RoomType(new RoomTypeName("ICU"));
+            // Arrange
+            var roomTypeId = new RoomTypeCode("ABC12345");
+            var roomType = new RoomType(
+                roomTypeId,
+                new RoomTypeDesignation("ICU"),
+                new RoomTypeDescription("Intensive Care Unit"),
+                new RoomTypeIsSurgical(true)
+            );
 
-            RoomTypeId capturedRoomTypeId = null;
-
-            _roomTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.Is<RoomTypeId>(id => id == roomTypeId)))
-                .Callback<RoomTypeId>(id => capturedRoomTypeId = id)
+            _roomTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.Is<RoomTypeCode>(id => id == roomTypeId)))
                 .ReturnsAsync(roomType);
 
+            // Act
             var result = await _roomTypeService.GetByIdAsync(roomTypeId);
 
+            // Assert
             Assert.NotNull(result);
-            Assert.Equal(roomType.Id.AsGuid(), result.Id);
-            Assert.Equal("ICU", result.Name);
+            Assert.Equal("ABC12345", result.Code);
+            Assert.Equal("ICU", result.Designation);
+            Assert.Equal("Intensive Care Unit", result.Description);
+            Assert.True(result.IsSurgical);
 
-            Assert.NotNull(capturedRoomTypeId);
-            Assert.Equal(roomTypeId, capturedRoomTypeId);
-
-            _roomTypeRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<RoomTypeId>(id => id == roomTypeId)), Times.Once);
+            _roomTypeRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<RoomTypeCode>(id => id == roomTypeId)), Times.Once);
         }
 
         [Fact]
-        public async Task GetByIdAsyncNonExistingIdShouldReturnNull() {
-            var roomTypeId = new RoomTypeId(Guid.NewGuid());
+        public async Task GetByIdAsyncShouldReturnNullIfNotExists()
+        {
+            // Arrange
+            var roomTypeId = new RoomTypeCode("ABC12345");
 
-            RoomTypeId capturedRoomTypeId = null;
-
-            _roomTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.Is<RoomTypeId>(id => id == roomTypeId)))
-                .Callback<RoomTypeId>(id => capturedRoomTypeId = id)
+            _roomTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.Is<RoomTypeCode>(id => id == roomTypeId)))
                 .ReturnsAsync((RoomType)null);
 
+            // Act
             var result = await _roomTypeService.GetByIdAsync(roomTypeId);
 
+            // Assert
             Assert.Null(result);
 
-            Assert.NotNull(capturedRoomTypeId);
-            Assert.Equal(roomTypeId, capturedRoomTypeId);
-
-            _roomTypeRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<RoomTypeId>(id => id == roomTypeId)), Times.Once);
+            _roomTypeRepoMock.Verify(repo => repo.GetByIdAsync(It.Is<RoomTypeCode>(id => id == roomTypeId)), Times.Once);
         }
 
         [Fact]
-        public async Task AddAsyncValidDataShouldAddRoomType()
+        public async Task AddAsyncShouldAddRoomTypeIfValid()
         {
-            var creatingRoomTypeDto = new CreatingRoomTypeDto { Name = "ICU" };
+            var creatingRoomTypeDto = new CreatingRoomTypeDto
+            {
+                Code = "ABC12345",
+                Designation = "ICU",
+                Description = "Intensive Care Unit",
+                IsSurgical = true
+            };
 
             RoomType capturedRoomType = null;
 
-            _roomTypeRepoMock.Setup(repo => repo.AddAsync(It.Is<RoomType>(s => s.Name.Name == "ICU")))
-                .Callback<RoomType>(s => capturedRoomType = s)
-                .ReturnsAsync((RoomType capturedRoomType) => capturedRoomType);
+            _roomTypeRepoMock.Setup(repo => repo.AddAsync(It.IsAny<RoomType>()))
+                .Callback<RoomType>(roomType => capturedRoomType = roomType)
+                .ReturnsAsync((RoomType roomType) => roomType);
 
             var result = await _roomTypeService.AddAsync(creatingRoomTypeDto);
 
             Assert.NotNull(result);
-            Assert.Equal("ICU", result.Name);
+            Assert.Equal("ABC12345", result.Code);
+            Assert.Equal("ICU", result.Designation);
+            Assert.Equal("Intensive Care Unit", result.Description);
+            Assert.True(result.IsSurgical);
 
             Assert.NotNull(capturedRoomType);
-            Assert.Equal("ICU", capturedRoomType.Name.Name);
+            Assert.Equal("ABC12345", capturedRoomType.Id.AsString());
+            Assert.Equal("ICU", capturedRoomType.Designation.Designation);
+            Assert.Equal("Intensive Care Unit", capturedRoomType.Description.Description);
+            Assert.True(capturedRoomType.IsSurgical.IsSurgical);
 
-            _roomTypeRepoMock.Verify(repo => repo.AddAsync(It.Is<RoomType>(s => s.Name.Name == "ICU")), Times.Once);
+            _roomTypeRepoMock.Verify(repo => repo.AddAsync(It.IsAny<RoomType>()), Times.Once);
             _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Once);
         }
 
         [Fact]
-        public async Task GetAllAsyncShouldReturnListOfRoomTypeDtos()
+        public async Task AddAsyncShouldThrowExceptionIfDesignationExists()
+        {
+            var creatingRoomTypeDto = new CreatingRoomTypeDto
+            {
+                Code = "ABC12345",
+                Designation = "ICU",
+                Description = "Intensive Care Unit",
+                IsSurgical = false
+            };
+
+            _roomTypeRepoMock.Setup(repo => repo.AddAsync(It.IsAny<RoomType>()))
+                .ThrowsAsync(new Exception("Violation of UNIQUE KEY constraint 'UQ_RoomType_Designation'"));
+
+            var exception = await Assert.ThrowsAsync<Exception>(() =>
+                _roomTypeService.AddAsync(creatingRoomTypeDto));
+
+            Assert.Contains("UNIQUE KEY constraint", exception.Message);
+
+            _roomTypeRepoMock.Verify(repo => repo.AddAsync(It.IsAny<RoomType>()), Times.Once);
+            _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Never);
+        }
+
+        [Fact]
+        public async Task GetAllAsyncShouldReturnRoomTypeDtosIfExist()
         {
             var roomTypes = new List<RoomType>
             {
-                new RoomType(new RoomTypeName("ICU")),
-                new RoomType(new RoomTypeName("General")),
+                new RoomType(
+                    new RoomTypeCode("ABC12345"),
+                    new RoomTypeDesignation("ICU"),
+                    new RoomTypeDescription("Intensive Care Unit"),
+                    new RoomTypeIsSurgical(true)
+                ),
+                new RoomType(
+                    new RoomTypeCode("DEF67890"),
+                    new RoomTypeDesignation("Operation Room"),
+                    new RoomTypeDescription("Operation Room Description"),
+                    new RoomTypeIsSurgical(false)
+                )
             };
 
             _roomTypeRepoMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(roomTypes);
@@ -103,28 +150,10 @@ namespace DDDSample1.Tests.Domain.RoomTypes
 
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
-            Assert.Contains(result, dto => dto.Name == "ICU");
-            Assert.Contains(result, dto => dto.Name == "General");
+            Assert.Contains(result, dto => dto.Code == "ABC12345" && dto.Designation == "ICU" && dto.IsSurgical);
+            Assert.Contains(result, dto => dto.Code == "DEF67890" && dto.Designation == "Operation Room" && !dto.IsSurgical);
 
             _roomTypeRepoMock.Verify(repo => repo.GetAllAsync(), Times.Once);
         }
-        [Fact]
-        public async Task AddAsyncExistingRoomTypeNameShouldThrowException()
-        {
-            var creatingRoomTypeDto = new CreatingRoomTypeDto { Name = "ICU" };
-
-            _roomTypeRepoMock.Setup(repo => repo.AddAsync(It.IsAny<RoomType>()))
-                .ThrowsAsync(new Exception("Violation of UNIQUE KEY constraint 'UQ_RoomType_Name'."));
-
-            var exception = await Assert.ThrowsAsync<Exception>(() =>
-                _roomTypeService.AddAsync(creatingRoomTypeDto));
-
-            Assert.Contains("UNIQUE KEY constraint", exception.Message);
-
-            _roomTypeRepoMock.Verify(repo => repo.AddAsync(It.Is<RoomType>(s => s.Name.Name == "ICU")), Times.Once);
-            _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Never);
-        }
-
     }
-
 }

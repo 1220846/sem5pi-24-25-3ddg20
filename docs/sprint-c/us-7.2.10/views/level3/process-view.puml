@@ -50,7 +50,7 @@ activate Admin
                             
                             activate Service_
 
-                                Service_ -> RoomType**: create(creatingRoomTypeDto.Name)
+                                Service_ -> RoomType**: create(creatingRoomTypeDto.Code,creatingRoomTypeDto.Designation,\ncreatingRoomTypeDto.Description,creatingRoomTypeDto.IsSurgical)
 
                                 activate RoomType
                                     RoomType --> Service_ : roomType
@@ -58,7 +58,7 @@ activate Admin
 
                                 Service_ -> RoomTypeRepo : addAsync(roomType)
 
-                                Service_ -> RoomTypeDto** : create(roomType.Id,roomType.Name)
+                                Service_ -> RoomTypeDto** : create(roomType.Code,roomType.Designation,roomType.Description,roomType.IsSurgical)
 
                                 activate RoomTypeDto
 
