@@ -1,0 +1,67 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+box "<<system (C4)>>\nBackend Node"
+    participant Router as "MedicalConditionRouter"<<Router>>
+    participant Controller as "MedicalConditionController"<<Controller>>
+    participant Service_ as "MedicalConditionService"<<Service>>
+    participant MedicalCondition as "MedicalCondition"<<Domain>>
+    participant MedicalConditionMap as "MedicalConditionMap"<<Mapper>>
+    database MedicalConditionRepo as "MedicalConditionRepo"<<Domain>>
+end box
+activate Admin
+    Admin -> ComponentUI : asks to add new Medical Condition
+    activate ComponentUI
+        ComponentUI --> Admin : asks to input data
+    deactivate ComponentUI
+    Admin -> ComponentUI : input data
+    activate ComponentUI
+        ComponentUI -> Component : add new Medical Condition
+        activate Component
+            Component -> Model** : create
+            
+            Component -> Service : add new Medical Condition
+            activate Service
+                Service -> HTTP : post('/medicalconditions')
+                activate HTTP
+                    HTTP -> Router : POST /medicalconditions
+                    activate Router
+                        Router -> Controller : addMedicalCondition(req,res,next)
+                        activate Controller
+                            Controller -> Service_ : addMedicalCondition(medicalConditionDto)
+                            
+                            activate Service_
+                                Service_ -> MedicalCondition**: create(medicalConditionDTO)
+                                activate MedicalCondition
+                                    MedicalCondition --> Service_ : medicalCondition
+                                deactivate MedicalCondition
+                                Service_ -> MedicalConditionRepo : save(medicalCondition)
+                                Service_ -> MedicalConditionMap : toDTO(medicalCondition)
+                                activate MedicalConditionMap
+                                    MedicalConditionMap --> Service_ : medicalConditionDTO
+                                deactivate MedicalConditionMap
+                                
+                                Service_ --> Controller : medicalConditionDTO
+                            deactivate Service_
+                            Controller --> Router : medicalConditionDTO
+                        deactivate Controller
+                        Router --> HTTP : 201 (medicalCondition)
+                    deactivate Router
+                    HTTP --> Service : medicalCondition
+                deactivate HTTP
+                Service --> Component : medicalCondition
+            deactivate Service
+            Component --> ComponentUI : medicalCondition
+        deactivate Component
+    Admin <-- ComponentUI : shows success message
+    deactivate ComponentUI
+deactivate Admin
+@enduml
