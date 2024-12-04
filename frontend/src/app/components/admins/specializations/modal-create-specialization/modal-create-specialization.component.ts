@@ -58,7 +58,6 @@ export class ModalCreateSpecializationComponent {
   }
 
   saveData() {
-    console.log(this.specializationForm.value.code);
     if (this.specializationForm.valid) {
       const specialization: CreatingSpecializationDto = {
         name: this.specializationForm.value.name,

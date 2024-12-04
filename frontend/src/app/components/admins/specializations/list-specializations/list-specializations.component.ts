@@ -12,11 +12,23 @@ import { Specialization } from '../../../../domain/Specialization';
 import { SpecializationService } from '../../../../services/specialization.service';
 import { ScrollerModule } from 'primeng/scroller';
 import { AccordionModule } from 'primeng/accordion';
+import { ModalEditSpecializationComponent } from '../modal-edit-specialization/modal-edit-specialization.component';
 
 @Component({
   selector: 'app-list-specializations',
   standalone: true,
-  imports: [AccordionModule, AvatarModule, BadgeModule, TagModule, CommonModule, ScrollerModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule],
+  imports: [
+    AccordionModule,
+    AvatarModule,
+    BadgeModule,
+    TagModule,
+    CommonModule,
+    ScrollerModule,
+    DropdownModule,
+    InputTextModule,
+    FormsModule,
+    OverlayPanelModule,
+    ButtonModule, ModalEditSpecializationComponent],
   templateUrl: './list-specializations.component.html',
   styleUrl: './list-specializations.component.scss'
 })
@@ -43,6 +55,10 @@ export class ListSpecializationsComponent implements OnInit {
   }
 
   onSpecializationCreated(): void {
+    this.loadSpecializations();
+  }
+
+  onSpecializationEdited(): void {
     this.loadSpecializations();
   }
 }

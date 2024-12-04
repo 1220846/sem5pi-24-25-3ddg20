@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
 using Microsoft.AspNetCore.Authorization;
+using dddnetcore.Domain.Specializations;
 
 namespace DDDSample1.Controllers{
 
@@ -58,6 +59,21 @@ namespace DDDSample1.Controllers{
                 return BadRequest(new {exception.Message});
             }catch(Exception){
                 
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
+        //PATCH api/specializations
+        [HttpPatch("{id}")]
+        [Authorize(Policy = "RequiredAdminRole")]
+        public async Task<ActionResult<SpecializationDto>> EditSpecialization(Guid id, EditingSpecializationDto dto) {
+            try {
+                return await _service.EditSpecializationAsync(id, dto);
+            } catch (NullReferenceException e) {
+                return NotFound(new {e.Message});
+            } catch (BusinessRuleValidationException e) {
+                return BadRequest(new {e.Message});
+            } catch (Exception) {
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }

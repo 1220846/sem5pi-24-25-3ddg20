@@ -4,6 +4,7 @@ using DDDSample1.Domain.Shared;
 using System.Reflection.Emit;
 using DDDSample1.Domain.OperationTypes;
 using dddnetcore.Domain.Specializations;
+using System;
 
 namespace DDDSample1.Domain.Specializations
 {
@@ -47,6 +48,21 @@ namespace DDDSample1.Domain.Specializations
 
             await this._unitOfWork.CommitAsync();
 
+            return new SpecializationDto(specialization);
+        }
+
+        public async Task<SpecializationDto> EditSpecializationAsync(Guid id, EditingSpecializationDto dto) {
+            Specialization specialization = await this._repo.GetByIdAsync(new SpecializationId(id)) ?? throw new NullReferenceException("Not Found Specialization: " + id);
+            if (dto.Name != null) {
+                specialization.ChangeName(new SpecializationName(dto.Name));
+            }
+
+            if (dto.Description != null) {
+                specialization.ChangeDescription(new SpecializationDescription(dto.Description));
+            }
+
+            await this._repo.UpdateAsync(specialization);
+            await this._unitOfWork.CommitAsync();
             return new SpecializationDto(specialization);
         }
     }

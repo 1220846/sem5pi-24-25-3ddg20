@@ -21,6 +21,15 @@ namespace DDDSample1.Domain.Specializations{
             this.Description = description;
         }
 
+        public void ChangeName(SpecializationName newName) {
+            ArgumentNullException.ThrowIfNull(newName);
+            this.Name = newName;
+        }
+
+        public void ChangeDescription(SpecializationDescription newDescription) {
+            this.Description = newDescription; // null is allowed
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

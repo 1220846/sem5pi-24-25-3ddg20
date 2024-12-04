@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Specialization } from '../domain/Specialization';
 import { CreatingSpecializationDto } from '../domain/CreatingSpecializationDto';
+import { EditingSpecializationDto } from '../domain/EditingSpecializationDto';
 
 @Injectable({
   providedIn: 'root',
@@ -34,5 +35,16 @@ export class SpecializationService {
         return throwError(() => error.error.message)
       })
     ) 
+  }
+
+  edit(specializationId: string, editDto: EditingSpecializationDto) {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return  this.http.patch<Specialization>(`${this.apiUrl}/${specializationId}`, editDto, {headers})
+    .pipe(
+      catchError((error) => {
+        return throwError(() => error.error.message);
+      })
+    );
   }
 }

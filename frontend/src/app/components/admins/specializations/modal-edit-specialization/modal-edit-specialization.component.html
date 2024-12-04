@@ -1,0 +1,33 @@
+<div class="card flex justify-content-end mr-2">
+    <p-button (onClick)="showDialog()" [outlined]="true" severity="primary" icon="pi pi-pencil"/>
+    <p-dialog header="Edit Specialization" [modal]="true" [(visible)]="visible" [style]="{ width: '32rem', maxHeight: '30rem' }" [appendTo]="'body'">
+        <p-toast></p-toast>
+        <div class="p-fluid dialog-content">
+            <div class="flex flex-column gap-2 mb-2 input-large">
+                <form [formGroup]="specializationForm" class="dialog-form">
+                    <div class="flex flex-column gap-2 mb-2 input-large">
+                        <label for="name">New Name</label>
+                        <input pInputText id="name" aria-describedby="name-help" formControlName="name" type="text" />
+                        <small
+                            *ngIf="specializationForm.controls['name'].invalid && (specializationForm.controls['name'].dirty || specializationForm.controls['name'].touched)"
+                            class="p-error">
+                            Is required.
+                        </small>
+                    </div>
+                    <div class="flex flex-wrap mt-5 inputButton">
+                        <p-button (onClick)="showDescriptionBox()" label="Edit Description" severity="secondary" [style]="{ width: '24rem', }"></p-button>
+                        <p-dialog header="Specialization Description" [(visible)]="descriptionBoxVisible" [style]="{ width: '60rem', 'max-height': '40rem' }">
+                            <textarea pInputTextarea id="description" formControlName="description" rows="5" [autoResize]="true"></textarea>
+                        </p-dialog>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Close" severity="secondary" (onClick)="closeDialog()" />
+                <p-button label="Save" (onClick)="saveData()" />
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>
