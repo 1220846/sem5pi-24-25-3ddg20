@@ -27,6 +27,7 @@ namespace dddnetcore.Infraestructure.Staffs
             builder.HasMany(b => b.AvailabilitySlots).WithOne().HasForeignKey("StaffId").OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(b => b.Specialization).WithMany().HasForeignKey("SpecializationId").IsRequired();
             builder.HasOne(b => b.User).WithOne(b => b.Staff).HasForeignKey<Staff>(b => b.Username).IsRequired();
+            builder.HasMany(b => b.AppointmentStaffs).WithOne(b => b.Staff).HasForeignKey("StaffId").OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

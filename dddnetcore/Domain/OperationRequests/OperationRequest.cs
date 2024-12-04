@@ -57,5 +57,9 @@ namespace DDDSample1.Domain.OperationRequests{
             ArgumentNullException.ThrowIfNull(deadline);
             this.DeadlineDate=deadline;
         }
+        public void ChangeStatus(OperationRequestStatus status){
+            ArgumentNullException.ThrowIfNull(status);
+            this.Status=status;
+        }
     }
 }

@@ -8,6 +8,8 @@
 
 **US 7.2.8** As a Doctor, I want to create a Surgery Appointment, so that the Patient doesn’t need to wait for the automatically generated planning.
 
+ - The doctors specify the room, date and team of the surgery.
+
 ## 3. Views
 
 ### Level 1

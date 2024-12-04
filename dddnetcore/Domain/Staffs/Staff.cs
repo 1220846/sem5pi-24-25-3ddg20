@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using dddnetcore.Domain.AvailabilitySlots;
 using dddnetcore.Domain.Staffs;
+using DDDSample1.Domain.AppointmentsStaffs;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
 using DDDSample1.Domain.Users;
@@ -20,6 +21,8 @@ namespace DDDSample1.Domain.Staffs {
         public Specialization Specialization {get; private set;}
         public User User {get; private set;}
         public Username Username {get; private set;}
+        public ICollection<AppointmentStaff> AppointmentStaffs {get; private set;} = new List<AppointmentStaff>();
+
 
         private Staff() {}
 

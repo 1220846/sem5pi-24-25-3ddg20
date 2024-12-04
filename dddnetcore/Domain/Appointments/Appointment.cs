@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using dddnetcore.Domain.SurgeryRooms;
+using DDDSample1.Domain.AppointmentsStaffs;
 using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Domain.Shared;
 
@@ -14,6 +16,8 @@ namespace DDDSample1.Domain.Appointments{
         public OperationRequestId OperationRequestId { get;  private set; }
         public AppointmentStatus Status { get;  private set; }
         public AppointmentDateAndTime DateAndTime { get;  private set; }
+        public ICollection<AppointmentStaff> AppointmentStaffs {get; private set;} = new List<AppointmentStaff>();
+
         private Appointment(){}
 
         public Appointment(SurgeryRoom surgeryRoom,OperationRequest operationRequest, AppointmentDateAndTime dateAndTime){
