@@ -8,15 +8,15 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
-import { CardModule } from 'primeng/card';
 import { Specialization } from '../../../../domain/Specialization';
 import { SpecializationService } from '../../../../services/specialization.service';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { ScrollerModule } from 'primeng/scroller';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-list-specializations',
   standalone: true,
-  imports: [AvatarModule, BadgeModule, TagModule, CommonModule, ScrollPanelModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule, CardModule],
+  imports: [AccordionModule, AvatarModule, BadgeModule, TagModule, CommonModule, ScrollerModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule],
   templateUrl: './list-specializations.component.html',
   styleUrl: './list-specializations.component.scss'
 })
@@ -29,6 +29,10 @@ export class ListSpecializationsComponent implements OnInit {
     this.loadSpecializations();
   }
 
+  specializationText(specialization: Specialization): string {
+    return specialization.description ? specialization.description : "No description";
+  }
+
   loadSpecializations(): void {
     this.specializationService.getAll().subscribe({
       next: (data) => {
@@ -36,5 +40,9 @@ export class ListSpecializationsComponent implements OnInit {
       },
       error: (error) => console.error('Error fetching specializations:', error)
     });
+  }
+
+  onSpecializationCreated(): void {
+    this.loadSpecializations();
   }
 }

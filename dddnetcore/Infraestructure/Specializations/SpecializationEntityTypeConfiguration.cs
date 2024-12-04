@@ -17,6 +17,7 @@ namespace DDDSample1.Infrastructure.Specializations
 
             builder.Property(b => b.Name).HasConversion(b => b.Name, b => new SpecializationName(b)).IsRequired().HasMaxLength(255);
             builder.Property(b => b.Code).HasConversion(b => b.Code, b => new SpecializationCode(b)).IsRequired();
+            builder.HasIndex(b => b.Code).IsUnique();
             builder.Property(b => b.Description).HasConversion(b => b.Description, b => new SpecializationDescription(b)).IsRequired(false);
 
             builder.HasIndex(b => b.Name).IsUnique();

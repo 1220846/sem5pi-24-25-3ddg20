@@ -1,16 +1,28 @@
-<div class="specialization-conteiner m  -5">
-    <p-scrollPanel class="card-container" [style]="{ height: '480px', width: '100%' }">
-        <div class="grid mt-5 justify-content-center" style="gap: 2rem;">
-            <div class="col-3" *ngFor="let specialization of specializations">
-                <p-card [style]="{ width: '100%', height: '150px' }">
+<div class="card flex justify-content-center ml-5 mr-5 mt-2">
+    <p-scroller [items]="specializations" [itemSize]="90" [style]="{ height: '480px', width: '100%' }"
+        scrollHeight="410px" styleClass="border-1 surface-border">
+        <ng-template let-specialization pTemplate="item">
+            <p-accordion class="w-full">
+                <p-accordionTab>
                     <ng-template pTemplate="header">
-                        <div class="flex justify-content-center align-items-center flex-column">
-                            <i class="pi pi-id-card mt-5" style="font-size: 2rem; color: #0578f2;"></i>
-                            <h3 class="mt-5 font">{{ specialization.name }}</h3>
-                        </div>
+                        <span class="flex align-items-center gap-1 w-full">
+                            <div class="flex flex-column">
+                                <span class="font-bold white-space-nowrap">
+                                    {{ specialization.name }}
+                                    <span class="font-normal ml-3;">
+                                        ({{ specialization.code }})
+                                    </span>
+                                </span>
+                            </div>
+                        </span>
+                        <!--<app-edit-staff-profile [staff]=staff (staffProfileEdited)="onStaffProfileEdited()" (availabilitySlotsChanged)="onAvailabilitySlotChange(staff)"></app-edit-staff-profile>
+                        <app-deactivate-staff-profile [staff]=staff (staffProfileDeacivated)="onStaffProfileDeacivated()"></app-deactivate-staff-profile>-->
                     </ng-template>
-                </p-card>
-            </div>
-        </div>
-    </p-scrollPanel>
+                    <div class="flex ml-3 gap-6">
+                        <p>{{ specializationText(specialization) }}</p>
+                    </div>
+                </p-accordionTab>
+            </p-accordion>
+        </ng-template>
+    </p-scroller>
 </div>

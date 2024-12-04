@@ -1,0 +1,41 @@
+<div class="card flex justify-content-end mr-5">
+    <p-toast></p-toast>
+    <p-button (onClick)="showDialog()" label="Create Specialization" />
+    <p-dialog header="Create Specialization" [modal]="true" [(visible)]="visible" [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <span class="p-text-secondary block mb-5">Insert specialization data.</span>
+        <form [formGroup]="specializationForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <div class="flex flex-column gap-2 mb-2 input-large">
+                        <label for="name">Name</label>
+                        <input pInputText id="name" aria-describedby="name-help" formControlName="name" type="text" />
+                        <small
+                            *ngIf="specializationForm.controls['name'].invalid && (specializationForm.controls['name'].dirty || specializationForm.controls['name'].touched)"
+                            class="p-error">
+                            Is required.
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 mb-2 input-large">
+                        <label for="code">Code</label>
+                        <input pInputText id="code" aria-describedby="name-help" formControlName="code" type="text" />
+                        <small
+                        *ngIf="specializationForm.get('code')!.hasError('invalidPattern')"
+                            class="p-error">
+                            Must be a sequence of 6-18 digits.
+                        </small>
+                    </div>
+                    <div class="flex flex-wrap mt-5 gap-7 inputButton">
+                        <p-button (onClick)="showDescriptionBox()" label="Edit Description" severity="secondary" [style]="{ width: '24rem', }"></p-button>
+                        <p-dialog header="Specialization Description" [(visible)]="descriptionBoxVisible" [style]="{ width: '60rem', 'max-height': '40rem' }">
+                            <textarea pInputTextarea id="description" formControlName="description" rows="5" [autoResize]="true"></textarea>
+                        </p-dialog>
+                    </div>
+                    <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                        <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                        <p-button label="Save" (onClick)="saveData()" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+</div>

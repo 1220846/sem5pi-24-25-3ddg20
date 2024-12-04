@@ -14,7 +14,7 @@ namespace DDDSample1.Domain.Specializations{
             this.Id = specialization.Id.AsGuid();
             this.Name = specialization.Name.Name;
             this.Code = specialization.Code.Code;
-            this.Description = specialization.Description!.Description!;
+            this.Description = specialization.Description == null ? null : specialization.Description.Description!;
         }
     }
 }

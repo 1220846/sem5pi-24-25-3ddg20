@@ -24,7 +24,7 @@ namespace DDDSample1.Domain.Specializations
             var list = await this._repo.GetAllAsync();
             
             List<SpecializationDto> listDto = list.ConvertAll<SpecializationDto>(specialization => 
-                new SpecializationDto{Id = specialization.Id.AsGuid(), Name = specialization.Name.Name});
+                new SpecializationDto(specialization));
 
             return listDto;
         }
@@ -36,7 +36,7 @@ namespace DDDSample1.Domain.Specializations
             if(specialization == null)
                 return null;
 
-            return new SpecializationDto{Id = specialization.Id.AsGuid(), Name = specialization.Name.Name};
+            return new SpecializationDto(specialization);
         }
 
         public async Task<SpecializationDto> AddAsync(CreatingSpecializationDto dto)
@@ -47,7 +47,7 @@ namespace DDDSample1.Domain.Specializations
 
             await this._unitOfWork.CommitAsync();
 
-            return new SpecializationDto { Id = specialization.Id.AsGuid(), Name = specialization.Name.Name};
+            return new SpecializationDto(specialization);
         }
     }
 }

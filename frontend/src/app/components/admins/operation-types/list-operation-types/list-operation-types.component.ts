@@ -82,7 +82,7 @@ export class ListOperationTypesComponent implements OnInit {
   loadSpecializations(): void {
     this.specializationService.getAll().subscribe({
       next: (data) => {
-        this.specializations = [{ id: '', name: 'None' }, ...data];
+        this.specializations = [{ id: '', name: 'None', code: '000000' }, ...data];
         this.filterSpecializationId = ''; 
       },
       error: (error) => console.error('Error fetching specializations:', error)

@@ -47,6 +47,7 @@ namespace DDDSample1.Controllers{
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<SpecializationDto>> Create(CreatingSpecializationDto dto)
         {
+            Console.WriteLine(dto.Code);
             try{
                 var specialization = await _service.AddAsync(dto);
 
