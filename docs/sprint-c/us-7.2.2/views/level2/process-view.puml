@@ -1,0 +1,23 @@
+@startuml process-view
+autonumber
+actor "Admin" as Admin
+participant Frontend as "Frontend" <<system (C4)>>
+participant BackendNode as "Backend Node" <<system (C4)>>
+activate Admin
+    Admin -> Frontend : asks to add new allergy
+    activate Frontend
+        Frontend --> Admin : asks to input data
+    deactivate Frontend
+    Admin -> Frontend : input data
+    
+    activate Frontend
+    
+        Frontend-> BackendNode : POST /allergies
+        activate BackendNode
+            Frontend <-- BackendNode : 201 Created
+        deactivate BackendNode
+    Frontend --> Admin : shows success message
+    
+    deactivate Frontend
+deactivate Admin
+@enduml
