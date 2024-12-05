@@ -51,15 +51,16 @@ export class ModalEditSpecializationComponent {
   descriptionBoxVisible: boolean = false;
   
   showDialog() {
+    this.resetForm();
     this.visible = true;
     this.descriptionBoxVisible = false;
-    this.resetForm();
-    //TODO ver pq é q isto n tá a dar
   }
 
   resetForm() {
-    this.specializationForm.value.name = '';
-    this.specializationForm.value.description = this.specialization?.description;
+    this.specializationForm.patchValue({
+      name: '',
+      description: this.specialization?.description || '' 
+    });
   }
 
   showDescriptionBox() {
@@ -75,11 +76,13 @@ export class ModalEditSpecializationComponent {
     if (this.specializationForm.valid) {
       const specialization: EditingSpecializationDto = {
         name: this.specializationForm.value.name ? this.specializationForm.value.name : null,
-        description: this.specializationForm.value.description == (this.specialization?.description ? this.specialization?.description : '') ? this.specializationForm.value.description : null
+        description: this.specializationForm.value.description == (this.specialization?.description ? this.specialization?.description : '') ? null : this.specializationForm.value.description
       }
+      console.log(specialization.description);
       this.specializationService.edit(this.specialization?.id!, specialization).subscribe(
         (response) => {
           this.closeDialog();
+          this.specializationEdited.emit();
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Specialization edited successfully', life: 2000});
         },
         (error) => {
