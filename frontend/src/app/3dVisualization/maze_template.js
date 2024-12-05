@@ -13,15 +13,22 @@ import { parameter, texture } from "three/webgpu";
  */
 
 export default class Maze {
-    constructor(parameters) {
+    constructor(parameters, camera, renderer, scene3D) {
+
         this.onLoad = function (description) {
-            
+
+            // Create RayCaster
+            this.raycaster = new THREE.Raycaster();
+            this.mouse = new THREE.Vector2();
+            this.camera = camera;
+            this.renderer = renderer;
+            this.scene3D = scene3D;
 
             // Store the maze's map and size
             this.map = description.map;
             this.size = description.size;
 
-            
+
             // Store the player's initial position and direction
             //this.initialPosition = this.cellToCartesian(description.initialPosition);
             //this.initialDirection = description.initialDirection;
@@ -30,7 +37,7 @@ export default class Maze {
             // Store the maze's exit location
             this.exitLocation = this.cellToCartesian(description.exitLocation);
 
-            
+
             // Create a group of objects
             this.object = new THREE.Group();
 
@@ -44,7 +51,7 @@ export default class Maze {
 
             // Read whih rooms are busy
             const busyRooms = new Set(description.busyRooms);
-            
+
 
             // Build the maze
             let wallObject;
@@ -93,7 +100,7 @@ export default class Maze {
                             this.door.object.scale.set(0.0032, 0.0029, 0.0032);
                             this.door.object.position.set(i - description.size.width / 2.0, 0.0, j - description.size.height / 2.0 + 0.5);
                             this.door.object.rotation.y = (Math.PI * (doorId % 2 == 0 ? 1 : 3)) / 2;
-                        }).catch((error) => {   
+                        }).catch((error) => {
                             console.error("Error loading door model:", error);
                         });
                     }
@@ -115,12 +122,18 @@ export default class Maze {
                             this.object.add(this.table.object);
                             this.table.object.scale.set(0.7, 0.7, 0.7);
                             this.table.object.position.set(i - description.size.width / 2.0 - 1.9, 0.0, j - description.size.height / 2.0 - 3.125);
-                        }).catch((error) => {   
+
+                            // Box for click
+                            const boxTable = this.createBoxTable(this.table.object, 2.5);
+                            boxTable.name = `Table_${tableId}`;
+                            this.object.add(boxTable);
+
+                       }).catch((error) => {
                             console.error("Error loading table model:", error);
                         });
 
                         // Patients
-                        if (busyRooms.has(tableId)) { 
+                        if (busyRooms.has(tableId)) {
                             const loader = new GLTFLoader();
                             const loadPatientPromise = new Promise((resolve, reject) => {
                                 loader.load("/models/gltf/Patient/patient.glb", (glb) => {
@@ -195,6 +208,7 @@ export default class Maze {
 
             // onLoad callback
             description => this.onLoad(description),
+            
 
             // onProgress callback
             xhr => this.onProgress(this.url, xhr),
@@ -202,6 +216,7 @@ export default class Maze {
             // onError callback
             error => this.onError(this.url, error)
         );
+        window.addEventListener('click', this.onMouseClick);
     }
 
     // Convert cell [row, column] coordinates to cartesian (x, y, z) coordinates
@@ -212,6 +227,78 @@ export default class Maze {
     // Convert cartesian (x, y, z) coordinates to cell [row, column] coordinates
     cartesianToCell(position) {
         return [Math.floor(position.z / this.scale.z + this.size.height / 2.0), Math.floor(position.x / this.scale.x + this.size.width / 2.0)];
+    }
+
+    createBoxTable(table, increaseFactor = 1) {
+        const box = new THREE.Box3().setFromObject(table);
+    
+        // Get the size and center of the current box
+        const size = new THREE.Vector3();
+        const center = new THREE.Vector3();
+        box.getSize(size);
+        box.getCenter(center);
+    
+        // New Height
+        const adjustedHeight = size.y * increaseFactor;
+    
+        // Create new geometry
+        const geometry = new THREE.BoxGeometry(size.x, adjustedHeight, size.z);
+        const material = new THREE.LineBasicMaterial({
+            color: 0x808080,
+            transparent: true,
+            opacity: 0,
+        });
+        const boxMesh = new THREE.Mesh(geometry, material);
+    
+        // Adjust the position of the box to remain aligned
+        boxMesh.position.copy(center);
+        boxMesh.position.y += (adjustedHeight - size.y) / 2;
+    
+        return boxMesh;
+    }    
+
+    onMouseClick = (event) => {
+    
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    
+        this.raycaster.setFromCamera(this.mouse, this.camera.object);
+        const intersects = this.raycaster.intersectObjects(this.scene3D.children, true);
+    
+        if (intersects.length > 0) {
+            const clickedObject = intersects[0].object;
+            console.log("Object clicked:", clickedObject.name);
+    
+            if (clickedObject.name && clickedObject.name.includes("Table")) {
+                const tablePosition = clickedObject.position;
+                console.log("Selected operating table:", clickedObject.name, "Position:", tablePosition);
+    
+                this.moveCameraToRoom(tablePosition, this.camera);
+            } else {
+                console.log("The clicked object is not a surgical table.");
+            }
+        } else {
+            console.log("No objects were clicked.");
+        }
+    };
+
+    moveCameraToRoom(position, camera) {
+        
+        const [row, column] = this.cartesianToCell(position);
+        
+        // Calculates the center coordinates relative to the map size and scale
+        const centerX = (column - this.size.width / 2.0 + 0.5) * this.scale.x;
+        const centerZ = (row - this.size.height / 2.0 + 0.5) * this.scale.z;
+
+        // Height set to 3.5
+        camera.object.position.set(centerX,3.5,centerZ);
+        
+        //Adjust the camera's up
+        camera.object.up.set(0, 0, -1);
+
+        // Fix camera to look at the center of the cell
+        camera.object.lookAt(new THREE.Vector3(centerX, 0, centerZ));
     }
 
     /* To-do #23 - Measure the player’s distance to the walls

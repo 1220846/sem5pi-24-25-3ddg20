@@ -178,31 +178,11 @@ export default class Hospital {
         // Create a 3D scene (the game itself)
         this.scene3D = new THREE.Scene();
 
-        // Create the maze
-        this.maze = new Maze(this.mazeParameters);
-
-        // Create the player
-        this.player = new Player(this.playerParameters);
-
-        // Create the lights
-        this.lights = new Lights(this.lightsParameters);
-
-        // Create the fog
-        this.fog = new Fog(this.fogParameters);
-
         // Create the cameras corresponding to the four different views: fixed view, first-person view, third-person view and top view
         this.fixedViewCamera = new Camera(this.fixedViewCameraParameters, window.innerWidth, window.innerHeight);
         this.firstPersonViewCamera = new Camera(this.firstPersonViewCameraParameters, window.innerWidth, window.innerHeight);
         this.thirdPersonViewCamera = new Camera(this.thirdPersonViewCameraParameters, window.innerWidth, window.innerHeight);
         this.topViewCamera = new Camera(this.topViewCameraParameters, window.innerWidth, window.innerHeight);
-
-        // Create the mini-map camera
-        this.miniMapCamera = new Camera(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);
-
-        // Create the statistics and make its node invisible
-        this.statistics = new Stats();
-        this.statistics.dom.style.visibility = "hidden";
-        document.body.appendChild(this.statistics.dom);
 
         // Create a renderer and turn on shadows in the renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -217,6 +197,30 @@ export default class Hospital {
         document.body.appendChild(this.renderer.domElement);
 
         this.renderer.setClearColor(0x99c0d4);
+
+        // Create the maze
+        this.maze = new Maze(this.mazeParameters, this.fixedViewCamera, this.renderer, this.scene3D);
+
+        // Create the player
+        this.player = new Player(this.playerParameters);
+
+        // Create the lights
+        this.lights = new Lights(this.lightsParameters);
+
+        // Create the fog
+        this.fog = new Fog(this.fogParameters);
+
+
+
+        // Create the mini-map camera
+        this.miniMapCamera = new Camera(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);
+
+        // Create the statistics and make its node invisible
+        this.statistics = new Stats();
+        this.statistics.dom.style.visibility = "hidden";
+        document.body.appendChild(this.statistics.dom);
+
+
 
         // Set the mouse move action (none)
         this.dragMiniMap = false;
