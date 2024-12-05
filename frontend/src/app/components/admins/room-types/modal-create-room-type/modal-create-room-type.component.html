@@ -5,15 +5,58 @@
         [style]="{ width: '32rem', maxHeight: '40rem' }">
         <form [formGroup]="roomTypeForm" class="dialog-form">
             <div class="p-fluid dialog-content">
+                <div class="flex flex-wrap gap-7">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="code">Code</label>
+                        <input pInputText id="code" aria-describedby="code-help" formControlName="code" type="text" />
+                        <small
+                            *ngIf="roomTypeForm.get('code')!.hasError('required') &&         roomTypeForm.get('code')!.touched && submitted"
+                            class="p-error">
+                            Code is required.
+                        </small>
+                        <small
+                            *ngIf="(roomTypeForm.get('code')!.hasError('minlength') || roomTypeForm.get('code')!.hasError('maxlength')) && roomTypeForm.get('code')!.touched"
+                            class="p-error">
+                            Code must be exactly 8 characters long.
+                        </small>
+                        <small
+                            *ngIf="roomTypeForm.get('code')!.hasError('pattern') && roomTypeForm.get('code')!.touched"
+                            class="p-error">
+                            Code must contain only letters, numbers, and dashes ("-").
+                        </small>
+                    </div>
+                    <div class="flex flex-column gap-2 input-large">
+                        <label for="isSurgical">Is Surgical?</label>
+                        <div class="flex flex-wrap gap-3 mt-2">
+                            <p-radioButton formControlName="isSurgical" name="isSurgical" value="true" inputId="yes"
+                                [required]="true" [disabled]="false" />
+                            <label for="yes">Yes</label>
+                            <p-radioButton formControlName="isSurgical" name="isSurgical" value="false" inputId="no"
+                                [required]="true" [disabled]="false" />
+                            <label for="no">No</label>
+                        </div>
+                        <small
+                            *ngIf="roomTypeForm.get('isSurgical')!.hasError('required') && (roomTypeForm.get('isSurgical')!.dirty || submitted)"
+                            class="p-error">
+                            Selection is required.
+                        </small>
+                    </div>
+                </div>
                 <div class="flex flex-column gap-2 mb-2 input-large">
-                    <label for="name">Name</label>
-                    <input pInputText id="name" aria-describedby="name-help" formControlName="name" />
+                    <label for="designation">Designation</label>
+                    <input pInputText id="designation" aria-describedby="designation-help"
+                        formControlName="designation" />
                     <small
-                        *ngIf="roomTypeForm.controls['name'].invalid && (roomTypeForm.controls['name'].dirty || roomTypeForm.controls['name'].touched)"
+                        *ngIf="roomTypeForm.controls['designation'].invalid && (roomTypeForm.controls['designation'].dirty || roomTypeForm.controls['designation'].touched || submitted)"
                         class="p-error">
-                        Name is required.
+                        Designation is required.
                     </small>
-                </div>       
+                </div>
+                <div class="flex flex-wrap gap-2 input-large">
+                    <label for="description">Description</label>
+                    <textarea pInputTextarea id="description" formControlName="description" rows="5"></textarea>
+                    <small class="text-secondary">This field is optional.</small>
+                </div>
             </div>
         </form>
         <ng-template pTemplate="footer">

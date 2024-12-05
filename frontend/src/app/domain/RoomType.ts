@@ -1,4 +1,6 @@
 export interface RoomType{
-    id: string;
-    name: string;
+    code: string
+    designation: string;
+    description?: string;
+    isSurgical: boolean
 }

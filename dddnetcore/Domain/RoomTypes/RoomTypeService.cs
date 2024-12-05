@@ -21,7 +21,7 @@ namespace DDDSample1.Domain.RoomTypes
             var list = await this._repo.GetAllAsync();
             
             List<RoomTypeDto> listDto = list.ConvertAll<RoomTypeDto>(roomType => 
-                new RoomTypeDto{Code = roomType.Id.Code, Designation = roomType.Designation.Designation, Description = roomType.Description.Description, IsSurgical = roomType.IsSurgical.IsSurgical });
+                new RoomTypeDto{Code = roomType.Id.Code, Designation = roomType.Designation.Designation,Description = roomType.Description?.Description, IsSurgical = roomType.IsSurgical.IsSurgical });
 
             return listDto;
         }
@@ -33,7 +33,7 @@ namespace DDDSample1.Domain.RoomTypes
             if(roomType == null)
                 return null;
 
-            return new RoomTypeDto{Code = roomType.Id.Code, Designation = roomType.Designation.Designation, Description = roomType.Description.Description, IsSurgical = roomType.IsSurgical.IsSurgical };
+            return new RoomTypeDto{Code = roomType.Id.Code, Designation = roomType.Designation.Designation,Description = roomType.Description?.Description, IsSurgical = roomType.IsSurgical.IsSurgical };
         }
 
         public async Task<RoomTypeDto> AddAsync(CreatingRoomTypeDto dto)
@@ -44,7 +44,7 @@ namespace DDDSample1.Domain.RoomTypes
 
             await this._unitOfWork.CommitAsync();
 
-            return new RoomTypeDto { Code = roomType.Id.Code, Designation = roomType.Designation.Designation, Description = roomType.Description.Description, IsSurgical = roomType.IsSurgical.IsSurgical };
+            return new RoomTypeDto { Code = roomType.Id.Code, Designation = roomType.Designation.Designation,Description = roomType.Description?.Description, IsSurgical = roomType.IsSurgical.IsSurgical };
         }
     }
 }

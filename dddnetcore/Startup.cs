@@ -51,6 +51,7 @@ using DDDSample1.Domain.RoomTypes;
 using DDDSample1.Infrastructure.RoomTypes;
 using DDDSample1.Domain.AppointmentsStaffs;
 using DDDSample1.Infrastructure.AppointmentsStaffs;
+using dddnetcore.Infraestructure.Appointments;
 
 namespace DDDSample1
 {

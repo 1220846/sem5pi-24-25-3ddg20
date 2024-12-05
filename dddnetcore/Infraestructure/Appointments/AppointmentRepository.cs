@@ -8,7 +8,7 @@ using DDDSample1.Infrastructure;
 using DDDSample1.Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace dddnetcore.Infraestructure.AvailabilitySlots
+namespace dddnetcore.Infraestructure.Appointments
 {
     public class AppointmentRepository : BaseRepository<Appointment, AppointmentId>, IAppointmentRepository 
     {

@@ -1,3 +1,6 @@
 export interface CreatingRoomTypeDto{
-    name: string;
+    code: string;
+    designation: string;
+    description?: string;
+    isSurgical: boolean;
 }
