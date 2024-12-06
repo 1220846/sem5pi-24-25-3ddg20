@@ -56,79 +56,85 @@ namespace DDDSample1.Tests
             );
         }
 
-        private User ExampleUser1() {
-         return new User(new Username("O202499999@sarm.com"), new Email("john@doe.com"), Role.TECHNICIAN);
+        private User ExampleUser1()
+        {
+            return new User(new Username("O202499999@sarm.com"), new Email("john@doe.com"), Role.TECHNICIAN);
         }
 
-        private User ExampleUser2() {
-         return new User(new Username("O202499998@sarm.com"), new Email("joana@doe.com"), Role.TECHNICIAN);
+        private User ExampleUser2()
+        {
+            return new User(new Username("O202499998@sarm.com"), new Email("joana@doe.com"), Role.TECHNICIAN);
         }
 
-        private User ExampleUser3() {
-         return new User(new Username("iiiillia@doe.com"), new Email("iiiillia@doe.com"), Role.PATIENT);
+        private User ExampleUser3()
+        {
+            return new User(new Username("iiiillia@doe.com"), new Email("iiiillia@doe.com"), Role.PATIENT);
         }
 
-        private Staff ExampleStaff1() {
-        var staffId = "O202499999";
-        var staffFirstName = new StaffFirstName("John"); 
-        var staffLastName = new StaffLastName("Doe"); 
-        var staffFullName = new StaffFullName("John Doe"); 
-        var contactInformation = new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678"));
-        var licenseNumber = new LicenseNumber("ABC123");
-        var availabilitySlots = new List<AvailabilitySlot>();
-        var specialization = new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
-        var user = ExampleUser1();
-        var staffStatus = StaffStatus.ACTIVE;
+        private Staff ExampleStaff1()
+        {
+            var staffId = "O202499999";
+            var staffFirstName = new StaffFirstName("John");
+            var staffLastName = new StaffLastName("Doe");
+            var staffFullName = new StaffFullName("John Doe");
+            var contactInformation = new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678"));
+            var licenseNumber = new LicenseNumber("ABC123");
+            var availabilitySlots = new List<AvailabilitySlot>();
+            var specialization = new Specialization(new SpecializationName("Unspecified"), new SpecializationCode("123456"), new SpecializationDescription("qwerty"));
+            var user = ExampleUser1();
+            var staffStatus = StaffStatus.ACTIVE;
 
 
-        return new Staff(
-            staffId,
-            staffFirstName,
-            staffLastName,
-            staffFullName,
-            contactInformation,
-            licenseNumber,
-            availabilitySlots,
-            specialization,
-            user,
-            staffStatus
-        );
+            return new Staff(
+                staffId,
+                staffFirstName,
+                staffLastName,
+                staffFullName,
+                contactInformation,
+                licenseNumber,
+                availabilitySlots,
+                specialization,
+                user,
+                staffStatus
+            );
         }
 
-        private Staff ExampleStaff2() {
-        var staffId = "O202499999";
-        var staffFirstName = new StaffFirstName("John"); 
-        var staffLastName = new StaffLastName("Doe"); 
-        var staffFullName = new StaffFullName("John Doe"); 
-        var contactInformation = new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678"));
-        var licenseNumber = new LicenseNumber("ABC123");
-        var availabilitySlots = new List<AvailabilitySlot>();
-        var specialization = new Specialization(new SpecializationName("ACL Reconstruction Surgery"), new SpecializationCode("789012"), new SpecializationDescription("asdf"));
-        var user = ExampleUser2();
-        var staffStatus = StaffStatus.ACTIVE;
+        private Staff ExampleStaff2()
+        {
+            var staffId = "O202499999";
+            var staffFirstName = new StaffFirstName("John");
+            var staffLastName = new StaffLastName("Doe");
+            var staffFullName = new StaffFullName("John Doe");
+            var contactInformation = new StaffContactInformation(new StaffEmail("john@doe.com"), new StaffPhone("912345678"));
+            var licenseNumber = new LicenseNumber("ABC123");
+            var availabilitySlots = new List<AvailabilitySlot>();
+            var specialization = new Specialization(new SpecializationName("ACL Reconstruction Surgery"), new SpecializationCode("789012"), new SpecializationDescription("asdf"));
+            var user = ExampleUser2();
+            var staffStatus = StaffStatus.ACTIVE;
 
 
-        return new Staff(
-            staffId,
-            staffFirstName,
-            staffLastName,
-            staffFullName,
-            contactInformation,
-            licenseNumber,
-            availabilitySlots,
-            specialization,
-            user,
-            staffStatus
-        );
+            return new Staff(
+                staffId,
+                staffFirstName,
+                staffLastName,
+                staffFullName,
+                contactInformation,
+                licenseNumber,
+                availabilitySlots,
+                specialization,
+                user,
+                staffStatus
+            );
         }
 
-        private Patient ExamplePatient() {
+        private Patient ExamplePatient()
+        {
             var medicalRecordNumber = new MedicalRecordNumber("MRN123456");
             var appointmentHistory = new Address("Address : 1200-100");
             var dateOfBirth = new DateOfBirth(new DateTime(1990, 1, 1));
             var emergencyContact = new EmergencyContact("917654321");
-            var gender = Gender.MALE; 
-            var medicalConditions = new MedicalConditions(""); 
+            var gender = Gender.MALE;
+            var medicalConditions = new MedicalConditions("");
             var contactInformation = new PatientContactInformation(new PatientEmail("john.doe@example.com"), new PatientPhone("912345678"));
             var firstName = new PatientFirstName("John");
             var lastName = new PatientLastName("Doe");
@@ -150,14 +156,14 @@ namespace DDDSample1.Tests
             );
         }
 
-        
+
 
 
         [Fact]
         public async Task GetByIdAsync_ExistingId_ReturnsOperationRequestDto()
         {
             var operationRequestId = new OperationRequestId(Guid.NewGuid());
-            var operationRequest = new OperationRequest(ExamplePatient().Id,ExampleStaff1().Id,new OperationTypeId(Guid.NewGuid()),new DeadlineDate(DateTime.UtcNow.AddDays(1)), Priority.ELECTIVE);
+            var operationRequest = new OperationRequest(ExamplePatient().Id, ExampleStaff1().Id, new OperationTypeId(Guid.NewGuid()), new DeadlineDate(DateTime.UtcNow.AddDays(1)), Priority.ELECTIVE);
             _operationRequestRepoMock.Setup(repo => repo.GetByIdAsync(operationRequestId))
                 .ReturnsAsync(operationRequest);
 
@@ -169,13 +175,13 @@ namespace DDDSample1.Tests
         [Fact]
         public async Task GetByIdAsync_NonExistingId_ReturnsNull()
         {
-            
+
             var operationRequestId = new OperationRequestId(Guid.NewGuid());
 
-            
-            
+
+
             _operationRequestRepoMock.Setup(repo => repo.GetByIdAsync(operationRequestId))
-                .ReturnsAsync((OperationRequest)null); 
+                .ReturnsAsync((OperationRequest)null);
 
 
 
@@ -189,43 +195,45 @@ namespace DDDSample1.Tests
         public async Task AddOperationRequestAsync_ValidDto_AddsOperationRequest()
         {
             var doctor = ExampleStaff2();
-            
-            var operationType = new OperationType( new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            
-            var patient =ExamplePatient();
 
-            
-            operationType.OperationTypeSpecializations.Add(new DDDSample1.Domain.OperationTypesSpecializations.OperationTypeSpecialization(operationType,doctor.Specialization,new DDDSample1.Domain.OperationTypeSpecializations.NumberOfStaff(5)));
+            var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+
+            var patient = ExamplePatient();
+
+
+            operationType.OperationTypeSpecializations.Add(new DDDSample1.Domain.OperationTypesSpecializations.OperationTypeSpecialization(operationType, doctor.Specialization, new DDDSample1.Domain.OperationTypeSpecializations.NumberOfStaff(5)));
             _staffRepoMock.Setup(repo => repo.GetStaffsAsync(null, null, null, null, null, null, doctor.Id.Value, null, null, 1, 10))
-                    .ReturnsAsync(new List<Staff> { doctor }); 
-            
-            
-            
+                    .ReturnsAsync(new List<Staff> { doctor });
+
+
+
             _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(new OperationTypeId(operationType.Id.AsGuid())))
                 .ReturnsAsync(operationType);
-            
-            
+
+
             _patientRepoMock.Setup(repo => repo.GetByIdAsync(new MedicalRecordNumber(patient.Id.AsString())))
                 .ReturnsAsync(patient);
 
-            
-            
-            var OpDto=new CreatingOperationRequestDto{
-                DoctorId=doctor.Id.Id,
-                OperationTypeId=operationType.Id.Value,
-                MedicalRecordNumber=patient.Id.Id,
-                Deadline=DateTime.UtcNow.AddDays(1).ToString(),
-                Priority=Priority.ELECTIVE.ToString()};
 
-            
+
+            var OpDto = new CreatingOperationRequestDto
+            {
+                DoctorId = doctor.Id.Id,
+                OperationTypeId = operationType.Id.Value,
+                MedicalRecordNumber = patient.Id.Id,
+                Deadline = DateTime.UtcNow.AddDays(1).ToString(),
+                Priority = Priority.ELECTIVE.ToString()
+            };
+
+
             var result = await _service.AddOperationRequestAsync(OpDto);
 
-            
+
             _operationRequestRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationRequest>()), Times.Once);
-            
-            
+
+
             _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Once);
-            
+
             Assert.NotNull(result);
         }
 
@@ -237,7 +245,7 @@ namespace DDDSample1.Tests
             var patient = ExamplePatient();
 
             _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
-                .ReturnsAsync((OperationType)null); 
+                .ReturnsAsync((OperationType)null);
 
             var OpDto = new CreatingOperationRequestDto
             {
@@ -250,9 +258,9 @@ namespace DDDSample1.Tests
 
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _service.AddOperationRequestAsync(OpDto));
 
-            _operationRequestRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationRequest>()), Times.Never); 
+            _operationRequestRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationRequest>()), Times.Never);
 
-            _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Never); 
+            _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Never);
 
         }
 
@@ -260,7 +268,7 @@ namespace DDDSample1.Tests
         public async Task AddOperationRequestAsync_DoctorNotFound_ThrowsException()
         {
             var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            
+
             _staffRepoMock.Setup(repo => repo.GetStaffsAsync(null, null, null, null, null, null, It.IsAny<String>(), null, null, 1, 10))
                 .ReturnsAsync(new List<Staff>());
 
@@ -271,7 +279,7 @@ namespace DDDSample1.Tests
 
             var OpDto = new CreatingOperationRequestDto
             {
-                DoctorId = new StaffId("D202400010").ToString(), 
+                DoctorId = new StaffId("D202400010").ToString(),
                 OperationTypeId = operationType.Id.Value,
                 MedicalRecordNumber = patient.Id.Id,
                 Deadline = DateTime.UtcNow.AddDays(1).ToString(),
@@ -280,7 +288,7 @@ namespace DDDSample1.Tests
 
             var exception = await Assert.ThrowsAsync<NullReferenceException>(() => _service.AddOperationRequestAsync(OpDto));
 
-            _operationRequestRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationRequest>()), Times.Never); 
+            _operationRequestRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationRequest>()), Times.Never);
             _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Never);
         }
 
@@ -309,7 +317,7 @@ namespace DDDSample1.Tests
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _service.AddOperationRequestAsync(OpDto));
 
             _operationRequestRepoMock.Verify(repo => repo.AddAsync(It.IsAny<OperationRequest>()), Times.Never);
-            _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Never); 
+            _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Never);
         }
 
 
@@ -317,25 +325,27 @@ namespace DDDSample1.Tests
         public async Task AddOperationRequestAsync_InvalidSpecialization_AddsOperationRequest()
         {
             var doctor = ExampleStaff1();
-            var operationType = new OperationType( new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            var patient =ExamplePatient();
+            var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var patient = ExamplePatient();
 
-            
+
             _staffRepoMock.Setup(repo => repo.GetStaffsAsync(null, null, null, null, null, null, doctor.Id.Value, null, null, 1, 10))
-                    .ReturnsAsync(new List<Staff> { doctor }); 
+                    .ReturnsAsync(new List<Staff> { doctor });
             _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(new OperationTypeId(operationType.Id.AsGuid())))
                 .ReturnsAsync(operationType);
             _patientRepoMock.Setup(repo => repo.GetByIdAsync(new MedicalRecordNumber(patient.Id.AsString())))
                 .ReturnsAsync(patient);
 
-            var OpDto=new CreatingOperationRequestDto{
-                DoctorId=doctor.Id.Id,
-                OperationTypeId=operationType.Id.Value,
-                MedicalRecordNumber=patient.Id.Id,
+            var OpDto = new CreatingOperationRequestDto
+            {
+                DoctorId = doctor.Id.Id,
+                OperationTypeId = operationType.Id.Value,
+                MedicalRecordNumber = patient.Id.Id,
                 Deadline = DateTime.UtcNow.AddDays(1).ToString(),
-                Priority=Priority.ELECTIVE.ToString()};
+                Priority = Priority.ELECTIVE.ToString()
+            };
 
-            await Assert.ThrowsAsync<BusinessRuleValidationException>(async () => 
+            await Assert.ThrowsAsync<BusinessRuleValidationException>(async () =>
                 await _service.AddOperationRequestAsync(OpDto));
         }
 
@@ -343,11 +353,12 @@ namespace DDDSample1.Tests
         public async Task UpdateOperationRequestAsync_ValidDto_UpdatesOperationRequest()
         {
             var operationRequestId = Guid.NewGuid();
-            var operationType = new OperationType( new OperationTypeName("ACL Reconstruction Surgery"),new EstimatedDuration(135),new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
-            var operationRequest = new OperationRequest(ExamplePatient().Id,ExampleStaff2().Id,operationType.Id,new DeadlineDate(DateTime.UtcNow.AddDays(1)),Priority.ELECTIVE);
-            var updateDto = new UpdateOperationRequestDto {
-                Deadline="3000-10-20",
-                Priority=Priority.EMERGENCY.ToString()
+            var operationType = new OperationType(new OperationTypeName("ACL Reconstruction Surgery"), new EstimatedDuration(135), new AnesthesiaTime(45), new CleaningTime(30), new SurgeryTime(60));
+            var operationRequest = new OperationRequest(ExamplePatient().Id, ExampleStaff2().Id, operationType.Id, new DeadlineDate(DateTime.UtcNow.AddDays(1)), Priority.ELECTIVE);
+            var updateDto = new UpdateOperationRequestDto
+            {
+                Deadline = "3000-10-20",
+                Priority = Priority.EMERGENCY.ToString()
             };
 
             _operationRequestRepoMock.Setup(repo => repo.GetByIdAsync(new OperationRequestId(operationRequestId)))
@@ -367,7 +378,8 @@ namespace DDDSample1.Tests
             var operationRequestId = Guid.NewGuid();
             var operationRequest = new OperationRequest(ExamplePatient().Id, ExampleStaff2().Id, new OperationTypeId(Guid.NewGuid()), new DeadlineDate(DateTime.UtcNow.AddDays(1)), Priority.ELECTIVE);
 
-            var updateDto = new UpdateOperationRequestDto {
+            var updateDto = new UpdateOperationRequestDto
+            {
                 Deadline = "invalid-date-format",
                 Priority = Priority.EMERGENCY.ToString()
             };
@@ -379,5 +391,75 @@ namespace DDDSample1.Tests
             await Assert.ThrowsAsync<BusinessRuleValidationException>(async () =>
                 await _service.UpdateOperationRequestAsync(operationRequestId, updateDto));
         }
+        [Fact]
+        public async Task GetByDoctorAndStatusAsyncValidDoctorAndStatusReturnsOperationRequests()
+        {
+            var doctorId = "O202499999";
+            var status = "SCHEDULED";
+
+            var operationTypeId = new OperationTypeId(Guid.NewGuid());
+            var operationType = new OperationType(
+                new OperationTypeName("ACL Reconstruction Surgery"),
+                new EstimatedDuration(120),
+                new AnesthesiaTime(30),
+                new CleaningTime(20),
+                new SurgeryTime(70)
+            );
+
+            var operationRequests = new List<OperationRequest>{
+                new OperationRequest(
+                    new MedicalRecordNumber("MRN123456"),
+                    new StaffId(doctorId),
+                    operationTypeId,
+                    new DeadlineDate(DateTime.UtcNow.AddDays(1)),
+                    Priority.ELECTIVE)};
+
+            _operationRequestRepoMock.Setup(repo => repo.GetByDoctorIdAndStatusAsync(
+                It.Is<StaffId>(id => id.Id == doctorId),
+                It.Is<OperationRequestStatus>(s => s == OperationRequestStatus.SCHEDULED)
+            )).ReturnsAsync(operationRequests);
+
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                .ReturnsAsync(operationType);
+
+            var result = await _service.GetByDoctorAndStatusAsync(doctorId, status);
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+
+            var dto = result.First();
+            Assert.Equal(doctorId, dto.DoctorId);
+            Assert.Equal("MRN123456", dto.MedicalRecordNumber);
+            Assert.Equal("ELECTIVE", dto.Priority);
+            Assert.Equal("ACL Reconstruction Surgery", dto.OperationType.Name);
+        }
+
+        [Fact]
+        public async Task GetByDoctorAndStatusAsyncOperationTypeNotFoundThrowsException()
+        {
+            var doctorId = "O202499999";
+            var status = "SCHEDULED";
+
+            var operationRequests = new List<OperationRequest>
+                {
+                    new OperationRequest(
+                    new MedicalRecordNumber("MRN123456"),
+                    new StaffId(doctorId),
+                    new OperationTypeId(Guid.NewGuid()),
+                    new DeadlineDate(DateTime.UtcNow.AddDays(1)),
+                    Priority.ELECTIVE)};
+
+            _operationRequestRepoMock.Setup(repo => repo.GetByDoctorIdAndStatusAsync(
+                It.Is<StaffId>(id => id.Id == doctorId),
+                It.Is<OperationRequestStatus>(s => s == OperationRequestStatus.SCHEDULED)
+            )).ReturnsAsync(operationRequests);
+
+            _operationTypeRepoMock.Setup(repo => repo.GetByIdAsync(It.IsAny<OperationTypeId>()))
+                .ReturnsAsync((OperationType)null);
+
+            await Assert.ThrowsAsync<NullReferenceException>(async () =>
+                await _service.GetByDoctorAndStatusAsync(doctorId, status));
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Domain.OperationTypes;
 using DDDSample1.Domain.Patients;
 using DDDSample1.Domain.Shared;
+using DDDSample1.Domain.Staffs;
 using DDDSample1.Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +24,13 @@ namespace DDDSample1.Infrastructure.OperationRequests{
         public new async Task<OperationRequest> GetByIdAsync(OperationRequestId id) {
         
             return await _context.OperationRequest.FirstOrDefaultAsync(op => op.Id == id);
+        }
+
+        public async Task<List<OperationRequest>> GetByDoctorIdAndStatusAsync(StaffId doctorId, OperationRequestStatus status) {
+        
+            return await _context.OperationRequest
+                    .Where(op => op.StaffId == doctorId && op.Status == status)
+                    .ToListAsync();
         }
 
         public async Task<List<OperationRequest>> GetOperationRequestsAsync(string patientId = null, Guid? operationTypeId = null, string priority = null, string status = null)

@@ -108,6 +108,26 @@ namespace DDDSample1.Controllers{
             } catch(Exception){
                 return Forbid();
             }
+        }
+        // GET: api/operationRequests/{doctorId}/status
+        [HttpGet("{doctorId}/{status}")]
+        [Authorize(Policy = "RequiredBackofficeRole")]
+        public async Task<ActionResult<IEnumerable<OperationRequestWithAllDataDto>>> GetByDoctorAndStatusAsync(string doctorId,string status)
+        {
+            try{
+                return await _service.GetByDoctorAndStatusAsync(doctorId,status);
+
+            }catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }catch(Exception){
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
         } 
     }
 }
