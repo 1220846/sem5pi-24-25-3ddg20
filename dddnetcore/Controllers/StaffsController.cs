@@ -121,5 +121,11 @@ namespace DDDSample1.Controllers
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
+
+        [HttpGet("")]
+        [Authorize(Policy = "RequiredBackofficeRole")]
+        public async Task<ActionResult<IEnumerable<StaffDto>>> GetAll() {
+            return await _service.GetAllAsync();
+        }
     }
 }

@@ -260,5 +260,20 @@ namespace dddnetcore.Domain.Staffs
             }
             return staffAppointmentsList;
         }
+        public async Task<List<StaffDto>> GetAllAsync()
+        {
+            try
+            {
+                List<Staff> staffs = await this._repo.GetAllAsync();
+
+                List<StaffDto> staffsDto = staffs.ConvertAll<StaffDto>(staff => new StaffDto(staff));
+
+                return staffsDto;
+            }
+            catch (BusinessRuleValidationException)
+            {
+                return new List<StaffDto>();
+            }
+        }
     }
 }

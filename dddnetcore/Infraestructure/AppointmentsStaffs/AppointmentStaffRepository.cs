@@ -22,6 +22,7 @@ namespace DDDSample1.Infrastructure.AppointmentsStaffs
 
             var appointmentStaffs = await _context.AppointmentsStaffs
                 .Include(a => a.Appointment)
+                .ThenInclude(appt => appt.OperationRequest)
                 .Where(a => a.Staff.Id == staffId)
                 .ToListAsync();
 

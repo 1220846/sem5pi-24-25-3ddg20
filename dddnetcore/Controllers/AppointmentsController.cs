@@ -47,7 +47,7 @@ namespace DDDSample1.Controllers{
         [Authorize(Policy = "RequiredBackofficeRole")]
         public async Task<ActionResult<AppointmentDto>> Create(CreatingAppointmentDto dto)
         {
-            try{
+           try{
                 var appointment = await _service.AddAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = appointment.Id }, appointment);
@@ -74,6 +74,20 @@ namespace DDDSample1.Controllers{
             if (appointments == null)
             {
                 return NotFound($"No appointments found for patient with id: {medicalRecordNumber}");
+            }
+
+            return Ok(appointments);
+        }
+
+        [HttpGet("doctor/{doctorId}")]
+        [Authorize(Policy = "RequiredDoctorRole")]
+        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetByDoctorId(string doctorId)
+        {
+            var appointments = await _service.GetByDoctorIdAsync(doctorId);
+
+            if (appointments == null)
+            {
+                return NotFound($"No appointments found for doctor with id: {doctorId}");
             }
 
             return Ok(appointments);

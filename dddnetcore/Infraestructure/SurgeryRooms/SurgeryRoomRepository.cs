@@ -33,6 +33,7 @@ namespace dddnetcore.Infraestructure.SurgeryRooms
         public async Task<bool> IsRoomAvailableAsync(RoomNumber roomNumber, DateTime startTime, DateTime endTime){
          var appointments = await _context.Appointments
             .Where(a => a.SurgeryRoom.Id == roomNumber && a.Status == AppointmentStatus.SCHEDULED)
+            .Include(a => a.OperationRequest)
             .ToListAsync();
 
             foreach (var appointment in appointments)
