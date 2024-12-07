@@ -12,7 +12,7 @@
                         scrollHeight="120px" placeholder="Select a surgery room" optionLabel="number">
                     </p-dropdown>
                     <small
-                        *ngIf="appointmentForm.controls['surgeryRoom'].invalid && (appointmentForm.controls['surgeryRoom'].dirty || appointmentForm.controls['surgeryRoom'].touched)"
+                        *ngIf="appointmentForm.controls['surgeryRoom'].invalid && (appointmentForm.controls['surgeryRoom'].dirty || appointmentForm.controls['surgeryRoom'].touched || submitted)"
                         class="p-error">
                         Please select a surgery room.
                     </small>
@@ -29,7 +29,7 @@
                         </ng-template>
                     </p-dropdown>
                     <small
-                        *ngIf="appointmentForm.controls['operationRequest'].invalid && (appointmentForm.controls['operationRequest'].dirty || appointmentForm.controls['operationRequest'].touched)"
+                        *ngIf="appointmentForm.controls['operationRequest'].invalid && (appointmentForm.controls['operationRequest'].dirty || appointmentForm.controls['operationRequest'].touched || submitted)"
                         class="p-error">
                         Please select an operation request.
                     </small>
@@ -50,7 +50,7 @@
                     </p-multiSelect>
                     <small
                         *ngIf="appointmentForm.controls['staffs'].invalid && 
-                                  (appointmentForm.controls['staffs'].dirty || appointmentForm.controls['staffs'].touched)"
+                                  (appointmentForm.controls['staffs'].dirty || appointmentForm.controls['staffs'].touched || submitted)"
                         class="p-error">
                         Please select at least one staff member.
                     </small>
@@ -60,8 +60,13 @@
                     <p-calendar id="date" formControlName="date" [minDate]="minDate" dateFormat="dd/mm/yy"
                         placeholder="Select Date and Time" [showTime]="true" [showIcon]="true" appendTo="body"
                         [iconDisplay]="'input'" (onFocus)="updateMinDateOnFocus()"></p-calendar>
-
-                </div>
+                    <small
+                        *ngIf="appointmentForm.controls['date'].invalid && 
+                               (appointmentForm.controls['date'].dirty || appointmentForm.controls['date'].touched || submitted)"
+                        class="p-error">
+                        Please select a valid date and time.
+                    </small>
+                </div>                
             </div>
         </form>
         <ng-template pTemplate="footer">

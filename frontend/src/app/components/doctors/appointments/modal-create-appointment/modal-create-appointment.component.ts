@@ -94,6 +94,7 @@ export class ModalCreateAppointmentComponent implements OnChanges {
   }
 
   saveData() {
+    this.submitted = true;
     if (this.appointmentForm.valid) {
       const appointment: CreatingAppointmentDto = {
         surgeryRoomId: this.appointmentForm.value.surgeryRoom.number,
