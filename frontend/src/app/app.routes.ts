@@ -14,9 +14,11 @@ import { PatientsComponent } from './components/patients/patients.component';
 import { StaffsComponent } from './components/admins/staffs/staffs.component';
 import { AdminPatientsComponent } from './components/admins/patients/admin-patients.component';
 import { OperationRequestsComponent } from './components/doctors/operation-requests/operation-requests.component';
-import { AppointmentsComponent } from './components/patients/appointments/appointments.component';
+import { AppointmentsPatientComponent } from './components/patients/appointments-patient/appointments-patient.component';
+
 import { RoomTypesComponent } from './components/admins/room-types/room-types.component';
 import { SpecializationsComponent } from './components/admins/specializations/specializations.component';
+import { AppointmentsComponent } from './components/doctors/appointments/appointments.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -24,6 +26,7 @@ export const routes: Routes = [
     ,canActivate: [roleGuard],  
     data: { roles: ['Doctor']},
     children:[{ path: 'operation-requests', component:OperationRequestsComponent},
+      { path: 'appointments', component:AppointmentsComponent},
       { path: '', redirectTo: 'operation-requests', pathMatch: 'full' }
     ]
   },
@@ -49,7 +52,7 @@ export const routes: Routes = [
     canActivate: [roleGuard],  
     data: { roles: ['Patient'] },
     children: [{ path: 'account', component: AccountComponent },
-              { path: 'appointments', component: AppointmentsComponent },
+              { path: 'appointments', component: AppointmentsPatientComponent },
               { path: '', redirectTo: 'appointments', pathMatch: 'full' }]
   }
   

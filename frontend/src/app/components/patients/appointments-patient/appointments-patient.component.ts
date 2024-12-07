@@ -17,13 +17,13 @@ import { PatientService } from '../../../services/patient.service';
 import { catchError, of, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-appointments',
+  selector: 'app-appointments-patient',
   standalone: true,
   imports: [AccordionModule,AvatarModule,BadgeModule,TagModule,CommonModule,ScrollerModule,DropdownModule,InputTextModule,FormsModule,OverlayPanelModule,ButtonModule],
-  templateUrl: './appointments.component.html',
-  styleUrl: './appointments.component.scss'
+  templateUrl: './appointments-patient.component.html',
+  styleUrl: './appointments-patient.component.scss'
 })
-export class AppointmentsComponent {
+export class AppointmentsPatientComponent {
   
   @ViewChild('filterPanel') filterPanel!: OverlayPanel;
   patient: Patient | null = null;

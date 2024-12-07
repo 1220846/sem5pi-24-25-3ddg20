@@ -5,6 +5,7 @@ import { OperationRequest } from '../domain/OperationRequests';
 import { CreatingOperationRequestDto } from '../domain/CreatingOperationRequestDto';
 import { RemoveOperationRequestDto } from '../domain/RemoveOperationRequestDto';
 import { EditingOperationRequestDto } from '../domain/EditingOperationRequestDto';
+import { OperationRequestWithAllDataDto } from '../domain/OperationRequestWithAllDataDto';
 
 
 @Injectable({
@@ -69,4 +70,12 @@ export class OperationRequestService {
     const dto: RemoveOperationRequestDto = {token: token!};
     return this.http.delete<OperationRequest>(`${this.apiUrl}/${operationRequestId}`, {body: dto, headers: headers });
   }
+
+  getByDoctorAndStatus(doctorId: string, status: string): Observable<OperationRequestWithAllDataDto[]> {
+    console.log(status);
+    console.log(doctorId);
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.http.get<OperationRequestWithAllDataDto[]>(`${this.apiUrl}/${doctorId}/${status}`, { headers: headers });
+  }  
 }

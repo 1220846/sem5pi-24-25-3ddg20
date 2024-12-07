@@ -1,0 +1,74 @@
+<div class="card flex justify-content-end">
+    <p-toast></p-toast>
+    <p-button class="mr-5" (onClick)="showDialog()" label="Add Appointment" />
+    <p-dialog header="Add Appointment" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <form [formGroup]="appointmentForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="surgerRoom">Surgery Room</label>
+                    <p-dropdown [options]="surgeryRooms" [appendTo]="'body'" formControlName="surgeryRoom"
+                        [filter]="true" filterBy="number" [virtualScroll]="true" [virtualScrollItemSize]="40"
+                        scrollHeight="120px" placeholder="Select a surgery room" optionLabel="number">
+                    </p-dropdown>
+                    <small
+                        *ngIf="appointmentForm.controls['surgeryRoom'].invalid && (appointmentForm.controls['surgeryRoom'].dirty || appointmentForm.controls['surgeryRoom'].touched)"
+                        class="p-error">
+                        Please select a surgery room.
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="operationRequest">Operation Request</label>
+                    <p-dropdown [options]="operationRequests" [appendTo]="'body'" formControlName="operationRequest"
+                        [filter]="true" [virtualScroll]="true" [virtualScrollItemSize]="40" scrollHeight="120px"
+                        placeholder="Select an operation request" optionLabel="label">
+                        <ng-template let-operation pTemplate="item">
+                            <div>
+                                {{ operation.medicalRecordNumber }} - {{ operation.operationType.name }}
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                    <small
+                        *ngIf="appointmentForm.controls['operationRequest'].invalid && (appointmentForm.controls['operationRequest'].dirty || appointmentForm.controls['operationRequest'].touched)"
+                        class="p-error">
+                        Please select an operation request.
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="staffs">Medical Team</label>
+                    <p-multiSelect [options]="staffs" [appendTo]="'body'" formControlName="staffs"
+                        optionLabel="id" placeholder="Select medical team" display="chip" [showClear]="true"
+                        scrollHeight="150px">
+                        <ng-template let-staff pTemplate="item">
+                            <div class="flex align-items-center">
+                                <div class="flex flex-column">
+                                    <span>{{ staff.id }} - {{ staff.fullName }}</span>
+                                    <small class="text-muted">{{ staff.specialization.name }}</small>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-multiSelect>
+                    <small
+                        *ngIf="appointmentForm.controls['staffs'].invalid && 
+                                  (appointmentForm.controls['staffs'].dirty || appointmentForm.controls['staffs'].touched)"
+                        class="p-error">
+                        Please select at least one staff member.
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-medium">
+                    <label for="date">Date and Time</label>
+                    <p-calendar id="date" formControlName="date" [minDate]="minDate" dateFormat="dd/mm/yy"
+                        placeholder="Select Date and Time" [showTime]="true" [showIcon]="true" appendTo="body"
+                        [iconDisplay]="'input'" (onFocus)="updateMinDateOnFocus()"></p-calendar>
+
+                </div>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center gap-2 dialog-footer">
+                <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                <p-button label="Save" (onClick)="saveData()" />
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>

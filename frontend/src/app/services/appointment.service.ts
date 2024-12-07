@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Appointment } from '../domain/Appointment';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
+import { CreatingAppointmentDto } from '../domain/CreatingAppointmentDto';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,30 @@ export class AppointmentService {
     const headers = this.header.set('Authorization', `Bearer ${token}`);
 
     return this.http.get<Appointment[]>(`${this.apiUrl}/patient/${medicalRecordNumber}`, {headers: headers});
+  }
+
+  getAll(): Observable<Appointment[]> {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.http.get<Appointment[]>(this.apiUrl, {headers});
+  }
+
+  add(appointment: CreatingAppointmentDto): Observable<Appointment> {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.http.post<Appointment>(this.apiUrl, appointment, {headers})
+    .pipe(
+      catchError((error) => {
+        console.log(error.message);
+        return throwError(() => error.error.message)
+      })
+    ) 
+  }
+
+  getByDoctorId(doctorId: string): Observable<Appointment[]> {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+
+    return this.http.get<Appointment[]>(`${this.apiUrl}/doctor/${doctorId}`, {headers: headers});
   }
 }

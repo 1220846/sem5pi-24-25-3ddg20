@@ -82,4 +82,9 @@ export class StaffService {
       })
     );
   }
+  getAll(): Observable<Staff[]> {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.get<Staff[]>(this.apiUrl, {headers});
+  }
 }

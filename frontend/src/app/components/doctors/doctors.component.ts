@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { OperationRequestsComponent } from './operation-requests/operation-requests.component';
 import { ModalCreateOperationRequestComponent } from './operation-requests/modal-create-operation-request/modal-create-operation-request.component';
 import { ModalUpdateOperationRequestsComponent } from './operation-requests/modal-update-operation-requests/modal-update-operation-requests.component';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../../domain/User';
 import { ListOperationRequestComponent } from './operation-requests/list-operation-request/list-operation-request.component';
@@ -13,11 +13,11 @@ import { ListOperationRequestComponent } from './operation-requests/list-operati
 @Component({
   selector: 'app-doctors',
   standalone: true,
-  imports: [SidebarComponent, OperationRequestsComponent, ModalCreateOperationRequestComponent, ListOperationRequestComponent,ModalUpdateOperationRequestsComponent],
+  imports: [SidebarComponent,RouterOutlet],
   templateUrl: './doctors.component.html',
   styleUrl: './doctors.component.scss'
 })
-export class DoctorsComponent {
+export class DoctorsComponent implements OnInit, AfterViewInit{
 
   user$!: Observable<User | null>;
   user: User | null = null;
@@ -28,9 +28,7 @@ export class DoctorsComponent {
   constructor(private userService: UserService,private router: Router){
 
   }
-
   @ViewChild('sidebar') sidebar!: SidebarComponent;
-  @ViewChild('operation-types') operationRequests : OperationRequestsComponent |  undefined;
 
   ngOnInit(): void {
     this.userService.getLoggedInUser();
@@ -59,7 +57,8 @@ export class DoctorsComponent {
   updateSidebarItems(user: User) {
     if (this.sidebar) {
       this.sidebar.items = [
-        { label: 'Operation Requests', icon: '', link: '/operationRequests' }
+        { label: 'Operation Requests', icon: '', link: '/doctor/operation-requests' },
+        { label: 'Appointments', icon: '', link: '/doctor/appointments' }
       ];
       this.sidebar.setUserTitle('doctor');
       this.sidebar.setUsername(user.username);
