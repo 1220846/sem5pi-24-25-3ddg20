@@ -1,0 +1,98 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Doctor as "Doctor"
+
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Node"
+    participant Router as "AllergyRouter"<<Router>>
+    participant Controller as "AllergyController"<<Controller>>
+    participant Service_ as "AllergyService"<<Service>>
+    participant Allergy as "Allergy"<<Domain>>
+    participant AllergyMap as "AllergyMap"<<Mapper>>
+    database AllergyRepo as "AllergyRepo"<<Domain>>
+end box
+
+activate Doctor
+
+    Doctor -> ComponentUI : asks to search for allergies
+
+    activate ComponentUI
+
+        ComponentUI -> Component : search for allergies
+
+        activate Component
+            
+            Component -> Service : search for allergies
+            activate Service
+
+                Service -> HTTP : get('/allergies')
+
+                activate HTTP
+                    HTTP -> Router : GET /allergies
+
+                    activate Router
+
+                        Router -> Controller : getAllergies(req,res,next)
+
+                        activate Controller
+                            Controller -> Service_ : getAllergies()
+                            
+                            activate Service_
+
+                                Service_ -> AllergyRepo : findAll()
+
+                                activate AllergyRepo
+
+                                    AllergyRepo --> Service_ : allergies
+
+                                deactivate AllergyRepo
+
+                                loop allergy in allergies
+                                
+                                    Service_ -> AllergyMap : toDTO(allergy)
+
+                                    activate AllergyMap
+
+                                        AllergyMap --> Service_ : allergyDTO
+
+                                    deactivate AllergyMap
+
+                                end
+                                
+                                Service_ --> Controller : allergiesDTO
+
+                            deactivate Service_
+
+                            Controller --> Router : allergiesDTO
+
+                        deactivate Controller
+
+                        Router --> HTTP : 200 (allergies)
+
+                    deactivate Router
+
+                    HTTP --> Service : allergies
+
+                deactivate HTTP
+
+                Service --> Component : allergies
+
+            deactivate Service
+
+            Component --> ComponentUI : allergies
+        deactivate Component
+
+    Doctor <-- ComponentUI : shows allergies
+    deactivate ComponentUI
+
+deactivate Doctor
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml process-view
+autonumber
+
+actor "Doctor" as Doctor
+participant SARM as "SARM" <<system (C4)>>
+
+activate Doctor
+
+    Doctor -> SARM : asks to search for allergies
+
+    activate SARM 
+        SARM --> Doctor: shows allergies
+        
+    deactivate SARM
+
+deactivate Doctor
+
+@enduml

@@ -1,0 +1,26 @@
+@startuml process-view
+autonumber
+
+actor "Doctor" as Doctor
+participant Frontend as "Frontend" <<system (C4)>>
+participant BackendNode as "Backend Node" <<system (C4)>>
+
+activate Doctor
+
+    Doctor -> Frontend : asks to search for allergies
+    
+    activate Frontend
+    
+        Frontend-> BackendNode : GET /allergies
+        activate BackendNode
+
+            Frontend <-- BackendNode : 200 OK
+
+        deactivate BackendNode
+
+    Frontend --> Doctor : shows allergies 
+    
+    deactivate Frontend
+deactivate Doctor
+
+@enduml
