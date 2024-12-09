@@ -18,6 +18,9 @@ export class MedicalConditionDesignation extends ValueObject<MedicalConditionDes
     public static create(medicalConditionDesignation: string): Result<MedicalConditionDesignation>{
         const guardResult = Guard.againstNullOrUndefined(medicalConditionDesignation,'MedicalConditionDesignation')
         
+        if(medicalConditionDesignation.length>100){
+            return Result.fail<MedicalConditionDesignation>('Medical Condition Designation is too long.')
+        }
         if (!guardResult.succeeded)
             return Result.fail<MedicalConditionDesignation>(guardResult.message);
         if (!medicalConditionDesignation.trim().length)  

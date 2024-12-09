@@ -19,7 +19,7 @@ export default class AllergyController implements IAllergyController {
             const allergyOrError = await this.allergyServiceInstance.createAllergy(req.body as IAllergyDTO) as Result<IAllergyDTO>;
 
             if (allergyOrError.isFailure)
-                return res.status(402).send();
+                return res.status(400).send();
 
             const allergyDTO = allergyOrError.getValue();
             return res.json(allergyDTO).status(201);

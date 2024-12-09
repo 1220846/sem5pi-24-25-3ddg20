@@ -8,6 +8,7 @@ import IAllergyDTO from "../dto/IAllergyDTO";
 import IMedicalConditionController from "./IControllers/IMedicalConditionController";
 import IMedicalConditionService from "../services/IServices/IMedicalConditionService";
 import IMedicalConditionDTO from "../dto/IMedicalConditionDTO";
+import { Console } from "console";
 
 @Service()
 export default class MedicalConditionController implements IMedicalConditionController {
@@ -17,19 +18,25 @@ export default class MedicalConditionController implements IMedicalConditionCont
     ) { }
 
     public async createMedicalCondition(req: Request, res: Response, next: NextFunction) {
-
         try {
             const medicalConditionOrError = await this.medicalConditionServiceInstance.createMedicalCondition(req.body as IMedicalConditionDTO) as Result<IMedicalConditionDTO>;
+            
+            if (medicalConditionOrError.isFailure) {
+                if (!medicalConditionOrError.error.toString().includes("Medical Condition")) {
+                    return res.status(500).json({ message: "An unexpected error occurred." });
+                }
+                return res.status(400).json({ message: medicalConditionOrError.error });
+            }
 
-            if (medicalConditionOrError.isFailure)
-                return res.status(402).send();
 
             const medicalConditionDTO = medicalConditionOrError.getValue();
-            return res.json(medicalConditionDTO).status(201);
+            return res.status(201).json(medicalConditionDTO);
         } catch (e) {
             return next(e);
         }
     }
+
+
     public async getMedicalCondition(req: Request, res: Response, next: NextFunction) {
 
         try {

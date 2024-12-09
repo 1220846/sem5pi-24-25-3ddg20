@@ -24,7 +24,9 @@ export default (app: Router) => {
         cors(corsOptions),
         celebrate({
             body: Joi.object({
-
+                code: Joi.string().required(),
+                designation: Joi.string().required(),
+                description: Joi.string().required()
             }),
         }),
         (req, res, next) => ctrl.createMedicalCondition(req, res, next),
