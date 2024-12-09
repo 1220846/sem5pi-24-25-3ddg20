@@ -19,7 +19,7 @@ export default class AllergyService implements IAllergyService {
       const allergy = await this.allergyRepo.findByDomainId(allergyId);
 
       if (allergy === null) {
-        return Result.fail<IAllergyDTO>("Role not found");
+        return Result.fail<IAllergyDTO>("Allergy not found");
       }
       else {
         const allergyDTOResult = AllergyMap.toDTO(allergy) as IAllergyDTO;
@@ -46,6 +46,22 @@ export default class AllergyService implements IAllergyService {
 
       const allergyDTOResult = AllergyMap.toDTO(allergyResult) as IAllergyDTO;
       return Result.ok<IAllergyDTO>(allergyDTOResult)
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getAllergies(): Promise<Result<IAllergyDTO[]>> {
+    try {
+      const allergies = await this.allergyRepo.findAll();
+
+      if (!allergies || allergies.length === 0) {
+        return Result.fail<IAllergyDTO[]>("No allergies found");
+      }
+
+      const allergyDTOs = allergies.map(allergy => AllergyMap.toDTO(allergy) as IAllergyDTO);
+
+      return Result.ok<IAllergyDTO[]>(allergyDTOs);
     } catch (e) {
       throw e;
     }
