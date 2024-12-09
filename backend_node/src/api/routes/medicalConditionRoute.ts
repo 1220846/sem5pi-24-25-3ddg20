@@ -13,7 +13,7 @@ export default (app: Router) => {
     const ctrl = Container.get(config.controllers.medicalCondition.name) as IMedicalConditionController;
 
     const corsOptions = {
-        origin: 'http://localhost:4200/',
+        origin: 'http://localhost:4200',
         credentials: true,
         methods: ['GET', 'POST'],
         allowedHeaders: ['Content-Type', 'Authorization'],
@@ -24,7 +24,9 @@ export default (app: Router) => {
         cors(corsOptions),
         celebrate({
             body: Joi.object({
-
+                code: Joi.string().required(),
+                designation: Joi.string().required(),
+                description: Joi.string().required()
             }),
         }),
         (req, res, next) => ctrl.createMedicalCondition(req, res, next),
@@ -32,5 +34,5 @@ export default (app: Router) => {
 
     route.get('/:id', cors(corsOptions), (req, res, next) => ctrl.getMedicalCondition(req, res, next));
 
-    //route.get('', cors(corsOptions), (req, res, next) => ctrl.getAllergies(req, res, next));
+    route.get('', cors(corsOptions), (req, res, next) => ctrl.getMedicalConditions(req, res, next));
 };

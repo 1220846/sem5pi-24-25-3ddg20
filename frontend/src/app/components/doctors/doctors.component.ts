@@ -58,7 +58,7 @@ export class DoctorsComponent implements OnInit, AfterViewInit{
     if (this.sidebar) {
       this.sidebar.items = [
         { label: 'Operation Requests', icon: '', link: '/doctor/operation-requests' },
-        { label: 'Appointments', icon: '', link: '/doctor/appointments' }
+        { label: 'Appointments', icon: '', link: '/doctor/appointments' },
       ];
       this.sidebar.setUserTitle('doctor');
       this.sidebar.setUsername(user.username);

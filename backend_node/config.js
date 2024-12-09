@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import medicalCondition from './src/persistence/schemas/medicalConditionSchema';
 
 // Set the NODE_ENV to 'development' by default
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -48,6 +49,10 @@ export default {
     role: {
       name: "RoleController",
       path: "../controllers/roleController"
+    },
+    medicalCondition:{
+      name:"MedicalConditionController",
+      path:"../controllers/medicalConditionController"
     }
   },
 
@@ -63,6 +68,10 @@ export default {
     allergy: {
       name: "AllergyRepo",
       path: "../repos/allergyRepo"
+    },
+    medicalCondition: {
+      name: "MedicalConditionRepo",
+      path: "../repos/medicalConditionRepo"
     }
   },
 
@@ -74,6 +83,10 @@ export default {
     allergy: {
       name: "AllergyService",
       path: "../services/allergyService"
-    }    
+    },
+    medicalCondition: {
+      name: "MedicalConditionService",
+      path: "../services/medicalConditionService"
+    }   
   },
 };

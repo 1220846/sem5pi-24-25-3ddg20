@@ -54,4 +54,8 @@ export class MedicalCondition extends AggregateRoot<MedicalConditionProps> {
         const medicalCondition = new MedicalCondition({ code : code.getValue(), description: description.getValue(), designation: designation.getValue()}, id);
         return Result.ok<MedicalCondition>(medicalCondition);
     }
+
+    public async getAll(){
+        
+    }
 }

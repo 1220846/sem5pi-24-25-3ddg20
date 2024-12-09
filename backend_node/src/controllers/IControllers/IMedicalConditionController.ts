@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-export default interface IAllergyController {
+export default interface IMedicalConditionController {
     createMedicalCondition(req: Request, res: Response, next: NextFunction);
     getMedicalCondition(req: Request, res: Response, next: NextFunction);
-    //getAllergies(req: Request, res: Response, next: NextFunction);
+    getMedicalConditions(req: Request, res: Response, next: NextFunction);
 }
