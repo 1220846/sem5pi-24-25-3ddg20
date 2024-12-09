@@ -27,7 +27,7 @@ namespace DDDSample1.Domain.Appointments
         private readonly IOperationTypeRepository _operationTypeRepo;
         private readonly IStaffRepository _staffRepo;
         private readonly IAppointmentStaffRepository _appointmentStaffRepo;
-        public AppointmentService(IUnitOfWork unitOfWork, IAppointmentRepository repo, ISurgeryRoomRepository surgeryRoomRepository, IOperationRequestRepository operationRequestRepository, IOperationTypeRepository operationTypeRepository,IStaffRepository staffRepository, IAppointmentStaffRepository appointmentStaffRepository)
+        public AppointmentService(IUnitOfWork unitOfWork, IAppointmentRepository repo, ISurgeryRoomRepository surgeryRoomRepository, IOperationRequestRepository operationRequestRepository, IOperationTypeRepository operationTypeRepository, IStaffRepository staffRepository, IAppointmentStaffRepository appointmentStaffRepository)
         {
 
             this._unitOfWork = unitOfWork;
@@ -36,7 +36,7 @@ namespace DDDSample1.Domain.Appointments
             this._operationRequestRepo = operationRequestRepository;
             this._operationTypeRepo = operationTypeRepository;
             this._staffRepo = staffRepository;
-            this._appointmentStaffRepo = appointmentStaffRepository; 
+            this._appointmentStaffRepo = appointmentStaffRepository;
         }
 
         public async Task<List<AppointmentDto>> GetAllAsync()
@@ -57,7 +57,7 @@ namespace DDDSample1.Domain.Appointments
                     SurgeryRoomDto = new SurgeryRoomDto
                     {
                         Number = appointment.SurgeryRoom.Id.Value,
-                        RoomType = new RoomTypeDto {Code = appointment.SurgeryRoom.RoomType.Id.Value,Designation = appointment.SurgeryRoom.RoomType.Designation.Designation},
+                        RoomType = new RoomTypeDto { Code = appointment.SurgeryRoom.RoomType.Id.Value, Designation = appointment.SurgeryRoom.RoomType.Designation.Designation },
                         Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                         CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                         MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -107,7 +107,7 @@ namespace DDDSample1.Domain.Appointments
                 SurgeryRoomDto = new SurgeryRoomDto
                 {
                     Number = appointment.SurgeryRoom.Id.Value,
-                    RoomType = new RoomTypeDto {Code = appointment.SurgeryRoom.RoomType.Id.Value,Designation = appointment.SurgeryRoom.RoomType.Designation.Designation},
+                    RoomType = new RoomTypeDto { Code = appointment.SurgeryRoom.RoomType.Id.Value, Designation = appointment.SurgeryRoom.RoomType.Designation.Designation },
                     Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                     CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                     MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -138,12 +138,12 @@ namespace DDDSample1.Domain.Appointments
             var surgeryRoom = await _surgeryRoomRepo.GetByIdAsync(new RoomNumber(dto.SurgeryRoomId)) ?? throw new NullReferenceException("Not Found Surgery Room: " + dto.SurgeryRoomId);
 
             var operationRequest = await _operationRequestRepo.GetByIdAsync(new OperationRequestId(dto.OperationRequestId)) ?? throw new NullReferenceException("Not Found Operation Request: " + dto.SurgeryRoomId);
-            
+
             var operationType = await this._operationTypeRepo.GetByIdAsync(new OperationTypeId(operationRequest.OperationTypeId.Value)) ?? throw new NullReferenceException("Not Found Operation Type: " + operationRequest.OperationTypeId.Value);
-            
+
             var startTime = DateTime.Parse(dto.DateAndTime);
             var endTime = startTime.AddMinutes(operationType.EstimatedDuration.Minutes);
-    
+
             var isRoomAvailable = await _surgeryRoomRepo.IsRoomAvailableAsync(surgeryRoom.Id, startTime, endTime);
 
             if (!isRoomAvailable)
@@ -172,13 +172,13 @@ namespace DDDSample1.Domain.Appointments
 
             foreach (var staffId in dto.StaffsIds)
             {
-                var staff = await _staffRepo.GetByIdAsync(new StaffId(staffId)) 
+                var staff = await _staffRepo.GetByIdAsync(new StaffId(staffId))
                             ?? throw new NullReferenceException("Staff not found: " + staffId);
 
                 var appointmentStaff = new AppointmentStaff(appointment, staff);
                 await _appointmentStaffRepo.AddAsync(appointmentStaff);
             }
-            
+
             // Update status of operation Request to scheduled
             operationRequest.ChangeStatus(OperationRequestStatus.SCHEDULED);
             await this._operationRequestRepo.UpdateAsync(operationRequest);
@@ -191,7 +191,7 @@ namespace DDDSample1.Domain.Appointments
                 SurgeryRoomDto = new SurgeryRoomDto
                 {
                     Number = appointment.SurgeryRoom.Id.Value,
-                    RoomType = new RoomTypeDto {Code = appointment.SurgeryRoom.RoomType.Id.Value,Designation = appointment.SurgeryRoom.RoomType.Designation.Designation},
+                    RoomType = new RoomTypeDto { Code = appointment.SurgeryRoom.RoomType.Id.Value, Designation = appointment.SurgeryRoom.RoomType.Designation.Designation },
                     Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                     CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                     MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -280,7 +280,7 @@ namespace DDDSample1.Domain.Appointments
                     SurgeryRoomDto = new SurgeryRoomDto
                     {
                         Number = appointment.SurgeryRoom.Id.Value,
-                        RoomType = new RoomTypeDto {Code = appointment.SurgeryRoom.RoomType.Id.Value,Designation = appointment.SurgeryRoom.RoomType.Designation.Designation},
+                        RoomType = new RoomTypeDto { Code = appointment.SurgeryRoom.RoomType.Id.Value, Designation = appointment.SurgeryRoom.RoomType.Designation.Designation },
                         Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                         CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                         MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -331,7 +331,7 @@ namespace DDDSample1.Domain.Appointments
                     SurgeryRoomDto = new SurgeryRoomDto
                     {
                         Number = appointment.SurgeryRoom.Id.Value,
-                        RoomType = new RoomTypeDto {Code = appointment.SurgeryRoom.RoomType.Id.Value,Designation = appointment.SurgeryRoom.RoomType.Designation.Designation},
+                        RoomType = new RoomTypeDto { Code = appointment.SurgeryRoom.RoomType.Id.Value, Designation = appointment.SurgeryRoom.RoomType.Designation.Designation },
                         Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
                         CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
                         MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
@@ -362,6 +362,128 @@ namespace DDDSample1.Domain.Appointments
                 listDto.Add(appointmentDto);
             }
             return listDto;
+        }
+
+        public async Task<AppointmentDto> UpdateAsync(Guid id, UpdateAppointmentDto dto)
+        {
+            var appointment = await _repo.GetByIdAsync(new AppointmentId(id))
+                            ?? throw new NullReferenceException($"Appointment with ID {id} not found.");
+
+            var operationRequest = await _operationRequestRepo.GetByIdAsync(appointment.OperationRequest.Id)
+                                 ?? throw new NullReferenceException($"Operation Request with ID {appointment.OperationRequest.Id} not found.");
+
+            var operationType = await _operationTypeRepo.GetByIdAsync(operationRequest.OperationTypeId)
+                             ?? throw new NullReferenceException($"Operation Type with ID {operationRequest.OperationTypeId} not found.");
+
+            var startTime = dto.DateAndTime != null
+                ? DateTime.Parse(dto.DateAndTime)
+                : appointment.DateAndTime.DateAndTime;
+
+            var endTime = startTime.AddMinutes(operationType.EstimatedDuration.Minutes);
+
+            var newRoomId = dto.SurgeryRoomId != null
+                ? new RoomNumber(dto.SurgeryRoomId)
+                : appointment.SurgeryRoom.Id;
+
+            var newStaffIds = dto.StaffsIds != null
+                ? dto.StaffsIds.ToHashSet()
+                : appointment.AppointmentStaffs.Select(s => s.Id.Value).ToHashSet();
+
+            // Validar disponibilidade da sala
+            if (!await _surgeryRoomRepo.IsRoomAvailableAsync(newRoomId, startTime, endTime, appointment.Id.AsGuid()))
+                throw new BusinessRuleValidationException("The surgery room is not available for the selected time.");
+
+            // Validar disponibilidade da equipa
+            foreach (var staffId in newStaffIds)
+            {
+                if (!await _appointmentStaffRepo.IsStaffAvailableAsync(new StaffId(staffId), startTime, endTime, appointment.Id.AsGuid()))
+                    throw new BusinessRuleValidationException($"Staff member with ID {staffId} is not available for the selected time.");
+            }
+
+            // Validar especializações da equipa, se necessário
+            if (dto.StaffsIds != null)
+            {
+                await ValidateStaffSpecializationsAsync(newStaffIds.ToList(), operationType);
+            }
+
+            // Atualizar a sala
+            if (dto.SurgeryRoomId != null && dto.SurgeryRoomId != appointment.SurgeryRoom.Id.Value)
+            {
+                var newRoom = await _surgeryRoomRepo.GetByIdAsync(newRoomId)
+                             ?? throw new NullReferenceException($"Surgery Room {dto.SurgeryRoomId} not found.");
+
+                appointment.ChangeSurgeryRoom(newRoom);
+            }
+
+            // Atualizar equipa
+            if (dto.StaffsIds != null && !dto.StaffsIds.SequenceEqual(appointment.AppointmentStaffs.Select(s => s.Id.Value)))
+            {
+                var currentStaffIds = appointment.AppointmentStaffs.Select(s => s.Id.Value).ToHashSet();
+
+                var staffToRemove = currentStaffIds.Except(newStaffIds).ToList();
+                var staffToAdd = newStaffIds.Except(currentStaffIds).ToList();
+
+                foreach (var staffId in staffToRemove)
+                {
+                    var appointmentStaff = appointment.AppointmentStaffs.FirstOrDefault(s => s.Id.Value == staffId);
+                    if (appointmentStaff != null)
+                        _appointmentStaffRepo.Remove(appointmentStaff);
+                }
+
+                foreach (var staffId in staffToAdd)
+                {
+                    var staff = await _staffRepo.GetByIdAsync(new StaffId(staffId))
+                                ?? throw new NullReferenceException($"Staff with ID {staffId} not found.");
+
+                    await _appointmentStaffRepo.AddAsync(new AppointmentStaff(appointment, staff));
+                }
+            }
+
+            // Atualizar data/hora
+            if (dto.DateAndTime != null)
+            {
+                appointment.ChangeDateAndTime(new AppointmentDateAndTime(startTime));
+            }
+
+            // Persistir as alterações
+            await _repo.UpdateAsync(appointment);
+            await _unitOfWork.CommitAsync();
+
+            // Retornar DTO atualizado
+            return new AppointmentDto
+            {
+                Id = appointment.Id.AsGuid(),
+                SurgeryRoomDto = new SurgeryRoomDto
+                {
+                    Number = appointment.SurgeryRoom.Id.Value,
+                    RoomType = new RoomTypeDto
+                    {
+                        Code = appointment.SurgeryRoom.RoomType.Id.Value,
+                        Designation = appointment.SurgeryRoom.RoomType.Designation.Designation
+                    },
+                    Capacity = appointment.SurgeryRoom.RoomCapacity.Capacity,
+                    CurrentStatus = EnumDescription.GetEnumDescription(appointment.SurgeryRoom.CurrentStatus),
+                    MaintenanceSlots = appointment.SurgeryRoom.MaintenanceSlots.MaintenanceSlots,
+                    AssignedEquipment = appointment.SurgeryRoom.AssignedEquipment.AssignedEquipment
+                },
+                OperationRequestDto = new OperationRequestWithAllDataDto
+                {
+                    Id = operationRequest.Id.AsGuid(),
+                    DoctorId = operationRequest.StaffId.Id,
+                    OperationType = new OperationTypeDto
+                    {
+                        Id = operationType.Id.AsGuid(),
+                        Name = operationType.Name.Name,
+                        EstimatedDuration = operationType.EstimatedDuration.Minutes,
+                    },
+                    MedicalRecordNumber = operationRequest.MedicalRecordNumber.Id,
+                    Deadline = operationRequest.DeadlineDate.Date.ToString(),
+                    Priority = operationRequest.Priority.ToString(),
+                    Status = operationRequest.Status.ToString()
+                },
+                Status = EnumDescription.GetEnumDescription(appointment.Status),
+                DateAndTime = appointment.DateAndTime.DateAndTime,
+            };
         }
     }
 }

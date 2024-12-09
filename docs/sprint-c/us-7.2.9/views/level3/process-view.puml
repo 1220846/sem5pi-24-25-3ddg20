@@ -1,0 +1,184 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Doctor as "Doctor"
+
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Data Management"
+    participant Controller as "AppointmentsController"<<Controller>>
+    participant Service_ as "AppointmentService"<<Service>>
+    participant Appointment as "Appointment"<<Domain>>
+    participant AppointmentDto as "AppointmentDto"<<Domain>>
+    database SurgeryRoomRepository as "SurgeryRoomRepository"<<Domain>>
+    database OperationRequestRepository as "OperationRequestRepository"<<Domain>>
+    database OperationTypeRepository as "OperationTypeRepository"<<Domain>>
+    database AppointmentStaffRepository as "AppointmentStaffRepository"<<Domain>>
+    database AppointmentRepository as "AppointmentRepository"<<Domain>>
+end box
+
+activate Doctor
+
+    Doctor -> ComponentUI : asks to update an appointment
+    activate ComponentUI
+
+        ComponentUI --> Doctor : asks to update data
+
+    deactivate ComponentUI
+
+    Doctor -> ComponentUI : update data
+    activate ComponentUI
+
+        ComponentUI -> Component : update an appointment
+
+        activate Component
+
+            Component -> Model** : create
+            
+            Component -> Service : update an appointment
+            activate Service
+
+                Service -> HTTP : patch('/appointments/{id}')
+
+                activate HTTP
+                    HTTP -> Controller : PATCH /appointments/{id}
+
+                        activate Controller
+                            Controller -> Service_ : UpdateAsync(id,updateAppointmentDto)
+                            
+                            activate Service_
+
+                                Service_ -> AppointmentRepository : GetByIdAsync(id)
+                                
+                                activate AppointmentRepository
+
+                                    AppointmentRepository --> Service_: appointment
+
+                                deactivate AppointmentRepository
+
+                                Service_ -> OperationRequestRepository : GetByIdAsync(updateAppointmentDto.OperationRequestId)
+                                
+                                activate OperationRequestRepository
+
+                                    OperationRequestRepository --> Service_: operationRequest
+
+                                deactivate OperationRequestRepository
+
+                                Service_ -> OperationTypeRepository : GetByIdAsync(operationRequest.OperationTypeId)
+                                
+                                activate OperationTypeRepository
+
+                                    OperationTypeRepository --> Service_: operationType 
+
+                                deactivate OperationTypeRepository
+
+                                Service_ -> SurgeryRoomRepository : IsRoomAvailableAsync(newRoomId, startTime, endTime,appointment.Id)
+
+                                activate SurgeryRoomRepository
+
+                                    SurgeryRoomRepository --> Service_: true 
+
+                                deactivate SurgeryRoomRepository
+
+                                loop staffId in StaffsIds
+
+                                    Service_ -> AppointmentStaffRepository : IsStaffAvailableAsync(staffId, startTime, endTime)
+
+                                    activate AppointmentStaffRepository
+
+                                        AppointmentStaffRepository --> Service_: true
+
+                                    deactivate AppointmentStaffRepository
+                                end
+
+                                alt updateAppointmentDto.StaffsIds != null
+                                    
+                                    Service_ -> Service_: ValidateStaffSpecializationsAsync(newStaffIds, operationType)
+
+                                    activate Service_
+
+                                        Service_ --> Service_
+
+                                    deactivate Service_
+                                end
+
+                                alt updateAppointmentDto.SurgeryRoomId != null && updateAppointmentDto.SurgeryRoomId != appointment.SurgeryRoom.Id
+
+                                    Service_ -> SurgeryRoomRepository : GetByIdAsync(updateAppointmentDto.SurgeryRoomId)
+                                
+                                    activate SurgeryRoomRepository
+
+                                        SurgeryRoomRepository --> Service_: newRoom
+
+                                    deactivate SurgeryRoomRepository
+
+                                    Service_ -> Appointment : ChangeSurgeryRoom(newRoom)
+
+                                end
+
+                                alt updateAppointmentDto.StaffsIds != null && !updateAppointmentDto.StaffsIds.SequenceEqual(appointment.AppointmentStaffs.Select(s => s.Id))
+
+                                    loop staffId in staffToRemove
+
+                                        alt appointmentStaff != null
+                                        
+                                            Service_ -> AppointmentStaffRepository : Remove(appointmentStaff)
+
+                                        end
+
+                                    end
+                                    
+                                    loop staffId in staffToAdd
+                                        
+                                        Service_ -> AppointmentStaffRepository : AddAsync(appointment, staff)
+
+                                    end
+
+                                end
+
+                                alt updateAppointmentDto.DateAndTime != null
+
+                                    Service_ -> Appointment : ChangeDateAndTime(startTime)
+
+                                end 
+
+                                Service_ -> AppointmentRepository : UpdateAsync(appointment)
+
+                                Service_ -> AppointmentDto**: create(appointment.Id, surgeryRoom,operationRequest,appointment.Status,appointment.DateAndTime)
+
+                                activate AppointmentDto
+
+                                    AppointmentDto --> Service_ : appointmentDto
+
+                                deactivate AppointmentDto
+                                
+                                Service_ --> Controller : appointmentDto
+
+                            deactivate Service_
+
+                        Controller --> HTTP : 200(appointment)
+
+                    deactivate Controller
+
+                    HTTP --> Service : appointment
+
+                deactivate HTTP
+
+                Service --> Component : appointment
+            deactivate Service
+
+            Component --> ComponentUI : appointment
+        deactivate Component
+
+    Doctor <-- ComponentUI : shows success message
+    deactivate ComponentUI
+
+deactivate Doctor
+
+@enduml

@@ -9,15 +9,16 @@ using DDDSample1.Domain.Appointments;
 
 namespace DDDSample1.Infrastructure.AppointmentsStaffs
 {
-    public class AppointmentStaffRepository : BaseRepository<AppointmentStaff,AppointmentStaffId> ,IAppointmentStaffRepository{
-        
+    public class AppointmentStaffRepository : BaseRepository<AppointmentStaff, AppointmentStaffId>, IAppointmentStaffRepository
+    {
+
         private readonly DDDSample1DbContext _context;
-        public AppointmentStaffRepository(DDDSample1DbContext context):base(context.AppointmentsStaffs)
+        public AppointmentStaffRepository(DDDSample1DbContext context) : base(context.AppointmentsStaffs)
         {
             _context = context;
         }
 
-        public async Task<bool> IsStaffAvailableAsync(StaffId staffId, DateTime startTime, DateTime endTime)
+        public async Task<bool> IsStaffAvailableAsync(StaffId staffId, DateTime startTime, DateTime endTime, Guid? excludedAppointmentId = null)
         {
 
             var appointmentStaffs = await _context.AppointmentsStaffs
@@ -28,7 +29,7 @@ namespace DDDSample1.Infrastructure.AppointmentsStaffs
 
             if (appointmentStaffs == null || !appointmentStaffs.Any())
             {
-                return true; 
+                return true;
             }
 
             var operationTypeIds = appointmentStaffs
@@ -55,6 +56,11 @@ namespace DDDSample1.Infrastructure.AppointmentsStaffs
                     continue;
                 }
 
+                if (excludedAppointmentId.HasValue && appointment.Id.AsGuid() == excludedAppointmentId.Value)
+                {
+                    continue;
+                }
+
                 var operationRequest = appointment.OperationRequest;
 
                 if (operationRequest == null || !operationTypes.ContainsKey(operationRequest.OperationTypeId))
@@ -69,7 +75,7 @@ namespace DDDSample1.Infrastructure.AppointmentsStaffs
 
                 if (startTime < staffAppointmentEndTime && endTime > staffAppointmentStartTime)
                 {
-                    return false; 
+                    return false;
                 }
             }
             return true;

@@ -7,7 +7,7 @@ namespace DDDSample1.Domain.AppointmentsStaffs
 {
     public interface IAppointmentStaffRepository : IRepository<AppointmentStaff, AppointmentStaffId>
     {
-        Task<bool> IsStaffAvailableAsync(StaffId staffId, DateTime startTime, DateTime endTime);
+        Task<bool> IsStaffAvailableAsync(StaffId staffId, DateTime startTime, DateTime endTime, Guid? excludedAppointmentId = null);
 
     }
 }

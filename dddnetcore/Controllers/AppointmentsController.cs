@@ -93,5 +93,27 @@ namespace DDDSample1.Controllers{
             return Ok(appointments);
         }
 
+        // PATCH: api/appointments/{id}
+        [HttpPatch("{id}")]
+        [Authorize(Policy = "RequiredDoctorRole")]
+        public async Task<ActionResult<AppointmentDto>> UpdateAppointment(Guid id,UpdateAppointmentDto dto)
+        {
+            try{
+                var userDto = await _service.UpdateAsync(id,dto);
+
+                return Ok(userDto);
+
+            }catch(BusinessRuleValidationException exception){
+                
+                return BadRequest(new {exception.Message});
+
+            }catch(NullReferenceException exception){
+                
+                return NotFound(new {exception.Message});
+            }catch(Exception){
+                
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
     }
 }

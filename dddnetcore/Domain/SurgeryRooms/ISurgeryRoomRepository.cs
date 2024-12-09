@@ -7,6 +7,6 @@ namespace dddnetcore.Domain.SurgeryRooms
 {
     public interface ISurgeryRoomRepository : IRepository<SurgeryRoom, RoomNumber> {
         
-        Task<bool> IsRoomAvailableAsync(RoomNumber roomNumber, DateTime startTime, DateTime endTime);
+        Task<bool> IsRoomAvailableAsync(RoomNumber roomNumber, DateTime startTime, DateTime endTime, Guid? excludedAppointmentId = null);
     }
 }

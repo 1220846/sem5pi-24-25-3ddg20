@@ -51,5 +51,13 @@ namespace dddnetcore.Infraestructure.Appointments
             .Include(a => a.AppointmentStaffs).ThenInclude(a => a.Staff)
             .ToListAsync();
         }
+
+        public async Task<Appointment> UpdateAsync(Appointment appointment) {
+            _context.Appointments.Update(appointment);
+            
+            await _context.SaveChangesAsync();
+
+            return appointment;
+        }
     }
 }

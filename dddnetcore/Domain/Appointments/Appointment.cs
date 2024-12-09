@@ -4,6 +4,7 @@ using dddnetcore.Domain.SurgeryRooms;
 using DDDSample1.Domain.AppointmentsStaffs;
 using DDDSample1.Domain.OperationRequests;
 using DDDSample1.Domain.Shared;
+using Microsoft.VisualBasic;
 
 namespace DDDSample1.Domain.Appointments{
 
@@ -56,5 +57,14 @@ namespace DDDSample1.Domain.Appointments{
                 $"DateAndTime={DateAndTime.DateAndTime:yyyy-MM-dd HH:mm}]";
         }
 
+        public void ChangeSurgeryRoom(SurgeryRoom newSurgeryRoom){
+            ArgumentNullException.ThrowIfNull(newSurgeryRoom);
+            this.SurgeryRoom = newSurgeryRoom;
+        }
+
+        public void ChangeDateAndTime(AppointmentDateAndTime newDateAndTime){
+            ArgumentNullException.ThrowIfNull(newDateAndTime);
+            this.DateAndTime = newDateAndTime;
+        }
     }
 }

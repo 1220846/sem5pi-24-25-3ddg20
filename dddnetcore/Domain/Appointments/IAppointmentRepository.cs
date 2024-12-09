@@ -11,5 +11,6 @@ namespace DDDSample1.Domain.Appointments{
 
         public Task<List<Appointment>> GetByStaffIdAsync(StaffId staffId);
 
+        public Task<Appointment> UpdateAsync(Appointment appointment);
     }
 }
