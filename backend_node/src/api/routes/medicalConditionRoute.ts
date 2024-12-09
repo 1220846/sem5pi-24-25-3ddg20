@@ -34,5 +34,5 @@ export default (app: Router) => {
 
     route.get('/:id', cors(corsOptions), (req, res, next) => ctrl.getMedicalCondition(req, res, next));
 
-    //route.get('', cors(corsOptions), (req, res, next) => ctrl.getAllergies(req, res, next));
+    route.get('', cors(corsOptions), (req, res, next) => ctrl.getMedicalConditions(req, res, next));
 };

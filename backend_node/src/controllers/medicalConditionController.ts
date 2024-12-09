@@ -54,19 +54,19 @@ export default class MedicalConditionController implements IMedicalConditionCont
             return next(e);
         }
     }
-    /* public async getallergies(req: Request, res: Response, next: NextFunction) {
+    public async getMedicalConditions(req: Request, res: Response, next: NextFunction) {
  
-         try {
-             const allergiesOrError = await this.medicalConditionServiceInstance.getmedicalCondition();
- 
-             if (allergiesOrError.isFailure)
-                 return res.status(400).json({ message: allergiesOrError.errorValue() });
- 
-             const allergiesDTO = allergiesOrError.getValue();
-             return res.status(200).json(allergiesDTO);
- 
-         } catch (e) {
-             return next(e);
-         }
-     }*/
+        try {
+            const medicalConditionsOrError = await this.medicalConditionServiceInstance.getMedicalConditions();
+
+            if (medicalConditionsOrError.isFailure)
+                return res.status(400).json({ message: medicalConditionsOrError.errorValue() });
+
+            const medicalConditionsDTO = medicalConditionsOrError.getValue();
+            return res.status(200).json(medicalConditionsDTO);
+
+        } catch (e) {
+            return next(e);
+        }
+    }
 }
