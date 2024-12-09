@@ -13,6 +13,7 @@ import { SpecializationService } from '../../../../services/specialization.servi
 import { ScrollerModule } from 'primeng/scroller';
 import { AccordionModule } from 'primeng/accordion';
 import { ModalEditSpecializationComponent } from '../modal-edit-specialization/modal-edit-specialization.component';
+import { ModalRemoveSpecializationComponent } from '../modal-remove-specialization/modal-remove-specialization.component';
 
 @Component({
   selector: 'app-list-specializations',
@@ -28,7 +29,10 @@ import { ModalEditSpecializationComponent } from '../modal-edit-specialization/m
     InputTextModule,
     FormsModule,
     OverlayPanelModule,
-    ButtonModule, ModalEditSpecializationComponent],
+    ButtonModule,
+    ModalEditSpecializationComponent,
+    ModalRemoveSpecializationComponent
+  ],
   templateUrl: './list-specializations.component.html',
   styleUrl: './list-specializations.component.scss'
 })
@@ -59,6 +63,10 @@ export class ListSpecializationsComponent implements OnInit {
   }
 
   onSpecializationEdited(): void {
+    this.loadSpecializations();
+  }
+
+  onSpecializationRemoved(): void {
     this.loadSpecializations();
   }
 }

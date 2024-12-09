@@ -40,7 +40,18 @@ export class SpecializationService {
   edit(specializationId: string, editDto: EditingSpecializationDto) {
     const token = localStorage.getItem('accessToken'); 
     const headers = this.header.set('Authorization', `Bearer ${token}`);
-    return  this.http.patch<Specialization>(`${this.apiUrl}/${specializationId}`, editDto, {headers})
+    return this.http.patch<Specialization>(`${this.apiUrl}/${specializationId}`, editDto, {headers})
+    .pipe(
+      catchError((error) => {
+        return throwError(() => error.error.message);
+      })
+    );
+  }
+
+  remove(specializationId: string) {
+    const token = localStorage.getItem('accessToken'); 
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.http.delete<Specialization>(`${this.apiUrl}/${specializationId}`, {headers})
     .pipe(
       catchError((error) => {
         return throwError(() => error.error.message);
