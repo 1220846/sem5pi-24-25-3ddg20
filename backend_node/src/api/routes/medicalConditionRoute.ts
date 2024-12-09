@@ -13,7 +13,7 @@ export default (app: Router) => {
     const ctrl = Container.get(config.controllers.medicalCondition.name) as IMedicalConditionController;
 
     const corsOptions = {
-        origin: 'http://localhost:4200/',
+        origin: 'http://localhost:4200',
         credentials: true,
         methods: ['GET', 'POST'],
         allowedHeaders: ['Content-Type', 'Authorization'],

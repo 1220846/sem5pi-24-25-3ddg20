@@ -21,14 +21,46 @@ export default async ({ expressApp }) => {
     schema: '../persistence/schemas/roleSchema',
   };
 
+  const allergySchema = {
+    // compare with the approach followed in repos and services
+    name: 'allergySchema',
+    schema: '../persistence/schemas/allergySchema',
+  };
+
+  const medicalConditionSchema = {
+    // compare with the approach followed in repos and services
+    name: 'medicalConditionSchema',
+    schema: '../persistence/schemas/medicalConditionSchema',
+  };
+
   const roleController = {
     name: config.controllers.role.name,
     path: config.controllers.role.path
   }
 
+  const medicalConditionController = {
+    name: config.controllers.medicalCondition.name,
+    path: config.controllers.medicalCondition.path
+  }
+
+  const allergyController = {
+    name: config.controllers.allergy.name,
+    path: config.controllers.allergy.path
+  }
+
   const roleRepo = {
     name: config.repos.role.name,
     path: config.repos.role.path
+  }
+
+  const allergyRepo = {
+    name: config.repos.allergy.name,
+    path: config.repos.allergy.path
+  }
+
+  const medicalConditionRepo = {
+    name: config.repos.medicalCondition.name,
+    path: config.repos.medicalCondition.path
   }
 
   const userRepo = {
@@ -41,21 +73,39 @@ export default async ({ expressApp }) => {
     path: config.services.role.path
   }
 
+  const allergyService = {
+    name: config.services.allergy.name,
+    path: config.services.allergy.path
+  }
+
+  const medicalConditionService = {
+    name: config.services.medicalCondition.name,
+    path: config.services.medicalCondition.path
+  }
+
   await dependencyInjectorLoader({
     mongoConnection,
     schemas: [
       userSchema,
-      roleSchema
+      roleSchema,
+      medicalConditionSchema,
+      allergySchema
     ],
     controllers: [
-      roleController
+      roleController,
+      medicalConditionController,
+      allergyController
     ],
     repos: [
       roleRepo,
+      allergyRepo,
+      medicalConditionRepo,
       userRepo
     ],
     services: [
-      roleService
+      roleService,
+      medicalConditionService,
+      allergyService
     ]
   });
   Logger.info('✌️ Schemas, Controllers, Repositories, Services, etc. loaded');
