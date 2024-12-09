@@ -1,6 +1,6 @@
 <div class="card flex justify-content-center ml-5 mr-5 mt-2">
-    <p-scroller [items]="specializations" [itemSize]="90" [style]="{ height: '480px', width: '100%' }"
-        scrollHeight="410px" styleClass="border-1 surface-border">
+    <p-scroller [items]="specializations" [itemSize]="90" [style]="{ height: '530px', width: '100%' }"
+        scrollHeight="530px" styleClass="border-1 surface-border">
         <ng-template let-specialization pTemplate="item">
             <p-accordion class="w-full">
                 <p-accordionTab>
@@ -16,8 +16,7 @@
                             </div>
                         </span>
                         <app-modal-edit-specialization [specialization]=specialization (specializationEdited)="onSpecializationEdited()"></app-modal-edit-specialization>
-                        <!--<app-deactivate-staff-profile [staff]=staff (staffProfileDeacivated)="onStaffProfileDeacivated()"></app-deactivate-staff-profile>-->
-                    </ng-template>
+                        <app-modal-remove-specialization [specialization]=specialization (SpecializationRemoved)="onSpecializationRemoved()"></app-modal-remove-specialization>                   </ng-template>
                     <div class="flex ml-3 gap-6">
                         <p>{{ specializationText(specialization) }}</p>
                     </div>

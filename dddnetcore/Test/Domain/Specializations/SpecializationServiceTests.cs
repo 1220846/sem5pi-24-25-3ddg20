@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using dddnetcore.Domain.Specializations;
+using DDDSample1.DataAnnotations.Staffs;
 using DDDSample1.Domain.OperationTypes;
+using DDDSample1.Domain.OperationTypesSpecializations;
 using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Specializations;
 using Moq;
@@ -13,13 +15,17 @@ namespace DDDSample1.Tests.Domain.Specializations
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<ISpecializationRepository> _specializationRepoMock;
+        private readonly Mock<IStaffRepository> _staffRepoMock;
+        private readonly Mock<IOperationTypeSpecializationRepository> _operationTypeSpecializationRepoMock;
 
         private readonly SpecializationService _specializationService;
 
         public SpecializationServiceTests(){
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _specializationRepoMock = new Mock<ISpecializationRepository>();
-            _specializationService = new SpecializationService(_unitOfWorkMock.Object,_specializationRepoMock.Object);
+            _staffRepoMock = new Mock<IStaffRepository>();
+            _operationTypeSpecializationRepoMock = new Mock<IOperationTypeSpecializationRepository>();
+            _specializationService = new SpecializationService(_unitOfWorkMock.Object,_specializationRepoMock.Object,_staffRepoMock.Object,_operationTypeSpecializationRepoMock.Object);
         }
 
         [Fact]

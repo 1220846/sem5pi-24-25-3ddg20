@@ -1,4 +1,4 @@
-<div class="card flex justify-content-end mr-5">
+<div class="card flex justify-content-end mr-5 mb-5">
     <p-toast></p-toast>
     <p-button (onClick)="showDialog()" label="Create Specialization" />
     <p-dialog header="Create Specialization" [modal]="true" [(visible)]="visible" [style]="{ width: '32rem', maxHeight: '40rem' }">
@@ -24,11 +24,10 @@
                             Must be a sequence of 6-18 digits.
                         </small>
                     </div>
-                    <div class="flex flex-wrap mt-5 gap-7 inputButton">
-                        <p-button (onClick)="showDescriptionBox()" label="Edit Description" severity="secondary" [style]="{ width: '24rem', }"></p-button>
-                        <p-dialog header="Specialization Description" [(visible)]="descriptionBoxVisible" [style]="{ width: '60rem', 'max-height': '40rem' }" [resizable]="false" [draggable]="false">
-                            <textarea pInputTextarea id="description" formControlName="description" rows="5"></textarea>
-                        </p-dialog>
+                    <div class="flex flex-wrap gap-2 input-large">
+                        <label for="description">Description</label>
+                        <textarea pInputTextarea id="description" formControlName="description" rows="5"></textarea>
+                        <small class="text-secondary">This field is optional.</small>
                     </div>
                     <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
                         <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />

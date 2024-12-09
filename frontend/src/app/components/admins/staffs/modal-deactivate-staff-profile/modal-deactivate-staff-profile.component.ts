@@ -54,7 +54,7 @@ export class ModalDeactivateStaffProfileComponent {
                 this.staffProfileDeacivated.emit(response);
               },
               (error) => {
-                console.error("Error creating staff profile:", error);
+                console.error("Error deactivating staff profile: ", error);
                 this.messageService.add({severity: 'error', summary: 'Error', detail:'Failed to deactivate staff profile', life: 2000});
               }
             );

@@ -33,14 +33,14 @@ namespace DDDSample1.Controllers{
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<SpecializationDto>> GetById(Guid id)
         {
-            var operationType = await _service.GetByIdAsync(new SpecializationId(id));
+            var specialization = await _service.GetByIdAsync(new SpecializationId(id));
 
-            if (operationType == null)
+            if (specialization == null)
             {
                 return NotFound();
             }
 
-            return operationType;
+            return specialization;
         }
 
         // POST: api/specializations
@@ -69,6 +69,20 @@ namespace DDDSample1.Controllers{
         public async Task<ActionResult<SpecializationDto>> EditSpecialization(Guid id, EditingSpecializationDto dto) {
             try {
                 return await _service.EditSpecializationAsync(id, dto);
+            } catch (NullReferenceException e) {
+                return NotFound(new {e.Message});
+            } catch (BusinessRuleValidationException e) {
+                return BadRequest(new {e.Message});
+            } catch (Exception) {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "RequiredAdminRole")]
+        public async Task<ActionResult<SpecializationDto>> RemoveSpecialization(Guid id) {
+            try {
+                return await _service.RemoveAsync(id);
             } catch (NullReferenceException e) {
                 return NotFound(new {e.Message});
             } catch (BusinessRuleValidationException e) {
