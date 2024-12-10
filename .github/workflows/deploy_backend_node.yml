@@ -20,7 +20,7 @@ jobs:
         run: |
           cd backend_node
           touch .env
-          echo "MONGODB_URI=" >> .env
+          echo "MONGODB_URI=secrets.MONGODB_URI" >> .env
 
       - name: Upload Backend to VM DEI
         uses: appleboy/scp-action@v0.1.5
