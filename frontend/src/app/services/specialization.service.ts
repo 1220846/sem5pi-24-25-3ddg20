@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Specialization } from '../domain/Specialization';
 import { CreatingSpecializationDto } from '../domain/CreatingSpecializationDto';
@@ -19,6 +19,18 @@ export class SpecializationService {
     const headers = this.header.set('Authorization', `Bearer ${token}`);
     return this.http.get<Specialization[]>(this.apiUrl, {headers});
   }
+
+  getAllAndFilter(namePartial?: string, codeExact?: string, descriptionPartial?: string): Observable<Specialization[]> {
+    let params = new HttpParams();
+    if (namePartial)
+      params = params.set('namePartial', namePartial);
+    if (codeExact)
+      params = params.set('codeExact', codeExact);
+    if (descriptionPartial)
+      params = params.set('descriptionPartial', descriptionPartial);
+
+    return this.http.get<Specialization[]>(`${this.apiUrl}/filter`, {params, headers: new HttpHeaders({'Authorization': `Bearer ${localStorage.getItem('accessToken')}`})});
+  } 
 
   getById(id: number): Observable<Specialization> {
     const token = localStorage.getItem('accessToken'); 

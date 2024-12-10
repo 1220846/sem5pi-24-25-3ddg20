@@ -47,6 +47,19 @@ namespace DDDSample1.Domain.Specializations
             return new SpecializationDto(specialization);
         }
 
+        public async Task<List<SpecializationDto>> GetSpecializationsAsync(string namePartial = null, string codeExact = null, string descriptionPartial = null) {
+            try {
+                List<Specialization> specializations = await this._repo.GetSpecializationsAsync(namePartial, codeExact, descriptionPartial);
+
+                List<SpecializationDto> specializationDtos = specializations.ConvertAll(specialization => new SpecializationDto(specialization));
+
+                return specializationDtos;
+                
+            } catch (BusinessRuleValidationException) {
+                return new List<SpecializationDto>();
+            }
+        }
+
         public async Task<SpecializationDto> AddAsync(CreatingSpecializationDto dto)
         {
             var specialization = new Specialization(new SpecializationName(dto.Name), new SpecializationCode(dto.Code), new SpecializationDescription(dto.Description));

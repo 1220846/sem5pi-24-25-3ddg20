@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
 import { Specialization } from '../../../../domain/Specialization';
 import { SpecializationService } from '../../../../services/specialization.service';
@@ -37,7 +37,13 @@ import { ModalRemoveSpecializationComponent } from '../modal-remove-specializati
   styleUrl: './list-specializations.component.scss'
 })
 export class ListSpecializationsComponent implements OnInit {
+  @ViewChild('filterPanel') filterPanel!: OverlayPanel;
+
   specializations: Specialization[] = [];
+
+  filterNamePartial: string = '';
+  filterCodeExact: string = '';
+  filterDescriptionPartial: string = '';
 
   constructor(private specializationService: SpecializationService) {}
 
@@ -45,12 +51,28 @@ export class ListSpecializationsComponent implements OnInit {
     this.loadSpecializations();
   }
 
+  applyFilters(): void {
+    console.log("a");
+    this.loadSpecializations();
+    this.filterPanel.hide();
+  }
+
+  clearFilters(): void {
+    this.filterNamePartial = '';
+    this.filterCodeExact = '';
+    this.filterDescriptionPartial = '';
+  }
+
   specializationText(specialization: Specialization): string {
     return specialization.description ? specialization.description : "No description";
   }
 
   loadSpecializations(): void {
-    this.specializationService.getAll().subscribe({
+    this.specializationService.getAllAndFilter(
+      this.filterNamePartial,
+      this.filterCodeExact,
+      this.filterDescriptionPartial
+    ).subscribe({
       next: (data) => {
         this.specializations = data;
       },

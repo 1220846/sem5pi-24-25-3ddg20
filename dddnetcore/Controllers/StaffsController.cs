@@ -100,7 +100,7 @@ namespace DDDSample1.Controllers
         }
 
         [HttpGet("operationtypes")]
-        //[Authorize(Policy = "RequiredBackOfficeRole")]
+        [Authorize(Policy = "RequiredBackOfficeRole")]
         public async Task<ActionResult<IEnumerable<StaffOperationTypesDto>>> GetStaffsOperationTypes() {
             try {
                 return await _service.GetStaffsOperationTypesAsync();
@@ -111,7 +111,7 @@ namespace DDDSample1.Controllers
         }
 
         [HttpGet("appointments")]
-        //[Authorize(Policy = "RequiredBackOfficeRole")]
+        [Authorize(Policy = "RequiredBackOfficeRole")]
         public async Task<ActionResult<IEnumerable<StaffAppointmentsDto>>> GetStaffAppointments() {
             try {
 
