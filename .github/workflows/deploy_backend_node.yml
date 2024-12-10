@@ -1,0 +1,41 @@
+name: Deploy Backend Node Module in VM DEI
+
+
+on:
+  push:
+    branches:
+      - main  
+  schedule:
+    - cron: '0 2 * * 6' 
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 'Configuring a .env file for the backend'
+        run: |
+          cd backend_node
+          touch .env
+          echo "MONGODB_URI=" >> .env
+
+      - name: Upload Backend to VM DEI
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP_BACKEND_NODE }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_BACKEND_NODE }}
+          source: ./backend_node/*
+          target: ~/sarm
+
+      - name: Deploy Backend Node in VM DEI
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP_BACKEND_NODE }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_BACKEND_NODE }}
+          script: |
+            ~/sarm/deployment_backend_node.sh
