@@ -1,0 +1,63 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Data Management"
+    participant Controller as "SpecializationsController"<<Controller>>
+    participant Service_ as "SpecializationService"<<Service>>
+    participant Specialization as "Specialization"<<Domain>>
+    participant SpecializationDto as "SpecializationDto"<<Domain>>
+    database SpecializationRepo as "SpecializationRepository"<<Domain>>
+end box
+
+activate Admin
+    Admin -> ComponentUI : Asks to add new Specialization
+    activate ComponentUI
+        ComponentUI --> Admin : Asks to input data
+    deactivate ComponentUI
+    Admin -> ComponentUI : Inputs data
+    activate ComponentUI
+        ComponentUI -> Component : Adds new Specialization
+        activate Component
+            Component -> Model** : create
+            Component -> Service : Add new Specialization
+            activate Service
+                Service -> HTTP : post('/specializations')
+                activate HTTP
+                    HTTP -> Controller : POST /specializations
+                        activate Controller
+                            Controller -> Service_ : addAsync(dto)
+                            activate Service_
+                                Service_ -> Specialization**: create(dto.Name,dto.Code,dto.Description)
+                                activate Specialization
+                                    Specialization --> Service_ : specialization
+                                deactivate Specialization
+                                Service_ -> SpecializationRepo : addAsync(specialization)
+                                Service_ -> SpecializationDto** : create(specialization)
+                                activate SpecializationDto
+                                    SpecializationDto --> Service_ : specializationDto
+                                deactivate SpecializationDto
+                                Service_ --> Controller : specializationDto
+                            deactivate Service_
+                        Controller --> HTTP : 201 (specialization)
+                    deactivate Controller
+                    HTTP --> Service : specialization
+                deactivate HTTP
+                Service --> Component : specialization
+            deactivate Service
+            Component --> ComponentUI : specialization
+        deactivate Component
+    Admin <-- ComponentUI : Shows success message
+    deactivate ComponentUI
+deactivate Admin
+
+@enduml

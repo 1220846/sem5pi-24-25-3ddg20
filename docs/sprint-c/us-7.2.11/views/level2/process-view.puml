@@ -1,0 +1,23 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant Frontend as "Frontend" <<system (C4)>>
+participant BackendDataManagement as "Backend Data Management" <<system (C4)>>
+
+activate Admin
+    Admin -> Frontend : Asks to add new Specialization
+    activate Frontend
+        Frontend --> Admin : Asks to input data
+    deactivate Frontend
+    Admin -> Frontend : Inputs data
+    activate Frontend
+        Frontend-> BackendDataManagement : POST /specializations
+        activate BackendDataManagement
+            Frontend <-- BackendDataManagement : 201 Created
+        deactivate BackendDataManagement
+    Frontend --> Admin : Shows success message
+    deactivate Frontend
+deactivate Admin
+
+@enduml
