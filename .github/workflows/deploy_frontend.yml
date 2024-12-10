@@ -1,0 +1,35 @@
+name: Deploy Frontend Node Module in VM DEI
+
+on:
+  push:
+    branches:
+      - main  
+  schedule:
+    - cron: '0 2 * * 6' 
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Upload Backend to VM DEI
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP_FRONTEND }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
+          source: ./frontend/*
+          target: ~/sarm
+
+      - name: Deploy Backend Node in VM DEI
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP_FRONTEND }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
+          script: |
+            cd ~/sarm/frontend
+            ~/sarm/deployment_frontend.sh
