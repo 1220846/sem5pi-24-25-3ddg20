@@ -28,6 +28,12 @@ namespace DDDSample1.Controllers{
             return await _service.GetAllAsync();
         }
 
+        [HttpGet("filter")]
+        [Authorize(Policy = "RequiredAdminRole")]
+        public async Task<ActionResult<IEnumerable<SpecializationDto>>> GetSpecializations(string namePartial = null, string codeExact = null, string descriptionPartial = null) {
+            return await _service.GetSpecializationsAsync(namePartial, codeExact, descriptionPartial);
+        }
+
         // GET: api/specializations/
         [HttpGet("{id}")]
         [Authorize(Policy = "RequiredAdminRole")]
@@ -42,6 +48,8 @@ namespace DDDSample1.Controllers{
 
             return specialization;
         }
+
+
 
         // POST: api/specializations
         [HttpPost]

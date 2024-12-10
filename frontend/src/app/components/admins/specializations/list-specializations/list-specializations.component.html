@@ -1,6 +1,33 @@
+<div class="flex justify-content-end mt-2 mr-5">
+    <p-button icon="pi pi-filter" (click)="filterPanel.toggle($event)" class="p-button-rounded p-button-outlined"
+        styleClass="p-button-text"></p-button>
+    <p-overlayPanel #filterPanel [dismissable]="true" [style]="{ 'max-height': '28rem', 'overflow-y': 'auto' }">
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterNamePartial">Name</label>
+                <input id="filterNamePartial" pInputText [(ngModel)]="filterNamePartial" placeholder="Search by Name"
+                    class="p-input-sm" />
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterCodeExact">Code</label>
+                <input id="filterCodeExact" pInputText [(ngModel)]="filterCodeExact" placeholder="Search by Code"
+                    class="p-input-sm" />
+            </div>
+            <div class="p-field p-col-12 mt-2">
+                <label for="filterDescriptionPartial">Description</label>
+                <input id="filterDescriptionPartial" pInputText [(ngModel)]="filterDescriptionPartial" placeholder="Search by Description"
+                    class="p-input-sm" />
+            </div>
+            <div class="p-col-12 mt-3 flex justify-content-center gap-2">
+                <p-button label="Apply" (click)="applyFilters()" class="p-button-sm"></p-button>
+                <p-button label="Clear" (click)="clearFilters()" class="p-button-sm" severity="secondary"></p-button>
+            </div>
+        </div>
+    </p-overlayPanel>
+</div>
 <div class="card flex justify-content-center ml-5 mr-5 mt-2">
-    <p-scroller [items]="specializations" [itemSize]="90" [style]="{ height: '530px', width: '100%' }"
-        scrollHeight="530px" styleClass="border-1 surface-border">
+    <p-scroller [items]="specializations" [itemSize]="90" [style]="{ height: '480px', width: '100%' }"
+        scrollHeight="480px" styleClass="border-1 surface-border">
         <ng-template let-specialization pTemplate="item">
             <p-accordion class="w-full">
                 <p-accordionTab>
