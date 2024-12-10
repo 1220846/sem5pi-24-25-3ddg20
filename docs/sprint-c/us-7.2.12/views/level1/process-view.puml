@@ -1,0 +1,14 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant SARM as "SARM" <<system (C4)>>
+
+activate Admin
+    Admin -> SARM : asks to list specializations
+    activate SARM
+        SARM --> Admin: shows specializations
+    deactivate SARM
+deactivate Admin
+
+@enduml
