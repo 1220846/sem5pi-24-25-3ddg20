@@ -3,9 +3,9 @@ name: Deploy Backend Module in VM DEI
 on:
 
   push:
-      branches:
-        - main  
-    schedule:
+    branches:
+      - main  
+  schedule:
     - cron: '0 2 * * 6'
     
 jobs:
