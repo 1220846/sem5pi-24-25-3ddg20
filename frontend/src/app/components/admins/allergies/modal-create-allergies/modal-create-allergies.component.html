@@ -1,0 +1,52 @@
+<div class="card flex justify-content-end">
+    <p-toast></p-toast>
+    <p-button class="mt-5 mr-5" (onClick)="showDialog()" label="Add Allergies" />
+    <p-dialog header="Add allergies" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <span class="p-text-secondary block mb-2">Insert information.</span>
+        <form [formGroup]="allergiesForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="code">Code</label>
+                        <input pInputText id="code" formControlName="code" />
+                        <small
+                            *ngIf="allergiesForm.controls['code'].invalid && (allergiesForm.controls['code'].dirty || allergiesForm.controls['code'].touched)"
+                            class="p-error">
+                            Insert Code.
+                        </small>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="designation">Designation</label>
+                        <input pInputText id="designation" formControlName="designation" />
+                        <small
+                            *ngIf="allergiesForm.controls['designation'].invalid && (allergiesForm.controls['designation'].dirty || allergiesForm.controls['designation'].touched)"
+                            class="p-error">
+                            Insert Designation.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-7">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="description">Description</label>
+                        <input pInputText id="description" formControlName="description" />
+                        <small
+                            *ngIf="allergiesForm.controls['description'].invalid && (allergiesForm.controls['description'].dirty || allergiesForm.controls['description'].touched)"
+                            class="p-error">
+                            Insert Description.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center gap-2 dialog-footer">
+                <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                <p-button label="Save" (onClick)="saveData()"/>
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>
