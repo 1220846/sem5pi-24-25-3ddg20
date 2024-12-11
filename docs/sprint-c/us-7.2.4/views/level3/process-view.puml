@@ -34,9 +34,9 @@ activate Admin
                 activate HTTP
                     HTTP -> Router : POST /medicalconditions
                     activate Router
-                        Router -> Controller : addMedicalCondition(req,res,next)
+                        Router -> Controller : createMedicalCondition(req,res,next)
                         activate Controller
-                            Controller -> Service_ : addMedicalCondition(medicalConditionDto)
+                            Controller -> Service_ : createMedicalCondition(medicalConditionDto)
                             
                             activate Service_
                                 Service_ -> MedicalCondition**: create(medicalConditionDTO)
