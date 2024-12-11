@@ -11,7 +11,7 @@ Filters by:
 
 ## 2. Requirements
 
-**US 7.2.11** As an Admin, I want to list/search Specializations, so that I can see the details, and edit Specialization.
+**US 7.2.12** As an Admin, I want to list/search Specializations, so that I can see the details, and edit Specialization.
 
 ## 3. Views
 
