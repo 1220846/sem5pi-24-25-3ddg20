@@ -34,9 +34,9 @@ activate Admin
                 activate HTTP
                     HTTP -> Router : POST /Allergys
                     activate Router
-                        Router -> Controller : addAllergy(req,res,next)
+                        Router -> Controller : createAllergy(req,res,next)
                         activate Controller
-                            Controller -> Service_ : addAllergy(AllergyDto)
+                            Controller -> Service_ : createAllergy(AllergyDto)
                             
                             activate Service_
                                 Service_ -> Allergy**: create(AllergyDTO)
