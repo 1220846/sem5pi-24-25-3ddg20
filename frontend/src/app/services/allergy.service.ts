@@ -2,11 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Allergy } from '../domain/Allergy';
 import { Observable } from 'rxjs';
+import { CreatingAllergyDto } from '../domain/CreatingAllergy';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AllergyService {
+  
 
   private apiUrl = 'http://localhost:4000/api/allergies';
 
@@ -19,5 +21,11 @@ export class AllergyService {
     const headers = this.header.set('Authorization', `Bearer ${token}`);
 
     return this.http.get<Allergy[]>(this.apiUrl,{ headers: headers });
+  }
+
+  add(allergy: CreatingAllergyDto) {
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+    return this.http.post<Allergy>(this.apiUrl, allergy, { headers: headers });
   }
 }

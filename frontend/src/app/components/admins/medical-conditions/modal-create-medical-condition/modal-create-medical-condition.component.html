@@ -1,1 +1,52 @@
-<p>modal-create-medical-condition works!</p>
+<div class="card flex justify-content-end">
+    <p-toast></p-toast>
+    <p-button class="mt-5 mr-5" (onClick)="showDialog()" label="Add Medical Condition" />
+    <p-dialog header="Add Medical Condition" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '32rem', maxHeight: '40rem' }">
+        <span class="p-text-secondary block mb-2">Insert information.</span>
+        <form [formGroup]="medicalConditionForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="code">Code</label>
+                        <input pInputText id="code" formControlName="code" />
+                        <small
+                            *ngIf="medicalConditionForm.controls['code'].invalid && (medicalConditionForm.controls['code'].dirty || medicalConditionForm.controls['code'].touched)"
+                            class="p-error">
+                            Insert Code.
+                        </small>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="designation">Designation</label>
+                        <input pInputText id="designation" formControlName="designation" />
+                        <small
+                            *ngIf="medicalConditionForm.controls['designation'].invalid && (medicalConditionForm.controls['designation'].dirty || medicalConditionForm.controls['designation'].touched)"
+                            class="p-error">
+                            Insert Designation.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-7">
+                    <div class="flex flex-column gap-2 mb-2 input-small">
+                        <label for="description">Description</label>
+                        <input pInputText id="description" formControlName="description" />
+                        <small
+                            *ngIf="medicalConditionForm.controls['description'].invalid && (medicalConditionForm.controls['description'].dirty || medicalConditionForm.controls['description'].touched)"
+                            class="p-error">
+                            Insert Description.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center gap-2 dialog-footer">
+                <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                <p-button label="Save" (onClick)="saveData()"/>
+            </div>
+        </ng-template>
+    </p-dialog>
+</div>
