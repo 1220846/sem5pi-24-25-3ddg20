@@ -1,0 +1,72 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Admin as "Admin"
+
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Data Management"
+    participant Controller as "SpecializationsController"<<Controller>>
+    participant Service_ as "SpecializationService"<<Service>>
+    participant SpecializationDto as "SpecializationDto"<<Domain>>
+    database SpecializationRepo as "SpecializationRepository"<<Domain>>
+    database StaffRepo as "StaffRepository" <<Domain>>
+    database OperationTypeSpecializationRepo as "OperationTypeSpecializationRepository" <<Domain>>
+end box
+
+activate Admin
+    Admin -> ComponentUI : Asks to remove a Specialization
+    activate ComponentUI
+        ComponentUI --> Admin : Asks to confirm
+    deactivate ComponentUI
+    Admin -> ComponentUI : Confirms
+    activate ComponentUI
+        ComponentUI -> Component : Remove Specialization
+        activate Component
+            Component -> Service : Remove Specialization
+            activate Service
+                Service -> HTTP : delete('/specializations')
+                activate HTTP
+                    HTTP -> Controller : DELETE /specializations/{id}
+                        activate Controller
+                            Controller -> Service_ : RemoveAsync(id)
+                            activate Service_
+                                Service_ -> SpecializationRepo : GetByIdAsync(id)
+                                activate SpecializationRepo
+                                    SpecializationRepo --> Service_ : specialization
+                                deactivate SpecializationRepo
+                                Service_ -> StaffRepo : GetStaffsAsync(specializationId: id)
+                                activate StaffRepo
+                                    StaffRepo --> Service_ : staffs
+                                deactivate StaffRepo
+                                note left: if staffs.Count > 0 return 400
+                                Service_ -> OperationTypeSpecializationRepo : GetAllAsync()
+                                activate OperationTypeSpecializationRepo
+                                    OperationTypeSpecializationRepo --> Service_ : operationTypeSpecializations
+                                deactivate OperationTypeSpecializationRepo
+                                note left: if any operationTypeSpecialization.Specialization.Id.AsGuid() == id return 400
+                                Service_ -> SpecializationRepo : Remove(specialization)
+                                Service_ -> SpecializationDto** : create(specialization)
+                                activate SpecializationDto
+                                    SpecializationDto --> Service_ : specializationDto
+                                deactivate SpecializationDto
+                                Service_ --> Controller : specializationDto
+                            deactivate Service_
+                        Controller --> HTTP : 200 (specialization)
+                    deactivate Controller
+                    HTTP --> Service : specialization
+                deactivate HTTP
+                Service --> Component : specialization
+            deactivate Service
+            Component --> ComponentUI : specialization
+        deactivate Component
+    Admin <-- ComponentUI : Shows success message
+    deactivate ComponentUI
+deactivate Admin
+
+@enduml
