@@ -1,0 +1,98 @@
+@startuml process-view
+autonumber
+skinparam DefaultTextAlignment center
+actor Doctor as "Doctor"
+
+box "<<system (C4)>>\nFrontend"#LightBlue
+    participant ComponentUI as "UI Component" <<component (C4)>>
+    participant Component as "Component" <<component (C4)>>
+    participant Model as "Model" <<component (C4)>>
+    participant Service as "Service" <<component (C4)>>
+    participant HTTP as "HTTP" <<component (C4)>>
+end box
+
+box "<<system (C4)>>\nBackend Node"
+    participant Router as "MedicalConditionRouter"<<Router>>
+    participant Controller as "MedicalConditionController"<<Controller>>
+    participant Service_ as "MedicalConditionService"<<Service>>
+    participant MedicalCondition as "MedicalCondition"<<Domain>>
+    participant MedicalConditionMap as "MedicalConditionMap"<<Mapper>>
+    database MedicalConditionRepo as "MedicalConditionRepo"<<Domain>>
+end box
+
+activate Doctor
+
+    Doctor -> ComponentUI : asks to search for medical conditions
+
+    activate ComponentUI
+
+        ComponentUI -> Component : search for medical conditions
+
+        activate Component
+            
+            Component -> Service : search for medical conditions
+            activate Service
+
+                Service -> HTTP : get('/medicalconditions')
+
+                activate HTTP
+                    HTTP -> Router : GET /medicalconditions
+
+                    activate Router
+
+                        Router -> Controller : getMedicalConditions(req,res,next)
+
+                        activate Controller
+                            Controller -> Service_ : getMedicalConditions()
+                            
+                            activate Service_
+
+                                Service_ -> MedicalConditionRepo : findAll()
+
+                                activate MedicalConditionRepo
+
+                                    MedicalConditionRepo --> Service_ : medicalConditions
+
+                                deactivate MedicalConditionRepo
+
+                                loop MedicalCondition in medicalConditions
+                                
+                                    Service_ -> MedicalConditionMap : toDTO(MedicalCondition)
+
+                                    activate MedicalConditionMap
+
+                                        MedicalConditionMap --> Service_ : MedicalConditionDTO
+
+                                    deactivate MedicalConditionMap
+
+                                end
+                                
+                                Service_ --> Controller : medicalConditionDTO
+
+                            deactivate Service_
+
+                            Controller --> Router : medicalConditionDTO
+
+                        deactivate Controller
+
+                        Router --> HTTP : 200 (medicalConditions)
+
+                    deactivate Router
+
+                    HTTP --> Service : medicalConditions
+
+                deactivate HTTP
+
+                Service --> Component : medicalConditions
+
+            deactivate Service
+
+            Component --> ComponentUI : medicalConditions
+        deactivate Component
+
+    Doctor <-- ComponentUI : shows medicalConditions
+    deactivate ComponentUI
+
+deactivate Doctor
+
+@enduml
