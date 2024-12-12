@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MessageService } from 'primeng/api';
 import { MedicalConditionService } from '../../../../services/medical-condition.service';
 import { CreatingMedicalConditionDto } from '../../../../domain/CreatingMedicalConditionDto';
@@ -14,7 +15,7 @@ import { CreatingMedicalConditionDto } from '../../../../domain/CreatingMedicalC
 @Component({
   selector: 'app-modal-create-medical-condition',
   standalone: true,
-  imports: [ TagModule, InputTextModule, DropdownModule, CommonModule,
+  imports: [ TagModule, InputTextModule, DropdownModule, CommonModule, InputTextareaModule,
     ButtonModule, DialogModule, FormsModule, ReactiveFormsModule, ToastModule],
   providers: [MessageService],
   templateUrl: './modal-create-medical-condition.component.html',

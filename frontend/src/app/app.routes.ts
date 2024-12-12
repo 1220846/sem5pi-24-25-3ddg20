@@ -20,6 +20,7 @@ import { RoomTypesComponent } from './components/admins/room-types/room-types.co
 import { SpecializationsComponent } from './components/admins/specializations/specializations.component';
 import { AppointmentsComponent } from './components/doctors/appointments/appointments.component';
 import { AllergiesComponent } from './components/admins/allergies/allergies.component';
+import { MedicalConditionsComponent } from './components/admins/medical-conditions/medical-conditions.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -44,6 +45,7 @@ export const routes: Routes = [
               { path: 'room-types', component:RoomTypesComponent},
               { path: 'specializatons', component:SpecializationsComponent},
               { path: 'allergies', component:AllergiesComponent},
+              { path: 'medical-conditions', component:MedicalConditionsComponent},
               { path: '', redirectTo: 'operation-types', pathMatch: 'full' }]
   },
   { path: 'hospital', component: HospitalComponent },

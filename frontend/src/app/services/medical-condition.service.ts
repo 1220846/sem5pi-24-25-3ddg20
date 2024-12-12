@@ -9,7 +9,7 @@ import { CreatingMedicalConditionDto } from '../domain/CreatingMedicalConditionD
 })
 export class MedicalConditionService {
 
-  private apiUrl = 'http://localhost:4000/api/medicalConditions';
+  private apiUrl = 'http://localhost:4000/api/medicalconditions';
 
   private header: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
   
@@ -19,8 +19,8 @@ export class MedicalConditionService {
   getAll(): Observable<MedicalCondition[]>{
     const token = localStorage.getItem('AccessToken');
     const headers = this.header.set('Authorixation', `Bearer ${token}`);
-  
     return this.http.get<MedicalCondition[]>(this.apiUrl,{ headers: headers });
+    
   }
 
   add(medicalCondition: CreatingMedicalConditionDto): Observable<MedicalCondition> {
