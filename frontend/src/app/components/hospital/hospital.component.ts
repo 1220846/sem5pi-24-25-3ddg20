@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as THREE from 'three';
+import * as TWEEN from '@tweenjs/tween.js';
 import Orientation from '../../3dVisualization/orientation';
 import Hospital from '../../3dVisualization/hospital';
 
@@ -40,8 +41,10 @@ export class HospitalComponent implements OnInit {
 
   animate() {
       requestAnimationFrame(() => this.animate());
+      TWEEN.update();
       this.hospital.update();
   }
+  
   setupPopStateListener() {
     window.addEventListener('popstate', this.reloadPage);
   }
@@ -49,5 +52,6 @@ export class HospitalComponent implements OnInit {
   reloadPage = () => {
       window.location.reload();
   };
+  
 }
 

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import * as TWEEN from "@tweenjs/tween.js";
 import Ground from "./ground.js";
 import Wall from "./wall.js";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -284,21 +285,46 @@ export default class Maze {
     };
 
     moveCameraToRoom(position, camera) {
-        
         const [row, column] = this.cartesianToCell(position);
-        
-        // Calculates the center coordinates relative to the map size and scale
+    
+        // Calcula as coordenadas centrais relativas ao tamanho e escala do mapa
         const centerX = (column - this.size.width / 2.0 + 0.5) * this.scale.x;
         const centerZ = (row - this.size.height / 2.0 + 0.5) * this.scale.z;
-
-        // Height set to 3.5
-        camera.object.position.set(centerX,3.5,centerZ);
-        
-        //Adjust the camera's up
-        camera.object.up.set(0, 0, -1);
-
-        // Fix camera to look at the center of the cell
-        camera.object.lookAt(new THREE.Vector3(centerX, 0, centerZ));
+    
+        // Define a posição de altura fixada a 3.5
+        const targetPosition = new THREE.Vector3(centerX, 3.5, centerZ);
+    
+        // Cria a animação para a posição da câmera
+        new TWEEN.Tween(camera.object.position,true)
+            .to({ x: targetPosition.x, y: targetPosition.y, z: targetPosition.z }, 1000) // 1000ms para a transição suave
+            .easing(TWEEN.Easing.Quadratic.Out) // Função de easing suave
+            .start();
+    
+        // Agora, para garantir que a câmera está sempre olhando para o centro da célula,
+        // usamos o lookAt para manter o foco durante a animação
+        const lookAtTarget = new THREE.Vector3(centerX, 0, centerZ); // O alvo de "lookAt" é o centro da célula
+        const initialRotation = camera.object.rotation.clone();
+    
+        // Cria a animação para a rotação da câmera
+        new TWEEN.Tween(camera.object.rotation,true)
+            .to({
+                x: Math.atan2(lookAtTarget.z - camera.object.position.z, lookAtTarget.x - camera.object.position.x), // Rotação em torno do eixo X
+                y: initialRotation.y, // Mantém a rotação ao longo do eixo Y (se necessário)
+                z: 0 // Garantir rotação apenas no eixo X e Y
+            }, 1000) // Mesma duração da transição de posição
+            .easing(TWEEN.Easing.Quadratic.Out)
+            .onUpdate(() => {
+                // Sempre que a rotação for atualizada, garantimos que a câmera olhe para o alvo
+                camera.object.lookAt(lookAtTarget);
+            })
+            .start();
+    
+        // Ajusta o vetor 'up' da câmera para manter a orientação correta (se necessário)
+        const targetUp = new THREE.Vector3(0, 0, -1);
+        new TWEEN.Tween(camera.object.up,true)
+            .to({ x: targetUp.x, y: targetUp.y, z: targetUp.z }, 1000)
+            .easing(TWEEN.Easing.Quadratic.Out)
+            .start();
     }
 
     /* To-do #23 - Measure the player’s distance to the walls
