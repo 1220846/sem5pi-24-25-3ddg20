@@ -10,6 +10,7 @@ namespace DDDSample1.Domain.Appointments{
 
     public class Appointment : Entity<AppointmentId>, IAggregateRoot
     {
+        private AppointmentDateAndTime appointmentDateAndTime;
 
         public SurgeryRoom SurgeryRoom { get;  private set; }
         public OperationRequest OperationRequest { get;  private set; }
@@ -21,12 +22,20 @@ namespace DDDSample1.Domain.Appointments{
 
         private Appointment(){}
 
-        public Appointment(SurgeryRoom surgeryRoom,OperationRequest operationRequest, AppointmentDateAndTime dateAndTime){
+        public Appointment(SurgeryRoom surgeryRoom,OperationRequest operationRequest, AppointmentDateAndTime dateAndTime, object pENDING)
+        {
             this.Id = new AppointmentId(Guid.NewGuid());
             this.SurgeryRoom = surgeryRoom;
             this.OperationRequest = operationRequest;
             this.DateAndTime = dateAndTime;
             this.Status = AppointmentStatus.SCHEDULED;
+        }
+
+        public Appointment(SurgeryRoom surgeryRoom, OperationRequest operationRequest, AppointmentDateAndTime appointmentDateAndTime)
+        {
+            SurgeryRoom = surgeryRoom;
+            OperationRequest = operationRequest;
+            this.appointmentDateAndTime = appointmentDateAndTime;
         }
 
         public override bool Equals(object obj)

@@ -13,15 +13,18 @@ import { TagModule } from 'primeng/tag';
 import { AppointmentService } from '../../../../services/appointment.service';
 import { Appointment } from '../../../../domain/Appointment';
 import { User } from '../../../../domain/User';
+import { ModalUpdateAppointmentComponent } from '../modal-update-appointment/modal-update-appointment.component';
+import { IconFieldModule } from 'primeng/iconfield';
 
 @Component({
   selector: 'app-list-appointments',
   standalone: true,
-  imports: [AccordionModule, AvatarModule, BadgeModule, TagModule, CommonModule, ScrollerModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule],
+  imports: [AccordionModule, AvatarModule, BadgeModule, TagModule, CommonModule, ScrollerModule, DropdownModule, InputTextModule, FormsModule, OverlayPanelModule, ButtonModule,ModalUpdateAppointmentComponent,IconFieldModule],
   templateUrl: './list-appointments.component.html',
   styleUrl: './list-appointments.component.scss'
 })
 export class ListAppointmentsComponent implements OnChanges {
+
   @Input() user: User | null = null;
   appointments: Appointment[] = [];
   doctorId: string | null = null;
@@ -48,5 +51,9 @@ export class ListAppointmentsComponent implements OnChanges {
     } else {
       console.error('Doctor ID is missing');
     }
+  }
+
+  onAppointmentUpdated() {
+    this.loadAppointments();
   }
 }

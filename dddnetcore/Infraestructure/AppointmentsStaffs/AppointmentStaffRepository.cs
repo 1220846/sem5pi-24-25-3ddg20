@@ -20,6 +20,23 @@ namespace DDDSample1.Infrastructure.AppointmentsStaffs
 
         public async Task<bool> IsStaffAvailableAsync(StaffId staffId, DateTime startTime, DateTime endTime, Guid? excludedAppointmentId = null)
         {
+            var staff = await _context.Staffs
+                .Include(s => s.AvailabilitySlots)
+                .FirstOrDefaultAsync(s => s.Id == staffId);
+
+            if (staff == null)
+            {
+                throw new ArgumentException($"Staff with ID {staffId} not found.");
+            }
+
+            // Verifica se o staff possui pelo menos um slot disponível no intervalo
+            var isAvailableInSlot = staff.AvailabilitySlots.Any(slot =>
+                slot.StartTime.Time <= startTime && slot.EndTime.Time >= endTime);
+
+            if (!isAvailableInSlot)
+            {
+                return false; // Sem slot disponível no intervalo
+            }
 
             var appointmentStaffs = await _context.AppointmentsStaffs
                 .Include(a => a.Appointment)

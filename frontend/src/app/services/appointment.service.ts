@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Appointment } from '../domain/Appointment';
 import { catchError, Observable, throwError } from 'rxjs';
 import { CreatingAppointmentDto } from '../domain/CreatingAppointmentDto';
+import { UpdateAppointmentDto } from '../domain/UpdateAppointmentDto';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,17 @@ export class AppointmentService {
     const headers = this.header.set('Authorization', `Bearer ${token}`);
 
     return this.http.get<Appointment[]>(`${this.apiUrl}/doctor/${doctorId}`, {headers: headers});
+  }
+  
+  updateAppointment(id: string, updateAppointmentDto: UpdateAppointmentDto): Observable<Appointment> {
+    const token = localStorage.getItem('accessToken');
+    const headers = this.header.set('Authorization', `Bearer ${token}`);
+
+    return this.http.patch<Appointment>(`${this.apiUrl}/${id}`, updateAppointmentDto, { headers })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error.error.message);
+        })
+      );
   }
 }

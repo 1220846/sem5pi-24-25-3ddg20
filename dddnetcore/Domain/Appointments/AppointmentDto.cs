@@ -12,5 +12,6 @@ namespace DDDSample1.Domain.Appointments{
         public OperationRequestWithAllDataDto OperationRequestDto {get;set;}
         public string Status {get;set;}
         public DateTime DateAndTime {get;set;}
+        public List<StaffDto> Team;
     }
 }

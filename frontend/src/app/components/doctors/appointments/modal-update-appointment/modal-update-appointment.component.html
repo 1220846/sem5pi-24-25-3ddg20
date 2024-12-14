@@ -1,0 +1,69 @@
+<div class="card flex justify-content-end mr-2">
+    <p-button (onClick)="showDialog()" [outlined]="true" severity="primary" icon="pi pi-pencil" />
+    <p-dialog header="Update Appointment" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '30rem', maxHeight: '40rem' }" [appendTo]="'body'" (onHide)="closeDialog()">
+        <p-toast></p-toast>
+        <form [formGroup]="appointmentForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="surgerRoomNumber">Surgery Room</label>
+                    <p-dropdown [options]="surgeryRooms" [appendTo]="'body'" formControlName="surgeryRoomNumber"
+                        [filter]="true" filterBy="number" [virtualScroll]="true" [virtualScrollItemSize]="40"
+                        scrollHeight="120px" placeholder="Select a surgery room" [optionValue]="'number'"
+                        optionLabel="number">
+                    </p-dropdown>
+                    <small
+                        *ngIf="appointmentForm.controls['surgeryRoomNumber'].invalid && (appointmentForm.controls['surgeryRoomNumber'].dirty || appointmentForm.controls['surgeryRoomNumber'].touched)"
+                        class="p-error">
+                        Please select a surgery room.
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="operationRequest">Operation Request</label>
+                    <input pInputText id="operationRequest" type="text" formControlName="operationRequest" />
+                </div>            
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="staffsIds">Medical Team</label>
+                    <p-multiSelect [options]="staffs" [appendTo]="'body'" formControlName="staffsIds" optionLabel="id"
+                        placeholder="Select medical team" display="chip" [showClear]="true" scrollHeight="150px"
+                        [optionValue]="'id'">
+                        <ng-template let-staff pTemplate="item">
+                            <div class="flex align-items-center">
+                                <div class="flex flex-column">
+                                    <span>{{ staff.id }} - {{ staff.fullName }}</span>
+                                    <small class="text-muted">{{ staff.specialization.name }}</small>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-multiSelect>
+                    <small
+                        *ngIf="appointmentForm.controls['staffsIds'].invalid && 
+                                      (appointmentForm.controls['staffsIds'].dirty || appointmentForm.controls['staffsIds'].touched)"
+                        class="p-error">
+                        Please select at least one staff member.
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-medium">
+                    <label for="dateAndTime">Date and Time</label>
+                    <p-calendar id="dateAndTime" formControlName="dateAndTime" [minDate]="minDate" dateFormat="dd/mm/yy"
+                        placeholder="Select Date and Time" [showTime]="true" [showIcon]="true" appendTo="body"
+                        [iconDisplay]="'input'" (onFocus)="updateMinDateOnFocus()">
+                    </p-calendar>
+                    <small
+                        *ngIf="appointmentForm.controls['dateAndTime'].invalid && 
+                                   (appointmentForm.controls['dateAndTime'].dirty || appointmentForm.controls['dateAndTime'].touched)"
+                        class="p-error">
+                        Please select a valid date and time.
+                    </small>
+                </div>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Save" (click)="saveData()" icon="pi pi-check"></p-button>
+                <p-button label="Cancel" (click)="closeDialog()" icon="pi pi-times" severity="secondary"></p-button>
+            </div>
+        </ng-template>
+
+    </p-dialog>
+</div>

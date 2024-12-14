@@ -83,6 +83,7 @@ namespace DDDSample1.Domain.Appointments
                     },
                     Status = EnumDescription.GetEnumDescription(appointment.Status),
                     DateAndTime = appointment.DateAndTime.DateAndTime,
+                    Team = appointment.AppointmentStaffs.Select(a => new StaffDto(a.Staff)).ToList()
                 };
 
                 listDto.Add(appointmentDto);
@@ -130,6 +131,7 @@ namespace DDDSample1.Domain.Appointments
                 },
                 Status = EnumDescription.GetEnumDescription(appointment.Status),
                 DateAndTime = appointment.DateAndTime.DateAndTime,
+                Team = appointment.AppointmentStaffs.Select(a => new StaffDto(a.Staff)).ToList()
             };
         }
 
@@ -214,6 +216,7 @@ namespace DDDSample1.Domain.Appointments
                 },
                 Status = EnumDescription.GetEnumDescription(appointment.Status),
                 DateAndTime = appointment.DateAndTime.DateAndTime,
+                Team = appointment.AppointmentStaffs.Select(a => new StaffDto(a.Staff)).ToList()
             };
         }
         private async Task ValidateStaffSpecializationsAsync(List<string> staffIds, OperationType operationType)
@@ -306,6 +309,7 @@ namespace DDDSample1.Domain.Appointments
                     },
                     Status = EnumDescription.GetEnumDescription(appointment.Status),
                     DateAndTime = appointment.DateAndTime.DateAndTime,
+                    Team = appointment.AppointmentStaffs.Select(a => new StaffDto(a.Staff)).ToList()
                 };
 
                 listDto.Add(appointmentDto);
@@ -357,6 +361,7 @@ namespace DDDSample1.Domain.Appointments
                     },
                     Status = EnumDescription.GetEnumDescription(appointment.Status),
                     DateAndTime = appointment.DateAndTime.DateAndTime,
+                    Team = appointment.AppointmentStaffs.Select(a => new StaffDto(a.Staff)).ToList()
                 };
 
                 listDto.Add(appointmentDto);
@@ -385,9 +390,9 @@ namespace DDDSample1.Domain.Appointments
                 ? new RoomNumber(dto.SurgeryRoomId)
                 : appointment.SurgeryRoom.Id;
 
-            var newStaffIds = dto.StaffsIds != null
-                ? dto.StaffsIds.ToHashSet()
-                : appointment.AppointmentStaffs.Select(s => s.Id.Value).ToHashSet();
+            var newStaffIds = dto.StaffsIds?.ToHashSet() 
+                ?? appointment.AppointmentStaffs.Select(s => s.Id.StaffId.Id).ToHashSet();
+
 
             // Validar disponibilidade da sala
             if (!await _surgeryRoomRepo.IsRoomAvailableAsync(newRoomId, startTime, endTime, appointment.Id.AsGuid()))
@@ -483,6 +488,7 @@ namespace DDDSample1.Domain.Appointments
                 },
                 Status = EnumDescription.GetEnumDescription(appointment.Status),
                 DateAndTime = appointment.DateAndTime.DateAndTime,
+                Team = appointment.AppointmentStaffs.Select(a => new StaffDto(a.Staff)).ToList()
             };
         }
     }
