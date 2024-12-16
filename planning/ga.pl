@@ -3,6 +3,12 @@
 :-dynamic prob_crossover/1.
 :-dynamic prob_mutation/1.
 
+:-dynamic max_time/1.
+:-dynamic best_value_threshold/1.
+:-dynamic stability_generations/1.
+:- dynamic start_time/1.
+:- dynamic population_history/2. % Dynamic predicate to store population history
+
 % task(Id,ProcessTime,DueTime,PenaltyWeight).
 task(t1,2,5,1).
 task(t2,4,7,6).
@@ -23,17 +29,29 @@ initialize:-write('Number of new generations: '),read(NG),
 	(retract(prob_crossover(_));true), 	asserta(prob_crossover(PC)),
 	write('Probability of mutation (%):'), read(P2),
 	PM is P2/100, 
-	(retract(prob_mutation(_));true), asserta(prob_mutation(PM)).
+	(retract(prob_mutation(_));true), asserta(prob_mutation(PM)),
+
+    % Novos parâmetros de terminação
+    write('Maximum time to run (in seconds): '), read(MaxTime),
+    (retract(max_time(_));true), asserta(max_time(MaxTime)),
+    write('Best value threshold to stop: '), read(BestValueThreshold),
+    (retract(best_value_threshold(_));true), asserta(best_value_threshold(BestValueThreshold)),
+    write('Number of generations for population stability: '), read(StabilityGenerations),
+    (retract(stability_generations(_));true), asserta(stability_generations(StabilityGenerations)).
 
 generate:-
     initialize,
+    start_timer,  % Start the timer at the beginning of the generation process
     generate_population(Pop),
     write('Pop='),write(Pop),nl,
     evaluate_population(Pop,PopValue),
     write('PopValue='),write(PopValue),nl,
     order_population(PopValue,PopOrd),
     generations(NG),
-    generate_generation(0,NG,PopOrd).
+    max_time(MaxTime),
+    best_value_threshold(BestValueThreshold),
+    stability_generations(StabilityGenerations),
+    generate_generation(0,NG,MaxTime,BestValueThreshold,StabilityGenerations,PopOrd).
 
 generate_population(Pop):-
     population(PopSize),
@@ -98,50 +116,132 @@ bchange([X*VX,Y*VY|L1],[Y*VY|L2]):-
 
 bchange([X|L1],[X|L2]):-bchange(L1,L2).
     
-generate_generation(G,G,Pop):-!,
-	write('Generation '), write(G), write(':'), nl, write(Pop), nl.
-generate_generation(N, G, Pop) :-
-  write('Generation '), write(N), write(':'), nl, write(Pop), nl,
-  Pop = [Best*BestValue|_], % Best individual
-  crossover(Pop, NPop1),
-  mutation(NPop1, NPop),
-  evaluate_population(NPop, NPopValue),
-  order_population(NPopValue, NPopOrd),
-  add_best(Best*BestValue, NPopOrd, FinalPop),
-  N1 is N + 1,
-  generate_generation(N1, G, FinalPop).
+generate_generation(G, G, _, _, _, Pop) :- !,
+    write('Final Generation '), write(G), write(':'), nl, 
+    write(Pop), nl.
 
-add_best(Best*BestValue, Pop, [Best*BestValue|Pop]).
-add_best(Best*BestValue, Pop, [Best*BestValue|Rest]) :-
-  Pop = [First*FirstValue|Rest],
-  write('BestValue: '), write(BestValue),nl,
-  write('FirstValue: '), write(FirstValue),nl,
-  FirstValue >= BestValue.
+generate_generation(N, MaxGenerations, MaxTime, BestValueThreshold, StabilityGenerations, Pop) :-
+    get_time(CurrentTime),
+    start_time(StartTime),
+    ElapsedTime is CurrentTime - StartTime,
+    
+    (ElapsedTime > MaxTime ->
+        write('Maximum time reached! Stopping at generation '), write(N), nl
+        ;
+        (
+            write('Generation '), write(N), write(':'), nl, write(Pop), nl,
+            % Best Value
+            Pop = [Best*BestValue|_],
+
+            % Check stabilization condition
+            (check_population_stability(N, Pop, StabilityGenerations) ->
+                write('Population stabilized after '), write(StabilityGenerations), 
+                write(' generations. Stopping.'), nl
+            ;
+                (BestValue =< BestValueThreshold ->
+                    write('Stopping condition met! Best value: '), write(BestValue), nl,
+                    write('Stopping at generation '), write(N), nl
+                ;
+                    crossover(Pop, NPop1),
+                    mutation(NPop1, NPop),
+                    evaluate_population(NPop, NPopValue),
+                    order_population(NPopValue, NPopOrd),
+
+                    % Compares the best of the current population with the next
+                    NPopOrd = [_NextBest*NextBestValue|_],
+                    ((NextBestValue @=< BestValue
+                        -> FinalPop = NPopOrd,
+                            write('Next Best value:'), write(NextBestValue), nl,
+                            write('Best value:'), write(BestValue), nl
+                    ;  
+                        add_best(Best*BestValue, NPopOrd, FinalPop),
+                            write('Next Best value:'), write(NextBestValue), nl,
+                            write('Best value:'), write(BestValue), nl
+                    )),
+                    
+                    N1 is N + 1,
+
+                    % Store the current population
+                    store_population(N, FinalPop),
+
+                    generate_generation(N1, MaxGenerations, MaxTime, BestValueThreshold, StabilityGenerations, FinalPop)
+                )
+            )
+        )
+    ).
+        
+
+% Add the best in the first position
+add_best(Best, Pop, FinalPop) :-
+    append(Front, [_|Rest], Pop),
+    append(Front, Rest, TempPop),
+    append([Best], TempPop, FinalPop).
+
+start_timer :-
+    get_time(CurrentTime),
+    retractall(start_time(_)),
+    asserta(start_time(CurrentTime)).
+
+% Store a population for a given generation
+store_population(Generation, Population) :-
+    % Retract any previous history for this generation
+    retract(population_history(Generation, _)),
+    fail.
+store_population(Generation, Population) :-
+    assertz(population_history(Generation, Population)).
+
+% Check population stability
+check_population_stability(CurrentGeneration, CurrentPop, StabilityGenerations) :-
+    CurrentGeneration >= StabilityGenerations,
+    check_last_n_generations(CurrentGeneration, StabilityGenerations, CurrentPop).
+
+% Check if the last N generations have the same population
+check_last_n_generations(_, 0, _) :- !.
+check_last_n_generations(CurrentGeneration, RemainingGenerations, CurrentPop) :-
+    PreviousGeneration is CurrentGeneration - 1,
+    population_history(PreviousGeneration, PreviousPop),
+    populations_are_identical(CurrentPop, PreviousPop),
+    
+    NextRemainingGenerations is RemainingGenerations - 1,
+    check_last_n_generations(PreviousGeneration, NextRemainingGenerations, CurrentPop).
+
+% Check if two populations are identical
+populations_are_identical(Pop1, Pop2) :-
+    length(Pop1, Len),
+    length(Pop2, Len),
+    compare_population_individuals(Pop1, Pop2).
+
+% Compare each individual in the populations
+compare_population_individuals([], []).
+compare_population_individuals([Individual1*Value1|Rest1], [Individual2*Value2|Rest2]) :-
+    Individual1 = Individual2,
+    Value1 = Value2,
+    compare_population_individuals(Rest1, Rest2).
 
 generate_crossover_points(P1,P2):- generate_crossover_points1(P1,P2).
-
 generate_crossover_points1(P1,P2):-
-	tasks(N),
-	NTemp is N+1,
-	random(1,NTemp,P11),
-	random(1,NTemp,P21),
-	P11\==P21,!,
-	((P11<P21,!,P1=P11,P2=P21);P1=P21,P2=P11).
-generate_crossover_points1(P1,P2):-
-	generate_crossover_points1(P1,P2).
+    tasks(N),
+    NTemp is N+1,
+    random(1,NTemp,P11),
+    random(1,NTemp,P21),
+    P11\==P21,!,
+    ((P11<P21,!,P1=P11,P2=P21);P1=P21,P2=P11).
+    generate_crossover_points1(P1,P2):-
+    generate_crossover_points1(P1,P2).
 
 
 crossover([ ],[ ]).
 crossover([Ind*_],[Ind]).
 crossover([Ind1*_,Ind2*_|Rest],[NInd1,NInd2|Rest1]):-
-	generate_crossover_points(P1,P2),
-	prob_crossover(Pcruz),random(0.0,1.0,Pc),
-	((Pc =< Pcruz,!,
-        cross(Ind1,Ind2,P1,P2,NInd1),
-	  cross(Ind2,Ind1,P1,P2,NInd2))
-	;
-	(NInd1=Ind1,NInd2=Ind2)),
-	crossover(Rest,Rest1).
+    generate_crossover_points(P1,P2),
+    prob_crossover(Pcruz),random(0.0,1.0,Pc),
+    ((Pc =< Pcruz,!,
+    cross(Ind1,Ind2,P1,P2,NInd1),
+    cross(Ind2,Ind1,P1,P2,NInd2))
+    ;
+    (NInd1=Ind1,NInd2=Ind2)),
+    crossover(Rest,Rest1).
+
 
 fillh([ ],[ ]).
 
