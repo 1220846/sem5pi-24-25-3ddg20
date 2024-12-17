@@ -31,13 +31,17 @@ initialize:-write('Number of new generations: '),read(NG),
 	PM is P2/100, 
 	(retract(prob_mutation(_));true), asserta(prob_mutation(PM)),
 
-    % Novos parâmetros de terminação
+    % Stop conditions
     write('Maximum time to run (in seconds): '), read(MaxTime),
     (retract(max_time(_));true), asserta(max_time(MaxTime)),
     write('Best value threshold to stop: '), read(BestValueThreshold),
     (retract(best_value_threshold(_));true), asserta(best_value_threshold(BestValueThreshold)),
     write('Number of generations for population stability: '), read(StabilityGenerations),
-    (retract(stability_generations(_));true), asserta(stability_generations(StabilityGenerations)).
+    (retract(stability_generations(_));true), asserta(stability_generations(StabilityGenerations)),
+
+    %Elitism
+    write('Selection method (1 for purely elitist, 2 for no purely elitist): '), read(SM),
+    (retract(selection_method(_));true), asserta(selection_method(SM)).
 
 generate:-
     initialize,
@@ -127,15 +131,13 @@ generate_generation(N, MaxGenerations, MaxTime, BestValueThreshold, StabilityGen
     
     (ElapsedTime > MaxTime ->
         write('Maximum time reached! Stopping at generation '), write(N), nl
-        ;
+    ;
         (
             write('Generation '), write(N), write(':'), nl, write(Pop), nl,
-            % Best Value
             Pop = [Best*BestValue|_],
 
-            % Check stabilization condition
             (check_population_stability(N, Pop, StabilityGenerations) ->
-                write('Population stabilized after '), write(StabilityGenerations), 
+                write('Population stabilized after '), write(StabilityGenerations),
                 write(' generations. Stopping.'), nl
             ;
                 (BestValue =< BestValueThreshold ->
@@ -146,24 +148,44 @@ generate_generation(N, MaxGenerations, MaxTime, BestValueThreshold, StabilityGen
                     mutation(NPop1, NPop),
                     evaluate_population(NPop, NPopValue),
                     order_population(NPopValue, NPopOrd),
+                    
+                    write('Best Value: '), write(BestValue), nl,
 
-                    % Compares the best of the current population with the next
-                    NPopOrd = [_NextBest*NextBestValue|_],
-                    ((NextBestValue @=< BestValue
-                        -> FinalPop = NPopOrd,
-                            write('Next Best value:'), write(NextBestValue), nl,
-                            write('Best value:'), write(BestValue), nl
-                    ;  
-                        add_best(Best*BestValue, NPopOrd, FinalPop),
-                            write('Next Best value:'), write(NextBestValue), nl,
-                            write('Best value:'), write(BestValue), nl
-                    )),
+                    selection_method(Method),
+                    (Method = 1 ->
+                        % Purely elitist selection
+                        (NPopOrd = [_NextBest*NextBestValue|_],
+                        write('Next Best Value: '), write(NextBestValue), nl,
+                        (NextBestValue @=< BestValue ->
+                            FinalPop = NPopOrd
+                        ;
+                            add_best(Best*BestValue, NPopOrd, FinalPop)
+                        ))
+                    ;
+                        random(0.0, 1.0, R),
+                        (R < 0.6 ->
+                            % 60% chance: Tournament selection normal
+                            select_population(NPopOrd, SelectedPop),
+                            add_best(Best*BestValue, SelectedPop, FinalPop)
+                        ;
+                            % 40% chance: Seleção baseada em rank
+                            NPopOrd = [Current*CurrentValue|_],
+                            write('Current Value: '), write(CurrentValue), nl,
+                            CompareValue is BestValue * 1.2,
+                            write('CompareValue: '), write(CompareValue), nl,
+                            (CurrentValue @< BestValue * 1.2 ->
+                                % Se o melhor atual estiver próximo do melhor global (até 20% pior)
+                                % mantém a população atual
+                                FinalPop = NPopOrd
+                            ;
+                                % Caso contrário, adiciona o melhor global
+                                add_best(Best*BestValue, NPopOrd, FinalPop)
+                            )
+                        )
+                    ),
                     
                     N1 is N + 1,
-
-                    % Store the current population
                     store_population(N, FinalPop),
-
                     generate_generation(N1, MaxGenerations, MaxTime, BestValueThreshold, StabilityGenerations, FinalPop)
                 )
             )
@@ -217,6 +239,26 @@ compare_population_individuals([Individual1*Value1|Rest1], [Individual2*Value2|R
     Individual1 = Individual2,
     Value1 = Value2,
     compare_population_individuals(Rest1, Rest2).
+
+% Tournament selection
+tournament_select(Pop, Selected) :-
+    population(PopSize),
+    random(0, PopSize, Idx1),
+    random(0, PopSize, Idx2),
+    nth0(Idx1, Pop, Ind1*Val1),
+    nth0(Idx2, Pop, Ind2*Val2),
+    (Val1 =< Val2 -> Selected = Ind1*Val1 ; Selected = Ind2*Val2).
+
+% Modified selection process
+select_population(OldPop, NewPop) :-
+    population(PopSize),
+    select_population(OldPop, PopSize, [], NewPop).
+
+select_population(_, 0, Acc, Acc) :- !.
+select_population(OldPop, N, Acc, NewPop) :-
+    tournament_select(OldPop, Selected),
+    N1 is N - 1,
+    select_population(OldPop, N1, [Selected|Acc], NewPop).
 
 generate_crossover_points(P1,P2):- generate_crossover_points1(P1,P2).
 generate_crossover_points1(P1,P2):-
