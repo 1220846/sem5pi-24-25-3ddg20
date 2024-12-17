@@ -15,6 +15,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Upload Frontend to VM DEI
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP_FRONTEND }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
+          source: ./frontend/*
+          target: ~/sarm
+
+      - name: Deploy Frontend in VM DEI
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP_FRONTEND }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
+          script: |
+            cd ~/sarm/frontend
+            ~/sarm/deployment_frontend.sh
+
       - name: Upload Backend to VM DEI 
         uses: appleboy/scp-action@v0.1.5
         with:
@@ -24,31 +43,12 @@ jobs:
           source: ./frontend/*
           target: ~/sarm
 
-      - name: Deploy Backend Node in VM DEI 
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/sarm/frontend
-            ~/sarm/deployment_frontend.sh
-
-      - name: Upload Frontend to VM DEI 2
-        uses: appleboy/scp-action@v0.1.5
-        with:
-          host: ${{ secrets.SERVER_IP_FRONTEND }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
-          source: ./frontend/*
-          target: ~/sarm
-
       - name: Deploy Frontend in VM DEI 2
         uses: appleboy/ssh-action@v0.1.5
         with:
-          host: ${{ secrets.SERVER_IP_FRONTEND }}
+          host: ${{ secrets.SERVER_IP_FRONTEND_2 }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND_2 }}
           script: |
             cd ~/sarm/frontend
             ~/sarm/deployment_frontend.sh
