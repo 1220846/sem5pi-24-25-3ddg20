@@ -15,7 +15,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Upload Backend to VM DEI
+      - name: Upload Backend to VM DEI 
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: ./frontend/*
+          target: ~/sarm
+
+      - name: Deploy Backend Node in VM DEI 
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/sarm/frontend
+            ~/sarm/deployment_frontend.sh
+
+      - name: Upload Frontend to VM DEI 2
         uses: appleboy/scp-action@v0.1.5
         with:
           host: ${{ secrets.SERVER_IP_FRONTEND }}
@@ -24,7 +43,7 @@ jobs:
           source: ./frontend/*
           target: ~/sarm
 
-      - name: Deploy Backend Node in VM DEI
+      - name: Deploy Frontend in VM DEI 2
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.SERVER_IP_FRONTEND }}
