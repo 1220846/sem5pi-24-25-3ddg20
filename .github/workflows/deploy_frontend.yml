@@ -34,7 +34,6 @@ jobs:
             cd ~/sarm/frontend
             ~/sarm/deployment_frontend.sh
 
-
       - name: Upload Frontend to VM DEI 2
         uses: appleboy/scp-action@v0.1.5
         with:
