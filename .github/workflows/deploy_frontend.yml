@@ -1,4 +1,4 @@
-name: Deploy Frontend Node Module in VM DEI
+name: Deploy Frontend Module in VM DEI
 
 on:
   push:
