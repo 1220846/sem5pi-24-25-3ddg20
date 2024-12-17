@@ -287,41 +287,39 @@ export default class Maze {
     moveCameraToRoom(position, camera) {
         const [row, column] = this.cartesianToCell(position);
     
-        // Calcula as coordenadas centrais relativas ao tamanho e escala do mapa
+        // Calculate central coordinates relative to map size and scale
         const centerX = (column - this.size.width / 2.0 + 0.5) * this.scale.x;
         const centerZ = (row - this.size.height / 2.0 + 0.5) * this.scale.z;
     
-        // Define a posição de altura fixada a 3.5
+        // Define fixed height position
         const targetPosition = new THREE.Vector3(centerX, 3.5, centerZ);
     
-        // Cria a animação para a posição da câmera
-        new TWEEN.Tween(camera.object.position,true)
-            .to({ x: targetPosition.x, y: targetPosition.y, z: targetPosition.z }, 1000) // 1000ms para a transição suave
-            .easing(TWEEN.Easing.Quadratic.Out) // Função de easing suave
+        // Create camera position tween
+        new TWEEN.Tween(camera.object.position)
+            .to({ x: targetPosition.x, y: targetPosition.y, z: targetPosition.z }, 1000)
+            .easing(TWEEN.Easing.Quadratic.Out)
             .start();
     
-        // Agora, para garantir que a câmera está sempre olhando para o centro da célula,
-        // usamos o lookAt para manter o foco durante a animação
-        const lookAtTarget = new THREE.Vector3(centerX, 0, centerZ); // O alvo de "lookAt" é o centro da célula
+        // Create look-at target
+        const lookAtTarget = new THREE.Vector3(centerX, 0, centerZ);
         const initialRotation = camera.object.rotation.clone();
     
-        // Cria a animação para a rotação da câmera
-        new TWEEN.Tween(camera.object.rotation,true)
+        // Create camera rotation tween
+        new TWEEN.Tween(camera.object.rotation)
             .to({
-                x: Math.atan2(lookAtTarget.z - camera.object.position.z, lookAtTarget.x - camera.object.position.x), // Rotação em torno do eixo X
-                y: initialRotation.y, // Mantém a rotação ao longo do eixo Y (se necessário)
-                z: 0 // Garantir rotação apenas no eixo X e Y
-            }, 1000) // Mesma duração da transição de posição
+                x: Math.atan2(lookAtTarget.z - camera.object.position.z, lookAtTarget.x - camera.object.position.x),
+                y: initialRotation.y,
+                z: 0
+            }, 1000)
             .easing(TWEEN.Easing.Quadratic.Out)
             .onUpdate(() => {
-                // Sempre que a rotação for atualizada, garantimos que a câmera olhe para o alvo
                 camera.object.lookAt(lookAtTarget);
             })
             .start();
     
-        // Ajusta o vetor 'up' da câmera para manter a orientação correta (se necessário)
+        // Adjust camera up vector
         const targetUp = new THREE.Vector3(0, 0, -1);
-        new TWEEN.Tween(camera.object.up,true)
+        new TWEEN.Tween(camera.object.up)
             .to({ x: targetUp.x, y: targetUp.y, z: targetUp.z }, 1000)
             .easing(TWEEN.Easing.Quadratic.Out)
             .start();
