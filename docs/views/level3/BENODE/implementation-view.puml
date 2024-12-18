@@ -1,0 +1,37 @@
+@startuml implementation-view
+
+component "Backend Node" as BackendNode <<component>> <<container (C4)>> {
+  folder Infrastructure as Infrastructure {
+    folder Persistence as Persistence
+    folder Routes as Routes
+  }
+
+  folder "Interface Adapters" as InterfaceAdapters {
+    folder Controllers as Controllers
+    folder Repositories as Repositories
+  }
+
+  folder "Application Services" as ApplicationServices {
+    folder "App Services" as AppServices
+  }
+
+  folder "Domain" as Domain {
+    folder "Aggregates" as Aggregates
+    folder "Value Objects" as ValueObjects
+    folder "Services" as Services
+  }
+}
+
+Routes ..> Controllers
+Repositories ..> Persistence
+Controllers ..> AppServices
+Repositories ..> AppServices
+AppServices ..> Aggregates
+AppServices ..> ValueObjects
+AppServices ..> Services
+
+Infrastructure ..> InterfaceAdapters
+InterfaceAdapters ..> ApplicationServices
+ApplicationServices ..> Domain
+
+@enduml

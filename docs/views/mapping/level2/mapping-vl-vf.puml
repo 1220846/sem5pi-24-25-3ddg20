@@ -1,0 +1,65 @@
+@startuml mapping-vl-vf
+top to bottom direction
+ 
+node "localhost: ?" as LOCALHOST {
+  artifact "Planning" as PlanningArtifact <<artifact>> {
+  }
+  component "Planning" as Planning <<component>> {
+  }
+
+  component "Browser" as BROWSER <<component>> {
+
+    component "UI" as UI <<component>>
+  }
+}
+ 
+node "Server 1: vs1422" as Server {
+  artifact "Backend Data Management" as BackendDataManagementArtifact <<artifact>> {
+  }
+
+  component "Backend Data Management" as BackendDataManagement <<component>> {
+  }
+}
+ 
+node "Server 2: vs1372" as Server2 {
+  database "Mysql" as Database <<database>> {
+  }
+}
+
+node "Server 3: vs215" as Server3 {
+  artifact "Frontend" as FrontendArtifact <<artifact>> {
+  }
+  component "Frontend" as Frontend <<component>> {
+  }
+}
+ 
+node "Server 4: vs227" as Server4 {
+  artifact "Backend Node" as BackendNodeArtifact <<artifact>> {
+  }
+  component "Backend Node" as BackendNode <<component>> {
+  }
+}
+ 
+node "Server 5: ?" as Server5 {
+  database "MongoDB" as MongoDB <<database>> {
+  }
+}
+
+ 
+ 
+LOCALHOST -- Server : http/s
+LOCALHOST -- Server3 : http/s
+LOCALHOST -- Server4 : http/s
+ 
+Server -- Server2 : TCP/IP
+Server -- Server4 : http/s
+ 
+Server4 -- Server5 : TCP/IP
+ 
+ 
+BackendNodeArtifact ..> BackendNode : <<manifest>>
+BackendDataManagementArtifact ..> BackendDataManagement : <<manifest>>
+FrontendArtifact ..> Frontend : <<manifest>>
+PlanningArtifact ..> Planning : <<manifest>>
+ 
+@enduml

@@ -21,9 +21,15 @@ package " " <<SARM>>{
     folder  "Planning" as Planning {
 
     }
+
+    folder  "Backend Node" as BackendNode {
+
+    }
 }
 
 Frontend <.. Backend
+Frontend <.. BackendNode
+Backend <.. BackendNode
 Backend <.. Planning
 Planning <.. Backend
 BCP <.. Backend

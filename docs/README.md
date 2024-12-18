@@ -2,7 +2,17 @@
 
 ## Use Case Diagram
 
-![Use Case Diagram](use-case-diagram/use-case-diagram.svg "Use Case Diagram")
+### Sprint A
+
+![Use Case Diagram](use-case-diagram/use-case-diagram.svg "Use Case Diagram")~
+
+### Sprint B
+
+![Use Case Diagram](use-case-diagram/use-case-diagram-sprint-b.svg "Use Case Diagram")
+
+### Sprint C
+
+![Use Case Diagram](use-case-diagram/use-case-diagram-sprint-c.svg "Use Case Diagram")
 
 ## Domain Model
 
@@ -42,6 +52,16 @@
 
 ![Implementation View Level 3](views/level3/BEDM/implementation-view.svg "Implementation View Level 3")
 
+#### Backend Node
+
+#### Logic View
+
+![Logic View Level 3](views/level3/BENODE/logic-view.svg "Logic View Level 3")
+
+#### Implementation View
+
+![Implementation View Level 3](views/level3/BENODE/implementation-view.svg "Implementation View Level 3")
+
 #### Frontend
 
 #### Logic View
@@ -54,13 +74,27 @@
 
 ### Mapping
 
+#### Level 2
+
+#### Logic View - Implementation View
+
+![Mapping Logic View - Implementation View Level 2](views/mapping/level2/mapping-vl-vi.svg "Mapping Logic View - Implementation View Level 2")
+
+#### Logic View - Physical View
+
+![Mapping Logic View - Physical View Level 2](views/mapping/level2/mapping-vl-vf.svg "Mapping Level 2")
+
 #### Level 3
 
 #### Backend Data Management
 
 ![Mapping Level 3 BEDM](views/mapping/level3/BEDM/mapping.svg "Mapping Level 3 BEDM")
 
-#### Level 2
+#### Backend Node
+
+![Mapping Level 3 BEDM](views/mapping/level3/BENODE/mapping.svg "Mapping Level 3 BEDM")
+
+#### Frontend
 ![Mapping Level 3 Frontend](views/mapping/level3/frontend/mapping.svg "Mapping Level 3 Frontend")
 
 ## Group Members

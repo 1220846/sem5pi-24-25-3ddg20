@@ -1,0 +1,127 @@
+@startuml mapping
+top to bottom direction
+
+
+interface "API" as API
+interface "Database API" as DB_API
+
+component "Backend Node" as BackendNode <<component>> <<C4 Container>> {
+  portin " " as P1
+  portin " " as P2
+
+  Interface "Controller API" as Controller_API
+  Interface "Data Model API" as DataModel_API
+
+  folder "Frameworks and Drivers Layer" as Infrastructure{
+    component "Database Driver" as DatabaseDriver <<component>> {
+    }
+    component "Routing" as Routing <<component>> {
+    }
+  }
+
+  component "DTO" as DTO <<component>> {
+  }
+
+  component "Data Model" as DataModel <<component>> {
+  }
+
+  Interface "App Services API" AS ApplicationServiceAPI
+  Interface "Database Driver API" AS DatabaseDriverAPI
+  Interface "Repo API" AS RepoAPI
+  Interface "DTO API" AS DTOAPI
+  Interface "Model API" AS ModelAPI
+  Interface "VO API" AS VOAPI
+
+  folder "Interface Adapters Layer" as InterfaceAdapters{
+    component "Controller" as Controller <<component>> {
+    }
+    component "Repository" as Repository <<component>> {
+    }
+  }
+
+  folder "Application Business Rules" as ApplicationServices {
+    component "Application Service" as ApplicationService <<component>> {
+    }
+  }
+
+  folder "Enterprise Business Rules" as Domain {
+    component "Domain Model DDD" as DomainModelDDD <<component>> {
+    }
+  }
+}
+
+API -- P1
+P2 -u-( DB_API
+
+Routing --- P1
+Routing --( Controller_API
+Routing --( DTOAPI
+
+DatabaseDriver -- DatabaseDriverAPI
+DatabaseDriver -- P2
+DatabaseDriver --( DataModel_API 
+
+Repository -- RepoAPI
+Repository -u-( DatabaseDriverAPI 
+Repository -u-( DataModel_API 
+Repository --( VOAPI
+Repository ---( ModelAPI 
+
+DataModel -- DataModel_API 
+
+Controller --( ApplicationServiceAPI
+Controller -u- Controller_API
+Controller --( DTOAPI
+Controller --( VOAPI
+
+ApplicationService -u- ApplicationServiceAPI
+ApplicationService --( VOAPI
+ApplicationService -u-( RepoAPI 
+ApplicationService --( ModelAPI 
+
+DTO -- DTOAPI
+
+DomainModelDDD -u- ModelAPI 
+DomainModelDDD -u- VOAPI
+
+
+component "Backend Node" as BackendNode_ <<component>> <<container (C4)>> {
+  folder Infrastructure as Infrastructure_ {
+    folder Persistence as Persistence_
+    folder Routes as Routes_
+  }
+
+  folder "Interface Adapters" as InterfaceAdapters_ {
+    folder Controllers as Controllers_
+    folder Repositories as Repositories_
+  }
+
+  folder "Application Services" as ApplicationServices_ {
+    folder "App Services" as AppServices_
+  }
+
+  folder "Domain" as Domain_ {
+    folder "Aggregates" as Aggregates_
+    folder "Value Objects" as ValueObjects_
+    folder "Services" as Services_
+  }
+}
+
+Routes_ ..> Controllers_
+Repositories_ ..> Persistence_
+Controllers_ ..> AppServices_
+Repositories_ ..> AppServices_
+AppServices_ ..> Aggregates_
+AppServices_ ..> ValueObjects_
+AppServices_ ..> Services_
+
+Infrastructure_ ..> InterfaceAdapters_
+InterfaceAdapters_ ..> ApplicationServices_
+ApplicationServices_ ..> Domain_
+
+Infrastructure_ ....> Infrastructure : <<manifest>>
+InterfaceAdapters_ ....> InterfaceAdapters : <<manifest>>
+ApplicationServices_ ....> ApplicationServices : <<manifest>>
+Domain_ ....> Domain : <<manifest>>
+
+@enduml

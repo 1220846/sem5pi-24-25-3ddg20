@@ -70,10 +70,6 @@ package "<<aggregate>> Patient"{
         
     }
 
-    class MedicalConditions <<Value Object>>{
-        
-    }
-
     class EmergencyContact <<Value Object>>{
         
     }
@@ -236,35 +232,52 @@ package "<<aggregate>> SurgeryRoom"{
         
     }
 
-    enum RoomType <<Value Object>>{
-        OPERATING_ROOM
-        CONSULTATION_ROOM
-        ICU
-    }
-
-    class Capacity <<Value Object>>{
+    class SurgeryRoomCapacity <<Value Object>>{
         
     }
 
-    class AssignedEquipment <<Value Object>> { 
+    class SurgeryRoomAssignedEquipment <<Value Object>> { 
 
     }
 
-    enum CurrentStatus <<Value Object>>{
+    enum SurgeryRoomCurrentStatus <<Value Object>>{
         AVAILABLE
         OCCUPIED
         UNDER_MAINTENANCE
     }
 
-    class MaintenanceSlots <<Value Object>> {
+    class SurgeryRoomMaintenanceSlots <<Value Object>> {
              
+    }
+    
+}
+
+package "<<aggregate>> RoomTyppe"{
+
+    entity RoomType <<entity>> <<root>>{
+    }
+
+    class RoomTypeCode <<Value Object>>{
+        
+    }
+
+    class RoomTypeDesignation <<Value Object>>{
+        
+    }
+
+    class RoomTypeDescription <<Value Object>> { 
+
+    }
+
+    class RoomTypeIsSurgical <<Value Object>>{
+
     }
     
 }
 
 package "<<aggregate>> AvailabilitySlot" {
 
-    class AvailabilitySlot <<Value Object>>{
+    entity AvailabilitySlot <<entity>> <<root>>{
         
     }
 
@@ -281,6 +294,55 @@ package "<<aggregate>> AvailabilitySlot" {
     }
 }
 
+package "<<aggregate>> Allergy" {
+
+    entity Allergy <<entity>> <<root>> {
+        
+    }
+
+    class AllergyCode <<Value Object>>{
+        
+    }
+
+    class AllgeryDesignation <<ValueObject>> {
+
+    }
+
+    class AllergyDescription <<Value Objet>> {
+
+    }
+}
+
+package "<<aggregate>> MedicalCondition" {
+
+    entity MedicalCondition <<entity>> <<root>> {
+        
+    }
+
+    class MedicalConditionCode <<Value Object>>{
+        
+    }
+
+    class MedicalConditionDesignation <<ValueObject>> {
+
+    }
+
+    class MedicalConditionDescription <<Value Objet>> {
+
+    }
+}
+
+package "<<aggregate>> MedicalRecord" {
+
+    entity MedicalRecord <<entity>> <<root>> {
+        
+    }
+
+    class MedicalRecordText <<Value Object>>{
+        
+    }
+}
+
 'User'
 Username <- User
 User --> Role
@@ -294,7 +356,6 @@ DateOfBirth <- Patient
 Patient --> Gender
 Patient ---> MedicalRecordNumber
 Patient ---> PatientContactInformation
-Patient --> MedicalConditions
 Patient --> EmergencyContact
 Patient -> AppointmentHistory
 PatientContactInformation --> PatientEmail
@@ -349,15 +410,37 @@ Appointment "*" --> "1" SurgeryRoom: in
 
 'SurgeryRoom'
 RoomNumber <- SurgeryRoom
-SurgeryRoom --> RoomType
-SurgeryRoom --> Capacity
-SurgeryRoom --> AssignedEquipment
-SurgeryRoom --> CurrentStatus
-SurgeryRoom  -> MaintenanceSlots
-
+SurgeryRoom --> SurgeryRoomCapacity
+SurgeryRoom --> SurgeryRoomAssignedEquipment
+SurgeryRoom --> SurgeryRoomCurrentStatus
+SurgeryRoom  -> SurgeryRoomMaintenanceSlots
+SurgeryRoom "*" ---> "1" RoomType: has
 
 'AvailabilitySlot'
 AvailabilitySlot -> AvailabilitySlotId
 AvailabilitySlot --> StartTime
 AvailabilitySlot --> EndTime
+
+'Room Type'
+RoomType --> RoomTypeCode
+RoomType --> RoomTypeDesignation
+RoomType --> RoomTypeDescription
+RoomType --> RoomTypeIsSurgical
+
+'Allergy'
+Allergy --> AllergyCode
+Allergy --> AllgeryDesignation
+Allergy --> AllergyDescription
+
+'Medical Condition'
+MedicalCondition --> MedicalConditionCode
+MedicalCondition --> MedicalConditionDesignation
+MedicalCondition --> MedicalConditionDescription
+
+'Patient Medical Record'
+PatientMedicalRecord --> PatientMedicalRecordText
+PatientMedicalRecord "*" --> "*" Allergy: has
+PatientMedicalRecord "*" --> "*" MedicalCondition: has
+Patient "*" -u-> "1" PatientMedicalRecord: has
+
 @enduml

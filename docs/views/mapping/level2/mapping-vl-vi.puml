@@ -1,4 +1,4 @@
-@startuml mapping
+@startuml mapping-vl-vi
 top to bottom direction
 
 package " " <<SARM>>{
@@ -21,10 +21,16 @@ package " " <<SARM>>{
     folder  "Planning" as Planning {
 
     }
+
+    folder  "Backend Node" as BackendNode {
+
+    }
 }
 
 Frontend <.. Backend
 Backend <.. Planning
+Frontend <.. BackendNode
+Backend <.. BackendNode
 Planning <.. Backend
 BCP <.. Backend
 Backend <.. GDPR
@@ -32,12 +38,14 @@ Backend <.. GDPR
 
 interface "API" as API
 interface "UI" as UI
+interface "Node API" as NODEAPI
 interface "Auth0 API" as A0API
 interface "SMTP Office 365" as SMTP_Office_365
 
 component "SARM" <<component>> <<C4 System>> {
     portin " " as SARMPI
     portin " " as SARMPIUI
+    portin " " as SARMPINODE
     portout " " as SARMPO1
     portout " " as SARMPO2
 
@@ -49,12 +57,21 @@ component "SARM" <<component>> <<C4 System>> {
         portout " " as BackendPO2
         portout " " as BackendPO3
         portout " " as BackendPO4
+        portout " " as BackendPO5
         portin " " as BackendPI2
+    }
+
+    interface "Backend Node API" as BACKENDNODEAPI
+
+    component "Backend Node" as BENODE_ <<component>> {
+        portin " " as BackendNodeIN
+        portin " " as BackendNodeIN2
     }
 
     component "Frontend" as FE <<component>> {
         portin " " as FrontendINUI
         portout " " as FrontendOutUI2
+        portout " " as FrontendOutUI3
     }
 
     interface "Planning API" as PLANNINGAPI
@@ -81,6 +98,12 @@ SARMPIUI --- FrontendINUI
 FrontendOutUI2 --( BACKENDAPI
 BackendPI2 -U- BACKENDAPI
 
+BackendNodeIN --d-- BACKENDNODEAPI
+BackendPO5 ----( BACKENDNODEAPI
+FrontendOutUI3 --u--( BACKENDNODEAPI
+NODEAPI -- SARMPINODE
+BackendNodeIN2 --- SARMPINODE
+
 GDPRINUI -U- GDPR_API
 BackendPO3 --( GDPR_API
 
@@ -101,6 +124,7 @@ SARMPO2 --( SMTP_Office_365
 BCP ...> BCP_ : <<manifest>>
 GDPR ...> GDPR_ : <<manifest>>
 Backend ...> BEDM : <<manifest>>
+BackendNode ...> BENODE_ : <<manifest>>
 Frontend ...> FE : <<manifest>>
 Planning ...> PL : <<manifest>>
 

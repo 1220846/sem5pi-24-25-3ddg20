@@ -2,25 +2,50 @@
 
 node "localhost: " as LOCALHOST {
 
-  component "Frontend" as Frontend <<component>>{
+  component "Planning" as Planning <<component>>  { 
   }
 
-  component "Planning" as Planning <<component>>  { 
+  component "Browser" as Browser <<component>>  { 
+
+    component "UI" as UI <<component>>
   }
 }
 
-node "Server 2: vs1422" as Server {
+node "Server 1: vs1422" as Server {
   
   component "Backend Data Management" as BackendDataManagement <<component>> {
   }
 }
 
-node "Server 1: vs1372" as Server2 {
+node "Server 2: vs1372" as Server2 {
     database "Mysql" as Database <<database>> {
   }
 }
 
-LOCALHOST -u- Server : http/s
-LOCALHOST -- Server2 : TCP/IP
+node "Server 3: vs215" as Server3 {
+  
+  component "Frontend" as Frontend <<component>> {
+  }
+}
+
+
+node "Server 4: vs227" as Server4 {
+  
+  component "Backend Node" as BackendNode <<component>> {
+  }
+}
+
+node "Server 5: ?" as Server5 {
+  
+  database "MongoDB" as MongoDB <<database>> {
+  }
+}
+
+LOCALHOST -- Server : http/s
+Server -- Server4 : http/s
+Server3 -- LOCALHOST : http/s
+Server4 -- LOCALHOST : http/s
+Server -- Server2 : TCP/IP
+Server4 -- Server5 : TCP/IP
 
 @enduml

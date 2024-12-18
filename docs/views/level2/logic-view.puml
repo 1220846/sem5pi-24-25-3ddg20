@@ -3,12 +3,14 @@ top to bottom direction
 
 interface "API" as API
 interface "UI" as UI
+interface "Node API" as NODEAPI
 interface "Auth0 API" as A0API
 interface "SMTP Office 365" as SMTP_Office_365
 
 component "SARM" <<component>> <<C4 System>> {
     portin " " as SARMPI
     portin " " as SARMPIUI
+    portin " " as SARMPINODE
     portout " " as SARMPO1
     portout " " as SARMPO2
 
@@ -20,12 +22,21 @@ component "SARM" <<component>> <<C4 System>> {
         portout " " as BackendPO2
         portout " " as BackendPO3
         portout " " as BackendPO4
+        portout " " as BackendPO5
         portin " " as BackendPI2
+    }
+
+    interface "Backend Node API" as BACKENDNODEAPI
+
+    component "Backend Node" <<component>> {
+        portin " " as BackendNodeIN
+        portin " " as BackendNodeIN2
     }
 
     component "Frontend" <<component>> {
         portin " " as FrontendINUI
         portout " " as FrontendOutUI2
+        portout " " as FrontendOutUI3
     }
 
     interface "Planning API" as PLANNINGAPI
@@ -51,6 +62,12 @@ UI -- SARMPIUI
 SARMPIUI --- FrontendINUI
 FrontendOutUI2 --( BACKENDAPI
 BackendPI2 -U- BACKENDAPI
+
+BackendNodeIN --d-- BACKENDNODEAPI
+BackendPO5 ----( BACKENDNODEAPI
+FrontendOutUI3 --u--( BACKENDNODEAPI
+NODEAPI -- SARMPINODE
+BackendNodeIN2 --- SARMPINODE
 
 GDPRINUI -U- GDPR_API
 BackendPO3 --( GDPR_API

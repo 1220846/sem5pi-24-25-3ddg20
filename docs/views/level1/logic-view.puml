@@ -2,6 +2,7 @@
 top to bottom direction
 
 interface "API" as API
+interface "Node API" as NodeAPI
 interface "Auth0 API" as A0API
 interface "SMTP Office 365" as SMTP_Office_365
 interface "UI" as UI
@@ -9,11 +10,13 @@ interface "UI" as UI
 component "SARM" <<component>> <<C4 System>> {
     portin " " as PI
     portin " " as PIUI
+    portin " " as PINODE
     portout " " as PI1
     portout " " as PI2
 }
 UI -- PIUI
 API -- PI
+NodeAPI -- PINODE
 PI1 --( A0API
 PI2 --( SMTP_Office_365
 
