@@ -15,7 +15,7 @@ export default (app: Router) => {
     const corsOptions = {
         origin: 'http://localhost:4200',
         credentials: true,
-        methods: ['GET', 'POST'],
+        methods: ['GET', 'POST', 'PATCH'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     };
 
@@ -26,7 +26,7 @@ export default (app: Router) => {
             body: Joi.object({
                 code: Joi.string().required(),
                 designation: Joi.string().required(),
-                description: Joi.string().required()
+                description: Joi.string().allow("").optional(),
             }),
         }),
         (req, res, next) => ctrl.createAllergy(req, res, next),
@@ -35,4 +35,14 @@ export default (app: Router) => {
     route.get('/:id', cors(corsOptions), (req, res, next) => ctrl.getAllergy(req, res, next));
 
     route.get('', cors(corsOptions), (req, res, next) => ctrl.getAllergies(req, res, next));
+
+    route.patch('/:id',
+        celebrate({
+            body: Joi.object({
+                id: Joi.string().required(),
+                designation: Joi.string().optional(),
+                description: Joi.string().allow("",null).optional(), 
+            }),
+        }),
+        (req, res, next) => ctrl.updateAllergy(req, res, next) );
 };

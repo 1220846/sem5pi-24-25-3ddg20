@@ -59,4 +59,23 @@ export default class AllergyController implements IAllergyController {
             return next(e);
         }
     }
+
+    public async updateAllergy(req: Request, res: Response, next: NextFunction) {
+        try {
+            const allergyOrError = await this.allergyServiceInstance.updateAllergy(req.body as IAllergyDTO) as Result<IAllergyDTO>;
+
+            if (allergyOrError.isFailure) {
+                if (!allergyOrError.error.toString().includes("Allergy")) {
+                    return res.status(500).json({ message: "An unexpected error occurred." });
+                }
+                return res.status(400).json({ message: allergyOrError.error });
+            }
+
+            const roleDTO = allergyOrError.getValue();
+            return res.status(200).json( roleDTO );
+        }
+        catch (e) {
+            return next(e);
+        }
+    };
 }
