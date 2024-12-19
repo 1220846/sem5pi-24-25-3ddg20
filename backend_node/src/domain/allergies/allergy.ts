@@ -31,9 +31,18 @@ export class Allergy extends AggregateRoot<AllergyProps> {
         return this.props.designation;
     }
 
+    set designation ( value: AllergyDesignation) {
+        this.props.designation = value;
+    }
+
+    set description ( value: AllergyDescription) {
+        this.props.description = value;
+    }
+
     private constructor (props: AllergyProps, id?: UniqueEntityID) {
         super(props, id);
     }
+
     public static create(AllergyDTO: IAllergyDTO, id?: UniqueEntityID): Result<Allergy> {
 
         const code = AllergyCode.create(AllergyDTO.code);

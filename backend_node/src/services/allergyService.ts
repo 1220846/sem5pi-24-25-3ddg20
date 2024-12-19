@@ -6,6 +6,8 @@ import IAllergyService from './IServices/IAllergyService';
 import IAllergyDTO from '../dto/IAllergyDTO';
 import { Allergy } from '../domain/allergies/allergy';
 import { AllergyMap } from '../mappers/AllergyMap';
+import { AllergyDesignation } from '../domain/allergies/allergyDesignation';
+import { AllergyDescription } from '../domain/allergies/allergyDescription';
 
 @Service()
 export default class AllergyService implements IAllergyService {
@@ -66,5 +68,31 @@ export default class AllergyService implements IAllergyService {
       throw e;
     }
   }
+
+  public async updateAllergy(allergyDTO: IAllergyDTO): Promise<Result<IAllergyDTO>> {
+      try {
+        const allergy = await this.allergyRepo.findByDomainId(allergyDTO.id);
+  
+        if (allergy === null) {
+          return Result.fail<IAllergyDTO>("Allergy not found");
+        }
+        else {
+          if(allergyDTO.designation != null){
+            allergy.designation =  AllergyDesignation.create(allergyDTO.designation).getValue();
+          }
+
+          if(allergyDTO.description != null){
+            allergy.description =  AllergyDescription.create(allergyDTO.description).getValue();
+          }
+          
+          await this.allergyRepo.save(allergy);
+  
+          const allergeyDTOResult = AllergyMap.toDTO( allergy ) as IAllergyDTO;
+          return Result.ok<IAllergyDTO>( allergeyDTOResult )
+          }
+      } catch (e) {
+        throw e;
+      }
+    }
 
 }
