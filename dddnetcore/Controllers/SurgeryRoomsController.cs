@@ -27,7 +27,7 @@ namespace dddnetcore.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "RequiredBackofficeRole")]
+        //[Authorize(Policy = "RequiredBackofficeRole")]
         public async Task<ActionResult<SurgeryRoomDto>> GetById(string id) {
             var surgeryRoom = await _service.GetByIdAsync(new RoomNumber(id));
 

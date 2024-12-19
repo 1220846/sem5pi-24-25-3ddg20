@@ -17,6 +17,8 @@ export default class Maze {
     constructor(parameters, camera, renderer, scene3D) {
 
         this.onLoad = function (description) {
+            this.dataUrl = description.dataUrl;
+
 
             // Create RayCaster
             this.raycaster = new THREE.Raycaster();
@@ -312,9 +314,26 @@ export default class Maze {
         }
     }
 
-    showRoomInfoOverlay() {
+    async showRoomInfoOverlay() {
         if (!this.selectedRoom) return;
-    
+        try {
+        const response = await fetch(`https://localhost:5001/api/surgeryrooms/${this.selectedRoom}`);
+        
+
+        // Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Converte a resposta para JSON
+        const data = await response.json();
+
+        const roomNumber = data.number;
+        const roomType = data.roomType.designation;
+        const roomCapacity = data.capacity;
+
+        } catch {}
+
         let overlay = document.getElementById("roomInfoOverlay");
         if (!overlay) {
             overlay = document.createElement("div");
@@ -334,9 +353,9 @@ export default class Maze {
     
         overlay.innerHTML = `
             <h3>Room Information</h3>
-            <p><strong>Name:</strong> </p>
-            <p><strong>Position:</strong></p>
-            <p><strong>Info:</strong></p>
+            <p><strong>Number: ${roomNumber}</strong> </p>
+            <p><strong>Type: ${roomType}</strong></p>
+            <p><strong>Capacity: ${roomCapacity}</strong></p>
         `;
         overlay.style.display = "block";
         this.infoOverlayVisible = true;
