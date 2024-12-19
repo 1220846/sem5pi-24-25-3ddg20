@@ -317,48 +317,49 @@ export default class Maze {
     async showRoomInfoOverlay() {
         if (!this.selectedRoom) return;
         try {
-        const response = await fetch(`https://localhost:5001/api/surgeryrooms/${this.selectedRoom}`);
+            const response = await fetch(`https://localhost:5001/api/surgeryrooms/${this.selectedRoom}`);
+            
+
+            // Verifica se a resposta foi bem-sucedida
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Converte a resposta para JSON
+            const data = await response.json();
+
+            const roomNumber = data.number;
+            const roomType = data.roomType.designation;
+            const roomCapacity = data.capacity;
+
+            
+
+            let overlay = document.getElementById("roomInfoOverlay");
+            if (!overlay) {
+                overlay = document.createElement("div");
+                overlay.id = "roomInfoOverlay";
+                overlay.style.position = "fixed";
+                overlay.style.top = "10px";
+                overlay.style.left = "10px";
+                overlay.style.backgroundColor = "rgb(255, 255, 255)";
+                overlay.style.color = "black";
+                overlay.style.padding = "10px";
+                overlay.style.borderRadius = "5px";
+                overlay.style.zIndex = "1000";
+                overlay.style.width = "300px"; // Define a largura
+                overlay.style.height = "400px"; // Define a altura
+                document.body.appendChild(overlay);
+            }
         
-
-        // Verifica se a resposta foi bem-sucedida
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        // Converte a resposta para JSON
-        const data = await response.json();
-
-        const roomNumber = data.number;
-        const roomType = data.roomType.designation;
-        const roomCapacity = data.capacity;
-
+            overlay.innerHTML = `
+                <h3>Room Information</h3>
+                <p><strong>Number: ${roomNumber}</strong> </p>
+                <p><strong>Type: ${roomType}</strong></p>
+                <p><strong>Capacity: ${roomCapacity}</strong></p>
+            `;
+            overlay.style.display = "block";
+            this.infoOverlayVisible = true;
         } catch {}
-
-        let overlay = document.getElementById("roomInfoOverlay");
-        if (!overlay) {
-            overlay = document.createElement("div");
-            overlay.id = "roomInfoOverlay";
-            overlay.style.position = "fixed";
-            overlay.style.top = "10px";
-            overlay.style.left = "10px";
-            overlay.style.backgroundColor = "rgb(255, 255, 255)";
-            overlay.style.color = "black";
-            overlay.style.padding = "10px";
-            overlay.style.borderRadius = "5px";
-            overlay.style.zIndex = "1000";
-            overlay.style.width = "300px"; // Define a largura
-            overlay.style.height = "400px"; // Define a altura
-            document.body.appendChild(overlay);
-        }
-    
-        overlay.innerHTML = `
-            <h3>Room Information</h3>
-            <p><strong>Number: ${roomNumber}</strong> </p>
-            <p><strong>Type: ${roomType}</strong></p>
-            <p><strong>Capacity: ${roomCapacity}</strong></p>
-        `;
-        overlay.style.display = "block";
-        this.infoOverlayVisible = true;
     }
 
     hideRoomInfoOverlay() {
