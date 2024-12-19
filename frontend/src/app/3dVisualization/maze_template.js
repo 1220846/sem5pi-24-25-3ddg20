@@ -22,6 +22,7 @@ export default class Maze {
             this.raycaster = new THREE.Raycaster();
             this.mouse = new THREE.Vector2();
             this.camera = camera;
+            this.defaultcamera=camera;
             this.renderer = renderer;
             this.scene3D = scene3D;
 
@@ -218,6 +219,10 @@ export default class Maze {
             error => this.onError(this.url, error)
         );
         window.addEventListener('click', this.onMouseClick);
+
+        this.selectedRoom=null;
+        this.infoOverlayVisible=false;
+        this.initEventListeners();
     }
 
     // Convert cell [row, column] coordinates to cartesian (x, y, z) coordinates
@@ -276,13 +281,74 @@ export default class Maze {
                 console.log("Selected operating table:", clickedObject.name, "Position:", tablePosition);
     
                 this.moveCameraToRoom(tablePosition, this.camera);
+                this.selectedRoom=clickedObject.name.split('_')[1];
+                
             } else {
                 console.log("The clicked object is not a surgical table.");
+                this.selectedRoom=null;
+                this.hideRoomInfoOverlay();
             }
         } else {
             console.log("No objects were clicked.");
+            this.selectedRoom=null;
+            this.hideRoomInfoOverlay();
         }
     };
+
+    initEventListeners() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key.toLocaleLowerCase() === "i" && this.selectedRoom) {
+                this.toggleRoomInfoOverlay();
+            }
+        });
+    }
+
+    toggleRoomInfoOverlay() {
+        if (this.infoOverlayVisible) {
+            this.selectedRoom=null;
+            this.hideRoomInfoOverlay();
+        } else {
+            this.showRoomInfoOverlay();
+        }
+    }
+
+    showRoomInfoOverlay() {
+        if (!this.selectedRoom) return;
+    
+        let overlay = document.getElementById("roomInfoOverlay");
+        if (!overlay) {
+            overlay = document.createElement("div");
+            overlay.id = "roomInfoOverlay";
+            overlay.style.position = "fixed";
+            overlay.style.top = "10px";
+            overlay.style.left = "10px";
+            overlay.style.backgroundColor = "rgb(255, 255, 255)";
+            overlay.style.color = "black";
+            overlay.style.padding = "10px";
+            overlay.style.borderRadius = "5px";
+            overlay.style.zIndex = "1000";
+            overlay.style.width = "300px"; // Define a largura
+            overlay.style.height = "400px"; // Define a altura
+            document.body.appendChild(overlay);
+        }
+    
+        overlay.innerHTML = `
+            <h3>Room Information</h3>
+            <p><strong>Name:</strong> </p>
+            <p><strong>Position:</strong></p>
+            <p><strong>Info:</strong></p>
+        `;
+        overlay.style.display = "block";
+        this.infoOverlayVisible = true;
+    }
+
+    hideRoomInfoOverlay() {
+        const overlay = document.getElementById("roomInfoOverlay");
+        if (overlay) {
+            overlay.style.display = "none";
+        }
+        this.infoOverlayVisible = false;
+    }
 
     moveCameraToRoom(position, camera) {
         const [row, column] = this.cartesianToCell(position);
