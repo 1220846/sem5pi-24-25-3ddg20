@@ -1,0 +1,26 @@
+@startuml process-view
+autonumber
+
+actor "Admin" as Admin
+participant SARM as "SARM" <<system (C4)>>
+
+activate Admin
+
+    Admin -> SARM : asks to update an allergy
+
+    activate SARM
+
+        SARM --> Admin : asks to update data
+
+    deactivate SARM
+
+    Admin -> SARM : update data
+
+    activate SARM 
+        SARM --> Admin: shows success message
+        
+    deactivate SARM
+
+deactivate Admin
+
+@enduml
