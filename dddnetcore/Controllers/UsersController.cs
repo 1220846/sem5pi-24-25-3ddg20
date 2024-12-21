@@ -153,6 +153,11 @@ namespace DDDSample1.Controllers{
                 var loginDto = await _service.LoginAsync(loginRequestDto);
 
                 return Ok(loginDto);
+
+            }catch(BusinessRuleValidationException ex){
+                
+                return BadRequest(new {ex.Message});
+
             }catch (Exception ex){
                 
                 return Unauthorized(new { Message ="Login failed. Please check your credentials and try again.", ErrorMessage = ex.Message});

@@ -183,6 +183,17 @@ namespace DDDSample1.Domain.Users
 
                 var handler = new JwtSecurityTokenHandler();
                 var jwtToken = handler.ReadJwtToken(loginToken);
+
+                var emailVerifiedClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == $"{_namespace}/email_verified");
+                
+                foreach (var claim in jwtToken.Claims) {
+                    Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+                }
+                Console.WriteLine("Aqui!   " + emailVerifiedClaim);
+
+                if (emailVerifiedClaim == null || emailVerifiedClaim.Value != "true") {
+                    throw new BusinessRuleValidationException("Email not verified. Please check your email before logging in.");
+                }
                 
                 var roles = jwtToken.Claims.Where(c => c.Type == $"{_namespace}/roles").Select(c => c.Value).ToList();
 
