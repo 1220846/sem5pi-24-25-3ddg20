@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Allergy } from '../domain/Allergy';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { CreatingAllergyDto } from '../domain/CreatingAllergy';
+import { UpdateAppointmentDto } from '../domain/UpdateAppointmentDto';
+import { UpdateAllergyDto } from '../domain/UpdateAllergyDto';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +29,17 @@ export class AllergyService {
     const token = localStorage.getItem('accessToken');
     const headers = this.header.set('Authorization', `Bearer ${token}`);
     return this.http.post<Allergy>(this.apiUrl, allergy, { headers: headers });
+  }
+
+  updateAllergy(updateAllergyDto: UpdateAllergyDto): Observable<Allergy> {
+    const token = localStorage.getItem('accessToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.http.patch<Allergy>(`${this.apiUrl}/${updateAllergyDto.id}`, updateAllergyDto, { headers })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.message));
+        })
+      );
   }
 }

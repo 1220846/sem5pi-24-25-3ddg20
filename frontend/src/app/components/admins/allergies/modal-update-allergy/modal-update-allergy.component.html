@@ -1,0 +1,35 @@
+<div class="card flex justify-content-end mr-2">
+    <p-button (onClick)="showDialog()" [outlined]="true" severity="primary" icon="pi pi-pencil" />
+    <p-dialog header="Update Appointment" [modal]="true" [(visible)]="visible"
+        [style]="{ width: '30rem', maxHeight: '40rem' }" [appendTo]="'body'" (onHide)="closeDialog()">
+        <p-toast></p-toast>
+        <form [formGroup]="allergyForm" class="dialog-form">
+            <div class="p-fluid dialog-content">
+                <div class="flex flex-column gap-2 mb-2 input-small">
+                    <label for="code">Code</label>
+                    <input pInputText id="code" formControlName="code" />
+                </div>
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="designation">Designation</label>
+                    <input pInputText id="designation" formControlName="designation" />
+                    <small
+                        *ngIf="allergyForm.controls['designation'].invalid && (allergyForm.controls['designation'].dirty || allergyForm.controls['designation'].touched)"
+                        class="p-error">
+                        Please insert designation.
+                    </small>
+                </div> 
+                <div class="flex flex-column gap-2 mb-2 input-large">
+                    <label for="description">Description</label>
+                    <input pInputText id="description" formControlName="description" />
+                </div>     
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-content-center mt-2 gap-2 dialog-footer">
+                <p-button label="Cancel" (click)="closeDialog()" icon="pi pi-times" severity="secondary"></p-button>
+                <p-button label="Save" (click)="saveData()" icon="pi pi-check"></p-button>
+            </div>
+        </ng-template>
+
+    </p-dialog>
+</div>

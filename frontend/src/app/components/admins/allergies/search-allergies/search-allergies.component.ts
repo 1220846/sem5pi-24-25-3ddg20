@@ -7,6 +7,7 @@ import { ScrollerModule } from 'primeng/scroller';
 import { TagModule } from 'primeng/tag';
 import { Allergy } from '../../../../domain/Allergy';
 import { AllergyService } from '../../../../services/allergy.service';
+import { ModalUpdateAllergyComponent } from "../modal-update-allergy/modal-update-allergy.component";
 
 @Component({
   selector: 'app-search-allergies',
@@ -16,7 +17,7 @@ import { AllergyService } from '../../../../services/allergy.service';
     BadgeModule,
     TagModule,
     CommonModule,
-    ScrollerModule],
+    ScrollerModule, ModalUpdateAllergyComponent],
   templateUrl: './search-allergies.component.html',
   styleUrl: './search-allergies.component.scss'
 })
@@ -42,5 +43,9 @@ export class SearchAllergiesComponent {
 
   allergyDescription(allergy: Allergy): string {
     return allergy.description ? allergy.description : "No description";
+  }
+
+  onAllergyUpdated() {
+    this.loadAllergies();
   }
 }

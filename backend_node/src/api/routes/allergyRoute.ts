@@ -37,12 +37,16 @@ export default (app: Router) => {
     route.get('', cors(corsOptions), (req, res, next) => ctrl.getAllergies(req, res, next));
 
     route.patch('/:id',
+        (req, res, next) => { next(); },
+        cors(corsOptions),
         celebrate({
             body: Joi.object({
                 id: Joi.string().required(),
-                designation: Joi.string().optional(),
-                description: Joi.string().allow("",null).optional(), 
+                code: Joi.string().optional(),
+                designation: Joi.string().allow(null).optional(),
+                description: Joi.string().allow("",null).optional(),
             }),
         }),
-        (req, res, next) => ctrl.updateAllergy(req, res, next) );
-};
+        (req, res, next) => ctrl.updateAllergy(req, res, next)
+    );
+}

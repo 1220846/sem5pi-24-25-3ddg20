@@ -62,6 +62,10 @@ export default class AllergyController implements IAllergyController {
 
     public async updateAllergy(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log('Controller ID:', req.params.id);
+            console.log('Controller Request Body:', req.body);
+            console.log('Received ID:', req.params.id); // Verifica o id passado na URL
+
             const allergyOrError = await this.allergyServiceInstance.updateAllergy(req.body as IAllergyDTO) as Result<IAllergyDTO>;
 
             if (allergyOrError.isFailure) {
