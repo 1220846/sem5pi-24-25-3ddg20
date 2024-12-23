@@ -97,4 +97,20 @@ export class UserService {
         })
       );
   }
+
+  authenticateWithToken(token: string): Observable<Login> {
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.httpClient.post<Login>(`${this.apiUrl}/login/google`, {}, { headers }).pipe(
+      tap(response => {
+        localStorage.setItem('accessToken', response.loginToken);
+        localStorage.setItem('roles', JSON.stringify(response.roles));
+        this.getLoggedInUser();
+    }),
+      catchError((error) => {
+        return throwError(() => new Error(error.error.message));
+      })
+    );
+  }
 }

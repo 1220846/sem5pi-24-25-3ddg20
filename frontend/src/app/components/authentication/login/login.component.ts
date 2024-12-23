@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ModalCreateUserPatientComponent } from '../modal-create-user-patient/modal-create-user-patient.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { environment } from '../../../../environments/environment'; 
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
+
 export class LoginComponent implements OnInit {
 
   @ViewChild('create-user-patient') modalCreateUserPatientComponent!: ModalCreateUserPatientComponent;
@@ -57,6 +59,20 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle() {
+
+    const authDomain = environment.authDomain;
+    const clientId = environment.clientId;
+    const audience = environment.audience;
+    const redirectUri = environment.redirectUri;
+
+    if (!audience || !authDomain || !clientId || !redirectUri) {
+      console.error('Missing required environment variables!');
+      return;
+    }
+  
+    const googleAuthUrl = `https://${authDomain}/authorize?response_type=token&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&audience=${encodeURIComponent(audience)}&scope=openid email profile&connection=google-oauth2`;
+  
+    window.location.href = googleAuthUrl;
   }
 
   private redirect(roles: string[]) {

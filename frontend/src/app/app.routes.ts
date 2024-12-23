@@ -21,6 +21,7 @@ import { SpecializationsComponent } from './components/admins/specializations/sp
 import { AppointmentsComponent } from './components/doctors/appointments/appointments.component';
 import { AllergiesComponent } from './components/admins/allergies/allergies.component';
 import { MedicalConditionsComponent } from './components/admins/medical-conditions/medical-conditions.component';
+import { AuthCallbackComponent } from './components/authentication/auth-callback/auth-callback.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -58,7 +59,10 @@ export const routes: Routes = [
     children: [{ path: 'account', component: AccountComponent },
               { path: 'appointments', component: AppointmentsPatientComponent },
               { path: '', redirectTo: 'appointments', pathMatch: 'full' }]
-  }
+  },
+  { path: 'auth-callback', component: AuthCallbackComponent },
+  { path: '', component: HomePageComponent },
+  { path: '**', redirectTo: '' }
   
 ];
 
