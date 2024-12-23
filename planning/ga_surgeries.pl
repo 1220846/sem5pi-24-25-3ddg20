@@ -115,33 +115,29 @@ generate:-
 
 generate_population(Pop):-
     population(PopSize),
-    write('Ola:'),
-    surgery_count(NumT), %! Mudar para surgeries
+    surgery_count(NumT), % Count the number of surgeries
     write('Counter:'), write(NumT),
     forall(surgery_id(Surgery, Type),
     assertz(surgery_penalty(Surgery, Type, 0))),
-    findall(Task,surgery_penalty(Task,_,_),TasksList), %! Mudar para surgerie
-    generate_population(PopSize,TasksList,NumT,Pop).
+    findall(Surgery,surgery_penalty(Surgery,_,_),SurgeriesList), % Changed to surgeries
+    generate_population(PopSize,SurgeriesList,NumT,Pop).
 
 generate_population(0,_,_,[]):-!.
-generate_population(PopSize,TasksList,NumT,[Ind|Rest]):-
-    write('Ola2:'),
+generate_population(PopSize,SurgeriesList,NumT,[Ind|Rest]):-
     PopSize1 is PopSize-1,
-    generate_population(PopSize1,TasksList,NumT,Rest),
-    generate_individual(TasksList,NumT,Ind),
+    generate_population(PopSize1,SurgeriesList,NumT,Rest),
+    generate_individual(SurgeriesList,NumT,Ind),
     not(member(Ind,Rest)).
-generate_population(PopSize,TasksList,NumT,L):-
-    write('Ola3:'),
-    generate_population(PopSize,TasksList,NumT,L).
-    
+generate_population(PopSize,SurgeriesList,NumT,L):-
+    generate_population(PopSize,SurgeriesList,NumT,L).
 
 
 generate_individual([G],1,[G]):-!.
 
-generate_individual(TasksList,NumT,[G|Rest]):-
+generate_individual(SurgeriesList,NumT,[G|Rest]):-
     NumTemp is NumT + 1, % to use with random
     random(1,NumTemp,N),
-    remove(N,TasksList,G,NewList),
+    remove(N,SurgeriesList,G,NewList),
     NumT1 is NumT-1,
     generate_individual(NewList,NumT1,Rest).
 
@@ -161,14 +157,14 @@ evaluate([ ],_,0).
 evaluate([Surgery|Rest], TotalTime, V) :-
     best_value_threshold(BestValueThreshold),
    
-    surgery_penalty(Surgery, SurgeryName, Penalty),
-    surgery_time(SurgeryName, SurgeryTime),
+    surgery_penalty(Surgery, SurgeryType, Penalty),
+    surgery_time(SurgeryType, SurgeryTime),
    
     NewTotalTime is TotalTime + SurgeryTime,
    
     % Check if the total time is within the valid value
     ( NewTotalTime =< BestValueThreshold ->
-      % Within the limit, continue evaluation
+
       evaluate(Rest, NewTotalTime, VRest),
       V is NewTotalTime + VRest + Penalty
     ; 
@@ -180,8 +176,8 @@ evaluate([Surgery|Rest], TotalTime, V) :-
    
    
 % Calculate the total time of a surgery
-surgery_time(SurgeryName, TotalTime) :-
-    surgery(SurgeryName, Time1, Time2, Time3),
+surgery_time(SurgeryType, TotalTime) :-
+    surgery(SurgeryType, Time1, Time2, Time3),
     TotalTime is Time1 + Time2 + Time3.
 
 order_population(PopValue,PopValueOrd):-
@@ -343,7 +339,7 @@ select_population(OldPop, N, Acc, NewPop) :-
 
 generate_crossover_points(P1,P2):- generate_crossover_points1(P1,P2).
 generate_crossover_points1(P1,P2):-
-    surgery_count(N), %! Mudar para surgeries 
+    surgery_count(N), % number of surgeries
     NTemp is N+1,
     random(1,NTemp,P11),
     random(1,NTemp,P21),
@@ -356,17 +352,18 @@ generate_crossover_points1(P1,P2):-
 crossover([ ],[ ]).
 crossover([Ind*_],[Ind]).
 crossover([Ind1*_,Ind2*_|Rest],[NInd1,NInd2|Rest1]):-
+
     % Aleatoriedade na seleção de quais indivíduos fazer crossover
     random(0, 2, Rand),
+
     % Seleciona dois indivíduos aleatórios na lista
     length(Rest, Len),
     (Len > 0 -> 
         random(0, Len, RandomIndex),
-        % Pega o indivíduo no índice aleatório
-        nth0(RandomIndex, Rest, NextInd*_)
+        
+        nth0(RandomIndex, Rest, NextInd*_) % Pega o indivíduo no índice aleatório
     ;  
-        % Se não há mais indivíduos, usa o atual
-        NextInd = Ind2
+        NextInd = Ind2 % Caso não exista mais indivíduos, fica o atual
     ),
     
     % Realiza crossover com o indivíduo selecionado aleatoriamente
@@ -380,7 +377,7 @@ crossover([Ind1*_,Ind2*_|Rest],[NInd1,NInd2|Rest1]):-
         ;
         (NInd1=Ind1,NInd2=NextInd))
     ;
-        % Se Rand não for 0, pula esses indivíduos
+        % Se Rand não for 0, avançamos esses indivíduos
         NInd1=Ind1, NInd2=NextInd
     ),
     crossover(Rest,Rest1).
@@ -405,7 +402,7 @@ sublist1([_|R1],N1,N2,[h|R2]):-N3 is N1 - 1,
 		N4 is N2 - 1,
 		sublist1(R1,N3,N4,R2).
 
-rotate_right(L,K,L1):- surgery_count(N), %! Mudar para surgeries
+rotate_right(L,K,L1):- surgery_count(N), % number of surgeries
 	T is N - K,
 	rr(T,L,L1).
 
@@ -425,7 +422,7 @@ remove([_|R1],L,R2):-
 
 insert([],L,_,L):-!.
 insert([X|R],L,N,L2):-
-    surgery_count(T), %! Mudar para surgeries
+    surgery_count(T), % number of surgeries
     ((N>T,!,N1 is N mod T);N1 = N),
     insert1(X,N1,L,L1),
     N2 is N + 1,
@@ -439,7 +436,7 @@ insert1(X,N,[Y|L],[Y|L1]):-
 
 cross(Ind1,Ind2,P1,P2,NInd11):-
     sublist(Ind1,P1,P2,Sub1),
-    surgery_count(NumT), %! Mudar pora surgeries
+    surgery_count(NumT), % number of surgeries
     R is NumT-P2,
     rotate_right(Ind2,R,Ind21),
     remove(Ind21,Sub1,Sub2),
