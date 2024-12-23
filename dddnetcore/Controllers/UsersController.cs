@@ -6,16 +6,19 @@ using DDDSample1.Domain.Users;
 using DDDSample1.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 
-namespace DDDSample1.Controllers{
+namespace DDDSample1.Controllers
+{
 
     [Route("api/[controller]")]
     [ApiController]
 
-    public class UsersController : ControllerBase{
+    public class UsersController : ControllerBase
+    {
 
         private readonly UserService _service;
 
-        public  UsersController(UserService service){
+        public UsersController(UserService service)
+        {
             _service = service;
         }
 
@@ -38,16 +41,21 @@ namespace DDDSample1.Controllers{
         [Authorize(Policy = "RequiredAdminRole")]
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
-            try{
+            try
+            {
                 var user = await _service.AddBackofficeUserAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
 
-            }catch(BusinessRuleValidationException exception){
-                
-                return BadRequest(new {exception.Message});
-            }catch(Exception){
-                
+            }
+            catch (BusinessRuleValidationException exception)
+            {
+
+                return BadRequest(new { exception.Message });
+            }
+            catch (Exception)
+            {
+
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
@@ -56,19 +64,26 @@ namespace DDDSample1.Controllers{
         [HttpPost("patients")]
         public async Task<ActionResult<UserDto>> CreateUserPatient(CreatingUserPatientDto dto)
         {
-            try{
+            try
+            {
                 var user = await _service.AddUserPatientAsync(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = user.Username }, user);
 
-            }catch(BusinessRuleValidationException exception){
-                
-                return BadRequest(new {exception.Message});
-            }catch(NullReferenceException exception){
-                
-                return NotFound(new {exception.Message});
-            }catch(Exception){
-                
+            }
+            catch (BusinessRuleValidationException exception)
+            {
+
+                return BadRequest(new { exception.Message });
+            }
+            catch (NullReferenceException exception)
+            {
+
+                return NotFound(new { exception.Message });
+            }
+            catch (Exception)
+            {
+
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
@@ -76,27 +91,34 @@ namespace DDDSample1.Controllers{
         // PUT: api/users/patients/{username}
         [HttpPatch("patients/{username}")]
         [Authorize(Policy = "RequiredPatientRole")]
-        public async Task<ActionResult<UserDto>> UpdateUserPatient(string username,UpdateUserPatientDto dto)
+        public async Task<ActionResult<UserDto>> UpdateUserPatient(string username, UpdateUserPatientDto dto)
         {
-            try{
-                var userDto = await _service.UpdateUserPatientAsync(username,dto);
+            try
+            {
+                var userDto = await _service.UpdateUserPatientAsync(username, dto);
 
                 return Ok(userDto);
 
-            }catch(BusinessRuleValidationException exception){
-                
-                return BadRequest(new {exception.Message});
+            }
+            catch (BusinessRuleValidationException exception)
+            {
 
-            }catch(NullReferenceException exception){
-                
-                return NotFound(new {exception.Message});
-            }catch(Exception){
-                
+                return BadRequest(new { exception.Message });
+
+            }
+            catch (NullReferenceException exception)
+            {
+
+                return NotFound(new { exception.Message });
+            }
+            catch (Exception)
+            {
+
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
-            
+
         }
-        
+
         // POST: api/users/patients/request-delete/{username}
         [HttpPost("patients/request-delete/{username}")]
         [Authorize(Policy = "RequiredPatientRole")]
@@ -109,14 +131,18 @@ namespace DDDSample1.Controllers{
             }
             catch (NullReferenceException ex)
             {
-                return NotFound(new {message = ex.Message});
-            
-            }catch(BusinessRuleValidationException ex){
-                
+                return NotFound(new { message = ex.Message });
+
+            }
+            catch (BusinessRuleValidationException ex)
+            {
+
                 return StatusCode(400, new { message = ex.Message });
 
-            }catch(Exception){
-                
+            }
+            catch (Exception)
+            {
+
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
@@ -126,23 +152,30 @@ namespace DDDSample1.Controllers{
         [HttpGet("patients/confirm-delete/{username}")]
         public async Task<ActionResult<UserDto>> DeleteUserPatient(string username)
         {
-            try{
+            try
+            {
                 var userDto = await _service.DeleteUserPatientAsync(username);
 
                 return Ok(userDto);
 
-            }catch(BusinessRuleValidationException exception){
-                
-                return BadRequest(new {exception.Message});
+            }
+            catch (BusinessRuleValidationException exception)
+            {
 
-            }catch(NullReferenceException exception){
-                
-                return NotFound(new {exception.Message});
-            }catch(Exception){
-                
+                return BadRequest(new { exception.Message });
+
+            }
+            catch (NullReferenceException exception)
+            {
+
+                return NotFound(new { exception.Message });
+            }
+            catch (Exception)
+            {
+
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
-            
+
         }
 
         [HttpPost("login")]
@@ -154,19 +187,24 @@ namespace DDDSample1.Controllers{
 
                 return Ok(loginDto);
 
-            }catch(BusinessRuleValidationException ex){
-                
-                return BadRequest(new {ex.Message});
+            }
+            catch (BusinessRuleValidationException ex)
+            {
 
-            }catch (Exception ex){
-                
-                return Unauthorized(new { Message ="Login failed. Please check your credentials and try again.", ErrorMessage = ex.Message});
+                return BadRequest(new { ex.Message });
+
+            }
+            catch (Exception ex)
+            {
+
+                return Unauthorized(new { Message = "Login failed. Please check your credentials and try again.", ErrorMessage = ex.Message });
             }
         }
 
         [HttpPost("resetpassword")]
         [Authorize(Policy = "RequiredBackofficeRole")]
-        public async Task<IActionResult> RequestResetPassword(RequestResetPasswordDto requestResetPasswordDto){
+        public async Task<IActionResult> RequestResetPassword(RequestResetPasswordDto requestResetPasswordDto)
+        {
             try
             {
                 var isSuccessful = await _service.ResetPassword(requestResetPasswordDto);
@@ -189,8 +227,8 @@ namespace DDDSample1.Controllers{
         [HttpGet("loggedIn-user")]
         [Authorize(Policy = "RequiredAnyRole")]
         public async Task<ActionResult<UserDto>> GetLoggedInUser([FromHeader(Name = "Authorization")] string authorization)
-        {   
-            
+        {
+
             var user = await _service.GetLoggedInUser(authorization);
 
             if (user == null)
@@ -199,6 +237,32 @@ namespace DDDSample1.Controllers{
             }
 
             return user;
+        }
+
+        [HttpPost("login/google")]
+        public async Task<ActionResult<LoginDto>> LoginWithGoogle()
+        {
+            try{
+                string authorizationHeader = Request.Headers["Authorization"];
+                
+                if (string.IsNullOrWhiteSpace(authorizationHeader) || !authorizationHeader.StartsWith("Bearer ")){
+                    return BadRequest(new { Message = "Token is missing or invalid." });
+                }
+
+                string token = authorizationHeader.Substring("Bearer ".Length);
+
+                var user = await _service.RegisterOrLoginWithGoogle(token);
+
+                return Ok(user);
+
+            }catch (BusinessRuleValidationException ex){
+
+                return BadRequest(new { Message = ex.Message });
+
+            } catch (Exception ex){
+                
+                return StatusCode(500, new { Message = "An unexpected error occurred.", Error = ex.Message });
+            }
         }
     }
 }

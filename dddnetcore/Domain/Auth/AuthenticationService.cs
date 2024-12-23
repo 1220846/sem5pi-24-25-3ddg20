@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using DDDSample1.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -33,7 +34,7 @@ namespace DDDSample1.Domain.Auth
             return tokenResponse.access_token;
         }
 
-        public string GetLoggedInUsername(string token)
+        /*public string GetLoggedInUsername(string token)
         {
             if (string.IsNullOrEmpty(token))
                 throw new InvalidOperationException("Token not found");
@@ -48,6 +49,33 @@ namespace DDDSample1.Domain.Auth
                 throw new InvalidOperationException("Username not found in token claims");
 
             return usernameClaim.Value["auth0|".Length..];
+        }*/
+        public string GetLoggedInUsername(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                throw new InvalidOperationException("Token not found");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var subClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub");
+
+            if (subClaim == null)
+                throw new InvalidOperationException("Subject ID not found in token claims");
+
+            if (subClaim.Value.StartsWith("google-oauth2|"))
+            {
+                var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email");
+
+                if (emailClaim == null)
+                    throw new BusinessRuleValidationException("Email not found in token claims");
+
+                return emailClaim.Value; 
+            }
+            else
+            {
+                return subClaim.Value["auth0|".Length..];
+            }
         }
     }
 }
